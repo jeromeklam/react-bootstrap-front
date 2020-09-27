@@ -7,8 +7,8 @@ module.exports = {
   entry: ['./src/index.js'],
   output: {
     path: path.join(__dirname, './dist'),
-    filename: 'freeassofront.js',
-    library: 'freeassofront',
+    filename: 'react-bootstrap-front.js',
+    library: 'react-bootstrap-front',
     libraryTarget: 'umd',
     publicPath: '/dist/',
     umdNamedDefine: true,
