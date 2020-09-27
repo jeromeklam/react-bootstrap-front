@@ -1,0 +1,20 @@
+.select-line {
+  width: 16px;
+  height: 16px;
+  top: 12px;
+  position: absolute;
+}
+.select-line:hover {
+  cursor: pointer;
+}
+.select-line-inner {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  display: none;
+}
+.selected .select-line-inner {
+  display: block;
+}

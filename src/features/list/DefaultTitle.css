@@ -1,0 +1,17 @@
+.sort-icon {
+  position: relative;
+  display: inline-block;
+  margin-left: 3px;
+  margin-top: -2px;
+}
+.col-vertical-align {
+  overflow: hidden;
+}
+.sort-icon:hover {
+  cursor: pointer;
+}
+
+.title-select {
+  position: absolute;
+  font-size: 0.8rem;
+}

@@ -1,0 +1,60 @@
+# 1.1.1 : --/--/2020
+
+* Polyfill ie globalThis (from core-js)
+* Modal fadeIn
+* List without selectMenu can't select
+* ResponsiceContent with Scrollbar
+* InputPicker : autocomplete with scrollbar ans maxheight
+* Modals with classnames
+* InoutSpin : clear icon
+* ModalInner : height as parameter
+* Filters : InputDate
+* LogLevel
+* Removed ScrollArea (custom class)
+
+# 1.1.0 : 24/05/2020
+
+* Small layout adaptations
+* Page, List for layout and colors
+* InputMonetary field with intl, cols, and money switch
+* Inline-list
+* Helpers
+* Filters change operator
+* InputSpin
+* InputDate & InputPicker with Portal
+* InputMask with (iMask)
+* Textarea link, ...
+* Button disabled property on header and lines
+* Filters default filter and fixed filters, FilterBuilder
+
+# 1.0.4 : 29/02/2020
+
+* InputDate & InputDatetime (ref bug)
+* InputTextarea as react-rte
+
+# 1.0.3 : 23/02/2020
+
+* ListPanel with left navbar via big icons
+* ListeLine smaller height
+* ListCol with switch & bool
+* Treeview
+* App tour
+* react-datepicker for date and datetime
+* striptags
+
+# 1.0.2 : 09/02/2020
+
+* pattern on InputText & InlineInputText
+* colors on ResponsiveModal
+* filters ignore empty cols
+* remove console.log
+
+# 1.0.1 : 02/02/2020
+
+* Select default value
+* No more react-responsive
+* Eslint
+
+# 1.0.0 : 01/02/2020
+
+* First test vesion
