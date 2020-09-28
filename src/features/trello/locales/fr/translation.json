@@ -1,0 +1,16 @@
+{
+  "Add another lane": "＋Colonne",
+  "Click to add card": "＋Carte",
+  "Delete lane": "Supprimer",
+  "Lane actions": "Actions",
+  "button": {
+    "Add card": "Ajouter",
+    "Add lane": "Colonne",
+    "Cancel": "Annuler"
+  },
+  "placeholder": {
+    "title": "Titre",
+    "description": "Description",
+    "label": "Libellé"
+  }
+}

@@ -117,3 +117,10 @@ export { default as highlightReducer } from './features/tour/redux/reducer.js';
  *******************************************************************************
  */
 export * from './features/calendar/index.js';
+
+/**
+ *******************************************************************************
+ * Trello
+ *******************************************************************************
+ */
+export { default as Board } from './features/trello/index.js';
