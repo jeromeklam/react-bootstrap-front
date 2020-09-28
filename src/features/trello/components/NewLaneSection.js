@@ -4,6 +4,8 @@ import {AddLaneLink} from 'rt/styles/Elements'
 
 export default ({t, onClick}) => (
   <NewLaneSection>
-    <AddLaneLink t={t} onClick={onClick}>{t('Add another lane')}</AddLaneLink>
+    <button className="btn btn-primary btn-large" t={t} onClick={onClick}>
+      {t('Add another lane')}
+    </button>
   </NewLaneSection>
 )

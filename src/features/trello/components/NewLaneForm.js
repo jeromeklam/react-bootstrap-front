@@ -35,8 +35,12 @@ class NewLane extends Component {
             />
           </LaneTitle>
           <NewLaneButtons>
-             <AddButton onClick={this.handleSubmit}>{t('button.Add lane')}</AddButton>
-            <CancelButton onClick={onCancel}>{t('button.Cancel')}</CancelButton>
+             <button className="btn btn-primary" onClick={this.handleSubmit}>
+               {t('button.Add lane')}
+             </button>
+            <button className="btn btn-primary" onClick={onCancel}>
+              {t('button.Cancel')}
+            </button>
           </NewLaneButtons>
         </Section>
     )

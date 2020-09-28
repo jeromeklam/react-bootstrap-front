@@ -135,7 +135,7 @@ export const LaneFooter = styled.div`
 export const ScrollableLane = styled.div`
   flex: 1;
   overflow-y: auto;
-  min-width: 250px;
+  min-width: 350px;
   overflow-x: hidden;
   align-self: center;
   max-height: 90vh;
@@ -165,9 +165,9 @@ export const CardWrapper = styled.article`
   position: relative;
   padding: 10px;
   cursor: pointer;
-  max-width: 250px;
+  max-width: 350px;
   margin-bottom: 7px;
-  min-width: 230px;
+  min-width: 330px;
 `
 
 export const MovableCardWrapper = styled(CardWrapper)`
@@ -238,7 +238,7 @@ export const LaneTitle = styled.div`
 `
 
 export const LaneSection = styled.section`
-  background-color: #2b6aa3;
+  /*background-color: #2b6aa3;*/
   border-radius: 3px;
   margin: 5px;
   position: relative;
@@ -249,7 +249,7 @@ export const LaneSection = styled.section`
 `
 
 export const NewLaneSection = styled(LaneSection)`
-  width: 200px;
+  width: 350px;
 `
 
 export const NewLaneButtons = styled.div`
