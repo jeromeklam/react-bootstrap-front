@@ -21,13 +21,20 @@ export const DefaultTitle = props => (
   <div style={mystyle} className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}>
     {props.cols.map((oneCol, i) => {
       let addClass = '';
+      if (oneCol.align !== '') {
+        addClass = 'text-' + props.align;
+      }
       switch (oneCol.type) {
         case 'monetary': {
-          addClass = 'text-right';
+          if (props.align === '') {
+            addClass = 'text-right';
+          }
           break;
         }
         case 'thumbnail': {
-          addClass = 'text-center';
+          if (props.align === '') {
+            addClass = 'text-right';
+          }
           break;
         }
         default:
@@ -91,6 +98,7 @@ export const DefaultTitle = props => (
               'col-vertical-align',
               oneCol.sortable && 'sortable',
               addClass,
+              props.className,
             )}
             onClick={() => {
               props.onSort(oneCol, way);

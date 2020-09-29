@@ -25,10 +25,16 @@ const colstyle = {
 export const DefaultCol = (props) => {
   let { content } = props;
   let addClass = '';
+  if (props.align !== '') {
+    addClass = 'text-' + props.align;
+  }
+  if (content === null) {
+    content = '';
+  }
   if (props.type && props.values) {
     switch (props.type) {
       case 'text': {
-        content = striptags(content);
+        content = striptags(`${content}`);
         break;
       }
       case 'html': {
@@ -63,7 +69,9 @@ export const DefaultCol = (props) => {
           style: 'currency',
           currency: money,
         }).format(content);
-        addClass = 'text-right';
+        if (props.align === '') {
+          addClass = 'text-right';
+        }
         break;
       }
       case 'switch': {
@@ -93,7 +101,9 @@ export const DefaultCol = (props) => {
         break;
       }
       case 'thumbnail': {
-        addClass = 'text-center';
+        if (props.align === '') {
+          addClass = 'text-center';
+        }
         content = `data:image/jpeg;base64,${content}`;
         content = <img src={content} className="rounded img-thumbnail" alt="" style={{height : "70px"}}/>
         break;
@@ -148,6 +158,7 @@ export const DefaultCol = (props) => {
         cols,
         'col-vertical-align',
         addClass,
+        props.className,
       )}
     >
       {props.selectable ? (
@@ -185,6 +196,8 @@ DefaultCol.propTypes = {
   fClassName: PropTypes.func,
   fDisplay: PropTypes.func,
   item: PropTypes.element.isRequired,
+  className: PropTypes.string,
+  align: PropTypes.string,
 };
 
 DefaultCol.defaultProps = {
@@ -195,4 +208,6 @@ DefaultCol.defaultProps = {
   money: 'EUR',
   fClassName: null,
   fDisplay: null,
+  className: '',
+  align: '',
 };
