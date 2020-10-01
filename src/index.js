@@ -26,6 +26,8 @@ export { default as InputSpin } from './features/basic/InputSpin.jsx';
 export { default as InputStringarray } from './features/basic/InputStringarray.jsx';
 export * from './features/basic/InputText.jsx';
 export { default as InputTextarea } from './features/basic/InputTextarea.jsx';
+export { default as InputCheckList } from './features/basic/InputCheckList.jsx';
+export { default as InputCheckLists } from './features/basic/InputCheckLists.jsx';
 
 /**
  *******************************************************************************
