@@ -21,3 +21,4 @@ export { default as InputStringarray } from './InputStringarray.jsx';
 export * from './InputText.jsx';
 export { default as InputTextarea } from './InputTextarea.jsx';
 export * from './ResponsiveButton.jsx';
+export { default as InputCheckList } from './InputCheckList.jsx';
