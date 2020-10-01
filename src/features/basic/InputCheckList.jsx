@@ -160,7 +160,7 @@ export default class InputCheckList extends Component {
           </div>
           {!multi && (
             <div className="col-2">
-              <button className="btn btn-primary" onClick={this.onAddNew}>
+              <button className="btn btn-primary" onClick={this.onAddLine}>
                 {this.props.addIcon}
               </button>
             </div>
