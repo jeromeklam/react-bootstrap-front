@@ -2,9 +2,10 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Responsive } from '../layout';
+import { CalmButton } from './';
 
 export const ResponsiveButton = props => (
-  <button
+  <CalmButton
     type="button"
     className={classnames('btn', `btn-${props.button.theme}`)}
     onClick={props.button.function}
@@ -15,10 +16,9 @@ export const ResponsiveButton = props => (
     <Responsive displayIn={['Mobile']}>
       {props.button.icon}
     </Responsive>
-  </button>
+  </CalmButton>
 );
 
 ResponsiveButton.propTypes = {
   button: PropTypes.element.isRequired,
 };
-

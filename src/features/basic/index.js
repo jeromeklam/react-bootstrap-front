@@ -1,3 +1,4 @@
+export { default as CalmButton } from './CalmButton.jsx';
 export { default as Dropdown } from './Dropdown.jsx';
 export * from './InlineInputCheckbox.jsx';
 export * from './InlineInputPicker.jsx';
