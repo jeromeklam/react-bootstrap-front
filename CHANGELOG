@@ -1,3 +1,8 @@
+# 1.2.0 04/10/2020
+
+* InputSelect get data attributes (forwarded via onChange)
+* Input
+
 # 1.1.2 : 28/09/2020
 
 * sass folder
