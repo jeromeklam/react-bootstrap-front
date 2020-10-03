@@ -23,6 +23,7 @@ export default class InputSelect extends Component {
     warning: PropTypes.element,
     defaultValue: PropTypes.string,
     defaultLabel: PropTypes.string,
+    datas: PropTypes.object,
   };
 
   static defaultProps = {
@@ -43,6 +44,7 @@ export default class InputSelect extends Component {
     addEmpty: false,
     defaultValue: '',
     defaultLabel: 'Aucune sélection',
+    datas: [],
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -91,11 +93,15 @@ export default class InputSelect extends Component {
         }
       });
       if (!found) {
+        let datasProps = {};
+        if (this.props.datas) {
+          for (const [name, value] of Object.entries(this.props.datas)) {
+            datasProps[`data-${name}`] = value;
+          };
+        }
+        const send = {name: this.state.name, value: def, ...datasProps, dataset: this.props.datas};
         const event = {
-          target: {
-            name: this.state.name,
-            value: def,
-          },
+          target: send,
         };
         this.state.logger.info('freeassofront.inputSelect.' + this.state.name + '.componentDidMount.onChange');
         this.state.logger.debug(event);
@@ -107,6 +113,12 @@ export default class InputSelect extends Component {
   render() {
     const { options, value } = this.state;
     this.state.logger.info('freeassofront.inputSelect.' + this.state.name + '.render.' + (value || '~'));
+    let datasProps = {};
+    if (this.props.datas) {
+      for (const [name, value] of Object.entries(this.props.datas)) {
+        datasProps[`data-${name}`] = value;
+      };
+    }
     return (
       <div
         className={classnames(
@@ -141,6 +153,7 @@ export default class InputSelect extends Component {
             required={this.props.required}
             value={value}
             onChange={this.props.onChange}
+            {...datasProps}
           >
             {this.props.addEmpty && (
               <option key="000" value={this.props.defaultValue}>
