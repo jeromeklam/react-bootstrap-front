@@ -9,7 +9,7 @@ export const DefaultSidebarMenu = props => (
     <a
       className={classnames(
         'nav-link',
-        props.menu === props.option.position ? 'active' : 'text-secondary'
+        props.menu === props.option.position ? 'active text-secondary' : 'text-secondary'
       )}
       onClick={() => {
         props.toggleMenu(props.option.position);
