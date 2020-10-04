@@ -31,6 +31,10 @@
     right: 2px;
     top: 0px;
 
+    .rbc-icon {
+      position: relative;
+      display: inline-block;
+    }
     .rbc-icon > svg {
       width: 16px !important;
       height: 16px !important;
