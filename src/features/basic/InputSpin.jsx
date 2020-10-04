@@ -147,6 +147,7 @@ export default class InputSpin extends Component {
                   this.props.size && `form-control-${this.props.size}`
                 )}
                 onChange={this.props.onChange}
+                disabled={this.props.disabled}
               />
               <input type="hidden" name="autocomplete-field-@" value={this.props.value || ''} />
               <div className="input-group-append">
@@ -158,6 +159,7 @@ export default class InputSpin extends Component {
                     'bg-light text-secondary pl-0 pr-0',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
+                  disabled={this.props.disabled}
                   onClick={() => this.onIncremente()}
                 >
                   {this.props.upIcon}
@@ -170,6 +172,7 @@ export default class InputSpin extends Component {
                     'bg-light text-secondary pl-0 pr-0',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
+                  disabled={this.props.disabled}
                   onClick={() => this.onDecremente()}
                 >
                   {this.props.downIcon}
@@ -182,6 +185,7 @@ export default class InputSpin extends Component {
                     'bg-light text-warning',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
+                  disabled={this.props.disabled}
                   onClick={this.onClear}
                 >
                   {this.props.clearIcon}
