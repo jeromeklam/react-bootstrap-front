@@ -1,4 +1,4 @@
-# 1.2.0 : 04/10/2020
+# 1.2.1 : 04/10/2020
 
 * InputSelect get data attributes (forwarded via onChange)
 * InputCheckLists, InputCheckList
