@@ -1,4 +1,13 @@
-import { FILTER_MODE_OR, FILTER_OPER_LIKE, FILTER_TYPE_GROUP, FILTER_TYPE_ELEM, FILTER_SEARCH_NONE, FILTER_SEARCH_QUICK } from './';
+import {
+  FILTER_MODE_OR,
+  FILTER_OPER_LIKE,
+  FILTER_OPER_EMPTY,
+  FILTER_OPER_NOT_EMPTY,
+  FILTER_TYPE_GROUP,
+  FILTER_TYPE_ELEM,
+  FILTER_SEARCH_NONE,
+  FILTER_SEARCH_QUICK
+} from './';
 
 /**
  * Manage filters
@@ -60,7 +69,7 @@ export default class Filter {
   isEnable() {
     return this.data.filter_enable;
   }
- 
+
   setMode(mode) {
     this.data.mode = mode;
   }
@@ -108,12 +117,16 @@ export default class Filter {
     let filters = [];
     this.data.filters.forEach((elt) => {
       let add = false;
-      const crits3 = elt.getFilterCrits();
-      Object.keys(crits3).forEach((key) => {
-        if (crits3[key] !== '') {
+      if (elt && elt.data && (elt.data.operator === FILTER_OPER_EMPTY || elt.data.operator === FILTER_OPER_NOT_EMPTY)) {
           add = true;
-        }
-      });
+      } else {
+        const crits3 = elt.getFilterCrits();
+        Object.keys(crits3).forEach((key) => {
+          if (crits3[key] !== '') {
+            add = true;
+          }
+        });
+      }
       if (add) {
         filters.push(elt);
       }
