@@ -16,7 +16,7 @@ export const DefaultSidebarMenu = props => (
       }}
     >
       {props.option.icon}
-      <span className="sidebar-menu-label">{props.option.label}</span>
+      <span className="sidebar-menu-label text secondary">{props.option.label}</span>
       <div
         className={classnames(
           'sidebar-menu-arrow',
