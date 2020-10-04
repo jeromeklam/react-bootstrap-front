@@ -8,13 +8,15 @@ class IconWrapper extends React.Component {
 
   render() {
     const { event, accessors, icons } = this.props;
-    let done = accessors.done(event);
+    const done = accessors.done(event);
+    const priority = accessors.priority(event);
     return (
       <div className="rbc-icons">
-        {done ? (
+        {done && (
           icons && icons.done ? <div className="rbc-icon">{this.props.icons.done}</div> : <span>Ok</span>
-        ) : (
-          <span></span>
+        )}
+        {priority && (
+          icons && icons[priority] ? <div className="rbc-icon">{this.props.icons[priority]}</div> : <span></span>
         )}
       </div>
     );

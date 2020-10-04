@@ -10,12 +10,12 @@ export default class InputCheckLists extends Component {
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    addIcon: PropTypes.element.isRequired,  
-    delIcon: PropTypes.element.isRequired,  
+    addIcon: PropTypes.element.isRequired,
+    delIcon: PropTypes.element.isRequired,
     addLineIcon: PropTypes.element.isRequired,
     delLineIcon: PropTypes.element.isRequired,
     openLinesIcon: PropTypes.element.isRequired,
-    closeLinesIcon: PropTypes.element.isRequired,  
+    closeLinesIcon: PropTypes.element.isRequired,
     checkedLineIcon: PropTypes.element.isRequired,
     uncheckedLineIcon: PropTypes.element.isRequired,
     checkedLine: PropTypes.string,
@@ -23,12 +23,12 @@ export default class InputCheckLists extends Component {
 
   static defaultProps = {
     value: '',
-    addIcon: null,  
-    delIcon: null,  
+    addIcon: null,
+    delIcon: null,
     addLineIcon: null,
     delLineIcon: null,
     openLinesIcon: null,
-    closeLinesIcon: null,  
+    closeLinesIcon: null,
     checkedLineIcon: null,
     uncheckedLineIcon: null,
     checkedLine: '',
@@ -36,8 +36,14 @@ export default class InputCheckLists extends Component {
 
   constructor(props) {
     super(props);
+    let lists = [];
+    try {
+      lists = JSON.parse(props.value) || [];
+    } catch (ex) {
+      lists = [];
+    }
     this.state = {
-      lists: JSON.parse(props.value) || [],
+      lists: lists,
     };
     this.onChange = this.onChange.bind(this);
     this.onAddNew = this.onAddNew.bind(this);
@@ -45,7 +51,7 @@ export default class InputCheckLists extends Component {
   }
 
   onChange(event, idx) {
-    let { lists } = this.state;    
+    let { lists } = this.state;
     const list = event.target.value;
     lists[idx] = JSON.parse(list);
     this.props.onChange({
@@ -94,19 +100,18 @@ export default class InputCheckLists extends Component {
               uncheckedLineIcon={this.props.uncheckedLineIcon}
               checkedLine={this.props.checkedLine}
             />
-          </div>          
+          </div>
         ))}
         <div className="row add-check-list">
           <div className="col-34">
-            <button 
+            <button
               className={classnames(`btn btn-input border-secondary text-primary btn-block`)}
               onClick={this.onAddNew}>
               Ajouter une liste
-            </button>  
+            </button>
           </div>
         </div>
       </div>
     );
   }
 }
-

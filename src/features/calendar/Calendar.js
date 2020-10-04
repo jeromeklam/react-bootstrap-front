@@ -195,6 +195,17 @@ class Calendar extends React.Component {
     doneAccessor: accessor,
 
     /**
+     * Returns thhe priority, false otherwise
+     *
+     * ```js
+     * string | (event: Object) => Date
+     * ```
+     *
+     * @type {(func|string)}
+     */
+    priorityAccessor: accessor,
+
+    /**
      * An array of resource objects that map events to a specific resource.
      * Resource objects, like events, can be any shape or have any properties,
      * but should be uniquly identifiable via the `resourceIdAccessor`, as
@@ -767,6 +778,7 @@ class Calendar extends React.Component {
     startAccessor: 'start',
     endAccessor: 'end',
     doneAccessor: 'done',
+    priorityAccessor: 'priority',
     resourceAccessor: 'resourceId',
 
     resourceIdAccessor: 'id',
@@ -794,6 +806,7 @@ class Calendar extends React.Component {
     tooltipAccessor,
     titleAccessor,
     doneAccessor,
+    priorityAccessor,
     resourceAccessor,
     resourceIdAccessor,
     resourceTitleAccessor,
@@ -836,6 +849,7 @@ class Calendar extends React.Component {
         start: wrapAccessor(startAccessor),
         end: wrapAccessor(endAccessor),
         done: wrapAccessor(doneAccessor),
+        priority: wrapAccessor(priorityAccessor),
         allDay: wrapAccessor(allDayAccessor),
         tooltip: wrapAccessor(tooltipAccessor),
         title: wrapAccessor(titleAccessor),

@@ -11,33 +11,33 @@ export default class InputCheckList extends Component {
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    addIcon: PropTypes.element.isRequired,  
-    delIcon: PropTypes.element.isRequired,  
+    addIcon: PropTypes.element.isRequired,
+    delIcon: PropTypes.element.isRequired,
     addLineIcon: PropTypes.element.isRequired,
     delLineIcon: PropTypes.element.isRequired,
     openLinesIcon: PropTypes.element.isRequired,
-    closeLinesIcon: PropTypes.element.isRequired,  
+    closeLinesIcon: PropTypes.element.isRequired,
     checkedLineIcon: PropTypes.element.isRequired,
     uncheckedLineIcon: PropTypes.element.isRequired,
     checkedLine: PropTypes.string,
   };
-  
+
   static defaultProps = {
     value: '',
-    addIcon: null,  
-    delIcon: null,  
+    addIcon: null,
+    delIcon: null,
     addLineIcon: null,
     delLineIcon: null,
     openLinesIcon: null,
-    closeLinesIcon: null,  
+    closeLinesIcon: null,
     checkedLineIcon: null,
     uncheckedLineIcon: null,
     checkedLine: '',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const list = JSON.parse(props.value) || emptyList;    
-    if (list.title !== state.title || list.items !== state.items) { 
+    const list = JSON.parse(props.value) || emptyList;
+    if (list.title !== state.title || list.items !== state.items) {
       return {title: list.title, items: list.items};
     }
     return null;
@@ -45,7 +45,12 @@ export default class InputCheckList extends Component {
 
   constructor(props) {
     super(props);
-    const list = JSON.parse(props.value) || emptyList;
+    let list = emptyList;
+    try {
+      list = JSON.parse(props.value) || emptyList;
+    } catch (ex) {
+      list = emptyList;
+    }
     this.state = {
       title: list.title,
       items: list.items,
@@ -57,7 +62,7 @@ export default class InputCheckList extends Component {
     this.onChangeItemLabel = this.onChangeItemLabel.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onDelLine = this.onDelLine.bind(this);
-    this.onChange = this.onChange.bind(this);    
+    this.onChange = this.onChange.bind(this);
   }
 
   onToggle() {
@@ -121,27 +126,27 @@ export default class InputCheckList extends Component {
             <div className="input-group">
               <input
                 label=''
-                type="text" 
-                className={classnames('border-secondary form-control')}                
+                type="text"
+                className={classnames('border-secondary form-control')}
                 name={this.state.title}
                 value={this.state.title}
                 onChange={this.onChangeTitle}
               />
               <div className="input-group-append">
                 {multi && (
-                  <button 
+                  <button
                     className={classnames(`btn btn-input border-secondary bg-light`)}
                     onClick={this.onAddLine}>
                     {this.props.addLineIcon}
                   </button>
                 )}
                 {(this.state.items && this.state.items.length > 0) && (
-                  <button 
+                  <button
                     className={classnames(`btn btn-input border-secondary bg-light`)}
                     onClick={this.onToggle}>
                     {this.state.open === true ? (
                       this.props.closeLinesIcon
-                    ) : ( 
+                    ) : (
                       this.props.openLinesIcon
                     )}
                   </button>
@@ -176,8 +181,8 @@ export default class InputCheckList extends Component {
                       {item.done === true ? this.props.checkedLineIcon : this.props.uncheckedLineIcon}
                     </div>
                   </div>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className={classnames('border-secondary-light form-control', item.done && `${this.props.checkedLine}`)}
                     name={`label-${i}`}
                     value={item.label}
