@@ -3,22 +3,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import './DefaultTitle.css';
 
-const mystyle = {
-  height: '50px',
-  lineHeight: '50px',
-  fontWeight: 'bold',
-  paddingTop: '0px',
-  paddingBottom: '0px',
-  left: '0px',
-  position: 'absolute',
-  right: '0px',
-  top: '0px',
-  zIndex: '700',
-  overflow: 'hidden',
-};
-
 export const DefaultTitle = props => (
-  <div style={mystyle} className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}>
+  <div style={props.style} className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}>
     {props.cols.map((oneCol, i) => {
       let addClass = '';
       if (oneCol.align !== '') {
