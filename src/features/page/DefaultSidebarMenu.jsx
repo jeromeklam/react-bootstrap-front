@@ -22,8 +22,7 @@ export const DefaultSidebarMenu = props => (
       )}
       <div
         className={classnames(
-          props.open ? 'sidebar-menu-arrow-open' : 'sidebar-menu-arrow',
-          props.menu === props.option.position ? 'active text-secondary' : 'text-secondary',
+          props.open ? 'sidebar-menu-arrow-open' : 'sidebar-menu-arrow'
         )}
       >
         {props.menu === props.option.position ? props.menuOpened : props.menuClosed }

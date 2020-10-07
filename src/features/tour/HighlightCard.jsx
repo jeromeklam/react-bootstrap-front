@@ -87,8 +87,12 @@ export class HighlightCard extends Component {
   }
 
   render() {
+    let footer = null;
+    let content = null;
+    let current = null;
     if (this.props.tour && this.props.tour.current) {
-      const footer = (
+      current = this.props.tour.current;
+      footer = (
         <div className="text-secondary">
           <div className="row mt-3">
             <div className="col-sm-10 text-left">
@@ -109,29 +113,28 @@ export class HighlightCard extends Component {
           </div>
         </div>
       );
-      const content = <h5 className="text-primary text-center">{this.state.title}</h5>;
-      return (
-        <div>
-          <div className="target" id={`highlight-${this.state.myRef}`}>
-            {this.props.children}
-          </div>
-          <ToolTip
-            parent={`#highlight-${this.state.myRef}`}
-            position={this.state.position}
-            arrow={this.state.arrow}
-            active={this.state.myRef === this.props.tour.current}
-            group={`highlight-${this.state.myRef}`}
-            tooltipTimeout={100}
-            useHover={false}
-            style={tooltipStyle}
-          >
-            {content}
-            {footer}
-          </ToolTip>
-        </div>
-      );
+      content = <h5 className="text-primary text-center">{this.state.title}</h5>;
     }
-    return null;
+    return (
+      <div>
+        <div className="target" id={`highlight-${this.state.myRef}`}>
+          {this.props.children}
+        </div>
+        <ToolTip
+          parent={`#highlight-${this.state.myRef}`}
+          position={this.state.position}
+          arrow={this.state.arrow}
+          active={this.state.myRef === current}
+          group={`highlight-${this.state.myRef}`}
+          tooltipTimeout={100}
+          useHover={false}
+          style={tooltipStyle}
+        >
+          {content}
+          {footer}
+        </ToolTip>
+      </div>
+    );
   }
 }
 

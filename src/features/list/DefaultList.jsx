@@ -27,7 +27,7 @@ const defaultStyle = {
   animationIterationCount: '1',
 };
 
-const datastyle = {
+const dataStyle = {
   top: '100px',
   height: 'calc(100% - 100px)',
   position: 'absolute',
@@ -51,14 +51,27 @@ const transitionStyles = {
   exited: { right: '-400px' },
 };
 
-const titleStyle = {
-  height: '50px',
+const titleLineStyle = {
   left: '0px',
   position: 'absolute',
   right: '0px',
   top: '50px',
   zIndex: '700',
   transition: `right ${duration}ms ease ${duration}ms`,
+};
+
+const titleStyle = {
+  height: '40px',
+  lineHeight: '40px',
+  fontWeight: 'bold',
+  paddingTop: '0px',
+  paddingBottom: '0px',
+  left: '0px',
+  position: 'absolute',
+  right: '0px',
+  top: '0px',
+  zIndex: '700',
+  overflow: 'hidden',
 };
 
 const listTransitionStyles = {
@@ -154,41 +167,42 @@ export default class DefaultList extends Component {
   render() {
     const dispCols = this.props.cols.filter(col => !col.hidden);
     let locTitleStyle = titleStyle;
-    let locDataStyle = datastyle;
+    let locDataStyle = dataStyle;
     if (this.props.titleMultiline) {
       locTitleStyle = {
         ...titleStyle,
-        height:'100px',
+        height:'80px',
+        lineHeight: '40px',
       };
       locDataStyle = {
-        ...datastyle,
-        top:'150px',
+        ...dataStyle,
+        top:'130px',
       };
     }
     return (
       <div style={fullDiv}>
         <DefaultHeader {...this.props} onToggleFilter={this.togglePanel} />
-            <CSSTransition in={this.state.panelOpen} timeout={duration}>
-              {state => (
-                <div
-                  className="default-list-panel bg-primary-light text-secondary"
-                  style={{
-                    ...defaultStyle,
-                    ...transitionStyles[state],
-                  }}
-                >
-                  <DefaultPanel onToggleFilter={this.togglePanel} {...this.props} />
-                </div>
-              )}
-            </CSSTransition>
+          <CSSTransition in={this.state.panelOpen} timeout={duration}>
+            {state => (
+              <div
+                className="default-list-panel bg-primary-light text-secondary"
+                style={{
+                  ...defaultStyle,
+                  ...transitionStyles[state],
+                }}
+              >
+                <DefaultPanel onToggleFilter={this.togglePanel} {...this.props} />
+              </div>
+            )}
+          </CSSTransition>
           <div className={classnames('default-list', 'content-' + this.state.contentSize)}>
             <CSSTransition in={this.state.splited} timeout={duration}>
               {state => (
                 <div>
-                  <div style={this.props.mode === 'right' ? {...titleStyle, ...listTransitionStyles[state]} : {...titleStyle}}>
-                    <DefaultTitle {...this.props} cols={dispCols} className={'list-' + this.state.listSize} cols={dispCols} />
+                  <div style={this.props.mode === 'right' ? {...titleLineStyle, ...listTransitionStyles[state]} : {...titleLineStyle}}>
+                    <DefaultTitle style={locTitleStyle} {...this.props} cols={dispCols} className={'list-' + this.state.listSize} cols={dispCols}/>
                   </div>
-                  <div className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize, 'list-' + this.state.listSize)} style={this.props.mode === 'right' ? {...datastyle, ...listTransitionStyles[state]} : {...datastyle}}>
+                  <div className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize, 'list-' + this.state.listSize)} style={this.props.mode === 'right' ? {...locDataStyle, ...listTransitionStyles[state]} : {...locDataStyle}}>
                     <div className="default-list-body">
                       {this.props.items.length > 0 ? (
                         <div>
