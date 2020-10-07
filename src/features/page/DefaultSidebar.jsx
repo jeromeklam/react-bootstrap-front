@@ -20,6 +20,7 @@ export default class DefaultSidebar extends Component {
     location: PropTypes.element.isRequired,
     onNavigate: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    onOpenSide: PropTypes.func,
   };
 
   constructor(props) {
@@ -36,6 +37,9 @@ export default class DefaultSidebar extends Component {
       this.setState({ menu: 0 });
     } else {
       this.setState({ menu: id });
+      if (!this.props.open) {
+        this.props.onOpenSide();
+      }
     }
   }
 
@@ -50,7 +54,7 @@ export default class DefaultSidebar extends Component {
               (option.role === 'NAV' && (this.props.authenticated || (this.props.authenticated && option.public)))
             ) {
               return (
-                <DefaultSidebarItem key={`option-${option.label}-${option.position}`} {...this.props} option={option} />
+                <DefaultSidebarItem key={`option-${option.label}-${option.position}`} {...this.props} option={option} open={this.props.open}/>
               );
             } else if (
               option.role === 'MENU' &&
@@ -64,6 +68,7 @@ export default class DefaultSidebar extends Component {
                     {...this.props}
                     option={option}
                     {...this.state}
+                    open={this.props.open}
                   />
                   {this.props.open && this.state.menu === option.position &&
                     option.options.map(option2 => (

@@ -127,6 +127,7 @@ export default class ResponsivePage extends Component {
     let menuMaxi = true;
     if (props.settings && (props.settings.menuposition === true || props.settings.menuposition === false)) {
       menuMaxi = props.settings.menuposition;
+      console.log("FK constructor",props.settings.menuposition);
     }
     this.state = {
       menuDataOpen: false,
@@ -136,6 +137,7 @@ export default class ResponsivePage extends Component {
     this.onToggleData = this.onToggleData.bind(this);
     this.onToggleSide = this.onToggleSide.bind(this);
     this.onToggleUser = this.onToggleUser.bind(this);
+    this.onOpenSide = this.onOpenSide.bind(this);
   }
 
   onToggleData() {
@@ -148,6 +150,10 @@ export default class ResponsivePage extends Component {
 
   onToggleSide() {
     this.props.onChangeSettings('menuposition', this.state.menuSideMini);
+  }
+
+  onOpenSide() {
+    this.props.onChangeSettings('menuposition', false);
   }
 
   render() {
@@ -176,7 +182,7 @@ export default class ResponsivePage extends Component {
             {state => (
               <div>
                 <div className="bg-light" style={{ ...sideMenuDefaultStyles, ...sideMenuStyles[state], bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px' }}>
-                  <DefaultSidebar {...this.props} open={this.state.menuSideMini} />
+                  <DefaultSidebar {...this.props} open={this.state.menuSideMini} onOpenSide={this.onOpenSide}/>
                 </div>
                 <div style={{ ...contentDefaultStyles, ...contentStyles[state], bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px' }}>
                   {this.props.children}

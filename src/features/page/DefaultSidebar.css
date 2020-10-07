@@ -93,6 +93,12 @@
 .sidebar-menu-arrow {
   position: absolute;
   top: 2px;
+  left: 42px;
+}
+
+.sidebar-menu-arrow-open {
+  position: absolute;
+  top: 2px;
   left: 220px;
 }
 

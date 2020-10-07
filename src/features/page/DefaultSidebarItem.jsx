@@ -14,9 +14,12 @@ export const DefaultSidebarItem = props => (
       onClick={() => {
         props.onNavigate(props.option.url);
       }}
+      title={(!props.open && props.option.label) && props.option.label} 
     >
       {props.option.icon}
-      <span className="sidebar-menu-label">{props.option.label}</span>
+      {props.open && (
+        <span className="sidebar-menu-label">{props.option.label}</span>
+      )}
       <Highlight position="right" theme="NAV" title={props.option.help || ''} />
     </a>
   </li>
@@ -27,8 +30,10 @@ DefaultSidebarItem.propTypes = {
   option: PropTypes.element.isRequired,
   onNavigate: PropTypes.func.isRequired,
   className: PropTypes.string,
+  open: PropTypes.bool,
 };
 
 DefaultSidebarItem.defaultProps = {
   className: '',
+  open: true,
 };
