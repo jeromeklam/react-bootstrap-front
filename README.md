@@ -1,43 +1,27 @@
-freeassofront
+react-bootstrap-front
 ---
 
-freeAsso Front Layout and Helpers
+Composants react graphiques basés sur bootstrap 4. Il suffit d'utiliser less ou sass pour modifier les variables et / ou les classes de bootstrap pour adapter le design à votre application.
 
-Inludes 
+**Forks**
 
 * https://github.com/jquense/react-big-calendar
+* https://github.com/rcdexta/react-trello
 
 # Introduction
 
-Tout ce qui est look
+Tout ce qui est ui, optimisé pour bootstrap 4.
 
 # Installation
 
-Pour développer faire
 ```
-npm link
+npm install react-bootstrap-front --save
 ```
-pour pouvoir utiliser ce projet comme un composant
-Cette commande n'est à faire qu'une seule fois pour crééer le lien
 
 # Utilisation
 
 Pour que les modifications soient utilisables dans le projet principal, il faut faire une compilation à la main
+
 ```
 npm run build
 ```
-
-# Répertoies
-
-## basic
-
-Champs de saisie
-
-## list
-
-Gestion des listes
-
-### Paramètres
-
-inlineActions Boutons sur la ligne
-globalActions Boutons en haut à droite de la liste
