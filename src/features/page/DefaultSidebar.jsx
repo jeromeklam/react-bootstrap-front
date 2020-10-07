@@ -37,13 +37,16 @@ export default class DefaultSidebar extends Component {
       this.setState({ menu: 0 });
     } else {
       this.setState({ menu: id });
-      if (!this.props.open) {
+      if (!this.props.open && id !== 0) {
         this.props.onOpenSide();
       }
     }
   }
 
   render() {
+    if (!this.props.open && this.state.menu !== 0) {
+      this.toggleMenu(0);
+    }
     return (
       <div className="sidebar-wrapper custom-scrollbar" style={myStyles}>
         <ul className="sidebar-navigation">
@@ -78,7 +81,7 @@ export default class DefaultSidebar extends Component {
                         {...this.props}
                         option={option2}
                       />
-                    ))}
+                   ))}
                 </div>
               );
             }
