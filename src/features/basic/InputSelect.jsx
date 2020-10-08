@@ -61,8 +61,8 @@ export default class InputSelect extends Component {
 
   constructor(props) {
     super(props);
-    let myLogger = log.getLogger('freeassofront.inputSelect');
-    myLogger.info('freeassofront.inputSelect.' + props.name + '.constructor');
+    let myLogger = log.getLogger('react-bootstrap-front.inputSelect');
+    myLogger.info('react-bootstrap-front.inputSelect.' + props.name + '.constructor');
     const { options } = { ...props };
     let value = props.value || '';
     let id = props.name;
@@ -79,9 +79,9 @@ export default class InputSelect extends Component {
   }
 
   componentDidMount() {
-    this.state.logger.debug('freeassofront.inputSelect.' +  this.state.name + '.componentDidMount');
+    this.state.logger.debug('react-bootstrap-front.inputSelect.' +  this.state.name + '.componentDidMount');
     if (!this.props.addEmpty || (this.props.addEmpty && this.state.value !== this.props.defaultValue)) {
-      this.state.logger.info('freeassofront.inputSelect.' + this.state.name + '.componentDidMount.check');
+      this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.componentDidMount.check');
       let def = this.props.defaultValue;
       let found = false;
       this.state.options.forEach((oneOption) => {
@@ -103,7 +103,7 @@ export default class InputSelect extends Component {
         const event = {
           target: send,
         };
-        this.state.logger.info('freeassofront.inputSelect.' + this.state.name + '.componentDidMount.onChange');
+        this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.componentDidMount.onChange');
         this.state.logger.debug(event);
         this.props.onChange(event);
       }
@@ -112,7 +112,7 @@ export default class InputSelect extends Component {
 
   render() {
     const { options, value } = this.state;
-    this.state.logger.info('freeassofront.inputSelect.' + this.state.name + '.render.' + (value || '~'));
+    this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.render.' + (value || '~'));
     let datasProps = {};
     if (this.props.datas) {
       for (const [name, value] of Object.entries(this.props.datas)) {

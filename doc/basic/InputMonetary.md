@@ -18,7 +18,6 @@ Champ de saisie de texte avec un masque de saisie pour ne pouvoir saisir que des
 | id           | Chaine   |          | Identifiant                                |
 | label        | Chaine   |          | Le libellé du champ, sans html             |
 | value        | Chaine   |          | La valeur                                  |
-| onChange     | Fonction |          | onChange(event)                            |
 | disabled     | Booléen  | Faux     | Pour désactiver le champ                   |
 | required     | Booléen  | Faux     | Pour rendre le champ obligatoire           |
 | labelTop     | Booléen  | Vrai     | Le libellé s'affiche au dessus du champ    |
@@ -31,24 +30,24 @@ Champ de saisie de texte avec un masque de saisie pour ne pouvoir saisir que des
 | placeholder  | Chaine   | ''       | Texte indicatif dans le champ de saisie    |
 | pattern      | Chaine   |          | Modèle de saisie (expression régulière) !! |
 | language     | Chaine   | 'fr-FR'  |                                            |
-| money        | Chaine   | 'EUR'    |                                            |
-| inputMoney   | Chaine   | 'EUR'    |                                            |
-| swapIcon     | Element  |          |                                            |
+| money        | Chaine   | 'EUR'    | Util pour changement de Money              |
+| inputMoney   | Chaine   | 'EUR'    | Monnaie                                    |
+| swapIcon     | Element  |          | Bouton Icone Monnaie                       |
 
 #### Fonctions appelées
 
 | Nom           | Type     | Remarque | Commentaire     |
 | ------------- | -------- | -------- | --------------- |
 | onChange      | Fonction |          | onChange(event) |
-| onMoneySwitch | Fonction |          |                 |
+| onMoneySwitch | Fonction |          | onMoneySwitch() |
 
 ### Spécificités
 
-- Si 'id' non renseigné, l'identifiant sera 'name'
+- Si 'id' non renseigné, l'identifiant sera 'name-' valeur aléatoire entre 10000 et 99999
 - Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
   l'élement erreur anomalie sera ajouté après
   (le plus souvent celà sera un message d'erreur en dessous)
-
+- money utilisé lorsque l'on change de monnaie (appelé avec dbMoney ??)
 
 ### Exemple
 
@@ -56,15 +55,16 @@ Champ de saisie de texte avec un masque de saisie pour ne pouvoir saisir que des
 <InputMonetary
   label="Montant"
   labelTop={true}
-  name="ct_amounte"
+  name="ct_mount"
   inputMoney="€"
   dbMoney="€"
-  value={values.ct_amount}
+  value={values.ct_mount}
 />
 ```
-![](./inputMask.png)
+![](./inputMonetary.png)
 
 ### To Do
 
 - Ajouter et gérer l'attribut className ?
 - Ajouter et gérer l'attribut help ?
+- Explication du fonctionnement du changement de monnaie ????

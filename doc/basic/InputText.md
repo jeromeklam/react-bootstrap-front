@@ -6,9 +6,9 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 
 #### Obligatoires
 
-| Nom          | Type     | Remarque | Commentaire                                       |
-| ------------ | -------- | -------- | ------------------------------------------------- |
-| name         | Chaine   | Obl.     | Le nom du champ, en snakeCase si possible         |
+| Nom          | Type     | Commentaire                                       |
+| ------------ | -------- | ------------------------------------------------- |
+| name         | Chaine   | Le nom du champ, en snakeCase si possible         |
 
 #### Optionnels
 
@@ -17,7 +17,6 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 | id           | Chaine   |          | Identifiant                                       |
 | label        | Chaine   |          | Le libellé du champ, sans html                    |
 | value        | Chaine   |          | La valeur                                         |
-| onChange     | Fonction |          | onChange(event)                                   |
 | disabled     | Booléen  | Faux     | Pour désactiver le champ                          |
 | required     | Booléen  | Faux     | Pour rendre le champ obligatoire                  |
 | labelTop     | Booléen  | Vrai     | Le libellé s'affiche au dessus du champ           |
@@ -44,7 +43,7 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 
 ### Spécificités
 
-- Si 'id' non renseigné, l'identifiant sera 'name'
+- Si 'id' non renseigné, l'identifiant sera 'name-' valeur aléatoire entre 10000 et 99999
 - Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
   l'élement erreur anomalie sera ajouté après
   (le plus souvent celà sera un message d'erreur en dessous)
@@ -52,21 +51,18 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
   (https://www.w3schools.com/tags/att_input_pattern.asp),
   il vaut mieux passer pas l'objet inputMask
 
-
 ### Exemple
 
 ```
-<div className="col-sm-16">
-  <InputText
-    label="Nom"
-    name="grp_name"
-    id="grp_name"
-    required={true}
-    value={values.grp_name}
-    onChange={handleChange}
-    error={getErrorMessage('grp_name')}
-  />
-</div>
+<InputText
+  label="Nom"
+  name="grp_name"
+  id="grp_name"
+  required={true}
+  value={values.grp_name}
+  onChange={handleChange}
+  error={getErrorMessage('grp_name')}
+/>
 ```
 
 ### To Do

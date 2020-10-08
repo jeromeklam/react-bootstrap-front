@@ -1,15 +1,14 @@
-## InputMask
+## InputPassword
 
-Champ de saisie de texte avec un masque de saisie lié à une expression régulière.
+Champ de saisie de type mot de passe avec la saisie remplacée par des points.
 
 ### Props
 
 #### Obligatoires
 
-| Nom  | Type   | Commentaire                               |
-| ---- | ------ | ----------------------------------------- |
-| name | Chaine | Le nom du champ, en snakeCase si possible |
-| mask | Chaine | Masque de saisie                          |
+| Nom          | Type     | Commentaire                                       |
+| ------------ | -------- | ------------------------------------------------- |
+| name         | Chaine   | Le nom du champ, en snakeCase si possible         |
 
 #### Optionnels
 
@@ -28,10 +27,7 @@ Champ de saisie de texte avec un masque de saisie lié à une expression réguli
 | warning      | Element  |          | Gestion du champ en anomalie                      |
 | autoComplete | Chaine   | off      | Type d'autocomplétion à utiliser                  |
 | placeholder  | Chaine   | ''       | Texte indicatif dans le champ de saisie           |
-| pattern      | Chaine   |          | Modèle de saisie (expression régulière) !!        |
-| className    | Chaine   |          | Gestion Attribut class                            |
-| maxLength    | Nombre   | 9999     | Nombre de caractères maximal qui peut être saisie |
-| help         | Element  |          | Elément d'aide sous le champ                      |
+| pattern      | Chaine   |          | Modèle de saisie (expression régulière) !         |
 
 #### Fonctions appelées
 
@@ -39,26 +35,31 @@ Champ de saisie de texte avec un masque de saisie lié à une expression réguli
 | ------------ | -------- | -------- | ------------------------------------------------- |
 | onChange     | Fonction |          | onChange(event)                                   |
 
-
 ### Spécificités
 
 - Si 'id' non renseigné, l'identifiant sera 'name-' valeur aléatoire entre 10000 et 99999
 - Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
   l'élement erreur anomalie sera ajouté après
   (le plus souvent celà sera un message d'erreur en dessous)
-- le masque de saisie doit correspondre au modèle (pattern) !!  S'il n'y a pas de pattern, il n'y a pas de contrôle
 
 ### Exemple
 
 ```
-<InputMask
-  label="N°"
-  name="ct_code"
-  value={values.ct_code}
-  mask={'aa.000000.00000'}
-  pattern={"(?<pays>[A-Z]{2})\.(?<principal>[0-9]{6})\.(?<ordre>[0-9]{5})"}
-  error={getErrorMessage('ct_code')}
-  help={'Format : FR.353032.24743'}
+<InputPassword
+  id="password"
+  name="password"
+  label="Mot de passe"
+  required
+  value={this.state.password}
+  error={this.state.password_error}
+  onChange={this.onChange}
 />
 ```
-![](./inputMask.png)
+
+### To Do
+
+- Ajouter et gérer l'attribut className ?
+- Ajouter et gérer l'attribut help ?
+- Ajouter 'labelInline'? Remplacé pas 'LabelTop' ?
+- Gérer un 'minlength' et/ou une robustesse (sécurité) avec un changement de couleur
+- Ajouter la visu du mot de passe pour vérification (icone Eye)
