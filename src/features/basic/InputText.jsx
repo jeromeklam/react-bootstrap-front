@@ -84,9 +84,9 @@ InputText.propTypes = {
   pattern: PropTypes.string,
   className: PropTypes.string,
   maxLength: PropTypes.number,
-  append: PropTypes.string,
-  prepend: PropTypes.string,
-  help: PropTypes.string,
+  append: PropTypes.element,
+  prepend: PropTypes.element,
+  help: PropTypes.element,
 };
 
 InputText.defaultProps = {
@@ -107,7 +107,7 @@ InputText.defaultProps = {
   pattern: null,
   className: '',
   maxLength: 9999,
-  append: '',
-  prepend: '',
-  help: '',
+  append: false,
+  prepend: false,
+  help: false,
 };

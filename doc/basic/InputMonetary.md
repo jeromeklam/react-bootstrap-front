@@ -1,0 +1,70 @@
+## InputMonetary
+
+Champ de saisie de texte avec un masque de saisie pour ne pouvoir saisir que des montants
+
+### Props
+
+#### Obligatoires
+
+| Nom  | Type   | Commentaire                               |
+| ---- | ------ | ----------------------------------------- |
+| name | Chaine | Le nom du champ, en snakeCase si possible |
+| mask | Chaine | Masque de saisie                          |
+
+#### Optionnels
+
+| Nom          | Type     | Remarque | Commentaire                                |
+| ------------ | -------- | -------- | ------------------------------------------ |
+| id           | Chaine   |          | Identifiant                                |
+| label        | Chaine   |          | Le libellé du champ, sans html             |
+| value        | Chaine   |          | La valeur                                  |
+| onChange     | Fonction |          | onChange(event)                            |
+| disabled     | Booléen  | Faux     | Pour désactiver le champ                   |
+| required     | Booléen  | Faux     | Pour rendre le champ obligatoire           |
+| labelTop     | Booléen  | Vrai     | Le libellé s'affiche au dessus du champ    |
+| size         | Taille   |          | Pour changer la taille par défaut          |
+| labelSize    | Taille   | 6        | Taille du libellé                          |
+| inputSize    | Taille   | 30       | Taille du champ de saisie                  |
+| error        | Element  |          | Gestion du champ en erreur                 |
+| warning      | Element  |          | Gestion du champ en anomalie               |
+| autoComplete | Chaine   | off      | Type d'autocomplétion à utiliser           |
+| placeholder  | Chaine   | ''       | Texte indicatif dans le champ de saisie    |
+| pattern      | Chaine   |          | Modèle de saisie (expression régulière) !! |
+| language     | Chaine   | 'fr-FR'  |                                            |
+| money        | Chaine   | 'EUR'    |                                            |
+| inputMoney   | Chaine   | 'EUR'    |                                            |
+| swapIcon     | Element  |          |                                            |
+
+#### Fonctions appelées
+
+| Nom           | Type     | Remarque | Commentaire     |
+| ------------- | -------- | -------- | --------------- |
+| onChange      | Fonction |          | onChange(event) |
+| onMoneySwitch | Fonction |          |                 |
+
+### Spécificités
+
+- Si 'id' non renseigné, l'identifiant sera 'name'
+- Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
+  l'élement erreur anomalie sera ajouté après
+  (le plus souvent celà sera un message d'erreur en dessous)
+
+
+### Exemple
+
+```
+<InputMonetary
+  label="Montant"
+  labelTop={true}
+  name="ct_amounte"
+  inputMoney="€"
+  dbMoney="€"
+  value={values.ct_amount}
+/>
+```
+![](./inputMask.png)
+
+### To Do
+
+- Ajouter et gérer l'attribut className ?
+- Ajouter et gérer l'attribut help ?

@@ -1,14 +1,15 @@
-## InputText
+## InputMask
 
-Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ... d'autres composants sont disponibles au besoin pour des dates, expressions régulières.
+Champ de saisie de texte avec un masque de saisie lié à une expression régulière.
 
 ### Props
 
 #### Obligatoires
 
-| Nom          | Type     | Remarque | Commentaire                                       |
-| ------------ | -------- | -------- | ------------------------------------------------- |
-| name         | Chaine   | Obl.     | Le nom du champ, en snakeCase si possible         |
+| Nom  | Type   | Commentaire                               |
+| ---- | ------ | ----------------------------------------- |
+| name | Chaine | Le nom du champ, en snakeCase si possible |
+| mask | Chaine | Masque de saisie                          |
 
 #### Optionnels
 
@@ -28,11 +29,9 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 | warning      | Element  |          | Gestion du champ en anomalie                      |
 | autoComplete | Chaine   | off      | Type d'autocomplétion à utiliser                  |
 | placeholder  | Chaine   | ''       | Texte indicatif dans le champ de saisie           |
-| pattern      | Chaine   |          | Modèle de saisie (expression régulière) !         |
+| pattern      | Chaine   |          | Modèle de saisie (expression régulière) !!        |
 | className    | Chaine   |          | Gestion Attribut class                            |
 | maxLength    | Nombre   | 9999     | Nombre de caractères maximal qui peut être saisie |
-| append       | Element  |          | Elément à mettre dans le champ à la fin           |
-| prepend      | Element  |          | Non géré pour l'instant                           |
 | help         | Element  |          | Elément d'aide sous le champ                      |
 
 #### Fonctions appelées
@@ -48,28 +47,19 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 - Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
   l'élement erreur anomalie sera ajouté après
   (le plus souvent celà sera un message d'erreur en dessous)
-- l'attribut 'pattern' peut aider mais tous les navigateurs ne le gère pas
-  (https://www.w3schools.com/tags/att_input_pattern.asp),
-  il vaut mieux passer pas l'objet inputMask
-
+- le masque de saisie doit correspondre au modèle (pattern) !!  S'il n'y a pas de pattern, il n'y a pas de contrôle
 
 ### Exemple
 
 ```
-<div className="col-sm-16">
-  <InputText
-    label="Nom"
-    name="grp_name"
-    id="grp_name"
-    required={true}
-    value={values.grp_name}
-    onChange={handleChange}
-    error={getErrorMessage('grp_name')}
-  />
-</div>
+<InputMask
+  label="N°"
+  name="ct_code"
+  value={values.ct_code}
+  mask={'aa.000000.00000'}
+  pattern={"(?<pays>[A-Z]{2})\.(?<principal>[0-9]{6})\.(?<ordre>[0-9]{5})"}
+  error={getErrorMessage('ct_code')}
+  help={'Format : FR.353032.24743'}
+/>
 ```
-
-### To Do
-
-- prepend  : à faire
-- append  : à gérer mieux avec input-group sur le champ
+![](./inputMask.png)

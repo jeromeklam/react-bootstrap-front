@@ -52,8 +52,8 @@ export default class InputMask extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.value !== state.origin && props.value !== null && props.value !== '') {
-      let myLogger = log.getLogger('freeassofront.inputMask');
-      myLogger.info('freeassofront.inputMask.' + props.name + '.getDerivedStateFromProps');
+      let myLogger = log.getLogger('react-bootstrap-front.inputMask');
+      myLogger.info('react-bootstrap-front.inputMask.' + props.name + '.getDerivedStateFromProps');
       return { value: props.value, origin: props.value };
     }
     return null;
@@ -61,8 +61,8 @@ export default class InputMask extends Component {
 
   constructor(props) {
     super(props);
-    let myLogger = log.getLogger('freeassofront.inputMask');
-    myLogger.info('freeassofront.inputMask.' + props.name + '.constructor');
+    let myLogger = log.getLogger('react-bootstrap-front.inputMask');
+    myLogger.info('react-bootstrap-front.inputMask.' + props.name + '.constructor');
     let myId = props.id;
     if (myId === '') {
       myId = props.name;
@@ -78,7 +78,7 @@ export default class InputMask extends Component {
   }
 
   render() {
-    this.state.logger.debug('freeassofront.inputMask.' +  this.props.name + '.render');
+    this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.render');
     this.state.logger.debug(this.state);
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
@@ -110,7 +110,7 @@ export default class InputMask extends Component {
             required={this.props.required}
             disabled={this.props.disabled}
             onAccept={(val) => {
-              this.state.logger.debug('freeassofront.inputMask.' +  this.props.name + '.onAccept');
+              this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onAccept');
               this.state.logger.debug(val);
               this.setState({value: val});
               const event = {
@@ -122,7 +122,7 @@ export default class InputMask extends Component {
               this.props.onChange(event);
             }}
             onComplete={(val) => {
-              this.state.logger.debug('freeassofront.inputMask.' +  this.props.name + '.onComplete');
+              this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onComplete');
               this.state.logger.debug(val);
               const event = {
                 target: {
