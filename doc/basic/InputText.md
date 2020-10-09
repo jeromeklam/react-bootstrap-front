@@ -67,5 +67,5 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 
 ### To Do
 
-- prepend  : à faire
+- prepend : à faire
 - append  : à gérer mieux avec input-group sur le champ

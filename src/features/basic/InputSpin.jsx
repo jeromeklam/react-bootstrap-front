@@ -33,8 +33,6 @@ export default class InputSpin extends Component {
     options: PropTypes.element,
     error: PropTypes.element,
     warning: PropTypes.element,
-    onIncrement: PropTypes.func.isRequired,
-    onDecrement: PropTypes.func.isRequired,
     clearIcon: PropTypes.element.isRequired,
     downIcon: PropTypes.element.isRequired,
     upIcon: PropTypes.element.isRequired,

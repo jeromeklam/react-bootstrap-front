@@ -13,6 +13,7 @@ export default class InlineInputSelect extends Component {
     size: PropTypes.string,
     options: PropTypes.element,
     error: PropTypes.element,
+    addEmpty: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -24,6 +25,7 @@ export default class InlineInputSelect extends Component {
     required: false,
     options: [],
     error: null,
+    addEmpty: false,
   };
 
   static getDerivedStateFromProps(props, state) {

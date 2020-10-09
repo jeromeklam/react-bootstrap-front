@@ -11,7 +11,7 @@ export const InlineLabel = props => (
 InlineLabel.propTypes = {
   label: PropTypes.string.isRequired,
   size: PropTypes.string,
-  htmlFor: PropTypes.string.isRequired,
+  htmlFor: PropTypes.string,
 };
 
 InlineLabel.defaultProps = {

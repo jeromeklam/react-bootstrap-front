@@ -44,6 +44,7 @@ Zone de saisie avec liste déroulante.
 - Si 'error' ou 'warning' sont renseignés, le champ sera invalide ![](./is_invalid.png) et
   l'élement erreur anomalie sera ajouté après
   (le plus souvent celà sera un message d'erreur en dessous)
+- datas est utilisé lors d'un changement de ligne ou quand la valeur n'est pas trouvée dans les options
 
 ### Exemple
 
@@ -63,3 +64,5 @@ Zone de saisie avec liste déroulante.
 - Ajouter et gérer l'attribut className ?
 - Ajouter et gérer l'attribut help ?
 - Gérer l'id comme l'InputText avec un nombre aléatoire ajouter à 'name'
+- Renommer addEmpty en addDefault
+- Supprimer Attribut inline ? Pas d'intérêt avec labelTop et pas juste inline -> inputSize=36 ??
