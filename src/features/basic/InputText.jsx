@@ -45,7 +45,7 @@ export const InputText = (props) => {
             placeholder={props.placeholder}
             maxLength={props.maxLength || ''}
           />
-          {props.append !== '' &&
+          {props.append && props.append !== '' && 
             <div className="input-group-append">
               <span className="input-group-text border-secondary bg-light">
                 {props.append}
@@ -107,7 +107,7 @@ InputText.defaultProps = {
   pattern: null,
   className: '',
   maxLength: 9999,
-  append: false,
-  prepend: false,
-  help: false,
+  append: null,
+  prepend: null,
+  help: null,
 };

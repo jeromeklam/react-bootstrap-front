@@ -127,7 +127,7 @@ export default class ResponsivePage extends Component {
     let menuMaxi = true;
     if (props.settings && (props.settings.menuposition === true || props.settings.menuposition === false)) {
       menuMaxi = props.settings.menuposition;
-      console.log("FK constructor",props.settings.menuposition);
+      //console.log("FK constructor",props.settings.menuposition);
     }
     this.state = {
       menuDataOpen: false,

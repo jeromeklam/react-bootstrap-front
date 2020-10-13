@@ -281,7 +281,7 @@ export default class InputDatetime extends Component {
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
-                timeCaption="time"
+                timeCaption="Heures"
                 inline
               />
             </div>

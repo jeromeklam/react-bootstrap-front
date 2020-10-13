@@ -17,7 +17,7 @@ export * from './features/basic/InputEmail.jsx';
 export * from './features/basic/InputHidden.jsx';
 export { default as InputMask} from './features/basic/InputMask.jsx';
 export { default as InputMonetary } from './features/basic/InputMonetary.jsx';
-export * from './features/basic/InputPassword.jsx';
+export { default as InputPassword } from './features/basic/InputPassword.jsx';
 export { default as InputPicker } from './features/basic/InputPicker.jsx';
 export * from './features/basic/InputRadio.jsx';
 export * from './features/basic/InputRandomText.jsx';
