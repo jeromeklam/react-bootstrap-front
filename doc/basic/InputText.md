@@ -40,7 +40,6 @@ Champ de saisie de texte, tout ce qu'il y a de plus simple. Aucun contrôle, ...
 | ------------ | -------- | -------- | ------------------------------------------------- |
 | onChange     | Fonction |          | onChange(event)                                   |
 
-
 ### Spécificités
 
 - Si 'id' non renseigné, l'identifiant sera 'name-' valeur aléatoire entre 10000 et 99999

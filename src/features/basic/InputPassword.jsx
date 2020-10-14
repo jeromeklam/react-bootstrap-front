@@ -20,7 +20,8 @@ export default class InputPassword extends Component {
     warning: PropTypes.element,
     autoComplete: PropTypes.string,
     placeholder: PropTypes.string,
-    pattern: PropTypes.string,
+    pattern: PropTypes.string,    
+    securityIcon: PropTypes.element,
     viewIcon: PropTypes.element,
   }
 
@@ -40,6 +41,7 @@ export default class InputPassword extends Component {
     autoComplete: 'off',
     placeholder: '',
     pattern: '',
+    securityIcon: null,
     viewIcon: null,
   }
 
@@ -65,7 +67,7 @@ export default class InputPassword extends Component {
     if (psw.length > 0) {
       if (psw.length > 8) {
         for (let car of psw) {
-          ascii = car.charCodeAt(0);          
+          ascii = car.charCodeAt(0);
           if (48 <= ascii && ascii <= 57) {
             num = num + 1;
           } else {
@@ -76,37 +78,37 @@ export default class InputPassword extends Component {
                 min = min + 1;
               } else {
                 spec = spec + 1;
-              }              
+              }
             }
           }
         }
         if (num > 0 && maj > 0 && min > 0) {
           if (spec > 0) {
-            this.setState({ security: 'primary', tooltip: 'Mot de passe très robuste !' });    
+            this.setState({ security: 'primary', tooltip: 'Mot de passe très robuste !' });
           } else {
-            this.setState({ security: 'secondary', tooltip: 'Mot de passe sans caractère spécial : bonne robustesse' });    
+            this.setState({ security: 'secondary', tooltip: 'Mot de passe sans caractère spécial : bonne robustesse' });
           }
         } else {
           this.setState({ security: 'warning' });
           comm = 'Mot de passe ';
           if (num === 0) {
             comm = comm + 'sans chiffre, ';
-          } 
+          }
           if (maj === 0) {
             comm = comm + 'sans majuscule, ';
           }
           if (min === 0) {
             comm = comm + 'sans minuscule, ';
-          } 
+          }
           comm.trim();
           comm = comm.slice(0,-1) + ' : faible robustesse...'
           this.setState({ tooltip: comm });
         }
       } else {
-        this.setState({ security: 'danger', tooltip: '8 caractères pour une robustesse minimum' });  
+        this.setState({ security: 'danger', tooltip: '8 caractères pour une robustesse minimum' });
       }
     } else {
-      this.setState({ security: '', tooltip: '' });  
+      this.setState({ security: '', tooltip: '' });
     }
     this.props.onChange(event);
   }
@@ -154,12 +156,12 @@ export default class InputPassword extends Component {
               name={this.props.name}
               value={this.props.value || ''}
               required={this.props.required}
-              disabled={this.props.disabled}              
+              disabled={this.props.disabled}
               autoComplete={this.props.autoComplete}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
-            {this.props.securityIcon && this.state.security !== '' && 
+            {this.props.securityIcon && this.state.security !== '' &&
               <div className="input-group-append" title={this.state.tooltip}>
                 <span className={classnames(
                   'input-group-text',
@@ -167,11 +169,11 @@ export default class InputPassword extends Component {
                   'bg-white', `text-${this.state.security}`)}
                 >
                   {this.props.securityIcon}
-                </span>                
+                </span>
               </div>
             }
-            {this.props.viewIcon && this.props.viewIcon !== '' && 
-              <div className="input-group-append">                
+            {this.props.viewIcon && this.props.viewIcon !== '' &&
+              <div className="input-group-append">
                 <button
                   type="button"
                   className={classnames(
@@ -196,4 +198,3 @@ export default class InputPassword extends Component {
     );
   }
 }
-
