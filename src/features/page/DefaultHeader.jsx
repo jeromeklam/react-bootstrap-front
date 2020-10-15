@@ -108,9 +108,9 @@ export class DefaultHeader extends Component {
               {this.props.onToggleUser && (
                 <li className="nav-item">
                   <a className="nav-link" onClick={this.props.onToggleUser} href={null}>
-                    <span>
-                      {this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}{' '}
-                      {this.props.userTitle}
+                    <span>                      
+                      {this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}{' '}                      
+                      {this.props.menuUserOpen ? '' : this.props.userTitle}
                     </span>
                   </a>
                 </li>

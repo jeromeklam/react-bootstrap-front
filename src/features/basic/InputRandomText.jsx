@@ -88,7 +88,6 @@ InputRandomText.propTypes = {
   value: PropTypes.string,
   length: PropTypes.number,
   labelTop: PropTypes.bool,
-  inline: PropTypes.bool,
   size: PropTypes.string,
   labelSize: PropTypes.number,
   inputSize: PropTypes.number,
@@ -97,8 +96,8 @@ InputRandomText.propTypes = {
   error: PropTypes.element,
   warning: PropTypes.element,
   onChange: PropTypes.func,
-  randomIcon: PropTypes.element,
-  removeIcon: PropTypes.element,
+  randomIcon: PropTypes.element.isRequired,
+  removeIcon: PropTypes.element.isRequired,
 };
 
 InputRandomText.defaultProps = {
@@ -107,7 +106,6 @@ InputRandomText.defaultProps = {
   value: '',
   length: 32,
   labelTop: true,
-  inline: false,
   size: null,
   labelSize: 6,
   inputSize: 30,
@@ -116,6 +114,4 @@ InputRandomText.defaultProps = {
   error: false,
   warning: false,
   onChange: () => {},
-  randomIcon: null,
-  removeIcon: null,
 };

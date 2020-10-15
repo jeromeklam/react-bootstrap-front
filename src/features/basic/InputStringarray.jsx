@@ -44,15 +44,20 @@ const emptyItem = { value: '', label: '', new: true };
 
 export default class InputStringarray extends Component {
   static propTypes = {
-    label: PropTypes.string,
+    name: PropType.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     labelTop: PropTypes.bool,
     plusIcon: PropTypes.element.isRequired,
+    label: PropTypes.string,
+    titleValue: PropTypes.string,
+    titleLabel: PropTypes.string,
   };
   static defaultProps = {
     labelTop: true,
     label: '',
+    titleValue: '',
+    titleLabel: '',
   };
 
   constructor(props) {

@@ -161,7 +161,7 @@ export default class FilterBuilder extends Component {
                     </div>
                   </div>
                 );
-              case 'select':
+              case 'select', 'select-label':
                 return (
                   <div key={colFilterable}>
                     <div className="form-group">
@@ -177,7 +177,7 @@ export default class FilterBuilder extends Component {
                       >
                         <option key="0" value="" />
                         {col.filterable.options.map(elt => (
-                          <option key={elt.value} value={elt.value}>
+                          <option key={elt.value} value={(col.filterable.type === 'select-label') ? elt.label : elt.value}>
                             {elt.label}
                           </option>
                         ))}
