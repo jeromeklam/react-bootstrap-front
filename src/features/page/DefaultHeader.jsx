@@ -25,7 +25,6 @@ export class DefaultHeader extends Component {
     location: PropTypes.element.isRequired,
     onNavigate: PropTypes.func.isRequired,
     menuIcon: PropTypes.element,
-    userTitle: PropTypes.string,
     onLocale: PropTypes.func,
     locales: PropTypes.element,
     currentRealm: PropTypes.string,
@@ -42,7 +41,6 @@ export class DefaultHeader extends Component {
     onToggleSide: null,
     onToggleUser: null,
     menuIcon: null,
-    userTitle: '',
     onLocale: null,
     locales: false,
     currentRealm: '',
@@ -109,8 +107,7 @@ export class DefaultHeader extends Component {
                 <li className="nav-item">
                   <a className="nav-link" onClick={this.props.onToggleUser} href={null}>
                     <span>                      
-                      {this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}{' '}                      
-                      {this.props.menuUserOpen ? '' : this.props.userTitle}
+                      {this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}
                     </span>
                   </a>
                 </li>

@@ -44,7 +44,7 @@ const emptyItem = { value: '', label: '', new: true };
 
 export default class InputStringarray extends Component {
   static propTypes = {
-    name: PropType.string.isRequired,
+    name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string,
     labelTop: PropTypes.bool,
