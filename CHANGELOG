@@ -1,3 +1,8 @@
+# 1.2.2 : 18/10/2020
+
+* CalmButton : better timer release.
+* Highlight: Code styling
+
 # 1.2.1 : 04/10/2020
 
 * InputSelect get data attributes (forwarded via onChange)

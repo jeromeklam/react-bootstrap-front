@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Provider } from 'react-redux'
-import uuidv1 from 'uuid/v1'
-import { HighlightCard } from './'
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import uuidv1 from 'uuid/v1';
+import { HighlightCard } from './';
 import getStore from './store.js';
 
 export default class Highlight extends Component {
@@ -14,11 +14,8 @@ export default class Highlight extends Component {
   render() {
     return (
       <Provider store={this.store}>
-        <HighlightCard
-          id={this.id}
-          {...this.props}
-        />
+        <HighlightCard id={this.id} {...this.props} />
       </Provider>
-    )
+    );
   }
 }

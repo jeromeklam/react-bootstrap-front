@@ -152,7 +152,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(HighlightCard);
+export default connect(mapStateToProps, mapDispatchToProps)(HighlightCard);

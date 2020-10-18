@@ -25,7 +25,6 @@ class EventCell extends React.Component {
       icons,
       ...props
     } = this.props
-
     let title = accessors.title(event)
     let tooltip = accessors.tooltip(event)
     let end = accessors.end(event)

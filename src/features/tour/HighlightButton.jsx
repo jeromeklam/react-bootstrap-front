@@ -61,10 +61,13 @@ export class HighlightButton extends Component {
   }
 
   render() {
-    const classname = (this.props.tour && this.props.tour.highlights && this.props.tour.highlights.length <= 0) ? 'disabled' : '';
+    const classname =
+      this.props.tour && this.props.tour.highlights && this.props.tour.highlights.length <= 0 ? 'disabled' : '';
     return (
       <a className={classnames('help-toggler', classname, this.props.className)} onClick={this.onClick} title="Aide">
-        <span><b>?</b></span>
+        <span>
+          <b>?</b>
+        </span>
       </a>
     );
   }
@@ -84,7 +87,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(HighlightButton);
+export default connect(mapStateToProps, mapDispatchToProps)(HighlightButton);
