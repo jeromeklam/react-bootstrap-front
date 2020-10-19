@@ -127,7 +127,6 @@ export default class ResponsivePage extends Component {
     let menuMaxi = true;
     if (props.settings && (props.settings.menuposition === true || props.settings.menuposition === false)) {
       menuMaxi = props.settings.menuposition;
-      //console.log("FK constructor",props.settings.menuposition);
     }
     this.state = {
       menuDataOpen: false,
@@ -157,6 +156,7 @@ export default class ResponsivePage extends Component {
   }
 
   render() {
+    const userForm = React.cloneElement(this.props.userForm, {onClose: this.onToggleUser});
     return (
       <div id="page-root" className="full-page">
         <div className="display-desktop">
@@ -164,7 +164,7 @@ export default class ResponsivePage extends Component {
             {state => (
               <div>
                 <div className="bg-primary-light" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
-                  {this.props.userForm}
+                  {userForm}
                 </div>
                 <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
                   <DefaultHeader
