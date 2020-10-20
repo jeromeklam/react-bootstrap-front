@@ -127,7 +127,7 @@ export default class InputPassword extends Component {
     let type = "text";
     if (this.state.hidden) {
       type = "password";
-    }
+    }  
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
         {this.props.label !== '' && (
@@ -143,13 +143,16 @@ export default class InputPassword extends Component {
           </label>
         )}
         <div className={classnames(!this.props.labelTop && `col-sm-${this.props.inputSize}`)}>
-          <div className='input-group'>
+          <div className={classnames(
+              'input-group', 
+              (this.props.error || this.props.warning) && 'is-invalid'
+            )}  
+          >
             <input
               type={type}
               className={classnames(
                 'border-secondary form-control',
-                this.props.size && `form-control-${this.props.size}`,
-                (this.props.error || this.props.warning) && 'is-invalid',
+                this.props.size && `form-control-${this.props.size}`,                
                 (this.props.securityIcon) && 'border-right-0'
               )}
               id={myId}
