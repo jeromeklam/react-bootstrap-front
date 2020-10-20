@@ -164,7 +164,7 @@ export default class InputPassword extends Component {
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
-            {this.props.securityIcon && this.state.security !== '' &&
+            {(this.props.securityIcon && this.state.security !== '') &&
               <div className="input-group-append" title={this.state.tooltip}>
                 <span className={classnames(
                   'input-group-text',
@@ -175,7 +175,7 @@ export default class InputPassword extends Component {
                 </span>
               </div>
             }
-            {this.props.viewIcon && this.props.viewIcon !== '' &&
+            {(this.props.viewIcon && this.props.viewIcon !== '') &&
               <div className="input-group-append">
                 <button
                   type="button"

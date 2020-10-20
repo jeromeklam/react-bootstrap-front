@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Portal } from '../advanced';
 
 const getCoords = (props) => {
-  console.log("FK myRef Dropdown",props.myRef);
   if (props.myRef && props.myRef.current) {
-    //console.log("FK myRef Dropdown 2 ",props.myRef.current.getBoundingClientRect());
     try {
       return props.myRef.current.getBoundingClientRect();
     } catch (ex) {
