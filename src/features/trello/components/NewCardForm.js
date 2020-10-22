@@ -37,7 +37,7 @@ class NewCardForm extends Component {
             <EditableLabel placeholder={t('placeholder.description')} onChange={val => this.updateField('description', val)} />
           </Detail>
         </CardWrapper>
-        <button className="btn btn-primary" onClick={this.handleAdd}>{t('button.Add card')}</button>
+        <button className="btn btn-primary" title={t('button.title.Add card')} onClick={this.handleAdd}>{t('button.Add card')}</button>
         <button className="btn btn-secondary" onClick={onCancel}>{t('button.Cancel')}</button>
       </CardForm>
     )

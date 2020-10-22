@@ -28,8 +28,8 @@ const defaultStyle = {
 };
 
 const dataStyle = {
-  top: '100px',
-  height: 'calc(100% - 100px)',
+  top: '90px',
+  height: 'calc(100% - 90px)',
   position: 'absolute',
   left: '0px',
   right: '0px',
@@ -177,6 +177,7 @@ export default class DefaultList extends Component {
       locDataStyle = {
         ...dataStyle,
         top:'130px',
+        height: 'calc(100% - 130px)',
       };
     }
     return (

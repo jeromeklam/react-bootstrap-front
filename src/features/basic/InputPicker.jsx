@@ -52,7 +52,7 @@ export default class InputPicker extends Component {
     inputSize: 30,
     required: false,
     error: false,
-    labelTop: true,  
+    labelTop: true,
     onAdd: null,
     onZoom: null,
     disabled: false,
@@ -75,6 +75,7 @@ export default class InputPicker extends Component {
   }
 
   render() {
+    console.log("FK ",this.props);
     return (
       <div
         className={classnames(

@@ -30,7 +30,7 @@
 }
 
 .sidebar-navigation li a {
-  padding: 0px 15px 0px 23px;
+  padding: 0px 15px 0px 15px;
   display: block;
   width: 100%;
   -webkit-transition: color 0.2s ease-in;
@@ -46,7 +46,7 @@
   overflow: hidden;
 }
 .sidebar-navigation li a span {
-  margin-left: 20px;
+  margin-left: 15px;
   margin-top: 3px;
   position: absolute;
 }
@@ -59,9 +59,12 @@
   height: 30px;
   line-height: 30px;
 }
+.sidebar-navigation li.menu-option a {
+  margin-left: 18px;
+}
 .sidebar-navigation li.menu-option a span {
   margin-top: 0px;
-  margin-left: 23px;
+  margin-left: 15px;
 }
 .sidebar-navigation li:hover {
   cursor: pointer;
@@ -93,7 +96,7 @@
 .sidebar-menu-arrow {
   position: absolute;
   top: 2px;
-  left: 42px;
+  left: 36px;
 }
 
 .sidebar-menu-arrow-open {

@@ -18,7 +18,7 @@ const LaneHeaderComponent = ({
       </Title>
       {label && (
         <RightContent>
-          <span style={labelStyle}>{label}</span>
+          <span classstyle={labelStyle}>{label}</span>
         </RightContent>
        )}
       {canAddLanes && <LaneMenu t={t} onDelete={onDelete}/>}

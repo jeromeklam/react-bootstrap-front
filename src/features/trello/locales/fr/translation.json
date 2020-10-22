@@ -5,8 +5,12 @@
   "Lane actions": "Actions",
   "button": {
     "Add card": "Ajouter",
-    "Add lane": "Colonne",
-    "Cancel": "Annuler"
+    "Add lane": "Ajouter",
+    "Cancel": "Annuler",
+    "title": {
+      "Add card": "Ajouter carte",
+      "Add lane": "Ajouter colonne"
+    }
   },
   "placeholder": {
     "title": "Titre",

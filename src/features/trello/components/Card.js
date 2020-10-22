@@ -42,7 +42,7 @@ class Card extends Component {
         className={className}
       >
         <CardHeader>
-          <CardTitle draggable={cardDraggable}>{title}</CardTitle>
+          <CardTitle className="text-secondary" draggable={cardDraggable}>{title}</CardTitle>
           <CardRightContent>{label}</CardRightContent>
           {showDeleteButton && <DeleteButton onClick={this.onDelete} />}
         </CardHeader>
