@@ -89,6 +89,7 @@ export { default as Treeview } from './features/treeview/Treeview.js';
 export * from './features/spinner/Loading9x9.jsx';
 export * from './features/spinner/Loading3Dots.jsx';
 export * from './features/spinner/SmLoading3Dots.jsx';
+export * from './features/spinner/SmLoading9x9.jsx';
 
 /**
  *******************************************************************************

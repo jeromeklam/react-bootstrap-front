@@ -6,14 +6,12 @@ import { Highlight } from '../tour';
 export const DefaultSidebarItem = props => (
   <li className={props.className}>
     <div className="sidebar-navigation-li bg-primary" />
-    <a
+    <a onClick={() => props.onNavigate(props.option.url)}
       className={classnames(
         'nav-link',
         props.location.pathname === props.option.url ? 'active text-primary' : 'text-secondary'
       )}
-      onClick={() => {
-        props.onNavigate(props.option.url);
-      }}
+      
       title={(!props.open && props.option.label) && props.option.label} 
     >
       {props.option.icon}
