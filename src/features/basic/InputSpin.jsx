@@ -2,13 +2,23 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const getValue = (minValue, maxValue, value, defaultMin = false) => {
-  if (value === null) {
-    return null;
-  }
-  let ret = defaultMin ? minValue : maxValue;
-  if (value && value >= minValue && value <= maxValue) {
-    ret = value;
+const getValue = (minValue, maxValue, value) => {
+  const min = parseInt(minValue);
+  const max = parseInt(maxValue);
+  const val = parseInt(value);
+  let ret = null;
+  if (value !== null) {
+    if (val && val >= min && val <= max) {
+      ret = val;
+    } else {
+      if (val < min) {
+        ret = min;
+      } else {
+        if (val > max) {
+          ret = max;
+        }
+      }
+    }
   }
   return ret;
 };
@@ -21,7 +31,6 @@ export default class InputSpin extends Component {
     minValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number.isRequired,
     step: PropTypes.number,
-    defaultValMin: PropTypes.bool,
     labelTop: PropTypes.bool,
     onChange: PropTypes.func,
     required: PropTypes.bool,
@@ -54,7 +63,6 @@ export default class InputSpin extends Component {
     addEmpty: false,
     step: 1,
     value: 0,
-    defaultValMin: false,
   };
 
   constructor(props) {
@@ -79,7 +87,6 @@ export default class InputSpin extends Component {
       this.props.minValue,
       this.props.maxValue,
       this.props.value + this.props.step,
-      this.props.defaultValMin,
     );
     const event = {
       target: {
@@ -95,7 +102,6 @@ export default class InputSpin extends Component {
       this.props.minValue,
       this.props.maxValue,
       this.props.value - this.props.step,
-      this.props.defaultValMin,
     );
     const event = {
       target: {
@@ -107,7 +113,7 @@ export default class InputSpin extends Component {
   }
 
   render() {
-    const value = getValue(this.props.minValue, this.props.maxValue, this.props.value, this.props.defaultValMin);
+    const value = getValue(this.props.minValue, this.props.maxValue, this.props.value);
     return (
       <div
         className={classnames(
@@ -158,9 +164,9 @@ export default class InputSpin extends Component {
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
                   disabled={this.props.disabled}
-                  onClick={() => this.onIncremente()}
+                  onClick={() => this.onDecremente()}
                 >
-                  {this.props.upIcon}
+                  {this.props.downIcon}
                 </button>
                 <button
                   type="button"
@@ -171,23 +177,25 @@ export default class InputSpin extends Component {
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
                   disabled={this.props.disabled}
-                  onClick={() => this.onDecremente()}
+                  onClick={() => this.onIncremente()}
                 >
-                  {this.props.downIcon}
+                  {this.props.upIcon}
                 </button>
-                <button
-                  type="button"
-                  className={classnames(
-                    'btn btn-input',
-                    'btn-outline-secondary',
-                    'bg-light text-warning',
-                    this.props.size === 'sm' && `btn-${this.props.size}`,
-                  )}
-                  disabled={this.props.disabled}
-                  onClick={this.onClear}
-                >
-                  {this.props.clearIcon}
-                </button>
+                {this.props.clearIcon && this.props.clearIcon !== '' &&
+                  <button
+                    type="button"
+                    className={classnames(
+                      'btn btn-input',
+                      'btn-outline-secondary',
+                      'bg-light text-warning',
+                      this.props.size === 'sm' && `btn-${this.props.size}`,
+                    )}
+                    disabled={this.props.disabled}
+                    onClick={this.onClear}
+                  >
+                    {this.props.clearIcon}
+                  </button>
+                }
               </div>
             </div>
             {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
