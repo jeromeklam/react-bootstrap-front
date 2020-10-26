@@ -15,9 +15,7 @@ export const DefaultSidebarItem = props => (
       title={(!props.open && props.option.label) && props.option.label} 
     >
       {props.option.icon}
-      {props.open && (
-        <span className="sidebar-menu-label">{props.option.label}</span>
-      )}
+      <span className="sidebar-menu-label">{props.option.label}</span>
       <Highlight position="right" theme="NAV" title={props.option.help || ''} />
     </a>
   </li>

@@ -240,13 +240,7 @@ export default class DefaultList extends Component {
                         ) : (
                           <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
                         )}
-                        <div
-                          style={
-                            this.props.mode === 'right'
-                              ? { ...footerstyle, ...listTransitionStyles[state] }
-                              : { ...footerstyle }
-                          }
-                        >
+                        <div style={footerstyle}>
                           <DefaultFooter {...this.props} />
                         </div>
                       </div>
@@ -259,11 +253,11 @@ export default class DefaultList extends Component {
                         style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
                       >
                         <div className="row">
-                          <div className="col-xs-w1 text-center bg-secondary" />
-                          <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
+                          <div className="col-1 text-center bg-secondary" />
+                          <div className="col-32 bg-white p-0 text-secondary h-100">
                             <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
                           </div>
-                          <div className="col-xs-w3 text-center">
+                          <div className="col-3 text-center">
                             <nav className="text-center pt-2">
                               <button
                                 type="button"
