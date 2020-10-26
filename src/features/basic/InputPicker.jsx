@@ -75,7 +75,6 @@ export default class InputPicker extends Component {
   }
 
   render() {
-    console.log("FK ",this.props);
     return (
       <div
         className={classnames(

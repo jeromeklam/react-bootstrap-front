@@ -48,14 +48,14 @@ export const DefaultTitle = props => (
         let cols = '';
         if (typeof oneCol.size === 'object') {
           Object.keys(oneCol.size).forEach((key) => {
-            if (!Number.isNaN(oneCol.size[key])) {
+            if (!isNaN(oneCol.size[key])) {
               cols += ` col-${key}-w${oneCol.size[key]} `;
             } else {
               cols += ` col-${key}-${oneCol.size[key]} `;
             }
           });
         } else {
-          if (!Number.isNaN(oneCol.size)) {
+          if (!isNaN(oneCol.size)) {
             cols = `col-xs-w${oneCol.size}`;
           } else {
             cols = `col-xs-${oneCol.size}`;

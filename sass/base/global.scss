@@ -1,0 +1,371 @@
+// Here you put all global css rules.
+body {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+  label {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.form-group-sm {
+  margin-bottom: 0rem;
+}
+
+.custom-scrollbar {
+  @include scrollbars(10px, theme-color('primary'), theme-color('primary-light'));
+}
+
+.noselect {
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+.text-danger > svg {
+  fill: theme-color('danger');
+  path {
+    fill: theme-color('danger');
+  }
+}
+.text-warning > svg {
+  fill: theme-color('warning');
+  path {
+    fill: theme-color('warning');
+  }
+}
+.text-success > svg {
+  fill: theme-color('success');
+  path {
+    fill: theme-color('success');
+  }
+}
+.text-dark > svg {
+  fill: theme-color('dark');
+  path {
+    fill: theme-color('dark');
+  }
+}
+.text-light > svg {
+  fill: theme-color('light');
+  path {
+    fill: theme-color('light');
+  }
+}
+.text-secondary > svg {
+  fill: theme-color('secondary');
+  path {
+    fill: theme-color('secondary');
+  }
+}
+.text-primary > svg {
+  fill: theme-color('primary');
+  path {
+    fill: theme-color('primary');
+  }
+}
+svg.text-primary.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('primary-dark');
+  fill: theme-color('primary-dark');
+  path {
+    fill: theme-color('primary-dark') !important;
+  }
+}
+svg.text-secondary.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('secondary-dark');
+  fill: theme-color('secondary-dark');
+  path {
+    fill: theme-color('secondary-dark') !important;
+  }
+}
+svg.text-warning.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('warning-dark');
+  fill: theme-color('warning-dark');
+  path {
+    fill: theme-color('warning-dark') !important;
+  }
+}
+
+.inline-add-one .inline-action:hover {
+  cursor: pointer;
+}
+
+.btn-sm {
+  &.btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  svg {
+    height: 1.2rem !important;
+    width: 1.2rem !important;
+  }
+}
+
+.sidebar-navigation li:hover a {
+  color: theme-color('primary-light') !important;
+}
+.sidebar-navigation li:hover i {
+  border: solid theme-color('primary-light') !important;
+  border-width: 0 3px 3px 0 !important;
+}
+.sidebar-navigation li:hover a > svg {
+  fill: theme-color('primary-light') !important;
+  path {
+    fill: theme-color('primary-light') !important;
+  }
+}
+
+.btn-left {
+  &.btn {
+    padding: 1rem;
+  }
+  svg {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+  }
+}
+
+.btn-inline {
+  &.btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  svg {
+    height: 1rem !important;
+    width: 1rem !important;
+  }
+}
+
+.modal-body {
+  padding: 1em;
+}
+
+.modal-fullscreen {
+  width: 90%;
+  max-width: 90%;
+  margin: 1rem auto;
+
+  .modal-body {
+    max-height: 600px;
+  }
+}
+
+.modal-xl {
+  .modal-body {
+    min-height: 550px;
+  }
+}
+
+.modal-lg {
+  .modal-body {
+    min-height: 450px;
+  }
+}
+
+.modal-md {
+  .modal-body {
+    min-height: 350px;
+  }
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-light');
+}  
+
+.nav-item .nav-link.active {
+  color: theme-color('primary');
+}  
+
+.nav-item .nav-link:hover {
+  cursor: pointer;
+}
+.nav-item .nav-link.disabled:hover {
+  cursor: not-allowed;
+}
+
+.btn-group-xs > .btn, .btn-xs {
+  padding  : .2rem .3rem;
+  font-size  : .8rem;
+  line-height  : .4;
+  border-radius : .2rem;
+}
+
+.inline-list {
+  svg.inline-action:hover {
+    cursor: pointer;
+    color: theme-color('secondary-light');
+    fill: theme-color('secondary-light');
+    path {
+      fill: theme-color('secondary-light') !important;
+    }
+  }
+  .row-title {
+    background-color: theme-color('secondary-light');
+    color: theme-color('secondary');
+  }
+  .row-title span {
+    font-weight: bold;
+  }
+  .row-line {
+    min-height: 30px;
+    line-height: 30px;
+  }
+  .row-line.row-even {
+    background: lighten(theme-color('secondary-light'), 6%);
+  }
+  .row-line.row-even:not(.row-title):hover {
+    background: lighten(theme-color('secondary-light'), 8%);
+  }
+  .row-line.row-odd {
+    background: lighten(theme-color('secondary-light'), 10%);
+  }
+  .row-line.row-odd:not(.row-title):hover {
+    background: lighten(theme-color('secondary-light'), 12%);
+  }
+  svg.inline-action:hover {
+    cursor: pointer;
+    color: theme-color('light');
+    fill: theme-color('light');
+    path {
+      fill: theme-color('light') !important;
+    }
+  }
+  .btn-group {
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.list-group-item {
+  background-color: transparent;
+}
+
+.scrollarea .scrollbar-container.vertical .scrollbar {
+  background-color: theme-color('primary') !important;
+}
+.modal-body {
+  font-size: 0.9rem;
+}
+.input-group {
+  font-size: 0.9rem;
+}
+.modal-body {
+  .card-body {
+/* Par défaut padding: 1.25rem pour les InputImage */
+/*padding: 0px;*/
+  }
+}
+.modal-shadow {
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+}
+
+.text-line-through {
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+/* Ligne de séparation entre les lignes des listes */
+.row-line-separator {
+  border-bottom: 1px solid;
+}
+
+/* Hover des lignes des listes */
+.row-line-hover {
+  background-color: theme-color('primary-light');
+  color: theme-color('secondary');
+}
+
+/* Couleur de fond spécifique des lignes des listes */
+.row-line-warning {
+  background-color: theme-color('warning-light');
+}
+.row-line-warning.row-line-hover {
+  background-color: darken(theme-color('warning-light'), 5%);
+  color: theme-color('secondary');
+}
+
+/* Couleur de fond spécifique des lignes des listes */
+.row-line-danger {
+  background-color: theme-color('danger-light');
+}
+.row-line-danger.row-line-hover {
+  background-color: darken(theme-color('danger-light'), 5%);
+  color: theme-color('secondary');
+}
+
+/* On force la couleur des icones dans les colonnes des listes */
+.text-secondary svg.col-icon {
+  fill: theme-color('secondary');
+  path {
+    fill: theme-color('secondary');
+  }
+}
+
+.text-light svg.col-icon {
+  fill: theme-color('light');
+  path {
+    fill: theme-color('light');
+  }
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.input-group .btn {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.modal-body {
+  font-size: 0.9rem;
+}
+.input-group {
+  font-size: 0.9rem;
+}
+.modal-body {
+  .card-body {
+    padding: 0px;
+  }
+}
+.modal-shadow {
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+}
+.btn-secondary {
+  color: white;
+  background-color: theme-color('secondary');
+  border-color: theme-color('secondary-light');
+}
+.btn-primary {
+  color: white;
+  background-color: theme-color('primary');
+  border-color: theme-color('primary-light');
+}
+.btn-warning {
+  color: white;
+  background-color: theme-color('warning');
+  border-color: theme-color('warning-light');
+}
+hr {
+  border-top: 2px solid;
+  border-top-color: theme-color('secondary');
+}

@@ -121,14 +121,14 @@ export const DefaultCol = (props) => {
   let cols = '';
   if (typeof props.size === 'object') {
     Object.keys(props.size).forEach((key) => {
-      if (!Number.isNaN(props.size[key])) {
+      if (!isNaN(props.size[key])) {
         cols += ` col-${key}-w${props.size[key]} `;
       } else {
         cols += ` col-${key}-${props.size[key]} `;
       }
     });
   } else {
-    if (!Number.isNaN(props.size)) {
+    if (!isNaN(props.size)) {
       cols = `col-xs-w${props.size}`;
     } else {
       cols = `col-xs-${props.size}`;

@@ -22,7 +22,6 @@ const detectWidth = (width) => {
       }
     }
   }
-  console.log(width, clWidth);
   return clWidth;
 }
 
