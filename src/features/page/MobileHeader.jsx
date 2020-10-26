@@ -17,10 +17,10 @@ const navLinkStyles = {
 export const MobileHeader = props => (
   <header className="mobile-header w-100 bg-secondary text-light" style={headerStyles}>
     <div className="row">
-      <div className="col-20">
+      <div className="col-xs-w20">
         <span className="header-title pl-2">{props.title}</span>
       </div>
-      <div className="col-16 text-right">
+      <div className="col-xs-w16 text-right">
         <ul className="nav justify-content-end">
           {props.options.map((option) => {
             if (

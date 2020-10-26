@@ -39,6 +39,7 @@ export * from './features/advanced/ResponsiveConfirm.jsx';
 export * from './features/advanced/ResponsiveForm.jsx';
 export * from './features/advanced/ResponsiveModal.jsx';
 export * from './features/advanced/ResponsiveQuickSearch.jsx';
+export { default as WidthObserver } from './features/advanced/WidthObserver.jsx';
 
 /**
  *******************************************************************************

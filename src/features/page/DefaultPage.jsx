@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultSidebar, DefaultFooter } from './';
+import { WidthObserver } from '../advanced';
 
 const duration = 500;
 
@@ -112,7 +113,8 @@ export default class ResponsivePage extends Component {
   static getDerivedStateFromProps(props, state) {
     if (!props.authenticated) {
       return { menuDataOpen: false, menuUserOpen: false };
-    } if (props.settings !== state.settings) {
+    }
+    if (props.settings !== state.settings) {
       let menuMaxi = true;
       if (props.settings && (props.settings.menuposition === true || props.settings.menuposition === false)) {
         menuMaxi = props.settings.menuposition;
@@ -156,45 +158,60 @@ export default class ResponsivePage extends Component {
   }
 
   render() {
-    const userForm = React.cloneElement(this.props.userForm, {onClose: this.onToggleUser});
+    const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
     return (
       <div id="page-root" className="full-page">
         <div className="display-desktop">
-          <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
-            {state => (
-              <div>
-                <div className="bg-primary-light" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
-                  {userForm}
+          <WidthObserver>
+            <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
+              {state => (
+                <div>
+                  <div className="bg-primary-light" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
+                    {userForm}
+                  </div>
+                  <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
+                    <DefaultHeader
+                      {...this.props}
+                      {...this.state}
+                      desktopHeaderHeight={DesktopHeaderHeight}
+                      onToggleUser={this.onToggleUser}
+                      onToggleSide={this.onToggleSide}
+                    />
+                  </div>
                 </div>
-                <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
-                  <DefaultHeader
-                    {...this.props}
-                    {...this.state}
-                    desktopHeaderHeight={DesktopHeaderHeight}
-                    onToggleUser={this.onToggleUser}
-                    onToggleSide={this.onToggleSide}
-                  />
+              )}
+            </CSSTransition>
+            <CSSTransition in={this.state.menuSideMini} timeout={duration}>
+              {state => (
+                <div>
+                  <div
+                    className="bg-light"
+                    style={{
+                      ...sideMenuDefaultStyles,
+                      ...sideMenuStyles[state],
+                      bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
+                    }}
+                  >
+                    <DefaultSidebar {...this.props} open={this.state.menuSideMini} onOpenSide={this.onOpenSide} />
+                  </div>
+                  <div
+                    style={{
+                      ...contentDefaultStyles,
+                      ...contentStyles[state],
+                      bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
+                    }}
+                  >
+                    {this.props.children}
+                  </div>
                 </div>
+              )}
+            </CSSTransition>
+            {this.props.footer && (
+              <div style={footerStyles}>
+                <DefaultFooter {...this.props} />
               </div>
             )}
-          </CSSTransition>
-          <CSSTransition in={this.state.menuSideMini} timeout={duration}>
-            {state => (
-              <div>
-                <div className="bg-light" style={{ ...sideMenuDefaultStyles, ...sideMenuStyles[state], bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px' }}>
-                  <DefaultSidebar {...this.props} open={this.state.menuSideMini} onOpenSide={this.onOpenSide}/>
-                </div>
-                <div style={{ ...contentDefaultStyles, ...contentStyles[state], bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px' }}>
-                  {this.props.children}
-                </div>
-              </div>
-            )}
-          </CSSTransition>
-          {this.props.footer &&
-            <div style={footerStyles}>
-              <DefaultFooter {...this.props} />
-            </div>
-          }
+          </WidthObserver>
         </div>
       </div>
     );

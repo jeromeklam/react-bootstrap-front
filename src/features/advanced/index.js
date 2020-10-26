@@ -9,3 +9,4 @@ export * from './ResponsiveForm.jsx';
 export * from './ResponsiveModal.jsx';
 export { default as ResponsiveModalInner } from './ResponsiveModalInner.jsx';
 export * from './ResponsiveQuickSearch.jsx';
+export { default as WidthObserver } from './WidthObserver.jsx';

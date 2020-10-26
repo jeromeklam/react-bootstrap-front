@@ -18,7 +18,7 @@ export const MobileLineCol = (props) => {
   }
   return (
     <div
-      className={classnames(`col-${props.mob_size}`, props.first && 'col-first', props.last && 'col-last')}
+      className={classnames(`col-xs-w${props.mob_size}`, props.first && 'col-first', props.last && 'col-last')}
     >
       <span>{content}</span>
     </div>

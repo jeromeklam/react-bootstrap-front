@@ -48,10 +48,18 @@ export const DefaultTitle = props => (
         let cols = '';
         if (typeof oneCol.size === 'object') {
           Object.keys(oneCol.size).forEach((key) => {
-            cols += ` col-${key}-${oneCol.size[key]} `;
+            if (!Number.isNaN(oneCol.size[key])) {
+              cols += ` col-${key}-w${oneCol.size[key]} `;
+            } else {
+              cols += ` col-${key}-${oneCol.size[key]} `;
+            }
           });
         } else {
-          cols = `col-${oneCol.size}`;
+          if (!Number.isNaN(oneCol.size)) {
+            cols = `col-xs-w${oneCol.size}`;
+          } else {
+            cols = `col-xs-${oneCol.size}`;
+          }
         }
         if (typeof oneCol.first !== 'undefined') {
           if (typeof oneCol.first === 'object') {
@@ -61,7 +69,7 @@ export const DefaultTitle = props => (
               }
             });
           } else if (oneCol.first) {
-            cols += ' col-first ';
+            cols += ' col-xs-first ';
           }
         }
         if (typeof oneCol.last !== 'undefined') {
@@ -72,7 +80,7 @@ export const DefaultTitle = props => (
               }
             });
           } else if (oneCol.last) {
-            cols += ' col-last ';
+            cols += ' col-xs-last ';
           }
         }
         return (

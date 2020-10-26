@@ -40,7 +40,7 @@ export default class FilterBuilder extends Component {
     return (
       <div className="filter-filter-builder">
         <div className="row">
-          <div className="col-16 col-first">
+          <div className="col-xs-w16 col-first">
             <label htmlFor="filter-or" className="">
               <span>Opérateur</span>
             </label>
@@ -54,7 +54,7 @@ export default class FilterBuilder extends Component {
               options={[{ label: 'et', value: FILTER_MODE_AND }, { label: 'ou', value: FILTER_MODE_OR }]}
             />
           </div>
-          <div className="col-16">
+          <div className="col-xs-w16">
             <label htmlFor="filter-oper" className="">
               <span>Condition par défaut</span>
             </label>

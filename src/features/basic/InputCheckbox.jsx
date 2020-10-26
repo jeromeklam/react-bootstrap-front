@@ -53,12 +53,12 @@ const inputstyle = {
 export const InputCheckbox = props => (
   <div className={classnames('form-group', !props.labelTop && 'row')}>
     {props.label !== '' && (
-      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-sm-${props.labelSize} col-form-label`)}>
+      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}>
         {props.label}
         {props.required && <span>&nbsp;*</span>}
       </label>
     )}
-    <div className={classnames(!props.labelTop && `col-sm-${props.inputSize}`)}>
+    <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
       <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
         <input
           style={inputstyle}

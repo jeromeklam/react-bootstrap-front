@@ -14,18 +14,12 @@ export const DefaultSidebarMenu = props => (
       onClick={() => {
         props.toggleMenu(props.option.position);
       }}
-      title={(!props.open && props.option.label) && props.option.label}
+      title={!props.open && props.option.label && props.option.label}
     >
       {props.option.icon}
-      {props.open && (
-        <span className="sidebar-menu-label text secondary">{props.option.label}</span>
-      )}
-      <div
-        className={classnames(
-          props.open ? 'sidebar-menu-arrow-open' : 'sidebar-menu-arrow'
-        )}
-      >
-        {props.menu === props.option.position ? props.menuOpened : props.menuClosed }
+      <span className="sidebar-menu-label text secondary">{props.option.label}</span>
+      <div className="sidebar-menu-arrow">
+        {props.menu === props.option.position ? props.menuOpened : props.menuClosed}
       </div>
     </a>
   </li>
@@ -42,4 +36,3 @@ DefaultSidebarMenu.propTypes = {
 DefaultSidebarMenu.defaultProps = {
   open: true,
 };
-

@@ -13,10 +13,10 @@ const mystyle = {
 
 export const MobileHeader = props => (
   <div style={mystyle} className="row bg-secondary text-light">
-    <div className="col-20">
+    <div className="col-xs-w20">
       <span className="pl-2">{props.title}</span>
     </div>
-    <div className="col-16 text-right">
+    <div className="col-xs-w16 text-right">
       <ul className="nav justify-content-end">
         {props.globalActions &&
           props.globalActions.map(action => (

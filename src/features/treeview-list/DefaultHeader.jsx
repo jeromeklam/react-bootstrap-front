@@ -53,13 +53,13 @@ const sortToText = (sort, cols) => {
 export const DefaultHeader = props => (
   <div style={mystyle} className="default-list-header bg-secondary text-ligh">
     <div className="row">
-      <div className="col-20">
+      <div className="col-xs-w20">
         <span style={titlestyle} className="text-light">
           {`${props.title}`}
         </span>
       </div>
-      <div className="col-10" style={quickStyles} />
-      <div className="col-6 text-right">
+      <div className="col-xs-w10" style={quickStyles} />
+      <div className="col-xs-w6 text-right">
         <ul className="nav justify-content-end">
           <li className="nav-item">
             <button type="button" className="btn btn-secondary text-light" onClick={props.onToggleFilter}>

@@ -131,7 +131,7 @@ export default class InputSelect extends Component {
           <label
             htmlFor={this.props.id}
             className={classnames(
-              !this.props.labelTop && `col-sm-${this.props.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -139,7 +139,7 @@ export default class InputSelect extends Component {
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className={classnames(!this.props.labelTop && `col-sm-${(!this.props.labelTop || this.props.inline) ? this.props.inputSize : '36'}`)}>
+        <div className={classnames(!this.props.labelTop && `col-xs-w${(!this.props.labelTop || this.props.inline) ? this.props.inputSize : '36'}`)}>
           <select
             type="text"
             className={classnames(

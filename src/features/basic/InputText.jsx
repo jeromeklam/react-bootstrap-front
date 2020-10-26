@@ -16,7 +16,7 @@ export const InputText = (props) => {
         <label
           htmlFor={myId}
           className={classnames(
-            !props.labelTop && `col-sm-${props.labelSize} col-form-label`,
+            !props.labelTop && `col-xs-w${props.labelSize} col-form-label`,
             props.size && `col-form-label-${props.size}`
           )}
         >
@@ -24,7 +24,7 @@ export const InputText = (props) => {
           {props.required && <span>&nbsp;*</span>}
         </label>
       )}
-      <div className={classnames(!props.labelTop && `col-sm-${props.inputSize}`)}>
+      <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
         <div className={classnames('input-group', (props.error || props.warning) && 'is-invalid')}>
           <input
             type="text"

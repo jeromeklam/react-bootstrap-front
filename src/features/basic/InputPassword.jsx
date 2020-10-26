@@ -134,7 +134,7 @@ export default class InputPassword extends Component {
           <label
             htmlFor={myId}
             className={classnames(
-              !this.props.labelTop && `col-sm-${this.props.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -142,7 +142,7 @@ export default class InputPassword extends Component {
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className={classnames(!this.props.labelTop && `col-sm-${this.props.inputSize}`)}>
+        <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
           <div className={classnames(
               'input-group', 
               (this.props.error || this.props.warning) && 'is-invalid'
