@@ -5,7 +5,7 @@ import { InputText } from './';
 
 const InputLine = props => (
   <div className="row">
-    <div className="col-sm-15">
+    <div className="col-xs-w15">
       <InputText
         name="value"
         value={props.value.value}
@@ -16,7 +16,7 @@ const InputLine = props => (
         onChange={props.onChange}
       />
     </div>
-    <div className="col-sm-15">
+    <div className="col-xs-w15">
       <InputText
         name="label"
         value={props.value.label}
@@ -26,7 +26,7 @@ const InputLine = props => (
         onChange={props.onChange}
       />
     </div>
-    <div className="col-sm-6">
+    <div className="col-xs-w6">
       <button className="btn bg-light btn-outline-secondary text-warning" onClick={props.onDelete}>
         {props.minusIcon}
       </button>
@@ -118,18 +118,18 @@ export default class InputStringarray extends Component {
     return (
       <div className="form-group">
         {this.props.label && (
-          <label htmlFor={this.props.id} className={classnames(!this.props.labelTop && 'col-sm-6 col-form-label')}>
+          <label htmlFor={this.props.id} className={classnames(!this.props.labelTop && 'col-xs-w6 col-form-label')}>
             {this.props.label}
           </label>
         )}
         {(this.props.titleValue || this.props.titleLabel) && (
            <div className="row">
-             <div className="col-sm-15">
+             <div className="col-xs-w15">
                <label className={classnames(!this.props.labelTop && 'col-form-label')}>
                  {this.props.titleValue}
                </label>
              </div>
-             <div className="col-sm-15">
+             <div className="col-xs-w15">
                <label className={classnames(!this.props.labelTop && 'col-form-label')}>
                  {this.props.titleLabel}
                </label>

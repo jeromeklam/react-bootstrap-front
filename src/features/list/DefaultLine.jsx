@@ -216,16 +216,16 @@ export default class DesktopListLine extends Component {
                   ...transitionStyles[state],
                 }}
               >
-                <div className="col-36 pb-3">
+                <div className="col-xs-w36 pb-3">
                   {this.props.inlineOpenedId === this.props.id && (
                     <div className="row">
-                      <div className="col-1 text-center bg-secondary" />
-                      <div className="col-32 bg-white p-0 text-secondary">
+                      <div className="col-xs-w1 text-center bg-secondary" />
+                      <div className="col-xs-w32 bg-white p-0 text-secondary">
                         <div className="custom-scrollbar p-0" style={inlineStyle}>
                           {this.props.inlineComponent}
                         </div>
                       </div>
-                      <div className="col-3 text-center">
+                      <div className="col-xs-w3 text-center">
                         <nav className="text-center pt-2">
                           <button
                             type="button"

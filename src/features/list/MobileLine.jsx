@@ -14,7 +14,7 @@ const navstyle = {
 
 export const MobileLine = props => (
   <div className="row mobile-line">
-    <div className="col-36">
+    <div className="col-xs-w36">
       <div className="card bg-secondary-light m-2">
         <div className="card-heading text-secondary">
           <span className="pl-2">{props.title}</span>

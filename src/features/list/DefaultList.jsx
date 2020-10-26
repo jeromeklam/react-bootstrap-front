@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, LoadEmpty } from './';
 import { getSizeFromWidth } from '../helper';
 import { DefaultPanel } from '../filter';
+import { WidthObserver } from '../advanced';
 
 const duration = 500;
 
@@ -100,7 +101,6 @@ const inlineTransitionStyles = {
   exited: { right: '-1024px' },
 };
 
-
 export default class DefaultList extends Component {
   static propTypes = {
     cols: PropTypes.element.isRequired,
@@ -119,10 +119,8 @@ export default class DefaultList extends Component {
     inlineOpenedId: 0,
     inlineComponent: null,
     inlineOpenedItem: null,
-    mode: 'inline',
+    mode: 'right',
     closeIcon: null,
-  };
-  static defaultProps = {
     titleMultiline: false,
   };
 
@@ -155,7 +153,7 @@ export default class DefaultList extends Component {
     const listSize = this.state.splited ? getSizeFromWidth(width - 1024) : contentSize;
     const dataSize = this.state.splited ? getSizeFromWidth(1024) : 'none';
     this.setState({ contentSize: contentSize, listSize: listSize, dataSize: dataSize });
-  };
+  }
 
   togglePanel(filters = false, sort = false) {
     if (filters !== false && sort !== false) {
@@ -171,18 +169,20 @@ export default class DefaultList extends Component {
     if (this.props.titleMultiline) {
       locTitleStyle = {
         ...titleStyle,
-        height:'80px',
+        height: '80px',
         lineHeight: '40px',
       };
       locDataStyle = {
         ...dataStyle,
-        top:'130px',
+        top: '130px',
         height: 'calc(100% - 130px)',
       };
     }
+    console.log(this.props.mode);
     return (
       <div style={fullDiv}>
-        <DefaultHeader {...this.props} onToggleFilter={this.togglePanel} />
+        <WidthObserver>
+          <DefaultHeader {...this.props} onToggleFilter={this.togglePanel} />
           <CSSTransition in={this.state.panelOpen} timeout={duration}>
             {state => (
               <div
@@ -200,78 +200,118 @@ export default class DefaultList extends Component {
             <CSSTransition in={this.state.splited} timeout={duration}>
               {state => (
                 <div>
-                  <div style={this.props.mode === 'right' ? {...titleLineStyle, ...listTransitionStyles[state]} : {...titleLineStyle}}>
-                    <DefaultTitle style={locTitleStyle} {...this.props} cols={dispCols} className={'list-' + this.state.listSize} cols={dispCols}/>
+                  <div
+                    style={
+                      this.props.mode === 'right'
+                        ? { ...titleLineStyle, ...listTransitionStyles[state] }
+                        : { ...titleLineStyle }
+                    }
+                  >
+                    <WidthObserver>
+                      <DefaultTitle
+                        style={locTitleStyle}
+                        {...this.props}
+                        cols={dispCols}
+                        className={'list-' + this.state.listSize}
+                        cols={dispCols}
+                      />
+                    </WidthObserver>
                   </div>
-                  <div className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize, 'list-' + this.state.listSize)} style={this.props.mode === 'right' ? {...locDataStyle, ...listTransitionStyles[state]} : {...locDataStyle}}>
-                    <div className="default-list-body">
-                      {this.props.items.length > 0 ? (
-                        <div>
-                          {this.props.items.map(item => (
-                            <DefaultLine key={item.id} id={item.id} item={item} {...this.props} cols={dispCols} />
-                          ))}
+                  <div
+                    className={classnames(
+                      'custom-scrollbar',
+                      'inline-' + this.state.dataSize,
+                      'list-' + this.state.listSize
+                    )}
+                    style={
+                      this.props.mode === 'right'
+                        ? { ...locDataStyle, ...listTransitionStyles[state] }
+                        : { ...locDataStyle }
+                    }
+                  >
+                    <WidthObserver>
+                      <div className="default-list-body">
+                        {this.props.items.length > 0 ? (
+                          <div>
+                            {this.props.items.map(item => (
+                              <DefaultLine key={item.id} id={item.id} item={item} {...this.props} cols={dispCols} />
+                            ))}
+                          </div>
+                        ) : (
+                          <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
+                        )}
+                        <div
+                          style={
+                            this.props.mode === 'right'
+                              ? { ...footerstyle, ...listTransitionStyles[state] }
+                              : { ...footerstyle }
+                          }
+                        >
+                          <DefaultFooter {...this.props} />
                         </div>
-                      ) : (
-                        <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
-                      )}
-                      <div style={this.props.mode === 'right' ? {...footerstyle, ...listTransitionStyles[state]} : {...footerstyle}}>
-                        <DefaultFooter {...this.props} />
                       </div>
-                    </div>
+                    </WidthObserver>
                   </div>
-                  {this.props.mode === 'right' &&
-                    <div className={classnames('custom-scrollbar bg-secondary', 'inline-' + this.state.dataSize )} style={{...inlineStyle, ...inlineTransitionStyles[state]}}>
-                      <div className="row">
-                        <div className="col-1 text-center bg-secondary" />
-                        <div className="col-32 bg-white p-0 text-secondary h-100">
-                          <div className="custom-scrollbar p-0">
-                            {this.props.inlineComponent}
+                  {this.props.mode === 'right' && (
+                    <WidthObserver>
+                      <div
+                        className={classnames('custom-scrollbar bg-secondary', 'inline-' + this.state.dataSize)}
+                        style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
+                      >
+                        <div className="row">
+                          <div className="col-xs-w1 text-center bg-secondary" />
+                          <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
+                            <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
+                          </div>
+                          <div className="col-xs-w3 text-center">
+                            <nav className="text-center pt-2">
+                              <button
+                                type="button"
+                                title="close"
+                                className={classnames('btn btn-left', 'btn-secondary')}
+                                onClick={evt => {
+                                  evt.stopPropagation();
+                                  this.props.onClick(null);
+                                }}
+                              >
+                                {this.props.closeIcon}
+                              </button>
+                              {this.props.inlineActions &&
+                                this.props.inlineActions.map((action, i) => (
+                                  <div key={`action-${i}`}>
+                                    {action.role !== 'DELETE' && action.role !== 'MODIFY' && (
+                                      <button
+                                        type="button"
+                                        title={action.label || ''}
+                                        className={classnames(
+                                          'btn btn-left',
+                                          action.active ? 'btn-primary' : 'btn-secondary'
+                                        )}
+                                        onClick={evt => {
+                                          evt.stopPropagation();
+                                          if (action.param === 'object') {
+                                            action.onClick(this.props.inlineOpenedItem);
+                                          } else {
+                                            action.onClick(this.props.inlineOpenedId);
+                                          }
+                                        }}
+                                      >
+                                        {action.icon}
+                                      </button>
+                                    )}
+                                  </div>
+                                ))}
+                            </nav>
                           </div>
                         </div>
-                        <div className="col-3 text-center">
-                          <nav className="text-center pt-2">
-                            <button
-                              type="button"
-                              title="close"
-                              className={classnames('btn btn-left', 'btn-secondary')}
-                              onClick={(evt) => {
-                                evt.stopPropagation();
-                                this.props.onClick(null);
-                              }}
-                            >
-                              {this.props.closeIcon}
-                            </button>
-                            {this.props.inlineActions &&
-                              this.props.inlineActions.map((action, i) => (
-                                <div key={`action-${i}`}>
-                                  {action.role !== 'DELETE' && action.role !== 'MODIFY' && (
-                                    <button
-                                      type="button"
-                                      title={action.label || ''}
-                                      className={classnames('btn btn-left', action.active ? 'btn-primary' : 'btn-secondary')}
-                                      onClick={(evt) => {
-                                        evt.stopPropagation();
-                                        if (action.param === 'object') {
-                                          action.onClick(this.props.inlineOpenedItem);
-                                        } else {
-                                          action.onClick(this.props.inlineOpenedId);
-                                        }
-                                      }}
-                                    >
-                                      {action.icon}
-                                    </button>
-                                  )}
-                                </div>
-                              ))}
-                          </nav>
-                        </div>
                       </div>
-                    </div>
-                  }
+                    </WidthObserver>
+                  )}
                 </div>
               )}
             </CSSTransition>
           </div>
+        </WidthObserver>
       </div>
     );
   }

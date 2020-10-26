@@ -103,7 +103,7 @@ export default class InputCheckLists extends Component {
           </div>
         ))}
         <div className="row add-check-list">
-          <div className="col-34">
+          <div className="col-xs-w34">
             <button
               className={classnames(`btn btn-input border-secondary text-primary btn-block`)}
               onClick={this.onAddNew}>

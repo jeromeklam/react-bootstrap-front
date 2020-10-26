@@ -15,7 +15,7 @@ export const DefaultFooter = props => (
   <div style={mystyle} className="bg-light">
     <div className="container">
       <div className="row">
-        <div className="col-20">
+        <div className="col-xs-w20">
           {props.options.map((option) => {
             if (option.role === 'ABOUT') {
               return (
@@ -31,7 +31,7 @@ export const DefaultFooter = props => (
             return null;
           })}
         </div>
-        <div className="col-16 text-right">
+        <div className="col-xs-w16 text-right">
           {props.options.map((option) => {
             if (option.role === 'SOCIAL') {
               return (

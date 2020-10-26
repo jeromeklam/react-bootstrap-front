@@ -10,9 +10,9 @@ export const InlineInputPicker = props => (
       props.size && `form-group-${props.size}`,
     )}
   >
-    <div className={classnames(!props.labelTop && `col-sm-${props.inputSize}`)}>
+    <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
       <div className="row">
-        <div className={classnames('col-36 input-group', props.error && 'is-invalid')}>
+        <div className={classnames('col-xs-w36 input-group', props.error && 'is-invalid')}>
           <input type="hidden" name={'autocomplete-field-@'} value={props.value} />
           <input
             type="text"

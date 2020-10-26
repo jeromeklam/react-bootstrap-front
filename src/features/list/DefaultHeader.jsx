@@ -123,10 +123,10 @@ export default class DefaultHeader extends Component {
     return (
       <div style={mystyle} className={classnames('default-list-header bg-secondary text-light', this.props.className)}>
         <div className="row">
-          <div className="col-2 text-center">
+          <div className="col-xs-w2 text-center">
             <HighlightToggler className="text-light" theme="LIST" />
           </div>
-          <div className="col-14">
+          <div className="col-xs-w14">
             <span style={titlestyle} className="text-light">
               {`${this.props.title}`}
             </span>
@@ -135,11 +135,11 @@ export default class DefaultHeader extends Component {
             </span>
             <Highlight position="bottom" theme="LIST" title="Tri en cours" />
           </div>
-          <div className="col-10" style={quickStyles}>
+          <div className="col-xs-w10" style={quickStyles}>
             {this.props.quickSearch}
             <Highlight position="bottom" theme="LIST" title="Recherche rapide" />
           </div>
-          <div className="col-10 text-right">
+          <div className="col-xs-w10 text-right">
             <ul className="nav justify-content-end">
               {this.props.selectMenu && (
                 <li className="nav-item">

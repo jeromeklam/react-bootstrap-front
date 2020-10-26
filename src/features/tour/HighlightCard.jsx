@@ -95,17 +95,17 @@ export class HighlightCard extends Component {
       footer = (
         <div className="text-secondary">
           <div className="row mt-3">
-            <div className="col-sm-10 text-left">
+            <div className="col-xs-w10 text-left">
               <button type="button" className="btn btn-sm btn-primary" onClick={this.prev}>
                 <span>{'<<'}</span>
               </button>
             </div>
-            <div className="col-sm-16 text-center">
+            <div className="col-xs-w16 text-center">
               <button type="button" className="btn btn-sm btn-secondary" onClick={this.stop}>
                 <span>Fermer</span>
               </button>
             </div>
-            <div className="col-sm-10 text-right">
+            <div className="col-xs-w10 text-right">
               <button type="button" className="btn btn-sm btn-primary" onClick={this.next}>
                 <span>{'>>'}</span>
               </button>

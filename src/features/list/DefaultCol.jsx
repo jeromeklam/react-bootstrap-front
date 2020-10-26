@@ -121,10 +121,18 @@ export const DefaultCol = (props) => {
   let cols = '';
   if (typeof props.size === 'object') {
     Object.keys(props.size).forEach((key) => {
-      cols += ` col-${key}-${props.size[key]} `;
+      if (!Number.isNaN(props.size[key])) {
+        cols += ` col-${key}-w${props.size[key]} `;
+      } else {
+        cols += ` col-${key}-${props.size[key]} `;
+      }
     });
   } else {
-    cols = `col-${props.size}`;
+    if (!Number.isNaN(props.size)) {
+      cols = `col-xs-w${props.size}`;
+    } else {
+      cols = `col-xs-${props.size}`;
+    }
   }
   if (typeof props.first !== 'undefined') {
     if (typeof props.first === 'object') {
@@ -134,7 +142,7 @@ export const DefaultCol = (props) => {
         }
       });
     } else if (props.first) {
-      cols += ' col-first ';
+      cols += ' col-xs-first ';
     }
   }
   if (typeof props.last !== 'undefined') {
@@ -145,7 +153,7 @@ export const DefaultCol = (props) => {
         }
       });
     } else if (props.last) {
-      cols += ' col-last ';
+      cols += ' col-xs-last ';
     }
   }
   if (typeof props.fClassName === 'function') {
