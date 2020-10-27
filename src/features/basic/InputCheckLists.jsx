@@ -18,6 +18,7 @@ export default class InputCheckLists extends Component {
     closeLinesIcon: PropTypes.element.isRequired,
     checkedLineIcon: PropTypes.element.isRequired,
     uncheckedLineIcon: PropTypes.element.isRequired,
+    commentLineIcon: PropTypes.element,
     checkedLine: PropTypes.string,
   };
 
@@ -31,6 +32,7 @@ export default class InputCheckLists extends Component {
     closeLinesIcon: null,
     checkedLineIcon: null,
     uncheckedLineIcon: null,
+    commentLineIcon: null,
     checkedLine: '',
   };
 
@@ -98,6 +100,10 @@ export default class InputCheckLists extends Component {
               closeLinesIcon={this.props.closeLinesIcon}
               checkedLineIcon={this.props.checkedLineIcon}
               uncheckedLineIcon={this.props.uncheckedLineIcon}
+              emptyCommentLineIcon={this.props.emptyCommentLineIcon} 
+              commentLineIcon={this.props.commentLineIcon} 
+              questionLineIcon={this.props.questionLineIcon} 
+              warningLineIcon={this.props.warningLineIcon} 
               checkedLine={this.props.checkedLine}
             />
           </div>

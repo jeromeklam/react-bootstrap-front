@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import './InputCheckList.css';
 
-const emptyItem = { label : '', done: false };
-const emptyList = { title : "Checklist", items : []};
+const emptyItem = { label: '', done: false, comment: '', question: false, warning: false };
+const emptyList = { title: 'Checklist', items: [] };
 
 export default class InputCheckList extends Component {
   static propTypes = {
@@ -38,7 +38,7 @@ export default class InputCheckList extends Component {
   static getDerivedStateFromProps(props, state) {
     const list = JSON.parse(props.value) || emptyList;
     if (list.title !== state.title || list.items !== state.items) {
-      return {title: list.title, items: list.items};
+      return { title: list.title, items: list.items };
     }
     return null;
   }
@@ -51,15 +51,24 @@ export default class InputCheckList extends Component {
     } catch (ex) {
       list = emptyList;
     }
+    let itemsComment = [];
+    for (let i = 0; i < list.items.length; i++) {
+      itemsComment.push(false);
+    }
     this.state = {
       title: list.title,
       items: list.items,
       open: true,
+      comm: itemsComment,
     };
     this.onToggle = this.onToggle.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onChangeItemCheck = this.onChangeItemCheck.bind(this);
     this.onChangeItemLabel = this.onChangeItemLabel.bind(this);
+    this.onChangeItemQuestion = this.onChangeItemQuestion.bind(this);
+    this.onChangeItemWarning = this.onChangeItemWarning.bind(this);
+    this.onChangeItemComment = this.onChangeItemComment.bind(this);
+    this.onOpenItemComment = this.onOpenItemComment.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onDelLine = this.onDelLine.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -72,36 +81,65 @@ export default class InputCheckList extends Component {
   onChangeTitle(event, idx) {
     let { title, items } = this.state;
     title = event.target.value;
-    const list = {title: title, items: items};
+    const list = { title: title, items: items };
     this.onChange(list);
   }
 
   onAddLine() {
     this.setState({ open: true });
-    let { title, items } = this.state;
+    let { title, items, comm } = this.state;
     items.push(emptyItem);
-    const list = {title: title, items: items};
+    comm.push(false);
+    const list = { title: title, items: items };
     this.onChange(list);
   }
 
   onChangeItemLabel(event, idx) {
     let { title, items } = this.state;
     items[idx].label = event.target.value;
-    const list = {title: title, items: items};
+    const list = { title: title, items: items };
     this.onChange(list);
   }
 
-  onChangeItemCheck(event, idx) {
+  onChangeItemCheck(idx) {
     let { title, items } = this.state;
     items[idx].done = !items[idx].done;
-    const list = {title: title, items: items};
+    const list = { title: title, items: items };
     this.onChange(list);
+  }
+
+  onChangeItemQuestion(idx) {
+    let { title, items } = this.state;
+    items[idx].question = !items[idx].question;
+    const list = { title: title, items: items };
+    this.onChange(list);
+  }
+
+  onChangeItemWarning(idx) {
+    let { title, items } = this.state;
+    items[idx].warning = !items[idx].warning;
+    const list = { title: title, items: items };
+    this.onChange(list);
+  }
+
+  onChangeItemComment(event, idx) {
+    let { title, items } = this.state;
+    items[idx].comment = event.target.value;
+    const list = { title: title, items: items };
+    this.onChange(list);
+  }
+
+  onOpenItemComment(idx) {
+    let commOpen = this.state.comm;
+    commOpen[idx] = !commOpen[idx];
+    this.setState({ comm: commOpen });
   }
 
   onDelLine(idx) {
-    let { title, items } = this.state;
-    items.splice(idx,1);
-    const list = {title: title, items: items};
+    let { title, items, comm } = this.state;
+    items.splice(idx, 1);
+    comm.splice(idx, 1);
+    const list = { title: title, items: items };
     this.onChange(list);
   }
 
@@ -119,13 +157,14 @@ export default class InputCheckList extends Component {
     if (this.props.onDelete) {
       multi = true;
     }
+    console.log('FK comm', this.state.comm);
     return (
       <div className="input-check-list">
-        <div className='row'>
-          <div className='col-xs-w34'>
+        <div className="row">
+          <div className="col-xs-w34">
             <div className="input-group">
               <input
-                label=''
+                label=""
                 type="text"
                 className={classnames('border-secondary form-control')}
                 name={this.state.title}
@@ -134,21 +173,13 @@ export default class InputCheckList extends Component {
               />
               <div className="input-group-append">
                 {multi && (
-                  <button
-                    className={classnames(`btn btn-input border-secondary bg-light`)}
-                    onClick={this.onAddLine}>
+                  <button className={classnames(`btn btn-input border-secondary bg-light`)} onClick={this.onAddLine}>
                     {this.props.addLineIcon}
                   </button>
                 )}
-                {(this.state.items && this.state.items.length > 0) && (
-                  <button
-                    className={classnames(`btn btn-input border-secondary bg-light`)}
-                    onClick={this.onToggle}>
-                    {this.state.open === true ? (
-                      this.props.closeLinesIcon
-                    ) : (
-                      this.props.openLinesIcon
-                    )}
+                {this.state.items && this.state.items.length > 0 && (
+                  <button className={classnames(`btn btn-input border-secondary bg-light`)} onClick={this.onToggle}>
+                    {this.state.open === true ? this.props.closeLinesIcon : this.props.openLinesIcon}
                   </button>
                 )}
                 {multi && (
@@ -171,38 +202,102 @@ export default class InputCheckList extends Component {
             </div>
           )}
         </div>
-        {this.state.open && (
+        {this.state.open &&
           this.state.items.map((item, i) => (
-            <div className='row' key={`item-${i}`}>
-              <div className='col-xs-w32'>
+            <div className="row" key={`item-${i}`}>
+              <div className="col-xs-w32">
                 <div className="input-group">
                   <div className="input-group-prepend border border-secondary-light rounded-left">
-                    <div className="input-group-text" onClick={(e) => {this.onChangeItemCheck(e, i)}}>
+                    <div
+                      className="input-group-text"
+                      onClick={() => {
+                        this.onChangeItemCheck(i);
+                      }}
+                    >
                       {item.done === true ? this.props.checkedLineIcon : this.props.uncheckedLineIcon}
                     </div>
                   </div>
                   <input
                     type="text"
-                    className={classnames('border-secondary-light form-control', item.done && `${this.props.checkedLine}`)}
+                    className={classnames(
+                      'border-secondary-light form-control',
+                      item.done && `${this.props.checkedLine}`
+                    )}
                     name={`label-${i}`}
                     value={item.label}
                     disabled={item.done}
-                    onChange={(e) => {this.onChangeItemLabel(e, i)}}
+                    onChange={e => {
+                      this.onChangeItemLabel(e, i);
+                    }}
                   />
                   <div className="input-group-append">
                     <button
                       type="button"
+                      className={classnames(
+                        `btn btn-input border-secondary-light bg-light`,
+                        item.warning ? 'text-warning' : 'text-inactif'
+                      )}
+                      onClick={() => {
+                        this.onChangeItemWarning(i);
+                      }}
+                    >
+                      {this.props.warningLineIcon}
+                    </button>
+                  </div>
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className={classnames(
+                        `btn btn-input border-secondary-light bg-light`,
+                        item.question ? 'text-secondary' : 'text-inactif'
+                      )}
+                      onClick={() => {
+                        this.onChangeItemQuestion(i);
+                      }}
+                    >
+                      {this.props.questionLineIcon}
+                    </button>
+                  </div>
+                  <div className="input-group-append">
+                    <button
+                      type="button"
                       className={classnames(`btn btn-input border-secondary-light bg-light`)}
-                      onClick={() => {this.onDelLine(i)}}
+                      onClick={() => this.onOpenItemComment(i)}
+                    >
+                      {item.comment && item.comment !== ''
+                        ? this.props.commentLineIcon
+                        : this.props.emptyCommentLineIcon}
+                    </button>
+                  </div>
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className={classnames(`btn btn-input border-secondary-light bg-light`)}
+                      onClick={() => {
+                        this.onDelLine(i);
+                      }}
                     >
                       {this.props.delLineIcon}
                     </button>
                   </div>
                 </div>
               </div>
+              {this.state.comm[i] && (
+                <div className="col-xs-w30">
+                  <div className="border border-secondary-light">
+                    <textarea
+                      name="comment"
+                      className="w-100"
+                      value={item.comment}
+                      onChange={e => {
+                        this.onChangeItemComment(e, i);
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-          ))
-        )}
+          ))}
       </div>
     );
   }
