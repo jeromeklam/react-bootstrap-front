@@ -39,8 +39,9 @@ export const DefaultCol = (props) => {
       }
       case 'html': {
         if (content && content !== null && content !== '') {
-          content = content.replace('<br>', ' ');
-          content = content.replace('<br />', ' ');
+          content = content.replaceAll('<br>', ' ');
+          content = content.replaceAll('<br />', ' ');
+          content = content.replaceAll('</p><p>', ' ');
           content = striptags(content);
           content = <div dangerouslySetInnerHTML={{ __html: `${content}` }} />;
         }

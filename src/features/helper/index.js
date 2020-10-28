@@ -161,8 +161,9 @@ export const getRandomInt = (min, max) => {
 export function htmlToString(html) {
   let text = '';
   if (html && html !== null && html !== '') {
-    text = html.replace('<br>', ' ');
-    text = text.replace('<br />', ' ');
+    text = html.replaceAll('<br>', ' ');
+    text = text.replaceAll('<br />', ' ');
+    text = text.replaceAll('</p><p>', ' ');
     text = striptags(text);    
   }
   return text;
