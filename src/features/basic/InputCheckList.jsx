@@ -282,12 +282,14 @@ export default class InputCheckList extends Component {
                   </div>
                 </div>
               </div>
+              <div className="col-xs-w4" />
+              <div className="col-xs-w2" />
               {this.state.comm[i] && (
                 <div className="col-xs-w30">
-                  <div className="border border-secondary-light">
+                  <div className="border border-secondary-light form-group">
                     <textarea
                       name="comment"
-                      className="w-100"
+                      className="w-100 form-control custom-scrollbar"
                       value={item.comment}
                       onChange={e => {
                         this.onChangeItemComment(e, i);
