@@ -119,7 +119,7 @@ export default class DefaultList extends Component {
     inlineOpenedId: 0,
     inlineComponent: null,
     inlineOpenedItem: null,
-    mode: 'right',
+    mode: 'inline',
     closeIcon: null,
     titleMultiline: false,
   };
