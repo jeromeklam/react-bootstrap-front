@@ -229,7 +229,7 @@ export default class DesktopListLine extends Component {
                         <nav className="text-center pt-2">
                           <button
                             type="button"
-                            title="close"
+                            title="Fermer"
                             className={classnames('btn btn-left', 'btn-secondary')}
                             onClick={(evt) => {
                               evt.stopPropagation();
