@@ -10,30 +10,29 @@ export default class InputCheckLists extends Component {
     name: PropTypes.string.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    addIcon: PropTypes.element.isRequired,
     delIcon: PropTypes.element.isRequired,
     addLineIcon: PropTypes.element.isRequired,
     delLineIcon: PropTypes.element.isRequired,
-    openLinesIcon: PropTypes.element.isRequired,
-    closeLinesIcon: PropTypes.element.isRequired,
+    openLinesIcon: PropTypes.element,
+    closeLinesIcon: PropTypes.element,
     checkedLineIcon: PropTypes.element.isRequired,
     uncheckedLineIcon: PropTypes.element.isRequired,
-    commentLineIcon: PropTypes.element,
     checkedLine: PropTypes.string,
+    emptyCommentLineIcon: PropTypes.element,
+    commentLineIcon: PropTypes.element,
+    questionLineIcon: PropTypes.element,
+    warningLineIcon: PropTypes.element,
   };
 
   static defaultProps = {
     value: '',
-    addIcon: null,
-    delIcon: null,
-    addLineIcon: null,
-    delLineIcon: null,
+    checkedLine: '',
     openLinesIcon: null,
     closeLinesIcon: null,
-    checkedLineIcon: null,
-    uncheckedLineIcon: null,
+    warningLineIcon: null,
+    questionLineIcon: null,   
     commentLineIcon: null,
-    checkedLine: '',
+    emptyCommentLineIcon: null,
   };
 
   constructor(props) {
@@ -92,7 +91,6 @@ export default class InputCheckLists extends Component {
               onChange={(e) => {this.onChange(e, i)}}
               onDelete={() => {this.onDelete(i)}}
               error={this.props.error}
-              addIcon={this.props.addIcon}
               delIcon={this.props.delIcon}
               addLineIcon={this.props.addLineIcon}
               delLineIcon={this.props.delLineIcon}
