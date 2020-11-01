@@ -161,7 +161,8 @@ export default class FilterBuilder extends Component {
                     </div>
                   </div>
                 );
-              case 'select', 'select-label':
+              case 'select':
+              case 'select-label':
                 return (
                   <div key={colFilterable}>
                     <div className="form-group">
