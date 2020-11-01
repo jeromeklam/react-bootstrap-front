@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders container with className 1`] = `
+<div>
+  <div
+    className="container-responsive container container-xs"
+  />
+</div>
+`;
+
+exports[`renders container with other props 1`] = `
+<div>
+  <div
+    className="container-responsive container-xs"
+    onClick={[MockFunction]}
+  />
+</div>
+`;
+
+exports[`renders empty container 1`] = `
+<div>
+  <div
+    className="container-responsive container-xs"
+  />
+</div>
+`;
+
+exports[`renders empty container 2`] = `
+<div>
+  <div
+    className="container-responsive container-sm"
+  />
+</div>
+`;
+
+exports[`renders empty container 3`] = `
+<div>
+  <div
+    className="container-responsive container-md"
+  />
+</div>
+`;
+
+exports[`renders empty container 4`] = `
+<div>
+  <div
+    className="container-responsive container-lg"
+  />
+</div>
+`;
+
+exports[`renders empty container 5`] = `
+<div>
+  <div
+    className="container-responsive container-xl"
+  />
+</div>
+`;

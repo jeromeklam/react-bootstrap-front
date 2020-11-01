@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 
 export default class CalmButton extends Component {
   static propTypes = {
+    disabled: PropTypes.bool,
     onClick: PropTypes.func.isRequired,
+  };
+  static defaultProps = {
+    disabled: false,
   };
 
   constructor(props) {

@@ -19,7 +19,7 @@
   "main": "dist/react-bootstrap-front.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "test": "jest",
+    "test": "jest --silent=false",
     "prepublish": "npm run build",
     "studio": "rekit-studio -p 8477",
     "doc:prepare": "cross-env NODE_ENV=development gitbook install",
@@ -119,6 +119,7 @@
     "webpack-dev-server": "^3.7.0"
   },
   "jest": {
+    "verbose": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
@@ -140,7 +141,8 @@
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
+      "^.+\\.module\\.(css|sass|scss)$",
+      "node_modules/(?!imask)"
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
