@@ -1,0 +1,161 @@
+//
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
+  // For Google Chrome
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $foreground-color;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $background-color;
+  }
+
+  // For Internet Explorer
+  & {
+    scrollbar-face-color: $foreground-color;
+    scrollbar-track-color: $background-color;
+  }
+}
+
+//
+@mixin container-breakpoint-down($name, $current, $breakpoints: $container-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  $crt: map-get($breakpoints, $current);
+  @if $min <= $crt {
+    @content;
+  }
+}
+
+//
+@mixin container-breakpoint-up($name, $current, $breakpoints: $container-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  $crt: map-get($breakpoints, $current);
+  @if $min >= $crt {
+    @content;
+  }
+}
+
+//
+@function container-infix($name, $breakpoints: $container-breakpoints) {
+  @if $name != 'no' {
+    @return '-#{$name}';
+  }
+  @return '';
+}
+
+//
+@mixin make-container-hidden-columns(
+  $current: 'no',
+  $columns: $grid-columns,
+  $breakpoints: $container-breakpoints
+) {
+  @each $breakpoint in map-keys($breakpoints) {
+    @if $breakpoint != 'no' {
+      $infix: container-infix($breakpoint, $breakpoints);
+      .col#{$infix}-none:not([class*='col-#{$current}-w']) {
+        display: none;
+      }
+      .col#{$infix}-flex {
+        display: flex;
+      }
+      .col#{$infix}-block {
+        display: block;
+      }
+    }
+  }
+}
+
+//
+@mixin make-container-columns(
+  $current: 'no',
+  $columns: $grid-columns,
+  $gutter: $grid-gutter-width,
+  $breakpoints: $container-breakpoints
+) {
+  // Common properties for all breakpoints
+  %grid-column {
+    position: relative;
+    width: 100%;
+    padding-right: $gutter / 2;
+    padding-left: $gutter / 2;
+  }
+  $crt: map-get($breakpoints, $current);
+
+  @each $breakpoint in map-keys($breakpoints) {
+    $infix: container-infix($breakpoint, $breakpoints);
+    $min: map-get($breakpoints, $breakpoint);
+
+    @if $columns > 0 {
+      // Allow columns to stretch full width below their breakpoints
+      @for $i from 1 through $columns {
+        .col#{$infix}-w#{$i} {
+          @extend %grid-column;
+        }
+      }
+    }
+
+    .col#{$infix},
+    .col#{$infix}-wauto {
+      @extend %grid-column;
+    }
+
+    @include container-breakpoint-down($breakpoint, $current, $breakpoints) {
+      // Provide basic `.col-{bp}` classes for equal-width flexbox columns
+      .col#{$infix} {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+      }
+
+      @if $grid-row-columns > 0 {
+        @for $i from 1 through $grid-row-columns {
+          .row-cols#{$infix}-w#{$i} {
+            @include row-cols($i);
+          }
+        }
+      }
+
+      .col#{$infix}-auto {
+        @include make-col-auto();
+      }
+
+      @if $columns > 0 {
+        @for $i from 1 through $columns {
+          .col#{$infix}-w#{$i} {
+            @include make-col($i, $columns);
+          }
+        }
+      }
+
+      .order#{$infix}-first {
+        order: -1;
+      }
+
+      .order#{$infix}-last {
+        order: $columns + 1;
+      }
+
+      @for $i from 0 through $columns {
+        .order#{$infix}-w#{$i} {
+          order: $i;
+        }
+      }
+
+      @if $columns > 0 {
+        // `$columns - 1` because offsetting by the width of an entire row isn't possible
+        @for $i from 0 through ($columns - 1) {
+          @if not($infix == '' and $i == 0) {
+            // Avoid emitting useless .offset-0
+            .offset#{$infix}-w#{$i} {
+              @include make-col-offset($i, $columns);
+            }
+          }
+        }
+      }
+    }
+  }
+}

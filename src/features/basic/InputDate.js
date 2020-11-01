@@ -4,9 +4,7 @@ import classnames from 'classnames';
 import { IMaskInput } from 'react-imask';
 import IMask from 'imask';
 import DatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import fr from 'date-fns/locale/fr';
-import './InputDate.css';
 import { displayDate } from '../helper';
 import { Dropdown } from './';
 

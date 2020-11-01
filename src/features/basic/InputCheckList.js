@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import './InputCheckList.css';
 
 const emptyItem = { label: '', done: false, comment: '', question: false, warning: false };
 const emptyList = { title: 'Checklist', items: [] };

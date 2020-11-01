@@ -4,7 +4,6 @@ import classnames from 'classnames';
 import { EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const myStyle = {
   height: 'auto',
