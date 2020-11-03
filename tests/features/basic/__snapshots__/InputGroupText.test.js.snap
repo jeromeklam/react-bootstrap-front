@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders empty 1`] = `
+<span
+  className="input-group-text"
+/>
+`;
+
+exports[`renders with content and className 1`] = `
+<span
+  className="input-group-text text"
+>
+  <p>
+    TEST
+  </p>
+</span>
+`;

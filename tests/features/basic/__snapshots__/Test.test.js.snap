@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<div
+  className="basic-test"
+>
+  Component content: basic/Test
+</div>
+`;

@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import Flag from 'react-world-flags';
 import { Dropdown } from '../basic';
-import { HighlightToggler } from '../tour';
+import { Highlight } from '../tour';
 
 const navStyles = {
   position: 'absolute',
@@ -223,7 +223,7 @@ export class DefaultHeader extends Component {
                 );
               })}
               <li className="nav-item">
-                <HighlightToggler theme="NAV" />
+                <Highlight toggler={true} theme="NAV" />
               </li>
             </ul>
           </div>

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders empty row 1`] = `
+<div
+  className="row"
+/>
+`;
+
+exports[`renders row with children 1`] = `
+<div
+  className="row"
+>
+  <p>
+    Test
+  </p>
+</div>
+`;
+
+exports[`renders row with children and className 1`] = `
+<div
+  className="row row-even"
+>
+  <p>
+    Test
+  </p>
+</div>
+`;
+
+exports[`renders row with props 1`] = `
+<div
+  className="row"
+  onClick={[MockFunction]}
+/>
+`;

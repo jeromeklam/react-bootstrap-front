@@ -4,30 +4,30 @@ import 'core-js/features/global-this';
  * Basic styles
  *******************************************************************************
  */
-export { default as Dropdown } from './features/basic/Dropdown.jsx';
-export * from './features/basic/InlineInputCheckbox.jsx';
-export * from './features/basic/InlineInputPicker.jsx';
-export { default as InlineInputSelect } from './features/basic/InlineInputSelect.jsx';
-export * from './features/basic/InlineInputText.jsx';
-export * from './features/basic/InlineLabel.jsx';
-export * from './features/basic/InputCheckbox.jsx';
-export { default as InputDate } from './features/basic/InputDate.jsx';
-export { default as InputDatetime } from './features/basic/InputDatetime.jsx';
-export * from './features/basic/InputEmail.jsx';
-export * from './features/basic/InputHidden.jsx';
-export { default as InputMask} from './features/basic/InputMask.jsx';
-export { default as InputMonetary } from './features/basic/InputMonetary.jsx';
-export { default as InputPassword } from './features/basic/InputPassword.jsx';
-export { default as InputPicker } from './features/basic/InputPicker.jsx';
-export * from './features/basic/InputRadio.jsx';
-export * from './features/basic/InputRandomText.jsx';
-export { default as InputSelect } from './features/basic/InputSelect.jsx';
-export { default as InputSpin } from './features/basic/InputSpin.jsx';
-export { default as InputStringarray } from './features/basic/InputStringarray.jsx';
-export * from './features/basic/InputText.jsx';
-export { default as InputTextarea } from './features/basic/InputTextarea.jsx';
-export { default as InputCheckList } from './features/basic/InputCheckList.jsx';
-export { default as InputCheckLists } from './features/basic/InputCheckLists.jsx';
+export { default as Dropdown } from './features/basic/Dropdown';
+export * from './features/basic/InlineInputCheckbox';
+export * from './features/basic/InlineInputPicker';
+export { default as InlineInputSelect } from './features/basic/InlineInputSelect';
+export * from './features/basic/InlineInputText';
+export * from './features/basic/InlineLabel';
+export * from './features/basic/InputCheckbox';
+export { default as InputDate } from './features/basic/InputDate';
+export { default as InputDatetime } from './features/basic/InputDatetime';
+export * from './features/basic/InputEmail';
+export * from './features/basic/InputHidden';
+export { default as InputMask} from './features/basic/InputMask';
+export { default as InputMonetary } from './features/basic/InputMonetary';
+export { default as InputPassword } from './features/basic/InputPassword';
+export { default as InputPicker } from './features/basic/InputPicker';
+export * from './features/basic/InputRadio';
+export * from './features/basic/InputRandomText';
+export { default as InputSelect } from './features/basic/InputSelect';
+export { default as InputSpin } from './features/basic/InputSpin';
+export { default as InputStringarray } from './features/basic/InputStringarray';
+export * from './features/basic/InputText';
+export { default as InputTextarea } from './features/basic/InputTextarea';
+export { default as InputCheckList } from './features/basic/InputCheckList';
+export { default as InputCheckLists } from './features/basic/InputCheckLists';
 
 /**
  *******************************************************************************

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<div>
+  <input
+    id="input-hidden"
+    name="hidden"
+    type="hidden"
+    value="test"
+  />
+</div>
+`;

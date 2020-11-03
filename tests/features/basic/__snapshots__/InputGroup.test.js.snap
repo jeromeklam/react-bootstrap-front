@@ -1,0 +1,251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders empty content 1`] = `
+<div
+  className="form-group"
+>
+  
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    />
+  </div>
+</div>
+`;
+
+exports[`renders with content 1`] = `
+<div
+  className="form-group"
+>
+  
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content and label 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content and label and error 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group is-invalid"
+    >
+      <input
+        type="text"
+      />
+    </div>
+    <div
+      className="invalid-feedback"
+    >
+      Error
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content and label not on top 1`] = `
+<div
+  className="form-group row"
+>
+  <label
+    className="col-form-label col-xs-w6"
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className="col-xs-w30"
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content and label not on top with complex size 1`] = `
+<div
+  className="form-group row"
+>
+  <label
+    className="col-form-label col-xs-w10 col-sm-w12"
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className="col-xs-w26 col-sm-w24"
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content and label not on top with size 1`] = `
+<div
+  className="form-group row"
+>
+  <label
+    className="col-form-label col-xs-w10"
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className="col-xs-w26"
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content, label and element error 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group is-invalid"
+    >
+      <input
+        type="text"
+      />
+    </div>
+    <div
+      className="invalid-feedback"
+    >
+      <span>
+        Error
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`renders with content, label and element helper 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        type="text"
+      />
+    </div>
+    <small
+      className="form-text text-muted"
+    >
+      <span>
+        Help
+      </span>
+    </small>
+  </div>
+</div>
+`;
+
+exports[`renders with content, label and text error 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor={null}
+  >
+    Test
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group is-invalid"
+    >
+      <input
+        type="text"
+      />
+    </div>
+    <div
+      className="invalid-feedback"
+    >
+      Error
+    </div>
+  </div>
+</div>
+`;

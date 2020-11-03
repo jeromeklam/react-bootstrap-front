@@ -19,6 +19,7 @@
   "main": "dist/react-bootstrap-front.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "test": "jest --silent=false",
     "prepublish": "npm run build",
     "studio": "rekit-studio -p 8477",
     "doc:prepare": "cross-env NODE_ENV=development gitbook install",
@@ -32,7 +33,7 @@
     "react-router-dom": "^5.0.1"
   },
   "dependencies": {
-    "@popperjs/core": "^2.4.0",
+    "@popperjs/core": "^2.5.4",
     "autosize": "^4.0.2",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.2.6",
@@ -53,6 +54,7 @@
     "object-assign": "^4.1.1",
     "object.omit": "^3.0.0",
     "prop-types": "^15.7.2",
+    "react-app-polyfill": "^2.0.0",
     "react-datepicker": "^2.11.0",
     "react-draft-wysiwyg": "^1.14.4",
     "react-imask": "^6.0.3",
@@ -71,26 +73,43 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",
-    "@babel/core": "^7.8.3",
+    "@babel/core": "^7.4.3",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/preset-react": "^7.8.3",
-    "babel-loader": "^8.0.0-beta.0",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.1",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "9.0.0",
+    "babel-jest": "23.6.0",
+    "babel-loader": "8.0.4",
     "babel-plugin-module-resolver": "3.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-react-app": "7.0.2",
     "coveralls": "3.0.0",
     "cross-env": "^5.1.4",
     "css-loader": "^2.1.1",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.8.0",
+    "eslint": "^5.13.0",
+    "eslint-config-react-app": "^3.0.8",
+    "eslint-loader": "2.1.1",
+    "eslint-plugin-flowtype": "2.50.1",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jsx-a11y": "6.1.2",
+    "eslint-plugin-react": "7.11.1",
+    "eslint-plugin-react-hooks": "^2.0.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^4.0.0",
     "fs-file-tree": "1.0.6",
     "html-webpack-plugin": "^3.2.0",
-    "jest": "22.4.3",
+    "jest": "^26.0.0",
+    "jest-pnp-resolver": "^1.2.2",
+    "jest-resolve": "26.6.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-redux": "^7.1.1",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.0.1",
+    "react-test-renderer": "^16.0.1",
     "striptags": "2.2.1",
     "style-loader": "^0.23.1",
     "styled-components": "4.0.3",
@@ -98,5 +117,48 @@
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.7.0"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "resolver": "jest-pnp-resolver",
+    "setupFiles": [
+      "react-app-polyfill/jsdom",
+      "<rootDir>/tests/setup.js"
+    ],
+    "testMatch": [
+      "<rootDir>/tests/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jsdom",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$",
+      "node_modules/(?!imask)"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ]
   }
 }

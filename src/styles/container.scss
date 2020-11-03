@@ -1,0 +1,141 @@
+@import './mixins/container';
+
+// Row
+//
+// Rows contain your columns.
+.row {
+  @include make-row();
+}
+
+// Remove the negative margin from default .row, then the horizontal padding
+// from all immediate children columns (to prevent runaway style inheritance).
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+//
+@each $breakpoint in map-keys($container-max-widths) {
+  $width: map-get($container-max-widths, $breakpoint);
+  .jumbotron-#{$breakpoint} {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+
+// Containers
+.container-xl {
+  @include make-container-columns(xl);
+  @include make-container-hidden-columns(xl);
+
+  $width: map-get($container-max-widths, xl);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+.container-lg {
+  @include make-container-columns(lg);
+  @include make-container-hidden-columns(lg);
+
+  $width: map-get($container-max-widths, lg);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+.container-md {
+  @include make-container-columns(md);
+  @include make-container-hidden-columns(md);
+
+  $width: map-get($container-max-widths, md);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+.container-sm {
+  @include make-container-columns(sm);
+  @include make-container-hidden-columns(sm);
+
+  $width: map-get($container-max-widths, sm);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+.container-xs {
+  @include make-container-columns(xs);
+  @include make-container-hidden-columns(xs);
+}
+.container-responsive {
+  .row .col-xs-first {
+    padding-left: 15px;
+  }
+  .row .col-xs-last {
+    padding-right: 15px;
+  }
+}
+
+.row .col-hidden {
+  display: none;
+}
+
+@include media-breakpoint-up(sm) {
+  .row .col-sm-first {
+    padding-left: 15px;
+  }
+  .row .col-sm-last {
+    padding-right: 15px;
+  }
+}
+@include media-breakpoint-up(md) {
+  .row .col-md-first {
+    padding-left: 15px;
+  }
+  .row .col-md-last {
+    padding-right: 15px;
+  }
+}
+@include media-breakpoint-up(lg) {
+  .row .col-lg-first {
+    padding-left: 15px;
+  }
+  .row .col-lg-last {
+    padding-right: 15px;
+  }
+}
+@include media-breakpoint-up(xl) {
+  .row .col-xl-first {
+    padding-left: 15px;
+  }
+  .row .col-xl-last {
+    padding-right: 15px;
+  }
+}

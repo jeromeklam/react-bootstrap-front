@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<button
+  className="btn bg-secondary"
+  disabled={false}
+  onClick={[Function]}
+>
+  My Button
+</button>
+`;
+
+exports[`render with className and name 2`] = `
+<button
+  className="btn bg-secondary"
+  disabled={true}
+  onClick={[Function]}
+>
+  My Button
+</button>
+`;
+
+exports[`render with className and name 3`] = `
+<button
+  className="btn bg-secondary"
+  disabled={false}
+  onClick={[Function]}
+>
+  My Button
+</button>
+`;
