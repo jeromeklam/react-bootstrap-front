@@ -1,16 +1,17 @@
 import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
-import uuidv1 from 'uuid/v1'
+import classnames from 'classnames';
+import uuidv1 from 'uuid/v1';
 import reducer from './redux/reducer';
 import initialState from './redux/initialState';
 import { addHighlight } from './redux/actions';
 
 function Highlight(props) {
-  const [state, setState] = useState({id: null, ref: null});
+  const [state, setState] = useState({ id: null, ref: null });
   const [store, dispatch] = useReducer(reducer, initialState);
   let newState = state;
   if (!state.id) {
-    newState = {id: uuidv1(), ref:React.createRef()};
+    newState = { id: uuidv1(), ref: React.createRef() };
     setState(newState);
   }
   let datas = {
@@ -20,10 +21,12 @@ function Highlight(props) {
   if (!index) {
     dispatch(addHighlight({ id: newState.id, ref: newState.ref, theme: props.theme }));
   }
+  const { children, className, title, style, otherProps } = props;
   return (
-    <div ref={newState.ref} style={{ position: 'absolute' }} className="tour-highlight" {...datas}>
-      <div style={{display: 'none'}}>
-        {props.children ? props.children : <span>{props.title}</span>}
+    <div ref={newState.ref} className={classnames('tour-highlight', className)} style={style} {...otherProps} {...datas}>
+      {children}
+      <div className="tour-highlight-content" style={{ display: 'none' }}>
+        <span>{title}</span>
       </div>
     </div>
   );
@@ -31,12 +34,14 @@ function Highlight(props) {
 
 Highlight.propTypes = {
   children: PropTypes.element,
+  className: PropTypes.string,
   theme: PropTypes.string,
   title: PropTypes.string,
 };
 
 Highlight.defaultProps = {
   children: null,
+  className: null,
   theme: 'ALL',
   title: '',
 };
