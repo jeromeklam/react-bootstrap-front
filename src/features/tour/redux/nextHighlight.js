@@ -1,35 +1,31 @@
 import { TOUR_NEXT_HIGHLIGHT } from './constants';
 
-export function nextHighlight(theme) {
+export function nextHighlight() {
   return {
-    type: TOUR_NEXT_HIGHLIGHT,
-    theme,
+    type: TOUR_NEXT_HIGHLIGHT
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_NEXT_HIGHLIGHT: {
-      let current = 0;
+      let currentPos = state.current || 0;
+      currentPos++;
+      let theme = state.theme || 'ALL';
       const { highlights } = state;
-      let currentPos = highlights.findIndex(elem => elem.ref === state.current);
-      currentPos += 1;
-      while (currentPos < highlights.length && highlights[currentPos].theme !== action.theme) {
+      while (currentPos < highlights.length && highlights[currentPos].theme !== theme) {
         currentPos += 1;
       }
-      if (currentPos >= highlights.length || highlights[currentPos].theme !== action.theme) {
+      if (currentPos >= highlights.length || highlights[currentPos].theme !== theme) {
         currentPos = 0;
-        while (currentPos < highlights.length && highlights[currentPos].theme !== action.theme) {
+        while (currentPos < highlights.length && highlights[currentPos].theme !== theme) {
           currentPos += 1;
         }
       }
-      if (currentPos < highlights.length && highlights[currentPos].theme === action.theme) {
-        current = highlights[currentPos].ref;
-      }
+      console.log(highlights, currentPos);
       return {
         ...state,
-        current,
-        theme: action.theme || 'ALL',
+        current: currentPos,
       };
     }
 

@@ -180,3 +180,29 @@ export const getFieldId = (name, id = null) => {
   const rnd = getRandomInt(10000, 99999);
   return `${name}-${rnd}`;
 };
+
+export const getRefCoords = ref => {
+  const w = Math.max(
+    document.documentElement.clientWidth,
+    window.innerWidth || 0
+  )
+  const h = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight || 0
+  )
+  let coords = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, w, h };
+  if (ref && ref.current) {
+    try {
+      const bRect = ref.current.getBoundingClientRect();
+      if (bRect) {
+        coords.top = bRect.top;
+        coords.right = bRect.right;
+        coords.bottom = bRect.bottom;
+        coords.left = bRect.left;
+        coords.width = bRect.width;
+        coords.height = bRect.height;
+      }
+    } catch (ex) {console.error(ex)}
+  }
+  return coords;
+};

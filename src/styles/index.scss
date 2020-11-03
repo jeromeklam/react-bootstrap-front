@@ -1,5 +1,7 @@
 @import './global';
 @import './container';
 
+@import '../features/advanced/style';
 @import '../features/basic/style';
 @import '../features/grid/style';
+@import '../features/tour/style';

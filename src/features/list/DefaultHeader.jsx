@@ -16,6 +16,8 @@ const titlestyle2 = {
   fontWeight: 'normal',
   paddingLeft: '5px',
   paddingRight: '10px',
+  display: 'inline-block',
+  lineHeight: '1',
 };
 
 const mystyle = {
@@ -38,7 +40,7 @@ const sortToText = (sort, cols) => {
   let text = 'Aucun tri';
   if (sort) {
     text = '';
-    sort.forEach((elem) => {
+    sort.forEach(elem => {
       const found = cols.find(elem2 => elem2.col === elem.col);
       if (found) {
         let way = '+';
@@ -91,7 +93,7 @@ export default class DefaultHeader extends Component {
   render() {
     let filterMenuIcon = this.props.filterFullIcon;
     let filterButtonIcon = {};
-    let filterButtonTitle = "";
+    let filterButtonTitle = '';
     let filterButtonAction = {};
     let showFilterButton = false;
     if (this.props.filters) {
@@ -100,22 +102,22 @@ export default class DefaultHeader extends Component {
         if (this.props.filters.isDefaultExist()) {
           showFilterButton = true;
           filterButtonIcon = this.props.filterDefaultIcon;
-          filterButtonTitle = "Activer les filtres par défaut"
+          filterButtonTitle = 'Activer les filtres par défaut';
           filterButtonAction = this.props.onClearFilters;
         }
       } else {
         showFilterButton = true;
         if (this.props.filters.isDefaultOnly()) {
           filterButtonIcon = this.props.filterClearDefaultIcon;
-          filterButtonTitle = "Supprimer les filtres par défaut"
+          filterButtonTitle = 'Supprimer les filtres par défaut';
           filterButtonAction = this.props.onClearFiltersDefault;
         } else {
           filterButtonIcon = this.props.filterClearIcon;
           filterButtonAction = this.props.onClearFilters;
           if (this.props.filters.isDefaultExist()) {
-            filterButtonTitle = "Supprimer les filtres ajoutés aux filtres par défaut"
+            filterButtonTitle = 'Supprimer les filtres ajoutés aux filtres par défaut';
           } else {
-            filterButtonTitle = "Supprimer les filtres"
+            filterButtonTitle = 'Supprimer les filtres';
           }
         }
       }
@@ -130,31 +132,50 @@ export default class DefaultHeader extends Component {
             <span style={titlestyle} className="text-light">
               {`${this.props.title}`}
             </span>
-            <span style={titlestyle2} className="text-light">
-              {` ${sortToText(this.props.sort, this.props.cols)}`}
-            </span>
-            <Highlight position="bottom" theme="LIST" title="Tri en cours" />
+            <Highlight style={titlestyle2} className="text-light" position="bottom" theme="LIST" title="Tri en cours">
+              <span>
+                {` ${sortToText(this.props.sort, this.props.cols)}`}
+              </span>
+            </Highlight>
           </div>
           <div className="col-xs-w10" style={quickStyles}>
-            {this.props.quickSearch}
-            <Highlight position="bottom" theme="LIST" title="Recherche rapide" />
+            <Highlight position="bottom" theme="LIST" title="Recherche rapide">
+              {this.props.quickSearch}
+            </Highlight>
           </div>
           <div className="col-xs-w10 text-right">
             <ul className="nav justify-content-end">
               {this.props.selectMenu && (
                 <li className="nav-item">
                   <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" ref={this.state.myRef} type="button" onClick={this.onToggle}>
-                      {this.props.selected.length}
-                    </button>
-                    <Highlight position="bottom" theme="LIST" title="Informations sur la sélection en cours" />
-                    {this.state.show &&
+                    <Highlight position="bottom" theme="LIST" title="Informations sur la sélection en cours">
+                      <button
+                        className="btn btn-secondary dropdown-toggle"
+                        ref={this.state.myRef}
+                        type="button"
+                        onClick={this.onToggle}
+                      >
+                        {this.props.selected.length}
+                      </button>
+                    </Highlight>
+                    {this.state.show && (
                       <Dropdown myRef={this.state.myRef} onClose={this.onToggle} align="bottom-right">
-                        <div className="bg-light border border-secondary text-secondary" aria-labelledby="dropdownMenuButton">
-                          {this.props.selectMenu.map((option) => {
+                        <div
+                          className="bg-light border border-secondary text-secondary"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          {this.props.selectMenu.map(option => {
                             if (option.name !== 'divider') {
                               return (
-                                <button type="button" className="text-secondary dropdown-item" key={`option-select-${option.name}`} onClick={() => { this.onToggle(); option.onClick(); }}>
+                                <button
+                                  type="button"
+                                  className="text-secondary dropdown-item"
+                                  key={`option-select-${option.name}`}
+                                  onClick={() => {
+                                    this.onToggle();
+                                    option.onClick();
+                                  }}
+                                >
                                   {option.label}
                                 </button>
                               );
@@ -163,29 +184,31 @@ export default class DefaultHeader extends Component {
                           })}
                         </div>
                       </Dropdown>
-                    }
+                    )}
                   </div>
                 </li>
               )}
-              {(this.props.filters) && (
+              {this.props.filters && (
                 <li className="nav-item">
-                  <button type="button" className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
-                    {filterMenuIcon}
-                  </button>
-                  <Highlight position="bottom" theme="LIST" title="Gérer les filtres" />
+                  <Highlight position="bottom" theme="LIST" title="Gérer les filtres">
+                    <button type="button" className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
+                      {filterMenuIcon}
+                    </button>
+                  </Highlight>
                 </li>
               )}
-              {(showFilterButton) && (
+              {showFilterButton && (
                 <li className="nav-item">
-                  <button 
-                    type="button" 
-                    className="btn btn-secondary text-light"
-                    title={filterButtonTitle}
-                    onClick={filterButtonAction}
-                  >
-                    {filterButtonIcon}
-                  </button>
-                <Highlight position="bottom" theme="LIST" title="Supprimer les filtres" />
+                  <Highlight position="bottom" theme="LIST" title="Supprimer les filtres">
+                    <button
+                      type="button"
+                      className="btn btn-secondary text-light"
+                      title={filterButtonTitle}
+                      onClick={filterButtonAction}
+                    >
+                      {filterButtonIcon}
+                    </button>
+                  </Highlight>
                 </li>
               )}
               {this.props.globalActions &&

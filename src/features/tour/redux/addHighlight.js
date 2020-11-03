@@ -11,7 +11,7 @@ export function reducer(state, action) {
   switch (action.type) {
     case TOUR_ADD_HIGHLIGHT: {
       let { highlights } = state;
-      const myHighlight = { ...action.highlight, display: false };
+      const myHighlight = { ...action.highlight };
       highlights.push(myHighlight);
       return {
         ...state,
