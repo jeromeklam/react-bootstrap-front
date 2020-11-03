@@ -1,90 +1,51 @@
-import React, { Component } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as actions from './redux/actions';
-import './HighlightButton.css';
+import reducer from './redux/reducer';
+import initialState from './redux/initialState';
+import { startHighlight, stopHighlight } from './redux/actions';
+import { Dropdown } from '../basic';
 
-export class HighlightButton extends Component {
-  static propTypes = {
-    tour: PropTypes.element.isRequired,
-    actions: PropTypes.element.isRequired,
-    theme: PropTypes.string,
-    className: PropTypes.string,
-  };
-
-  static defaultProps = {
-    theme: 'ALL',
-    className: 'nav-link',
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      timer: null,
-      theme: props.theme,
-    };
-    this.onClick = this.onClick.bind(this);
-    this.onNext = this.onNext.bind(this);
-  }
-
-  onNext() {
-    if (this.state.timer) {
-      clearTimeout(this.state.timer);
-    }
-    if (this.props.tour.current > 0) {
-      this.props.actions.nextHighlight(this.state.theme);
-      const t = setTimeout(this.onNext, 3000);
-      this.setState({ timer: t });
-    }
-  }
-
-  onClick(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    const { current } = this.props.tour;
-    if (current > 0) {
-      if (this.state.timer) {
-        clearTimeout(this.state.timer);
-        this.setState({ timer: null });
-      }
-    } else {
-      if (this.state.timer) {
-        clearTimeout(this.state.timer);
-      }
-      const t = setTimeout(this.onNext, 3000);
-      this.setState({ timer: t });
-    }
-    this.props.actions.toggleHighlight(this.state.theme);
-  }
-
-  render() {
-    const classname =
-      this.props.tour && this.props.tour.highlights && this.props.tour.highlights.length <= 0 ? 'disabled' : '';
-    return (
-      <a className={classnames('help-toggler', classname, this.props.className)} onClick={this.onClick} title="Aide">
-        <span>
-          <b>?</b>
-        </span>
-      </a>
-    );
-  }
+function HighlightButton(props) {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  return (
+    <div
+      className={classnames('help-toggler', props.className)}
+      onClick={(e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        if (!state.started) {
+          dispatch(startHighlight(props.theme));
+        } else {
+          dispatch(stopHighlight());
+        }
+      }}
+      title="Aide"
+    >
+      <span>
+        <b>?</b>
+      </span>
+      {state.started && (
+        <Dropdown myRef={state.highlights[4].ref} onClose={() => dispatch(stopHighlight())}>
+          <div className="card">
+            <div className="card-body">TEST</div>
+            {console.log(state.highlights)}
+          </div>
+        </Dropdown>
+      )}
+    </div>
+  );
 }
 
-/* istanbul ignore next */
-function mapStateToProps(state) {
-  return {
-    tour: state.tour,
-  };
-}
+HighlightButton.propTypes = {
+  className: PropTypes.string,
+  theme: PropTypes.string.isRequired,
+};
 
-/* istanbul ignore next */
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({ ...actions }, dispatch),
-  };
-}
+HighlightButton.defaultProps = {
+  className: '',
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HighlightButton);
+export default HighlightButton;

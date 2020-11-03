@@ -20,6 +20,16 @@ exports[`renders col with children and className 1`] = `
 </div>
 `;
 
+exports[`renders col with children and text-align 1`] = `
+<div
+  className="col col-xs-auto text-left"
+>
+  <p>
+    Test
+  </p>
+</div>
+`;
+
 exports[`renders col with complex size 1`] = `
 <div
   className="col col-xs-w36 col-sm-w18 col-lg-none col-xl-none"

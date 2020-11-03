@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getFieldId } from '../helper';
 
-export const InputHidden = props => (
-  <div>
-    <input type="hidden" id={props.id} name={props.name} value={props.value} />
-  </div>
-);
+export const InputHidden = props => {
+  const { id, name, value, otherProps } = props;
+  const myId = getFieldId(name, id);
+  return (
+    <div>
+      <input {...otherProps} type="hidden" id={myId} name={name} value={value} />
+    </div>
+  );
+};
 
 InputHidden.propTypes = {
   id: PropTypes.string,

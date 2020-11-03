@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { Test } from '../../../src/features/basic';
+import { Highlight } from '../../../src/features/tour';
 
 const callback = jest.fn();
 jest.useFakeTimers();
@@ -8,9 +8,9 @@ jest.useFakeTimers();
 it('render with className and name', () => {
   // First render
   const component = renderer.create(
-    <Test className="btn bg-secondary" onClick={callback}>
+    <Highlight theme="TEST">
       My Button
-    </Test>
+    </Highlight>
   );
   let test = component.toJSON();
   expect(test).toMatchSnapshot();

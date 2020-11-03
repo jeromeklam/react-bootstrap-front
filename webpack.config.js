@@ -27,6 +27,16 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       { test: /\.svg$/, loader: 'svg-url-loader' },
+      {
+        test: /\.scss$/,
+        use: {
+          loader: 'sass-loader',
+          options: {
+            webpackImporter: true,
+            includePaths: [path.resolve('/node_modules')],
+          },
+        },
+      },
     ],
   },
   resolve: {
@@ -53,6 +63,6 @@ module.exports = {
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000
-  }
+    maxAssetSize: 512000,
+  },
 };

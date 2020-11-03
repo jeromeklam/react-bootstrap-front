@@ -33,6 +33,17 @@ it('renders col with children and className', () => {
   expect(test).toMatchSnapshot();
 });
 
+it('renders col with children and text-align', () => {
+  // First render
+  const component = renderer.create(
+    <Col textAlign="left">
+      <p>Test</p>
+    </Col>
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
+});
+
 it('renders col with props', () => {
   // First render
   const component = renderer.create(

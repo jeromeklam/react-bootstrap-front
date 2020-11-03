@@ -2,27 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ObserveSize from 'react-observe-size';
+import { getSizeFromWidth } from '../helper';
 
 const detectWidth = width => {
-  let clWidth = '';
-  if (width < 768) {
-    clWidth = 'container-xs';
-  } else {
-    if (width < 1024) {
-      clWidth = 'container-sm';
-    } else {
-      if (width < 1200) {
-        clWidth = 'container-md';
-      } else {
-        if (width < 1600) {
-          clWidth = 'container-lg';
-        } else {
-          clWidth = 'container-xl';
-        }
-      }
-    }
-  }
-  return clWidth;
+  return 'container-' + getSizeFromWidth(width);
 };
 
 export default function Container(props) {

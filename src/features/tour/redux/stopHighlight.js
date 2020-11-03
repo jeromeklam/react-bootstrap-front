@@ -9,10 +9,9 @@ export function stopHighlight() {
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_STOP_HIGHLIGHT: {
-      const current = 0;
       return {
         ...state,
-        current,
+        started: false,
       };
     }
 

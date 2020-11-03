@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { Highlight, HighlightToggler } from '../tour';
+import { Highlight, HighlightButton } from '../tour';
 import { Dropdown } from '../basic';
 
 const titlestyle = {
@@ -124,7 +124,7 @@ export default class DefaultHeader extends Component {
       <div style={mystyle} className={classnames('default-list-header bg-secondary text-light', this.props.className)}>
         <div className="row">
           <div className="col-xs-w2 text-center">
-            <HighlightToggler className="text-light" theme="LIST" />
+            <HighlightButton className="text-light" theme="LIST" />
           </div>
           <div className="col-xs-w14">
             <span style={titlestyle} className="text-light">

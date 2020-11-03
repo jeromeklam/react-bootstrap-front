@@ -1,4 +1,4 @@
-@import '~react-datepicker/dist/react-datepicker.scss';
+@import '~react-datepicker/dist/react-datepicker.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 @import './CalmButton';
 @import './Dropdown';
@@ -26,4 +26,7 @@
 @import './InputText';
 @import './InputTextarea';
 @import './ResponsiveButton';
-@import './Test';
+@import './InputGroup';
+@import './InputGroupAppend';
+@import './InputGroupPrepend';
+@import './InputGroupText';

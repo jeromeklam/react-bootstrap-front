@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import ToolTip from 'react-portal-tooltip';
 import * as actions from './redux/actions';
+import { Row, Col } from '../grid';
 
 let globalRef = 1;
 
@@ -90,27 +91,28 @@ export class HighlightCard extends Component {
     let footer = null;
     let content = null;
     let current = null;
+    console.log(this.props);
     if (this.props.tour && this.props.tour.current) {
       current = this.props.tour.current;
       footer = (
         <div className="text-secondary">
-          <div className="row mt-3">
-            <div className="col-xs-w10 text-left">
+          <Row className="mt-3">
+            <Col size={10} textAlign="left">
               <button type="button" className="btn btn-sm btn-primary" onClick={this.prev}>
                 <span>{'<<'}</span>
               </button>
-            </div>
-            <div className="col-xs-w16 text-center">
+            </Col>
+            <Col size={16} textAlign="center">
               <button type="button" className="btn btn-sm btn-secondary" onClick={this.stop}>
                 <span>Fermer</span>
               </button>
-            </div>
-            <div className="col-xs-w10 text-right">
+            </Col>
+            <Col size={10} textAlign="right">
               <button type="button" className="btn btn-sm btn-primary" onClick={this.next}>
                 <span>{'>>'}</span>
               </button>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
       );
       content = <h5 className="text-primary text-center">{this.state.title}</h5>;
@@ -152,4 +154,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HighlightCard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HighlightCard);

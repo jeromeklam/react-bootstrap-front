@@ -1,23 +1,27 @@
 import striptags from 'striptags';
 
 export const getSizeFromWidth = width => {
+  let testW = parseInt(width, 10);
+  if (isNaN(testW)) {
+    testW = 0;
+  }
   let size = 'xs';
-  if (width >= 768) {
+  if (testW >= 768) {
     size = 'sm';
   }
-  if (width >= 1024) {
+  if (testW >= 1024) {
     size = 'md';
   }
-  if (width >= 1200) {
+  if (testW >= 1200) {
     size = 'lg';
   }
-  if (width >= 1600) {
+  if (testW >= 1600) {
     size = 'xl';
   }
   return size;
-}
+};
 
-export const isEmptyText = (text) => {
+export const isEmptyText = text => {
   try {
     if (text === null) {
       return true;
@@ -35,7 +39,7 @@ export const isEmptyText = (text) => {
 };
 
 export const roundMonetary = (value, language, money, maxDigits = null) => {
-  if (language === null  || language === '') {
+  if (language === null || language === '') {
     language = 'fr-FR';
   }
   if (money === null || money === '') {
@@ -50,7 +54,7 @@ export const roundMonetary = (value, language, money, maxDigits = null) => {
 };
 
 export const formatNumber = (value, language, money, maxDigits = null) => {
-  if (language === null  || language === '') {
+  if (language === null || language === '') {
     language = 'fr-FR';
   }
   if (money === null || money === '') {
@@ -86,7 +90,7 @@ export function getObjectmemberValue(obj, member) {
   return ' ';
 }
 
-export const randomString = (length) => {
+export const randomString = length => {
   const random13chars = () => {
     return Math.random()
       .toString(16)
@@ -155,17 +159,24 @@ export const displayBool = (bool, yes = 'Oui', no = 'Non', language = 'fr-FR') =
 export const getRandomInt = (min, max) => {
   const minL = Math.ceil(min);
   const maxL = Math.floor(max);
-  return Math.floor(Math.random() * ((maxL - minL) + 1)) + minL;
+  return Math.floor(Math.random() * (maxL - minL + 1)) + minL;
 };
 
-export function htmlToString(html) {
+export const htmlToString = html => {
   let text = '';
   if (html && html !== null && html !== '') {
     text = html.replaceAll('<br>', ' ');
     text = text.replaceAll('<br />', ' ');
     text = text.replaceAll('</p><p>', ' ');
-    text = striptags(text);    
+    text = striptags(text);
   }
   return text;
-}
+};
 
+export const getFieldId = (name, id = null) => {
+  if (id && id !== '') {
+    return id;
+  }
+  const rnd = getRandomInt(10000, 99999);
+  return `${name}-${rnd}`;
+};

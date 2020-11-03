@@ -1,3 +1,5 @@
-src
+__mocks__
+tests
+tmp
 .babelrc
 .settings

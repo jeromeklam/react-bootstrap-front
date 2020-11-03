@@ -1,29 +1,19 @@
 import { TOUR_START_HIGHLIGHT } from './constants';
 
-export function startHighlight() {
+export function startHighlight(theme) {
   return {
     type: TOUR_START_HIGHLIGHT,
+    theme: theme,
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_START_HIGHLIGHT: {
-      const { highlights, current } = state;
-      let newCrt = 0;
-      if (current <= 0 && highlights.length > 0) {
-        if (action.theme === 'ALL') {
-          newCrt = highlights[0].ref;
-        } else {
-          const found = highlights.find(elem => elem.theme === action.theme);
-          if (found) {
-            newCrt = found.ref;
-          }
-        }
-      }
       return {
         ...state,
-        current: newCrt,
+        current: 0,
+        started: true,
         theme: action.theme || 'ALL',
       };
     }

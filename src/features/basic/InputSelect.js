@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import log from 'loglevel';
+import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
+import { getFieldId } from '../helper';
 
 export default class InputSelect extends Component {
   static propTypes = {
@@ -65,10 +67,7 @@ export default class InputSelect extends Component {
     myLogger.info('react-bootstrap-front.inputSelect.' + props.name + '.constructor');
     const { options } = { ...props };
     let value = props.value || '';
-    let id = props.name;
-    if (props.id && props.id !== null) {
-      id = props.id;
-    }
+    let id = getFieldId(props.name, props.id);
     this.state = {
       options: options,
       name: props.name,
@@ -79,12 +78,12 @@ export default class InputSelect extends Component {
   }
 
   componentDidMount() {
-    this.state.logger.debug('react-bootstrap-front.inputSelect.' +  this.state.name + '.componentDidMount');
+    this.state.logger.debug('react-bootstrap-front.inputSelect.' + this.state.name + '.componentDidMount');
     if (!this.props.addEmpty || (this.props.addEmpty && this.state.value !== this.props.defaultValue)) {
       this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.componentDidMount.check');
       let def = this.props.defaultValue;
       let found = false;
-      this.state.options.forEach((oneOption) => {
+      this.state.options.forEach(oneOption => {
         if (!def) {
           def = oneOption.value;
         }
@@ -97,9 +96,9 @@ export default class InputSelect extends Component {
         if (this.props.datas) {
           for (const [name, value] of Object.entries(this.props.datas)) {
             datasProps[`data-${name}`] = value;
-          };
+          }
         }
-        const send = {name: this.state.name, value: def, ...datasProps, dataset: this.props.datas};
+        const send = { name: this.state.name, value: def, ...datasProps, dataset: this.props.datas };
         const event = {
           target: send,
         };
@@ -117,59 +116,47 @@ export default class InputSelect extends Component {
     if (this.props.datas) {
       for (const [name, value] of Object.entries(this.props.datas)) {
         datasProps[`data-${name}`] = value;
-      };
+      }
     }
     return (
-      <div
-        className={classnames(
-          'form-group',
-          !this.props.labelTop && 'row',
-          this.props.size && `form-group-${this.props.size}`
+      <InputGroup {...this.props} id={this.state.id}>
+        {this.props.prepend && this.props.prepend !== '' && (
+          <InputGroupPrepend>
+            <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
+          </InputGroupPrepend>
         )}
-      >
-        {this.props.label !== '' && (
-          <label
-            htmlFor={this.props.id}
-            className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
-              this.props.size && `col-form-label-${this.props.size}`
-            )}
-          >
-            {this.props.label}
-            {this.props.required && <span>&nbsp;*</span>}
-          </label>
+        <select
+          type="text"
+          className={classnames(
+            'border-secondary form-control',
+            (this.props.error || this.props.warning) && 'is-invalid',
+            this.props.size && `form-control-${this.props.size}`
+          )}
+          name={this.props.name}
+          id={this.props.name}
+          disabled={this.props.disabled}
+          required={this.props.required}
+          value={value}
+          onChange={this.props.onChange}
+          {...datasProps}
+        >
+          {this.props.addEmpty && (
+            <option key="000" value={this.props.defaultValue}>
+              {this.props.defaultLabel}
+            </option>
+          )}
+          {options.map(oneOption => (
+            <option key={`key-${oneOption.value}`} value={oneOption.value}>
+              {oneOption.label}
+            </option>
+          ))}
+        </select>
+        {this.props.append && this.props.append !== '' && (
+          <InputGroupAppend>
+            <InputGroupText className="border-secondary bg-light">{this.props.append}</InputGroupText>
+          </InputGroupAppend>
         )}
-        <div className={classnames(!this.props.labelTop && `col-xs-w${(!this.props.labelTop || this.props.inline) ? this.props.inputSize : '36'}`)}>
-          <select
-            type="text"
-            className={classnames(
-              'border-secondary form-control',
-              (this.props.error || this.props.warning) && 'is-invalid',
-              this.props.size && `form-control-${this.props.size}`
-            )}
-            name={this.props.name}
-            id={this.props.name}
-            disabled={this.props.disabled}
-            required={this.props.required}
-            value={value}
-            onChange={this.props.onChange}
-            {...datasProps}
-          >
-            {this.props.addEmpty && (
-              <option key="000" value={this.props.defaultValue}>
-                {this.props.defaultLabel}
-              </option>
-            )}
-            {options.map(oneOption => (
-              <option key={oneOption.value} value={oneOption.value}>
-                {oneOption.label}
-              </option>
-            ))}
-          </select>
-          {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
-          {this.props.warning && <div className="invalid-feedback">{this.props.warning}</div>}
-        </div>
-      </div>
+      </InputGroup>
     );
   }
 }

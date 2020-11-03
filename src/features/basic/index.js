@@ -23,4 +23,7 @@ export { default as InputTextarea } from './InputTextarea';
 export * from './ResponsiveButton';
 export { default as InputCheckList } from './InputCheckList';
 export { default as CalmButton } from './CalmButton';
-export { default as Test } from './Test';
+export { default as InputGroup } from './InputGroup';
+export { default as InputGroupAppend } from './InputGroupAppend';
+export { default as InputGroupPrepend } from './InputGroupPrepend';
+export { default as InputGroupText } from './InputGroupText';
