@@ -1,3 +1,14 @@
-.help-toggler:hover {
+.hightlight-card {
+  z-index: 999999;
+  min-width: 150px;
+}
+.highlight-back {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+.highlight-toggler {
   cursor: pointer;
 }

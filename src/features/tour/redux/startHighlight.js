@@ -10,11 +10,27 @@ export function startHighlight(theme) {
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_START_HIGHLIGHT: {
+      let currentPos = state.current || 0;
+      let theme = action.theme || 'ALL';
+      const { highlights } = state;
+      while (currentPos < highlights.length && highlights[currentPos].theme !== theme) {
+        currentPos += 1;
+      }
+      if (currentPos >= highlights.length || highlights[currentPos].theme !== theme) {
+        currentPos = 0;
+        while (currentPos < highlights.length && highlights[currentPos].theme !== theme) {
+          currentPos += 1;
+        }
+      }
+      let started = true;
+      if (highlights[currentPos].theme !== theme) {
+        started = false;
+      }
       return {
         ...state,
-        current: 0,
-        started: true,
-        theme: action.theme || 'ALL',
+        current: currentPos,
+        started: started,
+        theme: theme,
       };
     }
 
