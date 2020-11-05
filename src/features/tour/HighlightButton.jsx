@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { HighlightArrow, HighlightClose } from './';
 import reducer from './redux/reducer';
 import initialState from './redux/initialState';
-import { startHighlight, stopHighlight, prevHighlight, nextHighlight, startHighlightTimer } from './redux/actions';
+import { addHighlight, startHighlight, stopHighlight, prevHighlight, nextHighlight, startHighlightTimer } from './redux/actions';
 import { getRefCoords } from '../helper';
 import { Portal, SvgMask, SvgTimer, SvgPlay, Follower } from '../advanced';
 import { Container, Row, Col } from '../grid';
@@ -14,6 +14,9 @@ function HighlightButton(props) {
   let tour = null;
   if (state.started && state.highlights[state.current]) {
     const { ref, position } = state.highlights[state.current];
+    if (ref && !ref.current) {
+      console.log(state.highlights,state.current);
+    }
     const coords = getRefCoords(ref);
     const content = ref.current.querySelector('.tour-highlight-content');
     let htmlContent = content.innerHTML;
@@ -90,6 +93,16 @@ function HighlightButton(props) {
             e.stopPropagation();
           }
           if (!state.started) {
+            const nodes = document.querySelectorAll(".tour-highlight");
+            nodes.forEach(node => {
+              const highlight = {
+                id: node.id,
+                ref: { current: node},
+                theme: node.dataset.theme,
+                position: node.dataset.position
+              }
+              dispatch(addHighlight(highlight));
+            })
             dispatch(startHighlight(props.theme));
           } else {
             dispatch(stopHighlight());

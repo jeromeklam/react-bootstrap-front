@@ -3,8 +3,8 @@ import React from 'react';
 
 export default function HighlightClose() {
   return (
-    <div class="close-icon-container">
-      <span class="close-icon">
+    <div className="close-icon-container">
+      <span className="close-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" enable-background="new 0 0 40 40">
           <line
             x1="15"
