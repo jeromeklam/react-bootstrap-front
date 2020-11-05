@@ -11,3 +11,6 @@ export { default as ResponsiveModalInner } from './ResponsiveModalInner.jsx';
 export * from './ResponsiveQuickSearch.jsx';
 export { default as WidthObserver } from './WidthObserver.jsx';
 export { default as SvgMask } from './SvgMask';
+export { default as Follower } from './Follower';
+export { default as SvgTimer } from './SvgTimer';
+export { default as SvgPlay } from './SvgPlay';

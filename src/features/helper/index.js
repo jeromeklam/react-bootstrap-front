@@ -182,14 +182,8 @@ export const getFieldId = (name, id = null) => {
 };
 
 export const getRefCoords = ref => {
-  const w = Math.max(
-    document.documentElement.clientWidth,
-    window.innerWidth || 0
-  )
-  const h = Math.max(
-    document.documentElement.clientHeight,
-    window.innerHeight || 0
-  )
+  const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
   let coords = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, w, h };
   if (ref && ref.current) {
     try {
@@ -202,7 +196,18 @@ export const getRefCoords = ref => {
         coords.width = bRect.width;
         coords.height = bRect.height;
       }
-    } catch (ex) {console.error(ex)}
+    } catch (ex) {
+      console.error(ex);
+    }
   }
   return coords;
+};
+
+export const getRandomString = () => {
+  return (
+    '_' +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
 };

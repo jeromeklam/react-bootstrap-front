@@ -132,14 +132,14 @@ export default class DefaultHeader extends Component {
             <span style={titlestyle} className="text-light">
               {`${this.props.title}`}
             </span>
-            <Highlight style={titlestyle2} className="text-light" position="bottom" theme="LIST" title="Tri en cours">
+            <Highlight style={titlestyle2} className="text-light" position="bottom" theme="LIST" title="Liste des colonnes utilisées pour le tri en cours [RC](+) : croissant [RC](-) : décroissant">
               <span>
                 {` ${sortToText(this.props.sort, this.props.cols)}`}
               </span>
             </Highlight>
           </div>
           <div className="col-xs-w10" style={quickStyles}>
-            <Highlight position="bottom" theme="LIST" title="Recherche rapide">
+            <Highlight position="bottom" theme="LIST" title="Recherche rapide sur les champs indiqués, en recherche de type contient">
               {this.props.quickSearch}
             </Highlight>
           </div>
@@ -190,7 +190,7 @@ export default class DefaultHeader extends Component {
               )}
               {this.props.filters && (
                 <li className="nav-item">
-                  <Highlight position="bottom" theme="LIST" title="Gérer les filtres">
+                  <Highlight position="bottom" theme="LIST" title="Ouvrir le panneau de gestion des filtres">
                     <button type="button" className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
                       {filterMenuIcon}
                     </button>
@@ -199,7 +199,7 @@ export default class DefaultHeader extends Component {
               )}
               {showFilterButton && (
                 <li className="nav-item">
-                  <Highlight position="bottom" theme="LIST" title="Supprimer les filtres">
+                  <Highlight position="bottom" theme="LIST" title="Supprimer les filtres en cours">
                     <button
                       type="button"
                       className="btn btn-secondary text-light"

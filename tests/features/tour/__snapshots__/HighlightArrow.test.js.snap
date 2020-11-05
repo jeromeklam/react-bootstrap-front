@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders with className 1`] = `
+<div
+  className="btn bg-secondary"
+>
+  <svg
+    viewBox="0 0 18.4 14.4"
+  >
+    <path
+      d="M1.4 7.2h16M7.6 1L1.4 7.2l6.2 6.2"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeMiterlimit="10"
+      strokeWidth="2"
+    />
+  </svg>
+</div>
+`;
+
+exports[`renders with className and inverted 1`] = `
+<div
+  className="btn bg-secondary"
+>
+  <svg
+    viewBox="0 0 18.4 14.4"
+  >
+    <path
+      d="M17 7.2H1M10.8 1L17 7.2l-6.2 6.2"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeMiterlimit="10"
+      strokeWidth="2"
+    />
+  </svg>
+</div>
+`;

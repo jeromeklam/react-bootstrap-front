@@ -1,0 +1,21 @@
+@import '../../styles/mixins';
+
+.advanced-svg-play {
+  .play-btn {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 10%;
+  }
+
+  .play-btn__svg {
+    transition: 1s;
+    fill: theme-color('dark');
+    opacity: 0.5;
+  }
+
+  .play-btn:hover .play-btn__svg {
+    fill: theme-color('primary');
+    opacity: 1;
+  }
+}

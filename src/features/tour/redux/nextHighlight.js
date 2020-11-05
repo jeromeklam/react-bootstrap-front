@@ -1,8 +1,9 @@
 import { TOUR_NEXT_HIGHLIGHT } from './constants';
 
-export function nextHighlight() {
+export function nextHighlight(auto = false) {
   return {
-    type: TOUR_NEXT_HIGHLIGHT
+    type: TOUR_NEXT_HIGHLIGHT,
+    auto: auto,
   };
 }
 
@@ -22,10 +23,10 @@ export function reducer(state, action) {
           currentPos += 1;
         }
       }
-      console.log(highlights, currentPos);
       return {
         ...state,
         current: currentPos,
+        timer: action.auto,
       };
     }
 

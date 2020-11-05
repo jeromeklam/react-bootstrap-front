@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<div
+  className="tour-highlight"
+  data-tour-position="bottom"
+  data-tour-theme="TEST"
+>
+  My Button
+  <div
+    className="tour-highlight-content"
+    style={
+      Object {
+        "display": "none",
+      }
+    }
+  >
+    <span>
+      
+    </span>
+  </div>
+</div>
+`;
