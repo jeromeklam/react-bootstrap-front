@@ -10,12 +10,10 @@ export function addHighlight(args) {
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_ADD_HIGHLIGHT: {
-      let { highlights } = state;
-      const myHighlight = { ...action.highlight };
-      highlights.push(myHighlight);
+      console.log('ADD', [...state.highlights, action.highlight]);
       return {
         ...state,
-        highlights,
+        highlights: [...state.highlights, action.highlight],
       };
     }
 

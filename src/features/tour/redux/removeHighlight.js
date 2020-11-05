@@ -10,11 +10,10 @@ export function removeHighlight(id) {
 export function reducer(state, action) {
   switch (action.type) {
     case TOUR_REMOVE_HIGHLIGHT: {
-      let highlights = state.highlights;
-      const result = highlights.filter(elem => elem.id !== action.id);
+      console.log('REMOVE', JSON.parse(JSON.stringify(state.highlights)), action.id);
       return {
         ...state,
-        highlights: result,
+        highlights: [...state.highlights.filter(elem => elem.id !== action.id)],
       };
     }
 

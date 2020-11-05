@@ -1,34 +1,18 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import uuidv1 from 'uuid/v1';
-import reducer from './redux/reducer';
-import initialState from './redux/initialState';
-import { addHighlight, removeHighlight } from './redux/actions';
 
 function Highlight(props) {
-  const [state, setState] = useState({ id: null, ref: null });
-  const [store, dispatch] = useReducer(reducer, initialState);
-  let newState = state;
-  if (!state.id) {
-    newState = { id: uuidv1(), ref: React.createRef() };
-    setState(newState);
-  }
+  const id = uuidv1()
   let datas = {
-    'data-tour-theme': props.theme,
-    'data-tour-position': props.position,
+    'data-theme': props.theme,
+    'data-position': props.position,
   };
-  const index = store.highlights.find(elem => elem.id === newState.id);
-  if (!index) {
-    dispatch(addHighlight({ id: newState.id, ref: newState.ref, theme: props.theme, position: props.position }));
-  }
-  useEffect(() => {
-    return () => {dispatch(removeHighlight(newState.id))};
-  }, [newState.id]);
   const { children, className, title, style, otherProps } = props;
   return (
     <div
-      ref={newState.ref}
+      id={id}
       className={classnames('tour-highlight', className)}
       style={style}
       {...otherProps}

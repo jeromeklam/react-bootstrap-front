@@ -2,10 +2,10 @@
 
 exports[`renders with className 1`] = `
 <div
-  class="close-icon-container"
+  className="close-icon-container"
 >
   <span
-    class="close-icon"
+    className="close-icon"
   >
     <svg
       enable-background="new 0 0 40 40"
