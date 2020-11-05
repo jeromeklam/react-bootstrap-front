@@ -1,6 +1,6 @@
 import React from 'react';
+import classnames from 'classnames';
 import { SortableElement } from 'react-sortable-hoc';
-
 
 const liStyle = {
   height: '50px',
@@ -21,7 +21,7 @@ export const SortableItem = SortableElement(props => (
     <span className="noselect" style={mystyle}>{props.value}{' '}</span>
     <div className="sort-icon float-right">
       {' '}
-      <button className="btn" onClick={props.onSortChange}>
+      <button className={classnames('btn', props.way !== 'none' ? 'text-primary' : 'text-secondary')} onClick={props.onSortChange}>
         {props.icon}
       </button>
     </div>

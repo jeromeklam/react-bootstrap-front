@@ -188,8 +188,12 @@ svg.text-warning.inline-action:hover {
   }
 }
 
+.nav-tabs {
+  border-color: theme-color('secondary-inactive');
+}
+
 .nav-item .nav-link {
-  color: theme-color('secondary-light');
+  color: theme-color('secondary-inactive');
 }  
 
 .nav-item .nav-link.active {

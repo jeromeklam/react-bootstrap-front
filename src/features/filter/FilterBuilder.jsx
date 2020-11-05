@@ -17,6 +17,7 @@ import {
   FILTER_OPER_GREATER_OR_EQUAL_OR_NULL,
 } from './';
 import { InputRadio, InputDate } from '../basic';
+import { InputAutocomplete } from './';
 
 export default class FilterBuilder extends Component {
   static propTypes = {
@@ -51,7 +52,10 @@ export default class FilterBuilder extends Component {
               name="mode"
               value={mode}
               onChange={this.props.onMode}
-              options={[{ label: 'et', value: FILTER_MODE_AND }, { label: 'ou', value: FILTER_MODE_OR }]}
+              options={[
+                { label: 'et', value: FILTER_MODE_AND },
+                { label: 'ou', value: FILTER_MODE_OR },
+              ]}
             />
           </div>
           <div className="col-xs-w16">
@@ -73,7 +77,7 @@ export default class FilterBuilder extends Component {
           </div>
         </div>
         <hr />
-        {this.props.cols.map((col) => {
+        {this.props.cols.map(col => {
           if (col.filterable && col.label !== '') {
             const filter = this.props.filters;
             let colFilterable = col.col;
@@ -92,7 +96,7 @@ export default class FilterBuilder extends Component {
                 id={`oper-${colFilterable}`}
                 name={`oper-${colFilterable}`}
                 value={colOper}
-                className="border-0 bg-light text-secondary"
+                className="border-0 bg-light text-secondary rounded-left"
                 onChange={this.props.onFilterOperator}
               >
                 <option value={FILTER_OPER_EQUAL}>=</option>
@@ -110,6 +114,22 @@ export default class FilterBuilder extends Component {
               </select>
             );
             switch (col.filterable.type) {
+              case 'picker':
+                return (
+                  <div key={colFilterable}>
+                    <InputAutocomplete
+                      prepend={prepend}
+                      id={colFilterable}
+                      label={col.label}
+                      name={colFilterable}
+                      value={value}
+                      size={this.props.size}
+                      clearIcon={this.props.clearIcon}
+                      onSearch={col.filterable.onSearch}
+                      onSelect={this.props.onChange}
+                    />
+                  </div>
+                );
               case 'date':
                 return (
                   <div key={colFilterable}>
@@ -123,7 +143,6 @@ export default class FilterBuilder extends Component {
                         id={colFilterable}
                         name={colFilterable}
                         value={value}
-                        className="form-control border-primary rounded-right"
                         onChange={this.props.onChange}
                         calIcon={this.props.calIcon}
                         delIcon={this.props.clearIcon}
@@ -133,10 +152,10 @@ export default class FilterBuilder extends Component {
                 );
               case 'boolean':
               case 'bool':
-                if (value === true ) {
+                if (value === true) {
                   value = 1;
                 } else {
-                  if (value === false ) {
+                  if (value === false) {
                     value = 0;
                   }
                 }
@@ -150,7 +169,7 @@ export default class FilterBuilder extends Component {
                         className="border-0 bg-light text-secondary mr-3"
                         type="radio"
                         name={colFilterable}
-                        value={''+value}
+                        value={'' + value}
                         onChange={this.props.onChange}
                         options={[
                           { label: 'Oui', value: '1' },
@@ -178,7 +197,10 @@ export default class FilterBuilder extends Component {
                       >
                         <option key="0" value="" />
                         {col.filterable.options.map(elt => (
-                          <option key={elt.value} value={(col.filterable.type === 'select-label') ? elt.label : elt.value}>
+                          <option
+                            key={elt.value}
+                            value={col.filterable.type === 'select-label' ? elt.label : elt.value}
+                          >
                             {elt.label}
                           </option>
                         ))}
@@ -194,9 +216,7 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border border-primary rounded-left">
-                          {prepend}
-                        </div>
+                        <div className="input-group-prepend border border-primary rounded-left">{prepend}</div>
                         <input
                           type="text"
                           id={colFilterable}
