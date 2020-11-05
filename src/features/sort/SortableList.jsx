@@ -12,16 +12,22 @@ export const SortableList = SortableContainer((props) => {
       {props.items.map((value, index) => {
         if (value.label !== '') {
           let icon = props.sortNoneIcon;
-          if (value.way === 'up') {
+          let way = value.way;
+          if (way === 'up') {
             icon = props.sortUpIcon;
-          } else if (value.way === 'down') {
-            icon = props.sortDownIcon;
-          }
+          } else {
+            if (way === 'down') {
+              icon = props.sortDownIcon;
+            } else {
+              way = 'none';
+            }
+          } 
           return (
             <SortableItem
               key={`item-${index}`}
               index={index}
               value={value.label}
+              way={way}
               icon={icon}
               onSortChange={() => {
                 props.onSortChange(value);
