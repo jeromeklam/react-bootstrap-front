@@ -375,3 +375,20 @@ hr {
   border-top: 2px solid;
   border-top-color: theme-color('secondary');
 }
+
+.highlight-toggler {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+}
+
+::placeholder {
+  color: theme-color('secondary-light');
+  font-style: italic;
+  font-size: 0.9em;
+  font-weight: 200;
+}
+
+.form-group label {
+  color: theme-color('secondary');
+}
