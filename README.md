@@ -3,10 +3,11 @@ react-bootstrap-front
 
 Composants react graphiques basés sur bootstrap 4. Il suffit d'utiliser less ou sass pour modifier les variables et / ou les classes de bootstrap pour adapter le design à votre application.
 
-**Forks**
+**Forks / inspiration**
 
 * https://github.com/jquense/react-big-calendar
 * https://github.com/rcdexta/react-trello
+* https://github.com/elrumordelaluz/reactour
 
 # Introduction
 

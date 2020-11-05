@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders with className 1`] = `
+<div
+  className="advanced-svg-timer btn bg-secondary"
+>
+  <div
+    aria-label="Countdown timer"
+    style={
+      Object {
+        "height": 30,
+        "position": "relative",
+        "width": 30,
+      }
+    }
+  >
+    <svg
+      height={30}
+      width={30}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="m 15,1
+          a 14,14 0 1,0 0,28
+          a 14,14 0 1,0 0,-28"
+        fill="none"
+        stroke="#d9d9d9"
+        strokeWidth={2}
+      />
+      <path
+        d="m 15,1
+          a 14,14 0 1,0 0,28
+          a 14,14 0 1,0 0,-28"
+        fill="none"
+        stroke="rgba(0, 71, 119, 1)"
+        strokeDasharray={87.96459430051421}
+        strokeDashoffset={0}
+        strokeLinecap="round"
+        strokeWidth={2}
+      />
+    </svg>
+    <div
+      aria-hidden="true"
+      style={
+        Object {
+          "alignItems": "center",
+          "color": "rgba(0, 71, 119, 1)",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "top": 0,
+          "width": "100%",
+        }
+      }
+    >
+      10
+    </div>
+  </div>
+</div>
+`;

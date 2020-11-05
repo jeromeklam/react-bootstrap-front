@@ -6,17 +6,18 @@ import { Highlight } from '../tour';
 export const DefaultSidebarItem = props => (
   <li className={props.className}>
     <div className="sidebar-navigation-li bg-primary" />
-    <a onClick={() => props.onNavigate(props.option.url)}
+    <a
+      onClick={() => props.onNavigate(props.option.url)}
       className={classnames(
         'nav-link',
         props.location.pathname === props.option.url ? 'active text-primary' : 'text-secondary'
       )}
-      
-      title={(!props.open && props.option.label) && props.option.label} 
+      title={!props.open && props.option.label && props.option.label}
     >
-      {props.option.icon}
-      <span className="sidebar-menu-label">{props.option.label}</span>
-      <Highlight position="right" theme="NAV" title={props.option.help || ''} />
+      <Highlight position="right" theme="NAV" title={props.option.help || ''}>
+        {props.option.icon}
+        <span className="sidebar-menu-label">{props.option.label}</span>
+      </Highlight>
     </a>
   </li>
 );

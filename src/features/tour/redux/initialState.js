@@ -3,7 +3,7 @@ const initialState = {
   current: 0,
   theme: 'ALL',
   started: false,
-  timer: null,
+  timer: false,
 };
 
 export default initialState;

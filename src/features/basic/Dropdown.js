@@ -6,7 +6,6 @@ import { Portal } from '../advanced';
 const getCoords = (props) => {
   if (props.myRef && props.myRef.current) {
     try {
-      console.log('JKJK', props.myRef, props.myRef.current.getBoundingClientRect());
       return props.myRef.current.getBoundingClientRect();
     } catch (ex) {
     }
