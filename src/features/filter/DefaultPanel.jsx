@@ -65,7 +65,7 @@ const btStyle = {
   top: '2px',
 };
 
-export default class DefaultHeader extends Component {
+export default class DefaultPanel extends Component {
   static propTypes = {
     cols: PropTypes.element.isRequired,
     filters: PropTypes.element.isRequired,

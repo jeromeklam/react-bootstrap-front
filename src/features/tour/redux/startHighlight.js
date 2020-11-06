@@ -12,7 +12,6 @@ export function reducer(state, action) {
     case TOUR_START_HIGHLIGHT: {
       let currentPos = state.current || 0;
       let theme = action.theme || 'ALL';
-      console.log('JK', state.highlights, theme, 'JK');
       const { highlights } = state;
       while (currentPos < highlights.length && highlights[currentPos].theme !== theme) {
         currentPos += 1;
