@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Highlight } from '../tour';
-import './DefaultSidebar.css';
 
 export const DefaultSidebarMenu = props => (
   <li className="sidebar-menu">
