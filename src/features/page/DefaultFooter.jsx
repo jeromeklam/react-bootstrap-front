@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Container, Row, Col } from '../grid';
 
 const mystyle = {
   position: 'absolute',
@@ -13,14 +14,20 @@ const mystyle = {
 
 export const DefaultFooter = props => (
   <div style={mystyle} className="bg-light">
-    <div className="container">
-      <div className="row">
-        <div className="col-xs-w20">
-          {props.options.map((option) => {
+    <Container>
+      <Row>
+        <Col size={2} />
+        <Col size={18}>
+          {props.options.map(option => {
             if (option.role === 'ABOUT') {
               return (
                 <a
-                  onClick={() => {
+                  href={option.url}
+                  onClick={e => {
+                    if (e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }
                     props.onNavigate(option.url);
                   }}
                 >
@@ -30,19 +37,18 @@ export const DefaultFooter = props => (
             }
             return null;
           })}
-        </div>
-        <div className="col-xs-w16 text-right">
-          {props.options.map((option) => {
+        </Col>
+        <Col size={14} textAlign="right">
+          {props.options.map(option => {
             if (option.role === 'SOCIAL') {
-              return (
-                <span>{option.icon}</span>
-              );
+              return <span>{option.icon}</span>;
             }
             return null;
           })}
-        </div>
-      </div>
-    </div>
+        </Col>
+        <Col size={2} />
+      </Row>
+    </Container>
   </div>
 );
 
