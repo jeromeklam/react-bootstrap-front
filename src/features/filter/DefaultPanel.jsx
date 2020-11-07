@@ -122,6 +122,7 @@ export default class DefaultHeader extends Component {
 
   onFilterChange(event) {
     let { filter } = this.state;
+    console.log("FK onFilterChange",event.target);
     filter.addFilter(event.target.name, event.target.value);
     filter.setSearch(FILTER_SEARCH_SIMPLE);
     this.setState({ filter, local: true });
