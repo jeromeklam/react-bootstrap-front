@@ -38,7 +38,7 @@ export default class InputAutocomplete extends Component {
     let display = '';
     if (this.props.item) {
       value = this.props.item.id || '';
-      display = this.props.item || '';
+      display = this.props.item.display || '';
     }
     this.state = {
       myRef: React.createRef(),
@@ -76,7 +76,14 @@ export default class InputAutocomplete extends Component {
       this.props.onSelect({
         target: { name: this.props.name, value: item.id },
       });
-      this.setState({ value: item.id, display: item.display, list: [] });
+      let display = '';
+      if (typeof this.props.display === 'function') {
+        display = this.props.display(item);
+      } else {
+        this.props.display.split(',').map(elem => (display += item[elem] + ' '));
+        display = display.trim();
+      }
+      this.setState({ value: item.id, display: display, list: [] });
     } else {
       this.setState({ list: [] });
     }
@@ -144,14 +151,21 @@ export default class InputAutocomplete extends Component {
           >
             {this.state.list.map(item => (
               <a
-                key={item.id}
+                key={item.item.id}
                 className="dropdown-item"
                 onClick={() => {
-                  item.id = '' + item.id;
-                  this.onSelect(item);
+                  this.onSelect(item.item);
                 }}
               >
-                {item.display}
+                {typeof this.props.display === 'function' ? (
+                  this.props.display(item.item)
+                ) : (
+                  <div>
+                    {this.props.display.split(',').map(elem => (
+                      <span className="mr-2 text-nowrap">{item.item[elem]}</span>
+                    ))}
+                  </div>
+                )}
               </a>
             ))}
           </Dropdown>

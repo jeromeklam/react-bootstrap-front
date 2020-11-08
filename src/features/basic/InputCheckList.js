@@ -239,7 +239,7 @@ export default class InputCheckList extends Component {
                       type="button"
                       className={classnames(
                         `btn btn-input border-secondary-light bg-light`,
-                        item.warning ? 'text-warning' : 'text-inactif'
+                        item.warning ? 'text-warning' : 'text-inactive'
                       )}
                       onClick={() => {
                         this.onChangeItemWarning(i);
@@ -253,7 +253,7 @@ export default class InputCheckList extends Component {
                       type="button"
                       className={classnames(
                         `btn btn-input border-secondary-light bg-light`,
-                        item.question ? 'text-secondary' : 'text-inactif'
+                        item.question ? 'text-secondary' : 'text-inactive'
                       )}
                       onClick={() => {
                         this.onChangeItemQuestion(i);

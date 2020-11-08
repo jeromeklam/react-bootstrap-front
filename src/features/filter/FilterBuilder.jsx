@@ -113,15 +113,28 @@ export default class FilterBuilder extends Component {
                 <option value={FILTER_OPER_LOWER_OR_EQUAL_OR_NULL}>&lt;=&Oslash;</option>
               </select>
             );
+            const prependPicker = (
+              <button
+                type="button" 
+                className="border-0 bg-light text-secondary rounded-left"
+                id={`oper-${colFilterable}`}
+                value={FILTER_OPER_EQUAL}
+                disabled
+              >
+                {' '}
+                ={' '}
+              </button>
+            );
             switch (col.filterable.type) {
               case 'picker':
                 return (
                   <div key={colFilterable}>
                     <InputAutocomplete
-                      prepend={prepend}
+                      prepend={prependPicker}
                       id={colFilterable}
                       label={col.label}
                       name={colFilterable}
+                      display={col.filterable.display}
                       value={value}
                       size={this.props.size}
                       clearIcon={this.props.clearIcon}
