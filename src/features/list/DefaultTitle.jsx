@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import './DefaultTitle.css';
 
 export const DefaultTitle = props => (
   <div style={props.style} className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}>

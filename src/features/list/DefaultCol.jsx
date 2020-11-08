@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import striptags from 'striptags';
-import './DefaultCol.css';
 
 const optionsDate = {
   year: 'numeric',

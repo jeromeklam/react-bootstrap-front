@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { InputGroup, InputGroupPrepend,  InputGroupAppend, Dropdown } from '../basic';
+import { InputGroup, InputGroupPrepend, InputGroupAppend, Dropdown } from '../basic';
 import { getFieldId } from '../helper';
 
 export default class InputAutocomplete extends Component {
@@ -19,7 +19,6 @@ export default class InputAutocomplete extends Component {
     required: PropTypes.bool,
     prepend: PropTypes.element,
     type: PropTypes.string.isRequired,
-    
   };
 
   static defaultProps = {
@@ -36,10 +35,10 @@ export default class InputAutocomplete extends Component {
   constructor(props) {
     super(props);
     let value = '';
-    let display = '';    
+    let display = '';
     if (this.props.item) {
       value = this.props.item.id || '';
-      display = this.props.item || '';
+      display = this.props.item.display || '';
     }
     this.state = {
       myRef: React.createRef(),
@@ -57,17 +56,18 @@ export default class InputAutocomplete extends Component {
 
   onChange(event) {
     const search = '' + event.target.value;
+    this.setState({ display: search });
     if (search.length >= 2) {
-      this.props.onSearch(search)
-      .then(result => {
-        this.setState({ display : search, list: result });
-      })
-      .catch(errors => {
-        this.setState({ display : search, list: [] });
-      });
-    
+      this.props
+        .onSearch(search)
+        .then(result => {
+          this.setState({ list: result });
+        })
+        .catch(errors => {
+          this.setState({ list: [] });
+        });
     } else {
-      this.setState({ display : search, list: [] });
+      this.setState({ list: [] });
     }
   }
 
@@ -76,7 +76,14 @@ export default class InputAutocomplete extends Component {
       this.props.onSelect({
         target: { name: this.props.name, value: item.id },
       });
-      this.setState({ value: item.id, display: item.display, list: [] });
+      let display = '';
+      if (typeof this.props.display === 'function') {
+        display = this.props.display(item);
+      } else {
+        this.props.display.split(',').map(elem => (display += item[elem] + ' '));
+        display = display.trim();
+      }
+      this.setState({ value: item.id, display: display, list: [] });
     } else {
       this.setState({ list: [] });
     }
@@ -84,20 +91,16 @@ export default class InputAutocomplete extends Component {
 
   onClear() {
     this.setState({ value: '', display: '', list: [] });
-    this.props.onSelect(
-      {target: { name: this.props.name, value: null },
-    });
+    this.props.onSelect({ target: { name: this.props.name, value: null } });
   }
 
   render() {
     let myId = getFieldId(this.props.name, this.props.id);
-    let open = (this.state.display !== '' && this.state.list.length > 0);
+    let open = this.state.display !== '' && this.state.list.length > 0;
     return (
-      <InputGroup {...this.props} id={myId} >
+      <InputGroup {...this.props} id={myId}>
         {this.props.prepend && this.props.prepend !== '' && (
-          <InputGroupPrepend className=" border border-primary rounded-left">
-            {this.props.prepend}
-          </InputGroupPrepend>
+          <InputGroupPrepend className=" border border-primary rounded-left">{this.props.prepend}</InputGroupPrepend>
         )}
         <input
           type="text"
@@ -129,7 +132,7 @@ export default class InputAutocomplete extends Component {
             <button
               type="button"
               className={classnames(
-                "btn btn-input btn-outline-primary bg-light",
+                'btn btn-input btn-outline-primary bg-light',
                 this.props.size && `btn-${this.props.size}`
               )}
               disabled={this.props.disabled}
@@ -148,14 +151,21 @@ export default class InputAutocomplete extends Component {
           >
             {this.state.list.map(item => (
               <a
-                key={item.id}
+                key={item.item.id}
                 className="dropdown-item"
                 onClick={() => {
-                  item.id = '' + item.id;
-                  this.onSelect(item);
+                  this.onSelect(item.item);
                 }}
               >
-                {item.display}
+                {typeof this.props.display === 'function' ? (
+                  this.props.display(item.item)
+                ) : (
+                  <div>
+                    {this.props.display.split(',').map(elem => (
+                      <span className="mr-2 text-nowrap">{item.item[elem]}</span>
+                    ))}
+                  </div>
+                )}
               </a>
             ))}
           </Dropdown>
