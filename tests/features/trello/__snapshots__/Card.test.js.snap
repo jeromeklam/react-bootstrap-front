@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<article
+  className="trello-card btn bg-secondary"
+  onClick={[MockFunction]}
+  style={Object {}}
+>
+  <div
+    className="trello-card-header"
+  >
+    <div
+      className="trello-card-title text-secondary"
+    >
+      no title
+    </div>
+    <span
+      className="trello-card-right"
+    >
+      
+    </span>
+    <div
+      className="trello-delete-button"
+      onClick={[Function]}
+    >
+      <button
+        className="btn btn-xs text-danger"
+      >
+        ✖
+      </button>
+    </div>
+  </div>
+  <div
+    className="trello-card-detail"
+  >
+    
+  </div>
+</article>
+`;

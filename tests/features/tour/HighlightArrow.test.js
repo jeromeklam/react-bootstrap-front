@@ -2,9 +2,6 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { HighlightArrow } from '../../../src/features/tour';
 
-const callback = jest.fn();
-jest.useFakeTimers();
-
 it('renders with className', () => {
   // First render
   const component = renderer.create(

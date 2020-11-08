@@ -1,0 +1,23 @@
+.trello-lane {
+  background-color: #e3e3e3;
+  border-radius: 3px;
+  margin: 5px 5px;
+  position: relative;
+  padding: 10px;
+  display: inline-flex;
+  height: auto;
+  max-height: 90%;
+  flex-direction: column;
+}
+
+.trello-lane-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 350px;
+  overflow-x: hidden;
+  align-self: center;
+  max-height: 90vh;
+  margin-top: 10px;
+  flex-direction: column;
+  justify-content: space-between;
+}

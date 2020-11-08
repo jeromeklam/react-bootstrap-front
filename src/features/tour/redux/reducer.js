@@ -1,7 +1,6 @@
 import initialState from './initialState';
 import { reducer as addHighlightReducer } from './addHighlight';
 import { reducer as removeHighlightReducer } from './removeHighlight';
-import { reducer as toggleHighlightReducer } from './toggleHighlight';
 import { reducer as startHighlightReducer } from './startHighlight';
 import { reducer as stopHighlightReducer } from './stopHighlight';
 import { reducer as nextHighlightReducer } from './nextHighlight';
@@ -11,7 +10,6 @@ import { reducer as startHighlightTimerReducer } from './startHighlightTimer';
 const reducers = [
   addHighlightReducer,
   removeHighlightReducer,
-  toggleHighlightReducer,
   startHighlightReducer,
   stopHighlightReducer,
   nextHighlightReducer,

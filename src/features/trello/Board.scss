@@ -1,0 +1,32 @@
+  .comPlainTextContentEditable {
+    -webkit-user-modify: read-write-plaintext-only;
+    cursor: text;
+  }
+
+  .comPlainTextContentEditable--has-placeholder::before {
+    content: attr(placeholder);
+    opacity: 0.5;
+    color: inherit;
+    cursor: text;
+  }
+
+  .react_trello_dragClass {
+    transform: rotate(3deg);
+  }
+
+  .react_trello_dragLaneClass {
+    transform: rotate(3deg);
+  }
+
+  .icon-overflow-menu-horizontal:before {
+    content: "\\E91F";
+  }
+  .icon-lg, .icon-sm {
+    color: #798d99;
+  }
+  .icon-lg {
+    height: 32px;
+    font-size: 16px;
+    line-height: 32px;
+    width: 32px;
+  }

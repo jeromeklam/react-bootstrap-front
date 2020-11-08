@@ -5,6 +5,9 @@ import 'core-js/features/global-this';
  *******************************************************************************
  */
 export { default as Dropdown } from './features/basic/Dropdown';
+export { default as DropdownMenu } from './features/basic/DropdownMenu';
+export { default as DropdownMenuHeader } from './features/basic/DropdownMenuHeader';
+export { default as DropdownMenuOption } from './features/basic/DropdownMenuOption';
 export * from './features/basic/InlineInputCheckbox';
 export * from './features/basic/InlineInputPicker';
 export { default as InlineInputSelect } from './features/basic/InlineInputSelect';
@@ -15,7 +18,7 @@ export { default as InputDate } from './features/basic/InputDate';
 export { default as InputDatetime } from './features/basic/InputDatetime';
 export * from './features/basic/InputEmail';
 export * from './features/basic/InputHidden';
-export { default as InputMask} from './features/basic/InputMask';
+export { default as InputMask } from './features/basic/InputMask';
 export { default as InputMonetary } from './features/basic/InputMonetary';
 export { default as InputPassword } from './features/basic/InputPassword';
 export { default as InputPicker } from './features/basic/InputPicker';
@@ -34,12 +37,15 @@ export { default as InputCheckLists } from './features/basic/InputCheckLists';
  * Advanced
  *******************************************************************************
  */
-export { default as HoverObserver } from './features/advanced/HoverObserver.jsx';
-export * from './features/advanced/ResponsiveConfirm.jsx';
-export * from './features/advanced/ResponsiveForm.jsx';
-export * from './features/advanced/ResponsiveModal.jsx';
-export * from './features/advanced/ResponsiveQuickSearch.jsx';
-export { default as WidthObserver } from './features/advanced/WidthObserver.jsx';
+export { default as DropdownWrapper } from './features/advanced/DropdownWrapper';
+export { default as Follower } from './features/advanced/Follower';
+export { default as HoverObserver } from './features/advanced/HoverObserver';
+export { default as Portal } from './features/advanced/Portal';
+export * from './features/advanced/ResponsiveConfirm';
+export * from './features/advanced/ResponsiveForm';
+export * from './features/advanced/ResponsiveModal';
+export * from './features/advanced/ResponsiveQuickSearch';
+export { default as WidthObserver } from './features/advanced/WidthObserver';
 
 /**
  *******************************************************************************
@@ -134,4 +140,4 @@ export * from './features/calendar/index.js';
  * Trello
  *******************************************************************************
  */
-export { default as Board } from './features/trello/index.js';
+export { default as Trello } from './features/trello/Trello';

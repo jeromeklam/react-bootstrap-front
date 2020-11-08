@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders with className 1`] = `
+<div
+  className="trello-new-card-form"
+>
+  <article
+    className="trello-new-card-form-wrapper"
+  >
+    <header
+      className="trello-new-card-form-header"
+    >
+      <span
+        className="trello-new-card-form-title"
+      >
+        <div
+          className="comPlainTextContentEditable comPlainTextContentEditable--has-placeholder"
+          contentEditable="true"
+          onBlur={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onPaste={[Function]}
+          placeholder=""
+        />
+      </span>
+      <span
+        className="sc-jTzLTM bhxCSs"
+      >
+        <div
+          className="comPlainTextContentEditable comPlainTextContentEditable--has-placeholder"
+          contentEditable="true"
+          onBlur={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onPaste={[Function]}
+          placeholder=""
+        />
+      </span>
+    </header>
+    <div
+      className="sc-fjdhpX dDrzWr"
+    >
+      <div
+        className="comPlainTextContentEditable comPlainTextContentEditable--has-placeholder"
+        contentEditable="true"
+        onBlur={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+      />
+    </div>
+  </article>
+  <button
+    className="btn btn-primary"
+    onClick={[Function]}
+  />
+  <button
+    className="btn btn-secondary"
+  />
+</div>
+`;

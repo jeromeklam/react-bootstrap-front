@@ -27,3 +27,6 @@ export { default as InputGroup } from './InputGroup';
 export { default as InputGroupAppend } from './InputGroupAppend';
 export { default as InputGroupPrepend } from './InputGroupPrepend';
 export { default as InputGroupText } from './InputGroupText';
+export { default as DropdownMenu } from './DropdownMenu';
+export { default as DropdownMenuHeader } from './DropdownMenuHeader';
+export { default as DropdownMenuOption } from './DropdownMenuOption';
