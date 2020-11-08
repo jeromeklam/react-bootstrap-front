@@ -3,8 +3,9 @@
 exports[`render with className and name 1`] = `
 <div
   className="tour-highlight"
-  data-tour-position="bottom"
-  data-tour-theme="TEST"
+  data-position="bottom"
+  data-theme="TEST"
+  id="test"
 >
   My Button
   <div

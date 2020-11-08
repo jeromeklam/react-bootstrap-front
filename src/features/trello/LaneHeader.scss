@@ -1,0 +1,23 @@
+.trello-lane-header {
+  margin-bottom: 0px;
+  padding: 0px 5px;
+
+  .trello-lane-header-right {
+    width: 30%;
+    text-align: right;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+
+  .trello-lane-header-title {
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    width: 70%;
+  }
+}
+
+.trello-lane-header-editable {
+  padding: 0px;
+  line-height: 30px;
+}

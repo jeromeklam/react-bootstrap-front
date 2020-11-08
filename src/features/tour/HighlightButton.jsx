@@ -4,7 +4,14 @@ import classnames from 'classnames';
 import { HighlightArrow, HighlightClose } from './';
 import reducer from './redux/reducer';
 import initialState from './redux/initialState';
-import { addHighlight, startHighlight, stopHighlight, prevHighlight, nextHighlight, startHighlightTimer } from './redux/actions';
+import {
+  addHighlight,
+  startHighlight,
+  stopHighlight,
+  prevHighlight,
+  nextHighlight,
+  startHighlightTimer,
+} from './redux/actions';
 import { getRefCoords } from '../helper';
 import { Portal, SvgMask, SvgTimer, SvgPlay, Follower } from '../advanced';
 import { Container, Row, Col } from '../grid';
@@ -15,7 +22,7 @@ function HighlightButton(props) {
   if (state.started && state.highlights[state.current]) {
     const { ref, position } = state.highlights[state.current];
     if (ref && !ref.current) {
-      console.log(state.highlights,state.current);
+      console.log(state.highlights, state.current);
     }
     const coords = getRefCoords(ref);
     const content = ref.current.querySelector('.tour-highlight-content');
@@ -59,7 +66,7 @@ function HighlightButton(props) {
                       {state.timer ? (
                         <SvgTimer
                           size={24}
-                          duration={5}
+                          duration={props.delay}
                           onComplete={() => {
                             dispatch(nextHighlight(true));
                             return [true, 100];
@@ -93,16 +100,16 @@ function HighlightButton(props) {
             e.stopPropagation();
           }
           if (!state.started) {
-            const nodes = document.querySelectorAll(".tour-highlight");
+            const nodes = document.querySelectorAll('.tour-highlight');
             nodes.forEach(node => {
               const highlight = {
                 id: node.id,
-                ref: { current: node},
+                ref: { current: node },
                 theme: node.dataset.theme,
-                position: node.dataset.position
-              }
+                position: node.dataset.position,
+              };
               dispatch(addHighlight(highlight));
-            })
+            });
             dispatch(startHighlight(props.theme));
           } else {
             dispatch(stopHighlight());
@@ -110,9 +117,13 @@ function HighlightButton(props) {
         }}
         title="Aide"
       >
-        <span className="highlight-toggler">
-          <b>?</b>
-        </span>
+        {props.children ? (
+          props.children
+        ) : (
+          <span className="highlight-toggler">
+            <b>?</b>
+          </span>
+        )}
       </div>
       {state.started && tour}
     </>
@@ -120,12 +131,16 @@ function HighlightButton(props) {
 }
 
 HighlightButton.propTypes = {
+  children: PropTypes.element,
   className: PropTypes.string,
+  delay: PropTypes.number,
   theme: PropTypes.string.isRequired,
 };
 
 HighlightButton.defaultProps = {
+  children: PropTypes.idRequired,
   className: '',
+  delay: 5,
 };
 
 export default HighlightButton;

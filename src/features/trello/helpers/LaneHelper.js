@@ -7,7 +7,8 @@ const LaneHelper = {
       lane.currentPage = 1
       lane.cards && lane.cards.forEach(c => (c.laneId = lane.id))
       return lane
-    })
+    });
+    console.log(newLanes);
     return update(state, {lanes: {$set: newLanes}})
   },
 

@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<textarea
+  autoCapitalize="off"
+  autoComplete="off"
+  autoCorrect="off"
+  autoFocus={false}
+  border={false}
+  className="trello-inline-input"
+  dataGramm="false"
+  defaultValue=""
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onMouseDown={[Function]}
+  rows={1}
+  spellCheck="false"
+/>
+`;

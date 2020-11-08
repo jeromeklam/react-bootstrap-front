@@ -22,16 +22,23 @@ export function reducer(state, action) {
           currentPos += 1;
         }
       }
-      let started = true;
-      if (highlights[currentPos].theme !== theme) {
-        started = false;
+      if (currentPos >= 0 && currentPos < highlights.length) {
+        let started = true;
+        if (highlights[currentPos].theme !== theme) {
+          started = false;
+        }
+        return {
+          ...state,
+          current: currentPos,
+          started: started,
+          theme: theme,
+        };
+      } else {
+        return {
+          ...state,
+          started: false,
+        };
       }
-      return {
-        ...state,
-        current: currentPos,
-        started: started,
-        theme: theme,
-      };
     }
 
     default:

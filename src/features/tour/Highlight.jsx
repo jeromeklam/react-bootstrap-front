@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import uuidv1 from 'uuid/v1';
 
 function Highlight(props) {
-  const id = uuidv1()
+  const id = props.id || uuidv1()
   let datas = {
     'data-theme': props.theme,
     'data-position': props.position,

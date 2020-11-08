@@ -1,0 +1,45 @@
+.trello-new-card-form {
+  background-color: #eee;
+}
+
+.trello-new-card-form-wrapper {
+  border-radius: 3px;
+  background-color: #fff;
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
+  max-width: 350px;
+  margin-bottom: 7px;
+  min-width: 330px;
+  border: 1px solid;
+  border-color: theme-color('secondary');
+}
+
+.trello-new-card-form-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+  color: #000;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.trello-new-card-form-title {
+  font-weight: normal;
+  line-height: 18px;
+  width: 70%;
+  font-size: 14px;
+}
+
+.trello-new-card-form-right {
+  width: 30%;
+  text-align: right;
+  padding-right: 10px;
+  font-size: 10px;
+}
+.trello-new-card-form-detail {
+  font-size: 12px;
+  color: #4d4d4d;
+  white-space: pre-wrap;
+}
