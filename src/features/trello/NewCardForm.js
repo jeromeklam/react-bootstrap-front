@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import EditableLabel from 'rt/EditableLabel';
+import EditableLabel from './EditableLabel';
 
 class NewCardForm extends Component {
   updateField = (field, value) => {

@@ -16,5 +16,5 @@ Trello.propTypes = {
 };
 
 Trello.derfaultProps = {
-  lang: 'en',
+  lang: 'fr',
 };

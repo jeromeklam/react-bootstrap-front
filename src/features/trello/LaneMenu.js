@@ -4,10 +4,10 @@ import { DropdownWrapper } from '../advanced';
 import { DropdownMenu, DropdownMenuHeader, DropdownMenuOption } from '../basic';
 
 const LaneMenu = props => (
-  <DropdownWrapper position="bottom" trigger={<button className="btn btn-xs trello-lane-menu-menu">⋮</button>}>
+  <DropdownWrapper position="bottom" trigger={<button className="btn btn-sm btn-light trello-lane-menu-menu">&hellip;</button>}>
     <DropdownMenu className="trello-lane-menu">
       <DropdownMenuHeader label={props.t('Lane actions')} />
-      <DropdownMenuOption onClick={props.onDelete} label={props.t('Delete lane')} theme="danger" />
+      <DropdownMenuOption onClick={props.onDelete} label={props.t('Delete lane')} theme="warning" />
     </DropdownMenu>
   </DropdownWrapper>
 );

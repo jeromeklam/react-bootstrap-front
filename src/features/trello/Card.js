@@ -6,6 +6,7 @@ import Tag from './Tag';
 import CardMenu from './CardMenu';
 
 import { Row, Col } from '../grid';
+import { SvgCheckbox } from '../advanced';
 
 class Card extends Component {
   onDelete = e => {
@@ -17,41 +18,65 @@ class Card extends Component {
     const {
       showDeleteButton,
       style,
-      tagStyle,
       onClick,
+      onSelect,
       className,
       id,
       title,
       label,
+      num,
       description,
+      selected,
       tags,
       cardDraggable,
-      t
+      t,
     } = this.props;
 
     return (
       <article data-id={id} onClick={onClick} style={style} className={classnames('trello-card', className)}>
         <Row>
-          <Col size={20}>
+          <Col size={3} textAlign="left">
+            {onSelect && (
+              <SvgCheckbox
+                selected={selected}
+                onChange={e => {
+                  if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                  onSelect(id);
+                }}
+              />
+            )}
+          </Col>
+          <Col size={7} textAlign="left">
+            <span className="text-secondary">{num}</span>
+          </Col>
+          <Col size={20} textAlign="left">
+            {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.title} {...tag} />)}
+          </Col>
+          <Col size={6} textAlign="right">
+            <CardMenu delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} t={t} />
+          </Col>
+        </Row>
+        <Row>
+          <Col size={20} textAlign="left">
             <span className="trello-card-title text-secondary" draggable={cardDraggable}>
               {title}
             </span>
           </Col>
-          <Col size={10} textAlign="right">
-            <span className="trello-card-right">{label}</span>
-          </Col>
-          <Col size={6} textAlign="right">
-            <CardMenu delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} t={t}/>
-          </Col>
+          <Col size={10} textAlign="right" />
+          <Col size={6} textAlign="right" />
         </Row>
-        <div className="trello-card-detail">{description}</div>
-        {tags && tags.length > 0 && (
-          <div className="trello-card-footer">
-            {tags.map(tag => (
-              <Tag key={tag.title} {...tag} tagStyle={tagStyle} />
-            ))}
-          </div>
-        )}
+        {description && description !== '' && <div className="trello-card-detail">{description}</div>}
+        <div className="trello-card-footer">
+          <Row>
+            <Col size={6} textAlign="left">
+              <span className="trello-card-right">{label}</span>
+            </Col>
+            <Col size={30} textAlign="left" />
+          </Row>
+        </div>
       </article>
     );
   }
@@ -61,6 +86,7 @@ Card.propTypes = {
   showDeleteButton: PropTypes.bool,
   onDelete: PropTypes.func,
   onClick: PropTypes.func,
+  onSelect: PropTypes.func,
   style: PropTypes.object,
   tagStyle: PropTypes.object,
   className: PropTypes.string,
@@ -69,12 +95,14 @@ Card.propTypes = {
   label: PropTypes.string,
   description: PropTypes.string,
   tags: PropTypes.array,
+  selected: PropTypes.bool,
 };
 
 Card.defaultProps = {
   showDeleteButton: true,
   onDelete: () => {},
   onClick: () => {},
+  onSelect: null,
   style: {},
   tagStyle: {},
   title: 'no title',
@@ -82,6 +110,7 @@ Card.defaultProps = {
   label: '',
   tags: [],
   className: '',
+  selected: false,
 };
 
 export default Card;

@@ -15,18 +15,19 @@ const getCoords = (props) => {
 
 export default class Dropdown extends Component {
   static propTypes = {
-    className: PropTypes.string,
-    myRef: PropTypes.element.isRequired,
-    children: PropTypes.element.isRequired,
-    onClose: PropTypes.func.isRequired,
     align: PropTypes.string,
+    children: PropTypes.element.isRequired,
+    className: PropTypes.string,
     maxHeight: PropTypes.string,
+    myRef: PropTypes.element.isRequired,
+    onClose: PropTypes.func,
   };
 
   static defaultProps = {
-    className: '',
     align: 'bottom-left',
+    className: '',
     maxHeight: 'auto',
+    onClose: null
   };
 
   constructor(props) {
@@ -51,7 +52,7 @@ export default class Dropdown extends Component {
   handleClickOutside(event) {
     const domNode = ReactDOM.findDOMNode(this);
     if (!domNode || !domNode.contains(event.target)) {
-      this.props.onClose();
+      this.props.onClose && this.props.onClose();
       if (this.props.myRef && this.props.myRef.current.contains(event.target)) {
         event.preventDefault();
         event.stopPropagation();

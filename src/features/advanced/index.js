@@ -15,3 +15,4 @@ export { default as Follower } from './Follower';
 export { default as SvgTimer } from './SvgTimer';
 export { default as SvgPlay } from './SvgPlay';
 export { default as DropdownWrapper } from './DropdownWrapper';
+export { default as SvgCheckbox } from './SvgCheckbox';
