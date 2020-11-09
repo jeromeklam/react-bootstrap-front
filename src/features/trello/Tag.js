@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 
 class Tag extends Component {
   render() {
-    const { title, color, bgcolor, tagStyle, className, ...otherProps } = this.props;
-    const style = { color: color, backgroundColor: bgcolor, ...tagStyle };
+    const { title, theme, className, ...otherProps } = this.props;
     return (
-      <span style={style} {...otherProps} className={classnames('trello-tag', className)}>
+      <span {...otherProps} className={classnames('trello-tag text-white', `bg-${theme}`, className)}>
         {title}
       </span>
     );
@@ -15,17 +14,13 @@ class Tag extends Component {
 }
 
 Tag.propTypes = {
-  bgcolor: PropTypes.string,
   className: PropTypes.string,
-  color: PropTypes.string,
-  tagStyle: PropTypes.object,
+  theme: PropTypes.string,
   title: PropTypes.string.isRequired,
 };
 Tag.defaultProps = {
-  bgcolor: 'orange',
-  color: 'white',
   className: '',
-  tagStyle: {},
+  theme: 'secondary',
 };
 
 export default Tag;

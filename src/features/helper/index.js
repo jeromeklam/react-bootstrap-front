@@ -1,4 +1,5 @@
 import striptags from 'striptags';
+import { AllHtmlEntities } from 'html-entities';
 
 export const getSizeFromWidth = width => {
   let testW = parseInt(width, 10);
@@ -165,12 +166,15 @@ export const getRandomInt = (min, max) => {
 export const htmlToString = html => {
   let text = '';
   if (html && html !== null && html !== '') {
-    text = html.replaceAll('<br>', ' ');
-    text = text.replaceAll('<br />', ' ');
-    text = text.replaceAll('</p><p>', ' ');
+    text = html.replaceAll('<br>', "\n");
+    text = html.replaceAll('<li>', "\n");
+    text = html.replaceAll('</li>', "");
+    text = text.replaceAll('<br />', "\n");
+    text = text.replaceAll('</p><p>', "\n");
     text = striptags(text);
   }
-  return text;
+  const entities = new AllHtmlEntities();
+  return entities.decode(text);
 };
 
 export const getFieldId = (name, id = null) => {

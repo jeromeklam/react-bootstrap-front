@@ -10,6 +10,8 @@ import uuidv1 from 'uuid/v1';
 import Container from './Container';
 import Draggable from './Draggable';
 import AddCardLink from './AddCardLink';
+import SearchCardLink from './SearchCardLink';
+import SearchCardForm from './SearchCardForm';
 import NewCardForm from './NewCardForm';
 import LaneHeader from './LaneHeader';
 import Card from './Card';
@@ -24,6 +26,7 @@ class Lane extends Component {
     loading: false,
     currentPage: this.props.currentPage,
     addCardMode: false,
+    searchCardMode: false,
     collapsed: false,
     isDraggingOver: false,
   };
@@ -100,12 +103,21 @@ class Lane extends Component {
     this.setState({ addCardMode: false });
   };
 
+  showSearchableCard = () => {
+    this.setState({ searchCardMode: true });
+  };
+
+  hideSearchableCard = () => {
+    this.setState({ searchCardMode: false });
+  };
+
   addNewCard = params => {
     const laneId = this.props.id;
     const id = uuidv1();
     this.hideEditableCard();
+    this.hideSearchableCard();
     let card = { id, ...params };
-    this.props.actions.addCard({ laneId, card });
+    //this.props.actions.addCard({ laneId, card });
     this.props.onCardAdd(card, laneId);
   };
 
@@ -159,9 +171,12 @@ class Lane extends Component {
       cardDropClass,
       tagStyle,
       cardStyle,
+      onCardSearch,
+      onCardSelect,
+      cardSearchResult,
       t,
     } = this.props;
-    const { addCardMode, collapsed } = this.state;
+    const { addCardMode, searchCardMode, collapsed } = this.state;
 
     const showableCards = collapsed ? [] : cards;
 
@@ -174,6 +189,7 @@ class Lane extends Component {
           style={card.style || cardStyle}
           className="react-trello-card"
           onDelete={onDeleteCard}
+          onSelect={onCardSelect}
           onClick={e => this.handleCardClick(e, card)}
           showDeleteButton={!hideCardDeleteIcon}
           tagStyle={tagStyle}
@@ -190,7 +206,7 @@ class Lane extends Component {
     });
 
     return (
-      <div className="trello-lane-scrollable" ref={this.laneDidMount} isDraggingOver={isDraggingOver}>
+      <div className="trello-lane-scrollable custom-scrollbar" ref={this.laneDidMount} isDraggingOver={isDraggingOver}>
         <Container
           orientation="vertical"
           groupName={this.groupName}
@@ -205,8 +221,23 @@ class Lane extends Component {
         >
           {cardList}
         </Container>
-        {editable && !addCardMode && <AddCardLink onClick={this.showEditableCard} t={t} />}
+        {editable && !addCardMode && !searchCardMode && (
+          <div>
+            <AddCardLink onClick={this.showEditableCard} t={t} />
+            <SearchCardLink onClick={this.showSearchableCard} t={t} />
+          </div>
+        )}
         {addCardMode && <NewCardForm onCancel={this.hideEditableCard} t={t} laneId={id} onAdd={this.addNewCard} />}
+        {searchCardMode && (
+          <SearchCardForm
+            onCancel={this.hideSearchableCard}
+            t={t}
+            laneId={id}
+            onAdd={this.addNewCard}
+            onSearch={onCardSearch}
+            data={cardSearchResult}
+          />
+        )}
       </div>
     );
   };

@@ -21,3 +21,16 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
+.trello-lane-card-search {
+  border-radius: 3px;
+  background-color: #fff;
+  position: relative;
+  padding: 10px;
+  cursor: pointer;
+  max-width: 350px;
+  margin-bottom: 7px;
+  min-width: 330px;
+  border: 1px solid;
+  border-color: theme-color('secondary');
+}

@@ -153,6 +153,7 @@ class BoardContainer extends Component {
       'onBeforeCardDelete',
       'onCardDelete',
       'onCardAdd',
+      'onCardSelect',
       'onLaneClick',
       'laneSortFunction',
       'draggable',
@@ -166,6 +167,8 @@ class BoardContainer extends Component {
       'handleDragEnd',
       'cardDragClass',
       'editLaneTitle',
+      'onCardSearch',
+      'cardSearchResult',
       't',
     ]);
 

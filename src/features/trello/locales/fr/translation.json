@@ -1,10 +1,11 @@
 {
-  "Add another lane": "＋ Ajouter une autre colonne",
-  "Click to add card": "＋ Ajouter une carte",
-  "Delete lane": "Supprimer",
+  "Add another lane": "＋ Nouvelle colonne",
+  "Click to add card": "＋ Nouvelle carte",
+  "Click to search a card": "＋ Carte existante",
+  "Delete lane": "Supprimer la colonne",
   "Lane actions": "Actions",
-  "Update card": "Modifier",
-  "Delete card": "Supprimer",
+  "Update card": "Modifier la carte",
+  "Delete card": "Détacher du tableau",
   "Card actions": "Actions",
   "button": {
     "Add card": "Ajouter",
