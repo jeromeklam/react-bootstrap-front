@@ -23,13 +23,15 @@ class Card extends Component {
       className,
       id,
       title,
-      label,
+      textBottom,
+      classNameTB,
       num,
       description,
       selected,
       tags,
       cardDraggable,
       t,
+      user
     } = this.props;
 
     return (
@@ -52,10 +54,15 @@ class Card extends Component {
           <Col size={7} textAlign="left">
             <span className="text-secondary">{num}</span>
           </Col>
-          <Col size={20} textAlign="left">
+          <Col size={16} textAlign="left">
             {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.title} {...tag} />)}
           </Col>
-          <Col size={6} textAlign="right">
+          <Col size={5} textAlign="right">
+            <div style={{ height: 'px'}}>
+              {user}
+            </div>
+          </Col>
+          <Col size={5} textAlign="right">
             <CardMenu delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} t={t} />
           </Col>
         </Row>
@@ -72,7 +79,7 @@ class Card extends Component {
         <div className="trello-card-footer">
           <Row>
             <Col size={6} textAlign="left">
-              <span className="trello-card-right">{label}</span>
+              <span className={classnames("trello-card-right", classNameTB)}>{textBottom}</span>
             </Col>
             <Col size={30} textAlign="left" />
           </Row>
@@ -92,10 +99,12 @@ Card.propTypes = {
   className: PropTypes.string,
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  label: PropTypes.string,
+  textBottom: PropTypes.string,
+  classNameTB: PropTypes.string,
   description: PropTypes.string,
   tags: PropTypes.array,
   selected: PropTypes.bool,
+  user: PropTypes.object,
 };
 
 Card.defaultProps = {
@@ -107,10 +116,12 @@ Card.defaultProps = {
   tagStyle: {},
   title: 'no title',
   description: '',
-  label: '',
+  textBottom: '',
+  classNameTB: '',
   tags: [],
   className: '',
   selected: false,
+  user: null,
 };
 
 export default Card;
