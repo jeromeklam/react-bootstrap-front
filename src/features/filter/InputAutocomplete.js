@@ -64,9 +64,11 @@ export default class InputAutocomplete extends Component {
           this.setState({ list: result });
         })
         .catch(errors => {
+          this.props.onSelect({ target: { name: this.props.name, value: null } });
           this.setState({ list: [] });
         });
     } else {
+      this.props.onSelect({ target: { name: this.props.name, value: null } });
       this.setState({ list: [] });
     }
   }
@@ -85,6 +87,7 @@ export default class InputAutocomplete extends Component {
       }
       this.setState({ value: item.id, display: display, list: [] });
     } else {
+      this.props.onSelect({ target: { name: this.props.name, value: null } });
       this.setState({ list: [] });
     }
   }
