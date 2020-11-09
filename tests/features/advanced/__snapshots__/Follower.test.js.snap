@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<div
+  className="btn bg-secondary"
+  style={
+    Object {
+      "left": 0,
+      "maxHeight": "auto",
+      "overflow": "hidden",
+      "padding": "4px",
+      "position": "absolute",
+      "top": 10,
+    }
+  }
+>
+  <div
+    className="custom-scrollbar"
+    style={
+      Object {
+        "maxHeight": "auto",
+        "overflowX": "hidden",
+        "overflowY": "auto",
+      }
+    }
+  >
+    <span>
+      TEST
+    </span>
+  </div>
+</div>
+`;

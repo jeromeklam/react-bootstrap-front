@@ -1,8 +1,12 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { DropdownMenuHeader } from '../../../src/features/basic';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<DropdownMenuHeader />);
-  expect(renderedComponent.find('.basic-dropdown-menu-header').length).toBe(1);
+it('renders standard', () => {
+  // First render
+  const component = renderer.create(
+    <DropdownMenuHeader label="test" />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

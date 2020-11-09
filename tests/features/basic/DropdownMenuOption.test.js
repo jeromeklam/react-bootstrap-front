@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { DropdownMenuOption } from '../../../src/features/basic';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<DropdownMenuOption />);
-  expect(renderedComponent.find('.basic-dropdown-menu-option').length).toBe(1);
+const callback = jest.fn();
+
+it('renders standard', () => {
+  // First render
+  const component = renderer.create(
+    <DropdownMenuOption label="test" onClick={callback} />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

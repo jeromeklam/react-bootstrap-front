@@ -120,9 +120,9 @@ function HighlightButton(props) {
         {props.children ? (
           props.children
         ) : (
-          <span className="highlight-toggler">
+          <button className="btn btn-sm highlight-toggler">
             <b>?</b>
-          </span>
+          </button>
         )}
       </div>
       {state.started && tour}

@@ -2,7 +2,6 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { SvgTimer } from '../../../src/features/advanced';
 
-const callback = jest.fn();
 jest.useFakeTimers();
 
 it('renders with className', () => {

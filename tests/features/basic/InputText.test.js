@@ -1,23 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-import { act, Simulate } from 'react-dom/test-utils';
 import { InputText } from '../../../src/features/basic';
 
 const callback = jest.fn();
 jest.useFakeTimers();
-
-let container;
-
-beforeEach(() => {
-  container = document.createElement('div');
-  document.body.appendChild(container);
-});
-
-afterEach(() => {
-  document.body.removeChild(container);
-  container = null;
-});
 
 it('renders standard', () => {
   // First render
@@ -39,14 +26,15 @@ it('renders standard with label', () => {
 
 it('renders standard and verify onChange is called', () => {
   // First render
-  act(() => {
-    ReactDOM.render(
-      <InputText id="input-text" name="input-text" className="input" value="tes" onChange={callback} />,
-      container
+  let component;
+  renderer.act(() => {
+    component = renderer.create(
+      <InputText id="input-text" name="input-text" className="input" value="tes" onChange={callback} />
     );
   });
   //
-  const input = container.querySelector('input');
-  Simulate.change(input, {target: {value: 'test'}});
+  const trigger = component.root.findByType('input');
+  renderer.act(() => trigger.props.onChange({ target: { value: 'test' } }));
+  expect(component.toJSON()).toMatchSnapshot();
   expect(callback).toBeCalled();
 });

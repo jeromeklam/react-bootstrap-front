@@ -1,5 +1,78 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders standard and verify onChange on unexisting value 1`] = `
+<div
+  className="form-group"
+>
+  <label
+    className=""
+    htmlFor="input-select"
+  >
+    Select
+  </label>
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <select
+        className="border-secondary form-control"
+        disabled={false}
+        id="select"
+        name="select"
+        onChange={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "target": Object {
+                    "dataset": Array [],
+                    "name": "select",
+                    "value": "TEST 1",
+                  },
+                },
+              ],
+              Array [
+                Object {
+                  "target": Object {
+                    "value": "TEST 1",
+                  },
+                },
+              ],
+            ],
+            "results": Array [
+              Object {
+                "type": "return",
+                "value": undefined,
+              },
+              Object {
+                "type": "return",
+                "value": undefined,
+              },
+            ],
+          }
+        }
+        required={false}
+        type="text"
+        value="TEST 3"
+      >
+        <option
+          value="TEST 1"
+        >
+          test 1
+        </option>
+        <option
+          value="TEST 2"
+        >
+          test 2
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`renders standard with label and options 1`] = `
 <div
   className="form-group"

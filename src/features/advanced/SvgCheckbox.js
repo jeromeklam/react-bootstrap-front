@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default function SvgCheckbox(props) {
   let otherProps = {};
-  if (props.selected) {
+  if (props.checked || props.selected) {
     otherProps.checked = 'checked';
   }
   return (
@@ -22,9 +22,11 @@ export default function SvgCheckbox(props) {
 }
 
 SvgCheckbox.propTypes = {
+  checked: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   selected: PropTypes.bool,
 };
 SvgCheckbox.defaultProps = {
+  checked: false,
   selected: false,
 };

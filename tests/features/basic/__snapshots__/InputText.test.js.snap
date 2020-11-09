@@ -60,6 +60,54 @@ exports[`renders standard and text onChange 1`] = `
 </div>
 `;
 
+exports[`renders standard and verify onChange is called 1`] = `
+<div
+  className="form-group"
+>
+  
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        autoComplete="off"
+        className="border-secondary form-control input"
+        disabled={false}
+        id="input-text"
+        maxLength={9999}
+        name="input-text"
+        onChange={
+          [MockFunction] {
+            "calls": Array [
+              Array [
+                Object {
+                  "target": Object {
+                    "value": "test",
+                  },
+                },
+              ],
+            ],
+            "results": Array [
+              Object {
+                "type": "return",
+                "value": undefined,
+              },
+            ],
+          }
+        }
+        pattern={null}
+        placeholder=""
+        required={false}
+        type="text"
+        value="tes"
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`renders standard with label 1`] = `
 <div
   className="form-group"

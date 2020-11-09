@@ -1,8 +1,12 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { SvgMask } from '../../../src/features/advanced';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<SvgMask />);
-  expect(renderedComponent.find('.advanced-svg-mask').length).toBe(1);
+it('renders with className', () => {
+  // First render
+  const component = renderer.create(
+    <SvgMask className="btn bg-secondary" />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { DropdownMenu } from '../../../src/features/basic';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<DropdownMenu />);
-  expect(renderedComponent.find('.basic-dropdown-menu').length).toBe(1);
+it('renders with className', () => {
+  // First render
+  const component = renderer.create(
+    <DropdownMenu className="btn bg-secondary">
+      <span>MENU</span>
+    </DropdownMenu>
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

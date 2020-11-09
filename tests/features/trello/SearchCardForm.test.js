@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { SearchCardForm } from '../../../src/features/trello';
+import renderer from 'react-test-renderer';
+import SearchCardForm from '../../../src/features/trello/SearchCardForm';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<SearchCardForm />);
-  expect(renderedComponent.find('.trello-search-card-form').length).toBe(1);
+const callback = jest.fn();
+
+it('render with className and name', () => {
+  // First render
+  const component = renderer.create(
+    <SearchCardForm className="btn bg-secondary" t={callback} />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

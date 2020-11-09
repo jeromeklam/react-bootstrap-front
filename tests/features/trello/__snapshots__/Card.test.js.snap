@@ -3,37 +3,118 @@
 exports[`render with className and name 1`] = `
 <article
   className="trello-card btn bg-secondary"
-  onClick={[MockFunction]}
+  onClick={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          "Card actions",
+        ],
+        Array [
+          "Update card",
+        ],
+        Array [
+          "Delete card",
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
   style={Object {}}
 >
   <div
-    className="trello-card-header"
+    className="row"
   >
     <div
-      className="trello-card-title text-secondary"
-    >
-      no title
-    </div>
-    <span
-      className="trello-card-right"
-    >
-      
-    </span>
+      className="col col-xs-w3 text-left"
+    />
     <div
-      className="trello-delete-button"
-      onClick={[Function]}
+      className="col col-xs-w7 text-left"
     >
-      <button
-        className="btn btn-xs text-danger"
+      <span
+        className="text-secondary"
+      />
+    </div>
+    <div
+      className="col col-xs-w16 text-left"
+    />
+    <div
+      className="col col-xs-w5 text-right"
+    >
+      <div
+        style={
+          Object {
+            "height": "px",
+          }
+        }
+      />
+    </div>
+    <div
+      className="col col-xs-w5 text-right"
+    >
+      <div
+        className="advanced-dropdown-wrapper"
+        onClick={[Function]}
       >
-        ✖
-      </button>
+        <button
+          className="btn btn-sm btn-light trello-card-menu-menu"
+        >
+          …
+        </button>
+      </div>
     </div>
   </div>
   <div
-    className="trello-card-detail"
+    className="row"
   >
-    
+    <div
+      className="col col-xs-w20 text-left"
+    >
+      <span
+        className="trello-card-title text-secondary"
+      >
+        no title
+      </span>
+    </div>
+    <div
+      className="col col-xs-w10 text-right"
+    />
+    <div
+      className="col col-xs-w6 text-right"
+    />
+  </div>
+  
+  <div
+    className="trello-card-footer"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col col-xs-w6 text-left"
+      >
+        <span
+          className="trello-card-right"
+        >
+          
+        </span>
+      </div>
+      <div
+        className="col col-xs-w30 text-left"
+      />
+    </div>
   </div>
 </article>
 `;

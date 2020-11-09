@@ -1,13 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+
 import { Highlight } from '../tour';
 
 export const DefaultSidebarItem = props => (
   <li className={props.className}>
     <div className="sidebar-navigation-li bg-primary" />
     <a
-      onClick={() => props.onNavigate(props.option.url)}
+      href={props.option.url}
+      onClick={e => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        props.onNavigate(props.option.url);
+      }}
       className={classnames(
         'nav-link',
         props.location.pathname === props.option.url ? 'active text-primary' : 'text-secondary'
@@ -23,11 +31,11 @@ export const DefaultSidebarItem = props => (
 );
 
 DefaultSidebarItem.propTypes = {
-  location: PropTypes.element.isRequired,
-  option: PropTypes.element.isRequired,
-  onNavigate: PropTypes.func.isRequired,
   className: PropTypes.string,
+  location: PropTypes.element.isRequired,
+  onNavigate: PropTypes.func.isRequired,
   open: PropTypes.bool,
+  option: PropTypes.element.isRequired,
 };
 
 DefaultSidebarItem.defaultProps = {

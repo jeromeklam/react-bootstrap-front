@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<div
+  className="advanced-dropdown-wrapper"
+  onClick={[Function]}
+>
+  <button>
+    Button
+  </button>
+</div>
+`;
+
+exports[`renders test onClick 1`] = `
+<div
+  className="advanced-dropdown-wrapper"
+  onClick={[Function]}
+>
+  <button>
+    Button
+  </button>
+</div>
+`;
+
+exports[`renders test onClick 2`] = `
+Array [
+  <div
+    className="advanced-dropdown-wrapper"
+    onClick={[Function]}
+  >
+    <button>
+      Button
+    </button>
+  </div>,
+  <div>
+    <div
+      id="content"
+    >
+      <div
+        className=""
+        style={
+          Object {
+            "maxHeight": "auto",
+            "overflow": "hidden",
+            "padding": "4px",
+            "position": "absolute",
+          }
+        }
+      >
+        <div
+          className="custom-scrollbar"
+          style={
+            Object {
+              "maxHeight": "auto",
+              "overflowX": "hidden",
+              "overflowY": "auto",
+            }
+          }
+        >
+          <span>
+            TEST
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      data-target-tag-name="DIV"
+      id="target"
+    />
+  </div>,
+]
+`;

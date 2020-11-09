@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { CardMenu } from '../../../src/features/trello';
+import renderer from 'react-test-renderer';
+import CardMenu from '../../../src/features/trello/CardMenu';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<CardMenu />);
-  expect(renderedComponent.find('.trello-card-menu').length).toBe(1);
+const callback = jest.fn();
+
+it('renders standard', () => {
+  // First render
+  const component = renderer.create(
+    <CardMenu t={callback} />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

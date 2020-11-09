@@ -15,18 +15,21 @@ class Toolbar extends React.Component {
         <span className="rbc-btn-group">
           <button
             type="button"
+            className="btn btn-secondary"
             onClick={this.navigate.bind(null, navigate.TODAY)}
           >
             {messages.today}
           </button>
           <button
             type="button"
+            className="btn btn-secondary"
             onClick={this.navigate.bind(null, navigate.PREVIOUS)}
           >
             {messages.previous}
           </button>
           <button
             type="button"
+            className="btn btn-secondary"
             onClick={this.navigate.bind(null, navigate.NEXT)}
           >
             {messages.next}
@@ -57,7 +60,7 @@ class Toolbar extends React.Component {
         <button
           type="button"
           key={name}
-          className={clsx({ 'rbc-active': view === name })}
+          className={clsx('btn btn-secondary', { 'rbc-active': view === name })}
           onClick={this.view.bind(null, name)}
         >
           {messages[name]}

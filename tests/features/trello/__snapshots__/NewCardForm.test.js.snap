@@ -19,12 +19,13 @@ exports[`renders with className 1`] = `
           onBlur={[Function]}
           onInput={[Function]}
           onKeyDown={[Function]}
+          onKeyUp={[Function]}
           onPaste={[Function]}
           placeholder=""
         />
       </span>
       <span
-        className="sc-jTzLTM bhxCSs"
+        className="trello-new-card-form-right"
       >
         <div
           className="comPlainTextContentEditable comPlainTextContentEditable--has-placeholder"
@@ -32,13 +33,14 @@ exports[`renders with className 1`] = `
           onBlur={[Function]}
           onInput={[Function]}
           onKeyDown={[Function]}
+          onKeyUp={[Function]}
           onPaste={[Function]}
           placeholder=""
         />
       </span>
     </header>
     <div
-      className="sc-fjdhpX dDrzWr"
+      className="rello-new-card-form-detail"
     >
       <div
         className="comPlainTextContentEditable comPlainTextContentEditable--has-placeholder"
@@ -46,6 +48,7 @@ exports[`renders with className 1`] = `
         onBlur={[Function]}
         onInput={[Function]}
         onKeyDown={[Function]}
+        onKeyUp={[Function]}
         onPaste={[Function]}
         placeholder=""
       />

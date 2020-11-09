@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render with className and name 1`] = `
+<button
+  className="btn btn-primary"
+  onClick={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          "Click to search a card",
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+/>
+`;

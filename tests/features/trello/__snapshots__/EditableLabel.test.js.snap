@@ -7,6 +7,7 @@ exports[`render with className and name 1`] = `
   onBlur={[Function]}
   onInput={[Function]}
   onKeyDown={[Function]}
+  onKeyUp={[Function]}
   onPaste={[Function]}
   placeholder={false}
 />

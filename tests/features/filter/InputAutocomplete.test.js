@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { InputAutocomplete } from '../../../src/features/filter';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<InputAutocomplete />);
-  expect(renderedComponent.find('.filter-input-autocomplete').length).toBe(1);
+const callback = jest.fn();
+
+it('renders standard', () => {
+  // First render
+  const component = renderer.create(
+    <InputAutocomplete id="test" name="test" type="TEST" list={[]} clearIcon={<span />} onSearch={callback} onSelect={callback} />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

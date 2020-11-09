@@ -105,11 +105,11 @@ export class DefaultHeader extends Component {
             <ul className="navbar-nav justify-content-end">
               {this.props.onToggleUser && (
                 <li className="nav-item">
-                  <a className="nav-link" onClick={this.props.onToggleUser} href={null}>
+                  <button className="btn btn-light" onClick={this.props.onToggleUser}>
                     <span>                      
                       {this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}
                     </span>
-                  </a>
+                  </button>
                 </li>
               )}
               {this.props.locales && (
@@ -200,9 +200,13 @@ export class DefaultHeader extends Component {
                   return (
                     <li className="nav-item" key={`nav-item-${key}`}>
                       <a
-                        href={null}
+                        href={option.url}
                         className={classnames('nav-link', this.props.location.pathname === option.url && 'active')}
-                        onClick={() => {
+                        onClick={(e) => {
+                          if (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }
                           this.props.onNavigate(option.url);
                         }}
                       >
@@ -227,7 +231,11 @@ export class DefaultHeader extends Component {
                 );
               })}
               <li className="nav-item">
-                <HighlightButton theme="NAV" />
+                <HighlightButton theme="NAV">
+                  <div title="Aide">
+                    <button className="btn btn-light">?</button>
+                  </div>
+                </HighlightButton>
               </li>
             </ul>
           </div>

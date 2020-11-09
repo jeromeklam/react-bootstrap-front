@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { SearchCardLink } from '../../../src/features/trello';
+import renderer from 'react-test-renderer';
+import SearchCardLink from '../../../src/features/trello/SearchCardLink';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<SearchCardLink />);
-  expect(renderedComponent.find('.trello-search-card-link').length).toBe(1);
+const callback = jest.fn();
+
+it('render with className and name', () => {
+  // First render
+  const component = renderer.create(
+    <SearchCardLink className="btn bg-secondary" t={callback} onClick={callback}/>
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

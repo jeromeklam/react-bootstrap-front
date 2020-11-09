@@ -1,22 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-import { act, Simulate } from 'react-dom/test-utils';
 import { InputSelect } from '../../../src/features/basic';
 
 const callback = jest.fn();
 
-let container;
-
 beforeEach(() => {
-  container = document.createElement('div');
-  document.body.appendChild(container);
   jest.clearAllMocks();
-});
-
-afterEach(() => {
-  document.body.removeChild(container);
-  container = null;
 });
 
 it('renders standard with label and options', () => {
@@ -79,8 +69,9 @@ it('renders standard with label and options with empty on and default values', (
 
 it('renders standard and verify onChange on unexisting value', () => {
   // First render
-  act(() => {
-    ReactDOM.render(
+  let component;
+  renderer.act(() => {
+    component = renderer.create(
       <InputSelect
         className="btn bg-secondary"
         onChange={callback}
@@ -89,13 +80,13 @@ it('renders standard and verify onChange on unexisting value', () => {
         name="select"
         value="TEST 3"
         options={[{ label: 'test 1', value: 'TEST 1' }, { label: 'test 2', value: 'TEST 2' }]}
-      />,
-      container
+      />
     );
   });
   expect(callback).toHaveBeenCalledTimes(1);
   //
-  const input = container.querySelector('select');
-  Simulate.change(input, { target: { value: 'TEST 1' } });
+  const trigger = component.root.findByType('select');
+  renderer.act(() => trigger.props.onChange({ target: { value: 'TEST 1' } }));
+  expect(component.toJSON()).toMatchSnapshot();
   expect(callback).toHaveBeenCalledTimes(2);
 });

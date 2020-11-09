@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<h6
+  className="dropdown-header"
+>
+  test
+</h6>
+`;

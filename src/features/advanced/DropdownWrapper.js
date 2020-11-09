@@ -20,7 +20,6 @@ export default class DropdownWrapper extends Component {
       e.preventDefault();
       e.stopPropagation();
     }
-    console.log('DropdownWrapper', e);
     this.setState({ open: true });
   }
 

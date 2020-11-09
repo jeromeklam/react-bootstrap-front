@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders with className 1`] = `
+<div
+  className="dropdown-menu show btn bg-secondary"
+  style={
+    Object {
+      "position": "relative",
+    }
+  }
+>
+  <span>
+    MENU
+  </span>
+</div>
+`;

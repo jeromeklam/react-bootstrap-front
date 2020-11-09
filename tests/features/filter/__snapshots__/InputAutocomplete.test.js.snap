@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<div
+  className="form-group"
+>
+  
+  <div
+    className=""
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        autoComplete="off"
+        className="border-primary form-control"
+        disabled={false}
+        id="test"
+        name="test"
+        onChange={[Function]}
+        onClick={[Function]}
+        onKeyUp={[Function]}
+        required={false}
+        type="text"
+        value=""
+      />
+      <div
+        className="input-group-append"
+      >
+        <button
+          className="btn btn-input btn-outline-primary bg-light"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          <span />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

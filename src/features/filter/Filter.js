@@ -6,7 +6,6 @@ import {
   FILTER_TYPE_GROUP,
   FILTER_TYPE_ELEM,
   FILTER_SEARCH_NONE,
-  FILTER_SEARCH_QUICK
 } from './';
 
 /**
@@ -14,7 +13,7 @@ import {
  */
 export default class Filter {
   constructor() {
-  this.data = {
+    this.data = {
       operator: FILTER_OPER_LIKE,
       mode: FILTER_MODE_OR,
       filters: [],
@@ -25,7 +24,7 @@ export default class Filter {
       filter_enable: true,
       filter_crits: [],
       search: FILTER_SEARCH_NONE,
-    }
+    };
     this.init();
   }
 
@@ -45,7 +44,7 @@ export default class Filter {
   setOperator(oper, all = true) {
     this.data.operator = oper;
     if (all) {
-      this.data.filters.forEach((elt) => {
+      this.data.filters.forEach(elt => {
         elt.setOperator(oper);
       });
     }
@@ -115,13 +114,13 @@ export default class Filter {
 
   checkFilters() {
     let filters = [];
-    this.data.filters.forEach((elt) => {
+    this.data.filters.forEach(elt => {
       let add = false;
       if (elt && elt.data && (elt.data.operator === FILTER_OPER_EMPTY || elt.data.operator === FILTER_OPER_NOT_EMPTY)) {
-          add = true;
+        add = true;
       } else {
         const crits3 = elt.getFilterCrits();
-        Object.keys(crits3).forEach((key) => {
+        Object.keys(crits3).forEach(key => {
           if (crits3[key] !== '') {
             add = true;
           }
@@ -162,7 +161,7 @@ export default class Filter {
   }
 
   findFirst(name) {
-    return this.data.filters.find(elt => (elt.getFilterName() === name && elt.isEnable()));
+    return this.data.filters.find(elt => elt.getFilterName() === name && elt.isEnable());
   }
 
   asJsonApiObject() {
@@ -171,10 +170,10 @@ export default class Filter {
     let fixed = {};
     if (this.data.filters.length > 0) {
       params.filter = {};
-      this.data.filters.forEach((elt) => {
+      this.data.filters.forEach(elt => {
         let crits2 = [];
         const crits3 = elt.getFilterCrits();
-        Object.keys(crits3).forEach((key) => {
+        Object.keys(crits3).forEach(key => {
           if (crits3[key] === null || crits3[key] === '') {
             if (elt.getOperator() === 'empty' || elt.getOperator() === 'nempty') {
               crits2[elt.getOperator()] = crits3[key];
@@ -241,7 +240,11 @@ export default class Filter {
     if (this.data.filters.length > 0) {
       if (this.data.filters.find(elem => elem.isDefault() === true)) {
         defaultEnableOnly = true;
-        const found = this.data.filters.find(elem => elem.isFixed() === false && (elem.isDefault() === false || elem.isDefault() === true && elem.isEnable() === false));
+        const found = this.data.filters.find(
+          elem =>
+            elem.isFixed() === false &&
+            ((elem.isDefault() === false || elem.isDefault() === true) && elem.isEnable() === false)
+        );
         if (found) {
           defaultEnableOnly = false;
         }

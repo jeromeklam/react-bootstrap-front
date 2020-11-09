@@ -1,8 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { Follower } from '../../../src/features/advanced';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<Follower />);
-  expect(renderedComponent.find('.advanced-follower').length).toBe(1);
+it('renders standard', () => {
+  // First render
+  const component = renderer.create(
+    <Follower className="btn bg-secondary">
+      <span>TEST</span>
+    </Follower>
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });

@@ -1,8 +1,21 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 import { SvgCheckbox } from '../../../src/features/advanced';
 
-it('renders node with correct class name', () => {
-  const renderedComponent = shallow(<SvgCheckbox />);
-  expect(renderedComponent.find('.advanced-svg-checkbox').length).toBe(1);
+it('renders with className', () => {
+  // First render
+  const component = renderer.create(
+    <SvgCheckbox className="btn bg-secondary" />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
+});
+
+it('renders checked', () => {
+  // First render
+  const component = renderer.create(
+    <SvgCheckbox checked />
+  );
+  let test = component.toJSON();
+  expect(test).toMatchSnapshot();
 });
