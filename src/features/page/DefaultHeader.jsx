@@ -193,9 +193,9 @@ export class DefaultHeader extends Component {
                   key = option.url.replace(/\//g, '-');
                 }
                 if (
-                  option.role === 'HOME' ||
-                  (option.role === 'SIGNIN' && !this.props.authenticated) ||
-                  (option.role === 'SIGNOUT' && this.props.authenticated)
+                  option.role === '-HOME-' ||
+                  (option.role === 'SIGNIN' && !this.props.authenticated) || 
+                  (option.role === 'SIGNOUT' && !this.props.authenticated) 
                 ) {
                   return (
                     <li className="nav-item" key={`nav-item-${key}`}>
@@ -206,7 +206,11 @@ export class DefaultHeader extends Component {
                           this.props.onNavigate(option.url);
                         }}
                       >
-                        <span>{option.label}</span>
+                        {(option.label !== '') ? (
+                          <span>{option.label}</span>
+                        ) : (
+                          option.icon
+                        )}
                       </a>
                     </li>
                   );

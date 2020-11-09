@@ -1,4 +1,5 @@
 .trello-inline-input {
+  font-weight: bold;
   &:not(:focus) {
     background-color: transparent;
     border: theme-color('light');
