@@ -42,7 +42,7 @@ export default class InputCheckList extends Component {
   static getDerivedStateFromProps(props, state) {
     const list = JSON.parse(props.value) || emptyList;
     if (list.title !== state.title || list.items !== state.items) {
-      return { title: list.title, items: list.items };
+      return { title: list.title, items: list.items, total: list.total, done: list.done, warn: list.warn};
     }
     return null;
   }
@@ -62,8 +62,11 @@ export default class InputCheckList extends Component {
     this.state = {
       title: list.title,
       items: list.items,
-      open: true,
+      total: list.total,
+      done: list.done,
+      warn: list.warn,
       comm: itemsComment,
+      open: true,
     };
     this.onToggle = this.onToggle.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -91,10 +94,11 @@ export default class InputCheckList extends Component {
 
   onAddLine() {
     this.setState({ open: true });
-    let { title, items, comm } = this.state;
+    let { title, items, total, comm } = this.state;
     items.push(emptyItem);
+    total += 1;
     comm.push(false);
-    const list = { title: title, items: items };
+    const list = { title: title, items: items, total: total};
     this.onChange(list);
   }
 
@@ -106,9 +110,14 @@ export default class InputCheckList extends Component {
   }
 
   onChangeItemCheck(idx) {
-    let { title, items } = this.state;
+    let { title, items, done } = this.state;
     items[idx].done = !items[idx].done;
-    const list = { title: title, items: items };
+    if (items[idx].done === true) {
+      done += 1;
+    } else {
+      done -= 1;
+    }
+    const list = { title: title, items: items, done: done };
     this.onChange(list);
   }
 
@@ -120,9 +129,14 @@ export default class InputCheckList extends Component {
   }
 
   onChangeItemWarning(idx) {
-    let { title, items } = this.state;
+    let { title, items, warn } = this.state;
     items[idx].warning = !items[idx].warning;
-    const list = { title: title, items: items };
+    if (items[idx].warning === true) {
+      warn += 1;
+    } else {
+      warn -= 1;
+    }
+    const list = { title: title, items: items, warn: warn };
     this.onChange(list);
   }
 
@@ -140,10 +154,17 @@ export default class InputCheckList extends Component {
   }
 
   onDelLine(idx) {
-    let { title, items, comm } = this.state;
+    let { title, items, comm, total, done, warn } = this.state;
     items.splice(idx, 1);
     comm.splice(idx, 1);
-    const list = { title: title, items: items };
+    total -= 1;
+    if (items[idx].done === true) {
+      done -= 1;
+    }
+    if (items[idx].warning === true) {
+      warn -= 1;
+    }
+    const list = { title: title, items: items, total: total, done: done, warn: warn, comm: comm };
     this.onChange(list);
   }
 
@@ -161,7 +182,6 @@ export default class InputCheckList extends Component {
     if (this.props.onDelete) {
       multi = true;
     }
-    console.log('FK comm', this.state.comm);
     return (
       <div className="input-check-list">
         <div className="row">

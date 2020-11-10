@@ -23,15 +23,19 @@ class Card extends Component {
       className,
       id,
       title,
-      textBottom,
-      classNameTB,
       num,
       description,
       selected,
       tags,
       cardDraggable,
       t,
-      user
+      user,
+      project,
+      priority,
+      classPriority,
+      deadline,
+      progress,
+      comment,
     } = this.props;
 
     return (
@@ -54,15 +58,13 @@ class Card extends Component {
           <Col size={7} textAlign="left">
             <span className="text-secondary">{num}</span>
           </Col>
-          <Col size={16} textAlign="left">
+          <Col size={19} textAlign="left">
             {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.title} {...tag} />)}
           </Col>
-          <Col size={5} textAlign="right">
-            <div style={{ height: 'px'}}>
-              {user}
-            </div>
+          <Col size={3} textAlign="center">
+            <div style={{ height: 'px' }}>{user}</div>
           </Col>
-          <Col size={5} textAlign="right">
+          <Col size={4} textAlign="right">
             <CardMenu delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} t={t} />
           </Col>
         </Row>
@@ -72,16 +74,29 @@ class Card extends Component {
               {title}
             </span>
           </Col>
-          <Col size={10} textAlign="right" />
-          <Col size={6} textAlign="right" />
+          <Col size={16} textAlign="right">
+            <span className="trello-card-project text-secondary" draggable={cardDraggable}>
+              {project}
+            </span>
+          </Col>
         </Row>
         {description && description !== '' && <div className="trello-card-detail">{description}</div>}
         <div className="trello-card-footer">
           <Row>
-            <Col size={6} textAlign="left">
-              <span className={classnames("trello-card-right", classNameTB)}>{textBottom}</span>
+            <Col size={4} textAlign="left">
+              <div className={classnames('trello-card-priority', `text-${classPriority}`, 'border', `border-${classPriority}`)}>
+                <span>{priority}</span>
+              </div>
             </Col>
-            <Col size={30} textAlign="left" />
+            <Col size={11} textAlign='left'>
+              <span className="trello-card-deadline">{deadline}</span>
+            </Col>
+            <Col size={8} textAlign='left'>
+              <span className="trello-card-progress">{progress}</span>
+            </Col>
+            <Col size={6} textAlign="left">
+              <span className="trello-card-comment text-secondary">{comment}</span>
+            </Col>
           </Row>
         </div>
       </article>
@@ -99,12 +114,16 @@ Card.propTypes = {
   className: PropTypes.string,
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  textBottom: PropTypes.string,
-  classNameTB: PropTypes.string,
   description: PropTypes.string,
   tags: PropTypes.array,
   selected: PropTypes.bool,
   user: PropTypes.object,
+  project: PropTypes.string,
+  priority: PropTypes.string,
+  classPriority: PropTypes.string,
+  deadline: PropTypes.object,
+  progress: PropTypes.object,
+  comment: PropTypes.object,
 };
 
 Card.defaultProps = {
@@ -116,12 +135,16 @@ Card.defaultProps = {
   tagStyle: {},
   title: 'no title',
   description: '',
-  textBottom: '',
-  classNameTB: '',
   tags: [],
   className: '',
   selected: false,
   user: null,
+  project: '',
+  priority: '',
+  classPriority: '',
+  deadline: null,
+  progress: null,
+  comment: null,
 };
 
 export default Card;
