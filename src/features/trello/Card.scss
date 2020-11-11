@@ -34,10 +34,39 @@
   overflow: hidden;
 }
 
-.trello-card-right {
+.trello-card-project {
+  font-weight: normal;
+  line-height: 18px;
+  font-size: 12px;
+  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.trello-card-priority {
+  width: 18px !important;
+  height: 18px !important;
+  text-align: center;
+  line-height: 18px !important;
+  font-size: 12px;
+  border-radius: 9px !important;
+}
+
+.trello-card-deadline {
   width: 30%;
-  text-align: right;
-  padding-right: 10px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.trello-card-progress {
+  width: 30%;
+  text-align: left;
+  font-size: 12px;
+}
+
+.trello-card-comment {
+  width: 30%;
+  text-align: center;
   font-size: 12px;
 }
 
