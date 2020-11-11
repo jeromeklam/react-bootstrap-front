@@ -1,0 +1,18 @@
+@import '../../styles/mixins';
+
+.advanced-cookie-consent {
+  position: fixed;
+  height: 250px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  opacity: 0.8;
+  background-color: theme-color('secondary');
+  color: white;
+
+  .advanced-cookie-consent-inner {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding-top: 10px;
+  }
+}

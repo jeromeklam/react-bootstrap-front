@@ -112,7 +112,11 @@ export default class ResponsivePage extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (!props.authenticated) {
-      return { menuDataOpen: false, menuUserOpen: false };
+      let menuMaxi = true;
+      if (props.settings && (props.settings.menuposition === true || props.settings.menuposition === false)) {
+        menuMaxi = props.settings.menuposition;
+      }
+      return { menuDataOpen: false, menuUserOpen: false, menuSideMini: !menuMaxi };
     }
     if (props.settings !== state.settings) {
       let menuMaxi = true;
@@ -158,6 +162,7 @@ export default class ResponsivePage extends Component {
   }
 
   render() {
+    console.log(this.state);
     const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
     return (
       <div id="page-root" className="full-page">
@@ -181,7 +186,7 @@ export default class ResponsivePage extends Component {
                 </div>
               )}
             </CSSTransition>
-            <CSSTransition in={this.state.menuSideMini} timeout={duration}>
+            <CSSTransition in={!this.state.menuSideMini} timeout={duration}>
               {state => (
                 <div>
                   <div
@@ -192,7 +197,7 @@ export default class ResponsivePage extends Component {
                       bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
                     }}
                   >
-                    <DefaultSidebar {...this.props} open={this.state.menuSideMini} onOpenSide={this.onOpenSide} />
+                    <DefaultSidebar {...this.props} open={!this.state.menuSideMini} onOpenSide={this.onOpenSide} />
                   </div>
                   <div
                     style={{

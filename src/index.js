@@ -4,6 +4,7 @@ import 'core-js/features/global-this';
  * Basic styles
  *******************************************************************************
  */
+export { default as CookieConsent } from './features/advanced/CookieConsent';
 export { default as Dropdown } from './features/basic/Dropdown';
 export { default as DropdownMenu } from './features/basic/DropdownMenu';
 export { default as DropdownMenuHeader } from './features/basic/DropdownMenuHeader';

@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`render with className and name 1`] = `
+exports[`renders standard with theme 1`] = `
+<div
+  className="help-toggler"
+  onClick={[Function]}
+  title="Aide"
+>
+  <button
+    className="btn btn-sm highlight-toggler"
+    type="button"
+  >
+    <b>
+      ?
+    </b>
+  </button>
+</div>
+`;
+
+exports[`renders with theme and specific content 1`] = `
 <div
   className="help-toggler"
   onClick={[Function]}

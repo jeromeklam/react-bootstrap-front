@@ -120,7 +120,7 @@ function HighlightButton(props) {
         {props.children ? (
           props.children
         ) : (
-          <button className="btn btn-sm highlight-toggler">
+          <button type="button" className="btn btn-sm highlight-toggler">
             <b>?</b>
           </button>
         )}

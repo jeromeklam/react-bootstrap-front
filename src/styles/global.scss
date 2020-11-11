@@ -393,3 +393,10 @@ hr {
 .form-group label {
   color: theme-color('secondary');
 }
+
+.row .col-first {
+  padding-left: 15px;
+}
+.row .col-last {
+  padding-right: 15px;
+}

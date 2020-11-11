@@ -126,20 +126,32 @@ export default class DefaultHeader extends Component {
       <div style={mystyle} className={classnames('default-list-header bg-secondary text-light', this.props.className)}>
         <div className="row">
           <div className="col-xs-w2 text-center">
-            <HighlightButton className="text-light" theme="LIST" />
+            <HighlightButton className="text-light" theme="LIST">
+              <div title="Aide">
+                <button className="btn btn-secondary">?</button>
+              </div>
+            </HighlightButton>
           </div>
           <div className="col-xs-w14">
             <span style={titlestyle} className="text-light">
               {`${this.props.title}`}
             </span>
-            <Highlight style={titlestyle2} className="text-light" position="bottom" theme="LIST" title="Liste des colonnes utilisées pour le tri en cours [RC](+) : croissant [RC](-) : décroissant">
-              <span>
-                {` ${sortToText(this.props.sort, this.props.cols)}`}
-              </span>
+            <Highlight
+              style={titlestyle2}
+              className="text-light"
+              position="bottom"
+              theme="LIST"
+              title="Liste des colonnes utilisées pour le tri en cours [RC](+) : croissant [RC](-) : décroissant"
+            >
+              <span>{` ${sortToText(this.props.sort, this.props.cols)}`}</span>
             </Highlight>
           </div>
           <div className="col-xs-w10" style={quickStyles}>
-            <Highlight position="bottom" theme="LIST" title="Recherche rapide sur les champs indiqués, en recherche de type contient">
+            <Highlight
+              position="bottom"
+              theme="LIST"
+              title="Recherche rapide sur les champs indiqués, en recherche de type contient"
+            >
               {this.props.quickSearch}
             </Highlight>
           </div>

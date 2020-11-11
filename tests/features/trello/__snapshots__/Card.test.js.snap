@@ -48,10 +48,10 @@ exports[`render with className and name 1`] = `
       />
     </div>
     <div
-      className="col col-xs-w16 text-left"
+      className="col col-xs-w19 text-left"
     />
     <div
-      className="col col-xs-w5 text-right"
+      className="col col-xs-w3 text-center"
     >
       <div
         style={
@@ -62,7 +62,7 @@ exports[`render with className and name 1`] = `
       />
     </div>
     <div
-      className="col col-xs-w5 text-right"
+      className="col col-xs-w4 text-right"
     >
       <div
         className="advanced-dropdown-wrapper"
@@ -89,11 +89,14 @@ exports[`render with className and name 1`] = `
       </span>
     </div>
     <div
-      className="col col-xs-w10 text-right"
-    />
-    <div
-      className="col col-xs-w6 text-right"
-    />
+      className="col col-xs-w16 text-right"
+    >
+      <span
+        className="trello-card-project text-secondary"
+      >
+        
+      </span>
+    </div>
   </div>
   
   <div
@@ -103,17 +106,37 @@ exports[`render with className and name 1`] = `
       className="row"
     >
       <div
+        className="col col-xs-w4 text-left"
+      >
+        <div
+          className="trello-card-priority text- border border-"
+        >
+          <span>
+            
+          </span>
+        </div>
+      </div>
+      <div
+        className="col col-xs-w11 text-left"
+      >
+        <span
+          className="trello-card-deadline"
+        />
+      </div>
+      <div
+        className="col col-xs-w8 text-left"
+      >
+        <span
+          className="trello-card-progress"
+        />
+      </div>
+      <div
         className="col col-xs-w6 text-left"
       >
         <span
-          className="trello-card-right"
-        >
-          
-        </span>
+          className="trello-card-comment text-secondary"
+        />
       </div>
-      <div
-        className="col col-xs-w30 text-left"
-      />
     </div>
   </div>
 </article>
