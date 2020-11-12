@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { InputGroup, InputGroupPrepend, InputGroupAppend, Dropdown } from '../basic';
 import { getFieldId } from '../helper';
+import { FILTER_OPER_EQUAL } from '.';
 
 export default class InputAutocomplete extends Component {
   static propTypes = {
@@ -32,21 +33,24 @@ export default class InputAutocomplete extends Component {
     prepend: null,
   };
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.orig) {
+      if (!(props.value > 0)) {
+        return { value: '', display: '', orig: props.value };
+      }
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
-    let value = '';
-    let display = '';
-    if (this.props.item) {
-      value = this.props.item.id || '';
-      display = this.props.item.display || '';
-    }
     this.state = {
       myRef: React.createRef(),
       id: `id-${props.name}`,
-      item: props.item || null,
       list: [],
-      value: value,
-      display: display,
+      value: this.props.value || '',
+      display: '',
+      orig: this.props.value,
       source: false,
     };
     this.onChange = this.onChange.bind(this);
@@ -64,20 +68,18 @@ export default class InputAutocomplete extends Component {
           this.setState({ list: result });
         })
         .catch(errors => {
-          this.props.onSelect({ target: { name: this.props.name, value: null } });
+          this.props.onSelect({ target: { name: this.props.name, value: null } }, FILTER_OPER_EQUAL);
           this.setState({ list: [] });
         });
     } else {
-      this.props.onSelect({ target: { name: this.props.name, value: null } });
+      this.props.onSelect({ target: { name: this.props.name, value: null } }, FILTER_OPER_EQUAL);
       this.setState({ list: [] });
     }
   }
 
   onSelect(item) {
     if (item) {
-      this.props.onSelect({
-        target: { name: this.props.name, value: item.id },
-      });
+      this.props.onSelect({ target: { name: this.props.name, value: item.id } }, FILTER_OPER_EQUAL);
       let display = '';
       if (typeof this.props.display === 'function') {
         display = this.props.display(item);
@@ -87,14 +89,14 @@ export default class InputAutocomplete extends Component {
       }
       this.setState({ value: item.id, display: display, list: [] });
     } else {
-      this.props.onSelect({ target: { name: this.props.name, value: null } });
+      this.props.onSelect({ target: { name: this.props.name, value: null } }, FILTER_OPER_EQUAL);
       this.setState({ list: [] });
     }
   }
 
   onClear() {
     this.setState({ value: '', display: '', list: [] });
-    this.props.onSelect({ target: { name: this.props.name, value: null } });
+    this.props.onSelect({ target: { name: this.props.name, value: null } }, FILTER_OPER_EQUAL);
   }
 
   render() {
@@ -116,7 +118,7 @@ export default class InputAutocomplete extends Component {
           id={myId}
           ref={this.state.myRef}
           name={this.props.name}
-          value={this.state.display || ''}
+          value={this.state.display}
           required={this.props.required}
           disabled={this.props.disabled}
           onChange={this.onChange}
