@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { MobileHeader, MobileFooterMenu } from './';
+
+import { Container } from '../grid';
 
 const MobileHeaderHeight = 60;
 const MobileFooterHeight = 60;
@@ -70,7 +73,7 @@ export default class ResponsivePage extends Component {
   render() {
     return (
       <div id="page-root" className="full-page">
-        <div className="display-mobile">
+        <Container size="xs" className="display-mobile">
           <div style={headerMobileStyles}>
             <MobileHeader {...this.props} onToggleUser={this.onToggleUser} onToggleSide={this.onToggleSide} />
           </div>
@@ -78,7 +81,7 @@ export default class ResponsivePage extends Component {
           <div style={footerMobileStyles}>
             <MobileFooterMenu {...this.props} />
           </div>
-        </div>
+        </Container>
       </div>
     );
   }

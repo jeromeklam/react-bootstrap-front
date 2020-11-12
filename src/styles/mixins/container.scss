@@ -24,6 +24,26 @@
   @return '';
 }
 
+@function container-none-not($start, $end, $breakpoints: $container-breakpoints) {
+  $not: '';
+  $started: 0;
+  @each $breakpoint in map-keys($breakpoints) {
+    @if $breakpoint == $start {
+      $started: 1;
+    }
+    @if $breakpoint == $end {
+      $started: 2;
+    }
+    @if $started >= 1 {
+      $not: $not + ':not([class*=\'col-#{$breakpoint}-w\'])';
+      @if $started == 2 {
+        @return $not;
+      }
+    }
+  }
+  @return $not;
+}
+
 //
 @mixin make-container-hidden-columns(
   $current: 'no',
@@ -32,15 +52,20 @@
 ) {
   @each $breakpoint in map-keys($breakpoints) {
     @if $breakpoint != 'no' {
-      $infix: container-infix($breakpoint, $breakpoints);
-      .col#{$infix}-none:not([class*='col-#{$current}-w']) {
-        display: none;
-      }
-      .col#{$infix}-flex {
-        display: flex;
-      }
-      .col#{$infix}-block {
-        display: block;
+
+      @include container-breakpoint-down($breakpoint, $current, $breakpoints) {
+
+        $infix: container-infix($breakpoint, $breakpoints);
+        $not: container-none-not($breakpoint, $current, $breakpoints);
+        .col#{$infix}-none#{$not} {
+          display: none;
+        }
+        .col#{$infix}-flex {
+          display: flex;
+        }
+        .col#{$infix}-block {
+          display: block;
+        }
       }
     }
   }

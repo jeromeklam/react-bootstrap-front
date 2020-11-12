@@ -34,48 +34,11 @@
 }
 
 // Containers
-.container-xl {
-  @include make-container-columns(xl);
-  @include make-container-hidden-columns(xl);
-
-  $width: map-get($container-max-widths, xl);
-  .container-fluid {
-    width: 100%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-    max-width: #{$width};
-  }
+.container-xs {
+  @include make-container-columns(xs);
+  @include make-container-hidden-columns(xs);
 }
-.container-lg {
-  @include make-container-columns(lg);
-  @include make-container-hidden-columns(lg);
 
-  $width: map-get($container-max-widths, lg);
-  .container-fluid {
-    width: 100%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-    max-width: #{$width};
-  }
-}
-.container-md {
-  @include make-container-columns(md);
-  @include make-container-hidden-columns(md);
-
-  $width: map-get($container-max-widths, md);
-  .container-fluid {
-    width: 100%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-    max-width: #{$width};
-  }
-}
 .container-sm {
   @include make-container-columns(sm);
   @include make-container-hidden-columns(sm);
@@ -90,10 +53,52 @@
     max-width: #{$width};
   }
 }
-.container-xs {
-  @include make-container-columns(xs);
-  @include make-container-hidden-columns(xs);
+
+.container-md {
+  @include make-container-columns(md);
+  @include make-container-hidden-columns(md);
+
+  $width: map-get($container-max-widths, md);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
 }
+
+.container-lg {
+  @include make-container-columns(lg);
+  @include make-container-hidden-columns(lg);
+
+  $width: map-get($container-max-widths, lg);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+
+.container-xl {
+  @include make-container-columns(xl);
+  @include make-container-hidden-columns(xl);
+
+  $width: map-get($container-max-widths, xl);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+
 .container-responsive {
   .row .col-xs-first {
     padding-left: 15px;

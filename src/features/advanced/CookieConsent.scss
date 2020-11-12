@@ -2,17 +2,25 @@
 
 .advanced-cookie-consent {
   position: fixed;
-  height: 250px;
+  top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
   opacity: 0.8;
   background-color: theme-color('secondary');
   color: white;
+  padding: 10px;
 
   .advanced-cookie-consent-inner {
     max-width: 1024px;
     margin: 0 auto;
     padding-top: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .advanced-cookie-consent {
+    height: 250px;
+    top: auto;
   }
 }
