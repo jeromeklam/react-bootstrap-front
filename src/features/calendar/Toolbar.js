@@ -3,6 +3,8 @@ import React from 'react'
 import clsx from 'clsx'
 import { navigate } from './utils/constants'
 
+import { SvgPrevious, SvgNext } from '../advanced';
+
 class Toolbar extends React.Component {
   render() {
     let {
@@ -25,14 +27,16 @@ class Toolbar extends React.Component {
             className="btn btn-secondary"
             onClick={this.navigate.bind(null, navigate.PREVIOUS)}
           >
-            {messages.previous}
+            <div className="d-xs-none d-sm-block">{messages.previous}</div>
+            <div className="d-sm-none"><SvgPrevious /></div>
           </button>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={this.navigate.bind(null, navigate.NEXT)}
           >
-            {messages.next}
+            <div className="d-xs-none d-sm-block">{messages.next}</div>
+            <div className="d-sm-none"><SvgNext /></div>
           </button>
         </span>
 

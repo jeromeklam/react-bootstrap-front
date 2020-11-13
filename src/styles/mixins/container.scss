@@ -66,6 +66,15 @@
         .col#{$infix}-block {
           display: block;
         }
+        .d#{$infix}-none#{$not} {
+          display: none;
+        }
+        .d#{$infix}-flex {
+          display: flex;
+        }
+        .d#{$infix}-block {
+          display: block;
+        }
       }
     }
   }

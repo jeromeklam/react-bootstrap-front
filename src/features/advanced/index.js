@@ -17,3 +17,5 @@ export { default as SvgPlay } from './SvgPlay';
 export { default as DropdownWrapper } from './DropdownWrapper';
 export { default as SvgCheckbox } from './SvgCheckbox';
 export { default as CookieConsent } from './CookieConsent';
+export { default as SvgPrevious } from './SvgPrevious';
+export { default as SvgNext } from './SvgNext';
