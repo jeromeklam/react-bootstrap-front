@@ -120,9 +120,9 @@ export default class DefaultPanel extends Component {
     this.onValid = this.onValid.bind(this);
   }
 
-  onFilterChange(event) {
+  onFilterChange(event, oper = false) {
     let { filter } = this.state;
-    filter.addFilter(event.target.name, event.target.value);
+    filter.addFilter(event.target.name, event.target.value, oper);
     filter.setSearch(FILTER_SEARCH_SIMPLE);
     this.setState({ filter, local: true });
   }

@@ -30,3 +30,4 @@ export { default as InputGroupText } from './InputGroupText';
 export { default as DropdownMenu } from './DropdownMenu';
 export { default as DropdownMenuHeader } from './DropdownMenuHeader';
 export { default as DropdownMenuOption } from './DropdownMenuOption';
+export * from './InputChildren';

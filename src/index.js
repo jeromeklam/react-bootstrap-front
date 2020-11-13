@@ -10,6 +10,7 @@ export { default as DropdownMenu } from './features/basic/DropdownMenu';
 export { default as DropdownMenuHeader } from './features/basic/DropdownMenuHeader';
 export { default as DropdownMenuOption } from './features/basic/DropdownMenuOption';
 export * from './features/basic/InlineInputCheckbox';
+export * from './features/basic/InputChildren';
 export * from './features/basic/InlineInputPicker';
 export { default as InlineInputSelect } from './features/basic/InlineInputSelect';
 export * from './features/basic/InlineInputText';

@@ -243,7 +243,7 @@ export default class Filter {
         const found = this.data.filters.find(
           elem =>
             elem.isFixed() === false &&
-            ((elem.isDefault() === false || elem.isDefault() === true) && elem.isEnable() === false)
+            (elem.isDefault() === false || (elem.isDefault() === true && elem.isEnable() === false))
         );
         if (found) {
           defaultEnableOnly = false;
