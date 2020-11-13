@@ -26,7 +26,7 @@ export const MobileFooterMenu = props => (
           return (
             <div className="col text-center">
               <a
-                className={classnames('nav-link', props.location.pathname === option.url && 'active')}
+                className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
                 onClick={() => {
                   props.onNavigate(option.url);
                 }}

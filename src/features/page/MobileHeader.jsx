@@ -24,14 +24,13 @@ export const MobileHeader = props => (
         <ul className="nav justify-content-end">
           {props.options.map((option) => {
             if (
-              option.role === 'HOME' ||
               (option.role === 'SIGNIN' && !props.authenticated) ||
               (option.role === 'SIGNOUT' && props.authenticated)
             ) {
               return (
                 <li className="nav-item">
                   <a
-                    className={classnames('nav-link', props.location.pathname === option.url && 'active')}
+                    className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
                     onClick={() => {
                       props.onNavigate(option.url);
                     }}
