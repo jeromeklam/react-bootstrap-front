@@ -11,28 +11,6 @@
     user-select: none;
     cursor: pointer;
     margin-bottom: 0;
-    input:checked {
-      & + .checkbox {
-        border-color: theme-color('secondary');
-        svg {
-          path {
-            fill: theme-color('secondary');
-          }
-          polyline {
-            stroke-dashoffset: 0;
-          }
-        }
-      }
-    }
-    &:hover {
-      .checkbox {
-        svg {
-          path {
-            stroke-dashoffset: 0;
-          }
-        }
-      }
-    }
 
     .checkbox {
       position: relative;
@@ -40,13 +18,17 @@
       float: left;
       width: 20px;
       height: 20px;
-      border: 2px solid #C8CCD4;
+      border: 2px solid #c8ccd4;
       border-radius: 3px;
       svg {
         position: absolute;
         top: -2px;
         left: -2px;
-        path {
+        #basic-svg-checkbox-inner {
+          fill: white;
+          stroke: white;
+        }
+        #basic-svg-checkbox-out {
           fill: none;
           stroke: theme-color('secondary');
           stroke-width: 2;
@@ -54,20 +36,40 @@
           stroke-linejoin: round;
           stroke-dasharray: 71px;
           stroke-dashoffset: 71px;
-          transition: all .6s ease;
-        }
-        polyline {
-          fill: none;
-          stroke: #FFF;
-          stroke-width: 2;
-          stroke-linecap: round;
-          stroke-linejoin: round;
-          stroke-dasharray: 18px;
-          stroke-dashoffset: 18px;
-          transition: all .3s ease;
+          transition: all 0.6s ease;
         }
       }
     }
+
+    input:checked {
+      & + .checkbox {
+        border-color: theme-color('secondary');
+        svg {
+          #basic-svg-checkbox-inner {
+            fill: theme-color('secondary');
+            stroke: white;
+          }
+          #basic-svg-checkbox-out {
+            fill: none;
+            stroke: theme-color('secondary');
+          }
+        }
+      }
+    }
+    &:hover {
+      .checkbox {
+        svg {
+          #basic-svg-checkbox-inner {
+            fill: white;
+            stroke: white;
+          }
+          #basic-svg-checkbox-out {
+            stroke-dashoffset: 0;
+          }
+        }
+      }
+    }
+
     > span {
       pointer-events: none;
       vertical-align: middle;
