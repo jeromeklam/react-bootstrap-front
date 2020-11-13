@@ -36,6 +36,7 @@ class Card extends Component {
       deadline,
       progress,
       comment,
+      status,
     } = this.props;
 
     return (
@@ -97,6 +98,10 @@ class Card extends Component {
             <Col size={6} textAlign="left">
               <span className="trello-card-comment text-secondary">{comment}</span>
             </Col>
+            <Col size={3}/>
+            <Col size={3} textAlign="left">
+              <div className="trello-card-status">{status}</div>
+            </Col>
           </Row>
         </div>
       </article>
@@ -124,6 +129,7 @@ Card.propTypes = {
   deadline: PropTypes.object,
   progress: PropTypes.object,
   comment: PropTypes.object,
+  status: PropTypes.object,
 };
 
 Card.defaultProps = {
@@ -145,6 +151,7 @@ Card.defaultProps = {
   deadline: null,
   progress: null,
   comment: null,
+  status: null,
 };
 
 export default Card;
