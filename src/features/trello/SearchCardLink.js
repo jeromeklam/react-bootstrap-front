@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function SearchCardLink(props) {
   return (
     <button className="btn btn-primary" onClick={props.onClick}>
-      {props.t('Click to search a card')}
+      {props.t({ id: 'rbf.trello.card.searchLink', defaultMessage: 'Click to search a card' })}
     </button>
   );
 }

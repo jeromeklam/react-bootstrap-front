@@ -20,13 +20,13 @@ class NewCardForm extends Component {
           <header className="trello-new-card-form-header">
             <span className="trello-new-card-form-title">
               <EditableLabel
-                placeholder={t('placeholder.title')}
+                placeholder={t({ id: 'rbf.trello.card.form.title.placeholder', defaultMessage: 'placeholder.title' })}
                 onChange={val => this.updateField('title', val)}
                 autoFocus
               />
             </span>
             <span className="trello-new-card-form-right">
-              <EditableLabel placeholder={t('placeholder.label')} onChange={val => this.updateField('label', val)} />
+              <EditableLabel placeholder={t({ id: 'rbf.trello.card.form.label.placeholder', defaultMessage: 'placeholder.label' })} onChange={val => this.updateField('label', val)} />
             </span>
           </header>
           <div className="rello-new-card-form-detail">
@@ -36,11 +36,11 @@ class NewCardForm extends Component {
             />
           </div>
         </article>
-        <button className="btn btn-primary" title={t('button.title.Add card')} onClick={this.handleAdd}>
-          {t('button.Add card')}
+        <button className="btn btn-primary" title={t({ id: 'rbf.trello.card.form.add.help', defaultMessage: 'button.title.Add card' })} onClick={this.handleAdd}>
+          {t({ id: 'rbf.trello.card.form.add', defaultMessage: 'button.Add card' })}
         </button>
         <button className="btn btn-secondary" onClick={onCancel}>
-          {t('button.Cancel')}
+          {t({ id: 'rbf.trello.card.form.cancel', defaultMessage: 'button.Cancel' })}
         </button>
       </div>
     );

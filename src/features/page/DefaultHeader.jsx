@@ -92,7 +92,7 @@ export class DefaultHeader extends Component {
           style={navStyles}
           className="default-header-menu navbar navbar-expand-lg navbar-light bg-light border-bottom row"
         >
-          <div className="col-xs-w10" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
+          <div className="col-xs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             {this.props.authenticated && this.props.onToggleSide && (
               <button className="btn btn-primary" onClick={this.props.onToggleSide} id="menu-toggle">
                 {this.props.menuIcon}
@@ -101,7 +101,7 @@ export class DefaultHeader extends Component {
             &nbsp;&nbsp;
             <div className="navbar-brand p-0">{this.props.title}</div>
           </div>
-          <div className="col-xs-w26 text-right" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
+          <div className="col-xs-w20 text-right" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             <ul className="navbar-nav justify-content-end">
               {this.props.onToggleUser && (
                 <li className="nav-item">

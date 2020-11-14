@@ -7,7 +7,10 @@ exports[`render with className and name 1`] = `
     [MockFunction] {
       "calls": Array [
         Array [
-          "Click to search a card",
+          Object {
+            "defaultMessage": "Click to search a card",
+            "id": "rbf.trello.card.searchLink",
+          },
         ],
       ],
       "results": Array [

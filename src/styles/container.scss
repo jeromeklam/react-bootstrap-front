@@ -33,32 +33,11 @@
   }
 }
 
-// Containers
-.container-xs {
-  @include make-container-columns(xs);
-  @include make-container-hidden-columns(xs);
-}
+.container-xl {
+  @include make-container-columns(xl);
+  @include make-container-hidden-columns(xl);
 
-.container-sm {
-  @include make-container-columns(sm);
-  @include make-container-hidden-columns(sm);
-
-  $width: map-get($container-max-widths, sm);
-  .container-fluid {
-    width: 100%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-    max-width: #{$width};
-  }
-}
-
-.container-md {
-  @include make-container-columns(md);
-  @include make-container-hidden-columns(md);
-
-  $width: map-get($container-max-widths, md);
+  $width: map-get($container-max-widths, xl);
   .container-fluid {
     width: 100%;
     padding-right: 10px;
@@ -84,11 +63,11 @@
   }
 }
 
-.container-xl {
-  @include make-container-columns(xl);
-  @include make-container-hidden-columns(xl);
+.container-md {
+  @include make-container-columns(md);
+  @include make-container-hidden-columns(md);
 
-  $width: map-get($container-max-widths, xl);
+  $width: map-get($container-max-widths, md);
   .container-fluid {
     width: 100%;
     padding-right: 10px;
@@ -97,6 +76,27 @@
     margin-left: auto;
     max-width: #{$width};
   }
+}
+
+.container-sm {
+  @include make-container-columns(sm);
+  @include make-container-hidden-columns(sm);
+
+  $width: map-get($container-max-widths, sm);
+  .container-fluid {
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: #{$width};
+  }
+}
+
+// Containers
+.container-xs {
+  @include make-container-columns(xs);
+  @include make-container-hidden-columns(xs);
 }
 
 .container-responsive {

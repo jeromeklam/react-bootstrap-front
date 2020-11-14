@@ -7,6 +7,7 @@ import 'core-js/features/global-this';
 export { default as CookieConsent } from './features/advanced/CookieConsent';
 export { default as Dropdown } from './features/basic/Dropdown';
 export { default as DropdownMenu } from './features/basic/DropdownMenu';
+export { default as DropdownMenuDivider } from './features/basic/DropdownMenuDivider';
 export { default as DropdownMenuHeader } from './features/basic/DropdownMenuHeader';
 export { default as DropdownMenuOption } from './features/basic/DropdownMenuOption';
 export * from './features/basic/InlineInputCheckbox';

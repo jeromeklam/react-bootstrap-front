@@ -28,7 +28,6 @@ export class Responsive extends React.PureComponent {
   };
 
   shouldRender = (display, width, height) => {
-    console.log(display, width);
     if (display.indexOf('Laptop') !== -1 && width >= IdDeviceBreakpointsByWidth.laptop_min) {
       return true;
     }

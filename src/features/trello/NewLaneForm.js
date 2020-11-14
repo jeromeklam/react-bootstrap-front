@@ -24,7 +24,7 @@ class NewLaneForm extends Component {
         <div className="trello-new-lane-title">
           <NewLaneTitleEditor
             ref={ref => (this.refInput = ref)}
-            placeholder={t('placeholder.title')}
+            placeholder={t({ id: 'rbf.trello.lane.form.title.placeholder', defaultMessage: 'placeholder.title' })}
             onCancel={this.props.onCancel}
             onSave={this.handleSubmit}
             resize="vertical"
@@ -33,11 +33,11 @@ class NewLaneForm extends Component {
           />
         </div>
         <div className="trello-new-lane-buttons">
-          <button className="btn btn-primary" title={t('button.title.Add lane')} onClick={this.handleSubmit}>
-            {t('button.Add lane')}
+          <button className="btn btn-primary" title={t({ id: 'rbf.trello.lane.form.add.help', defaultMessage: 'button.title.Add lane' })} onClick={this.handleSubmit}>
+            {t({ id: 'rbf.trello.lane.form.add', defaultMessage: 'button.Add lane' })}
           </button>
           <button className="btn btn-secondary" onClick={onCancel}>
-            {t('button.Cancel')}
+            {t({ id: 'rbf.trello.lane.form.cancel', defaultMessage: 'button.Cancel' })}
           </button>
         </div>
       </section>

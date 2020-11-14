@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
-import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, LoadEmpty } from './';
+import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, LoadEmpty } from './';
 import { getSizeFromWidth } from '../helper';
 import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
@@ -207,13 +207,19 @@ export default class DefaultList extends Component {
                     }
                   >
                     <WidthObserver>
-                      <DefaultTitle
-                        style={locTitleStyle}
-                        {...this.props}
-                        cols={dispCols}
-                        className={'list-' + this.state.listSize}
-                        cols={dispCols}
-                      />
+                      {({ mediaSize }) => {
+                        if (mediaSize !== 'xs') {
+                          return (
+                            <DefaultTitle
+                              style={locTitleStyle}
+                              {...this.props}
+                              cols={dispCols}
+                              className={'list-' + this.state.listSize}
+                            />
+                          );
+                        }
+                        return null;
+                      }}
                     </WidthObserver>
                   </div>
                   <div
@@ -229,20 +235,28 @@ export default class DefaultList extends Component {
                     }
                   >
                     <WidthObserver>
-                      <div className="default-list-body">
-                        {this.props.items.length > 0 ? (
-                          <div>
-                            {this.props.items.map(item => (
-                              <DefaultLine key={item.id} id={item.id} item={item} {...this.props} cols={dispCols} />
-                            ))}
+                      {({ mediaSize }) => (
+                        <div className="default-list-body">
+                          {this.props.items.length > 0 ? (
+                            <div>
+                              {this.props.items.map(item => (
+                                <div key={item.id}>
+                                  {mediaSize === 'xs' ? (
+                                    <MobileLine {...this.props} id={item.id} item={item} cols={dispCols} />
+                                  ) : (
+                                    <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
+                          )}
+                          <div style={footerstyle}>
+                            <DefaultFooter {...this.props} />
                           </div>
-                        ) : (
-                          <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
-                        )}
-                        <div style={footerstyle}>
-                          <DefaultFooter {...this.props} />
                         </div>
-                      </div>
+                      )}
                     </WidthObserver>
                   </div>
                   {this.props.mode === 'right' && (

@@ -30,7 +30,7 @@ export const DefaultCol = (props) => {
   if (content === null) {
     content = '';
   }
-  if (props.type && props.values) {
+  if (props.type) {
     switch (props.type) {
       case 'text': {
         content = striptags(`${content}`);

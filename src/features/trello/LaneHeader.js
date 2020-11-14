@@ -9,6 +9,7 @@ import { Row, Col } from '../grid';
 
 const LaneHeader = ({
   updateTitle,
+  editable,
   canAddLanes,
   onDelete,
   onDoubleClick,
@@ -19,6 +20,7 @@ const LaneHeader = ({
   labelStyle,
   t,
   laneDraggable,
+  laneOptions,
 }) => {
   return (
     <header
@@ -33,7 +35,7 @@ const LaneHeader = ({
               <InlineInput
                 value={title}
                 border
-                placeholder={t('placeholder.title')}
+                placeholder={t({ id: 'rbf.trello.lane.title.placeholder', defaultMessage: 'placeholder.title' })}
                 resize="vertical"
                 onSave={updateTitle}
               />
@@ -48,7 +50,7 @@ const LaneHeader = ({
           )}
         </Col>
         <Col size="6" textAlign="right">
-          {canAddLanes && <LaneMenu t={t} onDelete={onDelete} />}
+          {canAddLanes && <LaneMenu t={t} delete={editable} onDelete={onDelete} options={laneOptions} />}
         </Col>
       </Row>
     </header>
@@ -62,6 +64,7 @@ LaneHeader.propTypes = {
   laneDraggable: PropTypes.bool,
   label: PropTypes.string,
   title: PropTypes.string,
+  editable: PropTypes.bool,
   onDelete: PropTypes.func,
   onDoubleClick: PropTypes.func,
   t: PropTypes.func.isRequired,
@@ -69,6 +72,7 @@ LaneHeader.propTypes = {
 
 LaneHeader.defaultProps = {
   updateTitle: () => {},
+  editable: false,
   editLaneTitle: false,
   canAddLanes: false,
 };
