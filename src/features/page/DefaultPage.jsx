@@ -158,11 +158,10 @@ export default class ResponsivePage extends Component {
   }
 
   onOpenSide() {
-    this.props.onChangeSettings('menuposition', false);
+    this.props.onChangeSettings('menuposition', true);
   }
 
   render() {
-    console.log(this.state);
     const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
     return (
       <div id="page-root" className="full-page">

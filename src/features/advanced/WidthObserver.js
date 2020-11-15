@@ -3,36 +3,39 @@ import classnames from 'classnames';
 import ObserveSize from 'react-observe-size';
 import PropTypes from 'prop-types';
 
-const detectWidth = (width) => {
+const detectWidth = (width, prefix) => {
   let clWidth = '';
   if (width < 768) {
-    clWidth = 'container-xs';
+    clWidth = 'xs';
   } else {
     if (width < 1024) {
-      clWidth = 'container-sm';
+      clWidth = 'sm';
     } else {
       if (width < 1200) {
-        clWidth = 'container-md';
+        clWidth = 'md';
       } else {
         if (width < 1600) {
-          clWidth = 'container-lg';
+          clWidth = 'lg';
         } else {
-          clWidth = 'container-xl';
+          clWidth = 'xl';
         }
       }
     }
   }
   return clWidth;
-}
+};
 
 export default function WidthObserver(props) {
   return (
     <ObserveSize>
-      {({ width }) => (
-        <div className={classnames('container-responsive', props.className, detectWidth(width))}>
-          {props.children}
-        </div>
-      )}
+      {({ width }) => {
+        const mediaSize = detectWidth(width, props.prefix);
+        return (
+          <div className={classnames(`${props.prefix}-responsive`, `${props.prefix}-${mediaSize}`, props.className)}>
+            {typeof props.children === 'function' ? props.children({ mediaSize }) : props.children}
+          </div>
+        );
+      }}
     </ObserveSize>
   );
 }
@@ -40,8 +43,10 @@ export default function WidthObserver(props) {
 WidthObserver.propTypes = {
   children: PropTypes.element,
   className: PropTypes.string,
+  prefix: PropTypes.string,
 };
 WidthObserver.defaultProps = {
   children: null,
   className: '',
+  prefix: 'container',
 };

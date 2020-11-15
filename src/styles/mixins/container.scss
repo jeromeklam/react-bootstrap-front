@@ -24,7 +24,7 @@
   @return '';
 }
 
-@function container-none-not($start, $end, $breakpoints: $container-breakpoints) {
+@function container-col-none-not($start, $end, $breakpoints: $container-breakpoints, $prefix: 'col') {
   $not: '';
   $started: 0;
   @each $breakpoint in map-keys($breakpoints) {
@@ -35,7 +35,27 @@
       $started: 2;
     }
     @if $started >= 1 {
-      $not: $not + ':not([class*=\'col-#{$breakpoint}-w\'])';
+      $not: $not + ':not([class*=\'#{$prefix}-#{$breakpoint}-w\'])';
+      @if $started == 2 {
+        @return $not;
+      }
+    }
+  }
+  @return $not;
+}
+
+@function container-d-none-not($start, $end, $breakpoints: $container-breakpoints, $prefix: 'd') {
+  $not: '';
+  $started: 0;
+  @each $breakpoint in map-keys($breakpoints) {
+    @if $breakpoint == $start {
+      $started: 1;
+    }
+    @if $breakpoint == $end {
+      $started: 2;
+    }
+    @if $started >= 1 {
+      $not: $not + ':not([class*=\'#{$prefix}-#{$breakpoint}-block\'])';
       @if $started == 2 {
         @return $not;
       }
@@ -56,24 +76,25 @@
       @include container-breakpoint-down($breakpoint, $current, $breakpoints) {
 
         $infix: container-infix($breakpoint, $breakpoints);
-        $not: container-none-not($breakpoint, $current, $breakpoints);
-        .col#{$infix}-none#{$not} {
-          display: none;
+        $notCol: container-col-none-not($breakpoint, $current, $breakpoints);
+        $notD: container-d-none-not($breakpoint, $current, $breakpoints);
+        .col#{$infix}-none#{$notCol} {
+          display: none !important;
         }
         .col#{$infix}-flex {
-          display: flex;
+          display: flex !important;
         }
         .col#{$infix}-block {
-          display: block;
+          display: block !important;
         }
-        .d#{$infix}-none#{$not} {
-          display: none;
+        .d#{$infix}-none#{$notD} {
+          display: none !important;
         }
         .d#{$infix}-flex {
-          display: flex;
+          display: flex !important;
         }
         .d#{$infix}-block {
-          display: block;
+          display: block !important;
         }
       }
     }

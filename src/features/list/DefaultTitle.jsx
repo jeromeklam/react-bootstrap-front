@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
+import { rbfIntl } from '../intl';
+
 export const DefaultTitle = props => (
-  <div style={props.style} className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}>
+  <div
+    style={props.style}
+    className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}
+  >
     {props.cols.map((oneCol, i) => {
       let addClass = '';
       if (oneCol.align !== '') {
@@ -31,14 +36,14 @@ export const DefaultTitle = props => (
         const found = props.sort && props.sort.find(element => element.col === oneCol.col);
         let crt = 'none';
         let way = 'up';
-        let title = 'Aucun tri';
+        let title = props.t({ id: 'rbf.list.title.sort.none', defaultMessage: 'No sort' });
         if (found) {
           crt = found.way;
           if (found.way === 'up') {
-            title = 'Tri croissant';
+            title = props.t({ id: 'rbf.list.title.sort.up', defaultMessage: 'Sort up' });
             way = 'down';
           } else {
-            title = 'Tri décroissant';
+            title = props.t({ id: 'rbf.list.title.sort.down', defaultMessage: 'Sort down' });
             way = 'none';
           }
         } else {
@@ -46,7 +51,7 @@ export const DefaultTitle = props => (
         }
         let cols = '';
         if (typeof oneCol.size === 'object') {
-          Object.keys(oneCol.size).forEach((key) => {
+          Object.keys(oneCol.size).forEach(key => {
             if (!isNaN(oneCol.size[key])) {
               cols += ` col-${key}-w${oneCol.size[key]} `;
             } else {
@@ -62,7 +67,7 @@ export const DefaultTitle = props => (
         }
         if (typeof oneCol.first !== 'undefined') {
           if (typeof oneCol.first === 'object') {
-            Object.keys(oneCol.first).forEach((key) => {
+            Object.keys(oneCol.first).forEach(key => {
               if (oneCol.first[key]) {
                 cols += ` col-${key}-first `;
               }
@@ -73,7 +78,7 @@ export const DefaultTitle = props => (
         }
         if (typeof oneCol.last !== 'undefined') {
           if (typeof oneCol.last === 'object') {
-            Object.keys(oneCol.last).forEach((key) => {
+            Object.keys(oneCol.last).forEach(key => {
               if (oneCol.last[key]) {
                 cols += ` col-${key}-last `;
               }
@@ -86,13 +91,7 @@ export const DefaultTitle = props => (
           <div
             key={oneCol.name}
             title={title}
-            className={classnames(
-              cols,
-              'col-vertical-align',
-              oneCol.sortable && 'sortable',
-              addClass,
-              props.className,
-            )}
+            className={classnames(cols, 'col-vertical-align', oneCol.sortable && 'sortable', addClass, props.className)}
             onClick={() => {
               props.onSort(oneCol, way);
             }}
@@ -124,4 +123,9 @@ DefaultTitle.propTypes = {
   sortDownIcon: PropTypes.element.isRequired,
   sortUpIcon: PropTypes.element.isRequired,
   sortNoneIcon: PropTypes.element.isRequired,
+  t: PropTypes.func,
+};
+
+DefaultTitle.defaultProps = {
+  t: rbfIntl,
 };

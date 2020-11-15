@@ -35,7 +35,9 @@ export default class DropdownWrapper extends Component {
         </div>
         {this.state.open && (
           <Dropdown myRef={this.state.ref} onClose={this.onClose}>
-            {this.props.children}
+            <div onClick={this.onClose}>
+              {this.props.children}
+            </div>
           </Dropdown>
         )}
       </>

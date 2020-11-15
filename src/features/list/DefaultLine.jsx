@@ -57,6 +57,7 @@ const inlineStyle = {
 export default class DesktopListLine extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
+    className: PropTypes.string,
     cols: PropTypes.element.isRequired,
     item: PropTypes.element.isRequired,
     fClassName: PropTypes.func,
@@ -72,6 +73,7 @@ export default class DesktopListLine extends Component {
   };
 
   static defaultProps = {
+    className: '',
     inlineOpenedId: 0,
     inlineComponent: null,
     onSelect: () => {},
@@ -133,7 +135,7 @@ export default class DesktopListLine extends Component {
     const { item } = this.props;
     const highlight = this.state.flipped || this.props.inlineOpenedId === this.props.id;
     return (
-      <div>
+      <div className={this.props.className}>
         <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
           <div
             onDoubleClick={this.handleDoubleClick}

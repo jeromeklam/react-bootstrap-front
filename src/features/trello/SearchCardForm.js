@@ -36,7 +36,7 @@ class SearchCardForm extends Component {
         <article className="trello-search-card-form-wrapper">
           <div ref={this.state.ref}>
             <EditableLabel
-              placeholder={t('placeholder.num')}
+              placeholder={t({ id: 'rbf.trello.card.search.num.placeholder', defaultMessage: 'placeholder.num' })}
               onKeyUp={e => this.updateField('num', e.target.value)}
               autoFocus
             />
@@ -66,11 +66,15 @@ class SearchCardForm extends Component {
             </Dropdown>
           )}
         </article>
-        <button className="btn btn-primary" title={t('button.title.Add card')} onClick={this.handleAdd}>
-          {t('button.Add card')}
+        <button
+          className="btn btn-primary"
+          title={t({ id: 'rbf.trello.card.form.add.help', defaultMessage: 'button.title.Add card' })}
+          onClick={this.handleAdd}
+        >
+          {t({ id: 'rbf.trello.card.form.add', defaultMessage: 'button.Add card' })}
         </button>
         <button className="btn btn-secondary" onClick={onCancel}>
-          {t('button.Cancel')}
+          {t({ id: 'rbf.trello.card.form.cancel', defaultMessage: 'button.Cancel' })}
         </button>
       </div>
     );

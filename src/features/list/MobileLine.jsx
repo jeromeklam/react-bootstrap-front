@@ -1,33 +1,64 @@
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { getObjectmemberValue } from '../helper';
+
 import { MobileLineCol } from './';
 
+import { getObjectmemberValue } from '../helper';
+import { Row } from '../grid';
+
 const navstyle = {
-  position: 'absolute',
   right: '5px',
   padding: '0px',
   float: 'right',
-  top: '0px',
+};
+
+const getCardTitle = (cols, item) => {
+  const pos = cols.findIndex(elem => elem.card && elem.card.role && elem.card.role === 'TITLE');
+  if (pos >= 0) {
+    if (typeof cols[pos].card.fDisplay === 'function') {
+      return cols[pos].card.fDisplay(item);
+    }
+    if (typeof cols[pos].fDisplay === 'function') {
+      return cols[pos].fDisplay(item);
+    }
+    const col = cols[pos].col;
+    if (item[col]) {
+      return item[col];
+    }
+  }
+  return '';
 };
 
 export const MobileLine = props => (
-  <div className="row mobile-line">
+  <div className={classnames('row list-mobile-line', props.className)}>
     <div className="col-xs-w36">
-      <div className="card bg-secondary-light m-2">
-        <div className="card-heading text-secondary">
-          <span className="pl-2">{props.title}</span>
-          <ul style={navstyle} className="nav justify-content-end">
+      <div
+        className="card bg-secondary-light m-2"
+        onClick={() => {
+          props.onClick(props.item);
+        }}
+      >
+        <div
+          className={classnames(
+            'card-header',
+            props.inlineOpenedId === props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
+          )}
+        >
+          <span className="pl-2">{getCardTitle(props.cols, props.item)}</span>
+          <ul style={navstyle} className="nav nav-pills justify-content-end">
             {props.inlineActions &&
               props.inlineActions.map(action => (
                 <li className="nav-item" key={action.name}>
-                  <a
+                  <button
+                    type="button"
+                    disabled={action.disabled || false}
                     title={action.label || ''}
-                    className={classnames('inline-action', action.theme && `dbtn-${action.theme}`)}
-                    onClick={() => {
+                    className={classnames('btn btn-inline', action.theme && `btn-${action.theme}`)}
+                    onClick={evt => {
+                      evt.stopPropagation();
                       if (action.role === 'DELETE') {
-                        //this.onConfirmDel();
+                        this.onConfirmDel();
                       } else if (action.param === 'object') {
                         action.onClick(props.item);
                       } else {
@@ -35,29 +66,34 @@ export const MobileLine = props => (
                       }
                     }}
                   >
-                    <div className="icon-sm pr-2">
-                      {action.icon}
-                    </div>
-                  </a>
+                    {action.icon}
+                  </button>
                 </li>
               ))}
           </ul>
         </div>
-        <div className="card-body bg-light text-secondary p-2">
-          <div className="row">
+        <div className="card-body p-2">
+          <Row>
             {props.cols.map((oneCol, i) => {
-              if (!oneCol.hidden) {
+              if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
                 const line = { ...oneCol, id: props.id };
                 const content = getObjectmemberValue(props.item, oneCol.col);
                 const first = i === 0;
                 const last = i === props.cols.length - 1;
                 return (
-                  <MobileLineCol key={`col-${oneCol.col}`} first={first} last={last} content={content} {...line} />
+                  <MobileLineCol
+                    key={`col-${oneCol.col}`}
+                    first={first}
+                    last={last}
+                    content={content}
+                    item={props.item}
+                    {...line}
+                  />
                 );
               }
               return null;
             })}
-          </div>
+          </Row>
         </div>
       </div>
     </div>
@@ -65,8 +101,13 @@ export const MobileLine = props => (
 );
 
 MobileLine.propTypes = {
+  className: PropTypes.string,
   title: PropTypes.string.isRequired,
   item: PropTypes.element.isRequired,
   cols: PropTypes.element.isRequired,
   id: PropTypes.string.isRequired,
+};
+
+MobileLine.defaultProps = {
+  className: '',
 };

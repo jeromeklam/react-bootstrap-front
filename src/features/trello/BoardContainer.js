@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
-import { PopoverWrapper } from 'react-popopo';
 
 import Lane from './Lane';
 import NewLaneForm from './NewLaneForm';
@@ -53,9 +52,11 @@ class BoardContainer extends Component {
       handleLaneDragEnd(removedIndex, addedIndex, payload);
     }
   };
+
   getCardDetails = (laneId, cardIndex) => {
     return this.props.reducerData.lanes.find(lane => lane.id === laneId).cards[cardIndex];
   };
+
   getLaneDetails = index => {
     return this.props.reducerData.lanes[index];
   };
@@ -169,53 +170,48 @@ class BoardContainer extends Component {
       'editLaneTitle',
       'onCardSearch',
       'cardSearchResult',
+      'laneOptions',
       't',
     ]);
 
     return (
       <div style={style} {...otherProps} draggable={false} className={classnames('trello-board-container', className)}>
-        <PopoverWrapper>
-          <Container
-            orientation="horizontal"
-            onDragStart={this.onDragStart}
-            dragClass={laneDragClass}
-            dropClass={laneDropClass}
-            onDrop={this.onLaneDrop}
-            lockAxis="x"
-            getChildPayload={index => this.getLaneDetails(index)}
-            groupName={this.groupName}
-          >
-            {reducerData.lanes.map((lane, index) => {
-              const { id, droppable, ...otherProps } = lane;
-              const laneToRender = (
-                <Lane
-                  key={id}
-                  boardId={this.groupName}
-                  id={id}
-                  getCardDetails={this.getCardDetails}
-                  index={index}
-                  droppable={droppable === undefined ? true : droppable}
-                  style={laneStyle || lane.style || {}}
-                  labelStyle={lane.labelStyle || {}}
-                  cardStyle={this.props.cardStyle || lane.cardStyle}
-                  editable={editable && !lane.disallowAddingCard}
-                  {...otherProps}
-                  {...passthroughProps}
-                />
-              );
-              return draggable && laneDraggable ? <Draggable key={lane.id}>{laneToRender}</Draggable> : laneToRender;
-            })}
-          </Container>
-        </PopoverWrapper>
-        {canAddLanes && (
-          <Container orientation="horizontal">
-            {editable && !addLaneMode ? (
-              <NewLaneSection t={t} onClick={this.showEditableLane} />
-            ) : (
-              addLaneMode && <NewLaneForm onCancel={this.hideEditableLane} onAdd={this.addNewLane} t={t} />
-            )}
-          </Container>
-        )}
+        <Container
+          orientation="horizontal"
+          onDragStart={this.onDragStart}
+          dragClass={laneDragClass}
+          dropClass={laneDropClass}
+          onDrop={this.onLaneDrop}
+          lockAxis="x"
+          getChildPayload={index => this.getLaneDetails(index)}
+          groupName={this.groupName}
+        >
+          {reducerData.lanes.map((lane, index) => {
+            const { id, droppable, ...otherProps } = lane;
+            const laneToRender = (
+              <Lane
+                key={id}
+                boardId={this.groupName}
+                id={id}
+                getCardDetails={this.getCardDetails}
+                index={index}
+                droppable={droppable === undefined ? true : droppable}
+                style={laneStyle || lane.style || {}}
+                labelStyle={lane.labelStyle || {}}
+                cardStyle={this.props.cardStyle || lane.cardStyle}
+                editable={editable && !lane.disallowAddingCard}
+                {...otherProps}
+                {...passthroughProps}
+              />
+            );
+            return draggable && laneDraggable ? <Draggable key={lane.id}>{laneToRender}</Draggable> : laneToRender;
+          })}
+          {canAddLanes && editable && !addLaneMode ? (
+            <NewLaneSection t={t} onClick={this.showEditableLane} />
+          ) : (
+            addLaneMode && <NewLaneForm onCancel={this.hideEditableLane} onAdd={this.addNewLane} t={t} />
+          )}
+        </Container>
       </div>
     );
   }

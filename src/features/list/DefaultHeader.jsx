@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+
 import { Highlight, HighlightButton } from '../tour';
 import { Dropdown } from '../basic';
+import { rbfIntl } from '../intl';
 
 const titlestyle = {
   fontSize: '1.2rem',
@@ -56,25 +58,30 @@ const sortToText = (sort, cols) => {
 
 export default class DefaultHeader extends Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
-    quickSearch: PropTypes.element,
-    onToggleFilter: PropTypes.func.isRequired,
-    onClearFilters: PropTypes.func.isRequired,
-    onClearFiltersDefault: PropTypes.func,
-    globalActions: PropTypes.element,
-    filterIcon: PropTypes.element,
-    sort: PropTypes.element,
     cols: PropTypes.element.isRequired,
+    filterIcon: PropTypes.element,
+    globalActions: PropTypes.element,
+    title: PropTypes.string.isRequired,
+    onToggleFilter: PropTypes.func.isRequired,
+    onClearFilters: PropTypes.func,
+    onClearFiltersDefault: PropTypes.func,
+    quickSearch: PropTypes.element,
     selected: PropTypes.element,
     selectMenu: PropTypes.element,
+    sort: PropTypes.element,
+    t: PropTypes.func,
   };
 
   static defaultProps = {
+    filterIcon: null,
     globalActions: [],
+    onClearFilters: null,
+    onClearFiltersDefault: null,
     quickSearch: '',
-    sort: {},
     selected: [],
     selectMenu: null,
+    sort: {},
+    t: rbfIntl,
   };
 
   constructor(props) {
@@ -102,22 +109,34 @@ export default class DefaultHeader extends Component {
         if (this.props.filters.isDefaultExist()) {
           showFilterButton = true;
           filterButtonIcon = this.props.filterDefaultIcon;
-          filterButtonTitle = 'Activer les filtres par défaut';
+          filterButtonTitle = this.props.t({
+            id: 'rbf.list.header.filter.setDefaultFilter',
+            defaultMessage: 'Set default filers',
+          });
           filterButtonAction = this.props.onClearFilters;
         }
       } else {
         showFilterButton = true;
         if (this.props.filters.isDefaultOnly()) {
           filterButtonIcon = this.props.filterClearDefaultIcon;
-          filterButtonTitle = 'Supprimer les filtres par défaut';
+          filterButtonTitle = this.props.t({
+            id: 'rbf.list.header.filter.removeDefaultFilter',
+            defaultMessage: 'Remove default filters',
+          });
           filterButtonAction = this.props.onClearFiltersDefault;
         } else {
           filterButtonIcon = this.props.filterClearIcon;
           filterButtonAction = this.props.onClearFilters;
           if (this.props.filters.isDefaultExist()) {
-            filterButtonTitle = 'Supprimer les filtres ajoutés aux filtres par défaut';
+            filterButtonTitle = this.props.t({
+              id: 'rbf.list.header.filter.removeCustomFilter',
+              defaultMessage: 'Remove custom filters',
+            });
           } else {
-            filterButtonTitle = 'Supprimer les filtres';
+            filterButtonTitle = this.props.t({
+              id: 'rbf.list.header.filter.removeAllFilter',
+              defaultMessage: 'Remove all filters',
+            });
           }
         }
       }
@@ -127,7 +146,7 @@ export default class DefaultHeader extends Component {
         <div className="row">
           <div className="col-xs-w2 text-center">
             <HighlightButton className="text-light" theme="LIST">
-              <div title="Aide">
+              <div title={this.props.t({ id: 'rbf.button.help.help', defaultMessage: 'Help' })}>
                 <button className="btn btn-secondary">?</button>
               </div>
             </HighlightButton>
@@ -141,7 +160,7 @@ export default class DefaultHeader extends Component {
               className="text-light"
               position="bottom"
               theme="LIST"
-              title="Liste des colonnes utilisées pour le tri en cours [RC](+) : croissant [RC](-) : décroissant"
+              title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
             >
               <span>{` ${sortToText(this.props.sort, this.props.cols)}`}</span>
             </Highlight>
@@ -150,7 +169,7 @@ export default class DefaultHeader extends Component {
             <Highlight
               position="bottom"
               theme="LIST"
-              title="Recherche rapide sur les champs indiqués, en recherche de type contient"
+              title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
             >
               {this.props.quickSearch}
             </Highlight>
@@ -202,7 +221,11 @@ export default class DefaultHeader extends Component {
               )}
               {this.props.filters && (
                 <li className="nav-item">
-                  <Highlight position="bottom" theme="LIST" title="Ouvrir le panneau de gestion des filtres">
+                  <Highlight
+                    position="bottom"
+                    theme="LIST"
+                    title={this.props.t({ id: 'rbf.list.header.filter.help', defaultMessage: 'Filter helper' })}
+                  >
                     <button type="button" className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
                       {filterMenuIcon}
                     </button>
@@ -211,7 +234,7 @@ export default class DefaultHeader extends Component {
               )}
               {showFilterButton && (
                 <li className="nav-item">
-                  <Highlight position="bottom" theme="LIST" title="Supprimer les filtres en cours">
+                  <Highlight position="bottom" theme="LIST" title={filterButtonTitle}>
                     <button
                       type="button"
                       className="btn btn-secondary text-light"

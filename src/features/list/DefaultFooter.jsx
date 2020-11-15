@@ -6,16 +6,12 @@ import { LoadMore, LoadError, LoadComplete } from './';
 export const DefaultFooter = props => (
   <div className="default-list-footer">
     {props.loadMorePending ? (
-      <div className="mt-2 text-center text-primary">
-        <Loading3Dots />
-      </div>
+      <div className="mt-2 text-center text-primary">{props.loader ? props.loader : <Loading3Dots />}</div>
     ) : (
       <div>
-        {props.items.length > 0 &&
-          <div>
-            {props.loadMoreFinish ? <LoadComplete /> : <LoadMore onLoadMore={props.onLoadMore} />}
-          </div>
-        }
+        {props.items.length > 0 && (
+          <div>{props.loadMoreFinish ? <LoadComplete /> : <LoadMore onLoadMore={props.onLoadMore} />}</div>
+        )}
       </div>
     )}
     {props.loadMoreError && <LoadError />}
@@ -23,6 +19,7 @@ export const DefaultFooter = props => (
 );
 
 DefaultFooter.propTypes = {
+  loader: PropTypes.element,
   loadMorePending: PropTypes.bool.isRequired,
   loadMoreFinish: PropTypes.bool.isRequired,
   loadMoreError: PropTypes.element,
@@ -31,5 +28,6 @@ DefaultFooter.propTypes = {
 };
 
 DefaultFooter.defaultProps = {
+  loader: null,
   loadMoreError: '',
 };

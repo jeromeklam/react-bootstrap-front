@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
-import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, LoadEmpty } from './';
+import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, LoadEmpty } from './';
 import { getSizeFromWidth } from '../helper';
 import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
@@ -91,7 +91,7 @@ const inlineStyle = {
   position: 'absolute',
   top: '50px',
   zIndex: '700',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `right ${duration}ms ease ${duration}ms, top ${duration}ms ease ${duration}ms`,
 };
 
 const inlineTransitionStyles = {
@@ -178,6 +178,9 @@ export default class DefaultList extends Component {
         height: 'calc(100% - 130px)',
       };
     }
+    if (this.props.mode === 'right') {
+      locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
+    }
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -207,13 +210,19 @@ export default class DefaultList extends Component {
                     }
                   >
                     <WidthObserver>
-                      <DefaultTitle
-                        style={locTitleStyle}
-                        {...this.props}
-                        cols={dispCols}
-                        className={'list-' + this.state.listSize}
-                        cols={dispCols}
-                      />
+                      {({ mediaSize }) => {
+                        if (mediaSize !== 'xs') {
+                          return (
+                            <DefaultTitle
+                              style={locTitleStyle}
+                              {...this.props}
+                              cols={dispCols}
+                              className={'list-' + this.state.listSize}
+                            />
+                          );
+                        }
+                        return null;
+                      }}
                     </WidthObserver>
                   </div>
                   <div
@@ -229,30 +238,38 @@ export default class DefaultList extends Component {
                     }
                   >
                     <WidthObserver>
-                      <div className="default-list-body">
-                        {this.props.items.length > 0 ? (
-                          <div>
-                            {this.props.items.map(item => (
-                              <DefaultLine key={item.id} id={item.id} item={item} {...this.props} cols={dispCols} />
-                            ))}
+                      {({ mediaSize }) => (
+                        <div className="default-list-body">
+                          {this.props.items.length > 0 ? (
+                            <div>
+                              {this.props.items.map(item => (
+                                <div key={item.id}>
+                                  {mediaSize === 'xs' ? (
+                                    <MobileLine {...this.props} id={item.id} item={item} cols={dispCols} />
+                                  ) : (
+                                    <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
+                          )}
+                          <div style={footerstyle}>
+                            <DefaultFooter {...this.props} />
                           </div>
-                        ) : (
-                          <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
-                        )}
-                        <div style={footerstyle}>
-                          <DefaultFooter {...this.props} />
                         </div>
-                      </div>
+                      )}
                     </WidthObserver>
                   </div>
                   {this.props.mode === 'right' && (
                     <WidthObserver>
                       <div
-                        className={classnames('custom-scrollbar bg-secondary', 'inline-' + this.state.dataSize)}
+                        className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
                         style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
                       >
                         <div className="row">
-                          <div className="col-xs-w1 text-center bg-secondary" />
+                          <div className="col-xs-w1 text-center" />
                           <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
                             <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
                           </div>

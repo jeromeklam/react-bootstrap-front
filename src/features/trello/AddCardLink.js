@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function AddCardLink(props) {
   return (
     <button className="btn btn-primary" onClick={props.onClick}>
-      {props.t('Click to add card')}
+      {props.t({ id: 'rbf.trello.card.addLink', defaultMessage: 'Click to add card' })}
     </button>
   );
 }

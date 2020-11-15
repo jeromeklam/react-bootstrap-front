@@ -10,8 +10,11 @@ import { SvgCheckbox } from '../advanced';
 
 class Card extends Component {
   onDelete = e => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     this.props.onDelete();
-    e.stopPropagation();
   };
 
   render() {
