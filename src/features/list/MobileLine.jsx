@@ -33,8 +33,18 @@ const getCardTitle = (cols, item) => {
 export const MobileLine = props => (
   <div className={classnames('row list-mobile-line', props.className)}>
     <div className="col-xs-w36">
-      <div className="card bg-secondary-light m-2">
-        <div className="card-header text-secondary">
+      <div
+        className="card bg-secondary-light m-2"
+        onClick={() => {
+          props.onClick(props.item);
+        }}
+      >
+        <div
+          className={classnames(
+            'card-header',
+            props.inlineOpenedId === props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
+          )}
+        >
           <span className="pl-2">{getCardTitle(props.cols, props.item)}</span>
           <ul style={navstyle} className="nav nav-pills justify-content-end">
             {props.inlineActions &&
@@ -52,7 +62,7 @@ export const MobileLine = props => (
                       } else if (action.param === 'object') {
                         action.onClick(props.item);
                       } else {
-                        action.onClick(this.props.id);
+                        action.onClick(props.id);
                       }
                     }}
                   >
@@ -65,7 +75,7 @@ export const MobileLine = props => (
         <div className="card-body p-2">
           <Row>
             {props.cols.map((oneCol, i) => {
-              if (!oneCol.hidden && oneCol.card) {
+              if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
                 const line = { ...oneCol, id: props.id };
                 const content = getObjectmemberValue(props.item, oneCol.col);
                 const first = i === 0;

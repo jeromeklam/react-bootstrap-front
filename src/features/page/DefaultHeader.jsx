@@ -202,7 +202,6 @@ export class DefaultHeader extends Component {
                     (option.role === 'SIGNIN' && !this.props.authenticated) ||
                     (option.role === 'SIGNOUT' && !this.props.authenticated)
                   ) {
-                    console.log(option);
                     return (
                       <li className="nav-item" key={`nav-item-${key}`}>
                         <Highlight theme="NAV" title={option.help || ''}>

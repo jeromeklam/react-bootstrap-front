@@ -72,7 +72,6 @@ export default class Follower extends Component {
     try {
       if (this.state.coords) {
         const { coords } = this.state;
-        console.log(coords);
         switch (this.props.align) {
           case 'right':
             divStyle.left = coords.right + 10;

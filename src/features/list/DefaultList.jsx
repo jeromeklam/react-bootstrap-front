@@ -91,7 +91,7 @@ const inlineStyle = {
   position: 'absolute',
   top: '50px',
   zIndex: '700',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `right ${duration}ms ease ${duration}ms, top ${duration}ms ease ${duration}ms`,
 };
 
 const inlineTransitionStyles = {
@@ -178,6 +178,9 @@ export default class DefaultList extends Component {
         height: 'calc(100% - 130px)',
       };
     }
+    if (this.props.mode === 'right') {
+      locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
+    }
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -262,11 +265,11 @@ export default class DefaultList extends Component {
                   {this.props.mode === 'right' && (
                     <WidthObserver>
                       <div
-                        className={classnames('custom-scrollbar bg-secondary', 'inline-' + this.state.dataSize)}
+                        className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
                         style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
                       >
                         <div className="row">
-                          <div className="col-xs-w1 text-center bg-secondary" />
+                          <div className="col-xs-w1 text-center" />
                           <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
                             <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
                           </div>
