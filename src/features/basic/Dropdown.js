@@ -8,6 +8,7 @@ const getCoords = (props) => {
     try {
       return props.myRef.current.getBoundingClientRect();
     } catch (ex) {
+      console.log("FK pas de coordonées",ex);
     }
   }
   return null;

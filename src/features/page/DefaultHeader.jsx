@@ -105,7 +105,7 @@ export class DefaultHeader extends Component {
             <ul className="navbar-nav justify-content-end">
               {this.props.onToggleUser && (
                 <li className="nav-item">
-                  <button className="btn btn-light" onClick={this.props.onToggleUser}>
+                  <button className="btn btn-light text-secondary" onClick={this.props.onToggleUser}>
                     <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
                   </button>
                 </li>
