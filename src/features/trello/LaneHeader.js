@@ -8,6 +8,7 @@ import LaneMenu from './LaneMenu';
 import { Row, Col } from '../grid';
 
 const LaneHeader = ({
+  id,
   updateTitle,
   editable,
   canAddLanes,
@@ -50,7 +51,7 @@ const LaneHeader = ({
           )}
         </Col>
         <Col size="6" textAlign="right">
-          {canAddLanes && <LaneMenu t={t} delete={editable} onDelete={onDelete} options={laneOptions} />}
+          {canAddLanes && <LaneMenu id={id} t={t} delete={editable} onDelete={onDelete} options={laneOptions} />}
         </Col>
       </Row>
     </header>
@@ -58,6 +59,7 @@ const LaneHeader = ({
 };
 
 LaneHeader.propTypes = {
+  id: PropTypes.string.isRequired,
   updateTitle: PropTypes.func,
   editLaneTitle: PropTypes.bool,
   canAddLanes: PropTypes.bool,
