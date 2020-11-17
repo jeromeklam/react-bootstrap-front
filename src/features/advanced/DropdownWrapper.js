@@ -10,7 +10,7 @@ export default class DropdownWrapper extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { open: false, ref: React.createRef() };
+    this.state = { open: false, ref: props.myRef || React.createRef() };
     this.onClose = this.onClose.bind(this);
     this.onClick = this.onClick.bind(this);
   }
