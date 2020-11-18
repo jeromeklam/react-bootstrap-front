@@ -124,8 +124,10 @@ DefaultTitle.propTypes = {
   sortUpIcon: PropTypes.element.isRequired,
   sortNoneIcon: PropTypes.element.isRequired,
   t: PropTypes.func,
+  align: PropTypes.string,
 };
 
 DefaultTitle.defaultProps = {
   t: rbfIntl,
+  align: '',
 };
