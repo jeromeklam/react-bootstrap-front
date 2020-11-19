@@ -173,7 +173,9 @@ class Lane extends Component {
       cardStyle,
       onCardSearch,
       onCardSelect,
+      onPrjSearch,
       cardSearchResult,
+      prjSearchResult,
       t,
     } = this.props;
     const { addCardMode, searchCardMode, collapsed } = this.state;
@@ -227,7 +229,16 @@ class Lane extends Component {
             <SearchCardLink onClick={this.showSearchableCard} t={t} />
           </div>
         )}
-        {addCardMode && <NewCardForm onCancel={this.hideEditableCard} t={t} laneId={id} onAdd={this.addNewCard} />}
+        {addCardMode && (
+          <NewCardForm 
+            t={t} 
+            laneId={id}
+            projects={prjSearchResult}
+            onPrjSearch={onPrjSearch}
+            onAdd={this.addNewCard}
+            onCancel={this.hideEditableCard}  
+          />
+        )}
         {searchCardMode && (
           <SearchCardForm
             onCancel={this.hideSearchableCard}
