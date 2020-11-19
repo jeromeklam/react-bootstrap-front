@@ -9,7 +9,10 @@ function Highlight(props) {
     'data-theme': props.theme,
     'data-position': props.position,
   };
-  const { children, className, title, style, otherProps } = props;
+  const { children, className, title, style, otherProps } = props;  
+  if (title === '') {
+    return children;
+  } 
   return (
     <div
       id={id}

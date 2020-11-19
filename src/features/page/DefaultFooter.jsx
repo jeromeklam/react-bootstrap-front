@@ -16,29 +16,8 @@ export const DefaultFooter = props => (
   <div style={mystyle} className="bg-light">
     <Container>
       <Row>
-        <Col size={2} />
-        <Col size={18}>
-          {props.options.map(option => {
-            if (option.role === 'ABOUT') {
-              return (
-                <a
-                  href={option.url}
-                  onClick={e => {
-                    if (e) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }
-                    props.onNavigate(option.url);
-                  }}
-                >
-                  <span className="text-muted">{option.label}</span>
-                </a>
-              );
-            }
-            return null;
-          })}
-        </Col>
-        <Col size={14} textAlign="right">
+        <Col size={20} />
+        <Col size={15} textAlign="right">
           {props.options.map(option => {
             if (option.role === 'SOCIAL') {
               return <span>{option.icon}</span>;
@@ -46,7 +25,7 @@ export const DefaultFooter = props => (
             return null;
           })}
         </Col>
-        <Col size={2} />
+        <Col size={1} />
       </Row>
     </Container>
   </div>
