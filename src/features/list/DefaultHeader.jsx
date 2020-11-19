@@ -59,6 +59,7 @@ const sortToText = (sort, cols) => {
 export default class DefaultHeader extends Component {
   static propTypes = {
     cols: PropTypes.element.isRequired,
+    counter: PropTypes.element,
     filterIcon: PropTypes.element,
     globalActions: PropTypes.element,
     title: PropTypes.string.isRequired,
@@ -73,6 +74,7 @@ export default class DefaultHeader extends Component {
   };
 
   static defaultProps = {
+    counter: null,
     filterIcon: null,
     globalActions: [],
     onClearFilters: null,
@@ -176,6 +178,11 @@ export default class DefaultHeader extends Component {
           </div>
           <div className="col-xs-w10 text-right">
             <ul className="nav justify-content-end">
+              {this.props.counter && (
+                <li className="nav-item pr-2">
+                  <span className="default-list-header-counter">{this.props.counter}</span>
+                </li>
+              )}
               {this.props.selectMenu && (
                 <li className="nav-item">
                   <div className="dropdown">
