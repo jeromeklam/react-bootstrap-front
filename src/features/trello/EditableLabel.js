@@ -72,7 +72,11 @@ class EditableLabel extends React.Component {
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
         placeholder={placeholder}
-      />
+      >
+        {this.props.newLabel && 
+          <span>{this.props.newLabel}</span>
+        }
+      </div>
     );
   }
 }
