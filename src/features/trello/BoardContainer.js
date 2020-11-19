@@ -170,6 +170,8 @@ class BoardContainer extends Component {
       'editLaneTitle',
       'onCardSearch',
       'cardSearchResult',
+      'onPrjSearch',
+      'prjSearchResult',
       'laneOptions',
       't',
     ]);

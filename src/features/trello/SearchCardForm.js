@@ -73,7 +73,11 @@ class SearchCardForm extends Component {
         >
           {t({ id: 'rbf.trello.card.form.add', defaultMessage: 'button.Add card' })}
         </button>
-        <button className="btn btn-secondary" onClick={onCancel}>
+        <button 
+          className="btn btn-secondary" 
+          title={t({ id: 'rbf.trello.card.form.cancel.help', defaultMessage: 'button.title.Cancel card' })}
+          onClick={onCancel}
+        >
           {t({ id: 'rbf.trello.card.form.cancel', defaultMessage: 'button.Cancel' })}
         </button>
       </div>
