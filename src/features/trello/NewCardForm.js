@@ -9,6 +9,7 @@ class NewCardForm extends Component {
     super(props);
     this.state = {
       ref: React.createRef(),
+      newLabel: '',
     };
     this.updateField = this.updateField.bind(this);
     this.projectSelect = this.projectSelect.bind(this);
@@ -23,7 +24,7 @@ class NewCardForm extends Component {
   };
 
   projectSelect = (prj) => {
-    this.setState({ project: prj, label: prj.label });
+    this.setState({ project: prj, newLabel: prj.label });
   };
 
   handleAdd = () => {
@@ -45,7 +46,7 @@ class NewCardForm extends Component {
             </span>
             <span className="trello-new-card-form-right" ref={this.state.ref}>
               <EditableLabel
-                value={this.state.label}
+                newLabel={this.state.newLabel}
                 placeholder={t({ id: 'rbf.trello.card.form.label.placeholder', defaultMessage: 'placeholder.label' })}
                 onKeyUp={e => this.updateField('label', e.target.value)}
               />
