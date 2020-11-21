@@ -47,9 +47,18 @@
   width: 18px !important;
   height: 18px !important;
   text-align: center;
-  line-height: 18px !important;
+  line-height: 16px !important;
   font-size: 12px;
   border-radius: 9px !important;
+  &.border-simple {
+    border: 1px solid !important;
+  }
+  &.border-warning {
+    border: 2px solid !important;
+  }
+  &.border-danger {
+    border: 2px solid !important;
+  }
 }
 
 .trello-card-deadline {

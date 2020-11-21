@@ -88,7 +88,7 @@ class Card extends Component {
         <div className="trello-card-footer">
           <Row>
             <Col size={4} textAlign="left">
-              <div className={classnames('trello-card-priority', `text-${classPriority}`, 'border', `border-${classPriority}`)}>
+              <div className={classnames('trello-card-priority', `text-${classPriority}`, `border-${classPriority}`)}>
                 <span>{priority}</span>
               </div>
             </Col>
