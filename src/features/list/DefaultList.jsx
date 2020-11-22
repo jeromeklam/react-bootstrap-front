@@ -18,10 +18,10 @@ const fullDiv = {
 };
 
 const defaultStyle = {
-  position: 'absolute',
+  position: 'fixed',
   right: '-400px',
   width: '400px',
-  top: '0px',
+  top: '60px',
   bottom: '0px',
   zIndex: '877',
   transition: `right ${duration}ms ease ${duration}ms`,
@@ -178,7 +178,7 @@ export default class DefaultList extends Component {
         height: 'calc(100% - 130px)',
       };
     }
-    if (this.props.mode === 'right') {
+    if (this.state.splited && this.props.mode === 'right') {
       locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
     }
     return (
@@ -244,8 +244,8 @@ export default class DefaultList extends Component {
                             <div>
                               {this.props.items.map(item => (
                                 <div key={item.id}>
-                                  {mediaSize === 'xs' ? (
-                                    <MobileLine {...this.props} id={item.id} item={item} cols={dispCols} />
+                                  {(this.props.mode === 'right' && this.state.splited) ? (
+                                    <MobileLine {...this.props} id={item.id} item={item} />
                                   ) : (
                                     <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
                                   )}
