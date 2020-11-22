@@ -26,7 +26,7 @@ export const translations = {
   'rbf.list.title.sort.none': 'Aucun tri',
   'rbf.list.header.sort.help': 'Liste des colonnes utilisées pour le tri en cours [RC](+) : croissant [RC](-) : décroissant',
   'rbf.list.header.search.help': 'Recherche rapide sur les champs indiqués, en recherche de type contient',
-  'rbf.list.header.filter.help': 'Ouvrir le panneau de gestion des filtres et tris',
+  'rbf.list.header.filter.help': 'Ouvrir le panneau de gestion[RC]des filtres et tris',
   'rbf.list.header.filter.setDefaultFilter': 'Activer les filtres par défaut',
   'rbf.list.header.filter.removeDefaultFilter': 'Supprimer les filtres par défaut',
   'rbf.list.header.filter.removeCustomFilter': 'Supprimer les filtres ajoutés aux filtres par défaut',
