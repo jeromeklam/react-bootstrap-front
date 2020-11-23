@@ -27,7 +27,7 @@ function HighlightButton(props) {
     const coords = getRefCoords(ref);
     const content = ref.current.querySelector('.tour-highlight-content');
     let htmlContent = content.innerHTML;
-    htmlContent = htmlContent.replaceAll('[RC]', '<br />');
+    htmlContent = htmlContent.replace(/\[RC\]/gi, '<br />');
     const helpContent = <div contentEditable="true" dangerouslySetInnerHTML={{ __html: htmlContent }} />;
     tour = (
       <Portal>

@@ -166,11 +166,12 @@ export const getRandomInt = (min, max) => {
 export const htmlToString = html => {
   let text = '';
   if (html && html !== null && html !== '') {
-    text = html.replaceAll('<br>', "\n");
-    text = html.replaceAll('<li>', "\n");
-    text = html.replaceAll('</li>', "");
-    text = text.replaceAll('<br />', "\n");
-    text = text.replaceAll('</p><p>', "\n");
+    text = '' + html;
+    text = text.replace(/<br>/gi, "\n");
+    text = text.replace(/<li>/gi, "\n");
+    text = text.replace(/<\/li>/gi, "");
+    text = text.replace(/<br \/>/gi, "\n");
+    text = text.replace(/<\/p><p>/gi, "\n");
     text = striptags(text);
   }
   const entities = new AllHtmlEntities();
