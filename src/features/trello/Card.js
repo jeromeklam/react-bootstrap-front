@@ -43,7 +43,7 @@ class Card extends Component {
     } = this.props;
 
     return (
-      <article data-id={id} onClick={onClick} style={style} className={classnames('trello-card', className)}>
+      <article data-id={id} onDoubleClick={onClick} style={style} className={classnames('trello-card', className)}>
         <Row>
           <Col size={3} textAlign="left">
             {onSelect && (
@@ -73,15 +73,15 @@ class Card extends Component {
           </Col>
         </Row>
         <Row>
-          <Col size={20} textAlign="left">
-            <span className="trello-card-title text-secondary" draggable={cardDraggable}>
+          <Col size={26} textAlign="left">
+            <div className="trello-card-title text-secondary" draggable={cardDraggable}>
               {title}
-            </span>
+            </div>
           </Col>
-          <Col size={16} textAlign="right">
-            <span className="trello-card-project text-secondary" draggable={cardDraggable}>
+          <Col size={10} textAlign="right">
+            <div className="trello-card-project text-secondary" draggable={cardDraggable}>
               {project}
-            </span>
+            </div>
           </Col>
         </Row>
         {description && description !== '' && <div className="trello-card-detail">{description}</div>}
@@ -89,19 +89,23 @@ class Card extends Component {
           <Row>
             <Col size={4} textAlign="left">
               <div className={classnames('trello-card-priority', `text-${classPriority}`, `border-${classPriority}`)}>
-                <span>{priority}</span>
+                {priority}
               </div>
             </Col>
-            <Col size={11} textAlign='left'>
-              <span className="trello-card-deadline">{deadline}</span>
+            <Col size={11} textAlign="left">
+              <div className="trello-card-deadline">
+                {deadline}
+              </div>
             </Col>
-            <Col size={8} textAlign='left'>
-              <span className="trello-card-progress">{progress}</span>
+            <Col size={12} textAlign="left">
+              <div className="trello-card-progress">
+                {progress}
+              </div>
             </Col>
-            <Col size={6} textAlign="left">
+            <Col size={2} textAlign="left">
               <span className="trello-card-comment text-secondary">{comment}</span>
             </Col>
-            <Col size={3}/>
+            <Col size={3} />
             <Col size={3} textAlign="left">
               <div className="trello-card-status">{status}</div>
             </Col>

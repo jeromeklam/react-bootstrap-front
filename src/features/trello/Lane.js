@@ -118,7 +118,7 @@ class Lane extends Component {
     this.hideSearchableCard();
     let card = { id, ...params };
     //this.props.actions.addCard({ laneId, card });
-    this.props.onCardAdd(card, laneId);
+    this.props.onCardAdd(laneId, card);
   };
 
   onDragStart = ({ payload }) => {
