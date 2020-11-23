@@ -29,9 +29,9 @@ export const MobileLineCol = props => {
       }
       case 'html': {
         if (content && content !== null && content !== '') {
-          content = content.replaceAll('<br>', ' ');
-          content = content.replaceAll('<br />', ' ');
-          content = content.replaceAll('</p><p>', ' ');
+          content = content.replace(/<br>/gi, ' ');
+          content = content.replace(/<br \/>/gi, ' ');
+          content = content.replace(/<\/p><p>/gi, ' ');
           content = striptags(content);
           content = <div dangerouslySetInnerHTML={{ __html: `${content}` }} />;
         }
