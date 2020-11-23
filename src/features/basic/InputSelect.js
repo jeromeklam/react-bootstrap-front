@@ -50,11 +50,11 @@ export default class InputSelect extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.value) {
+    if (props.value || props.options) {
       if (props.value !== state.value || props.options !== state.options) {
         return {
-          value: props.value,
-          options: props.options,
+          value: props.value ? props.value : state.value,
+          options: props.options ? props.options :  state.options,
         };
       }
     }
