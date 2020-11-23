@@ -30,7 +30,7 @@ export const DefaultTitle = props => (
         default:
           break;
       }
-      if (!oneCol.hidden && (oneCol.label !== '' && (oneCol.title === true || typeof oneCol.title === 'undefined'))) {
+      if (!oneCol.hidden && (oneCol.title === true || typeof oneCol.title === 'undefined')) {
         const first = i === 0;
         const last = i === props.cols.length - 1;
         const found = props.sort && props.sort.find(element => element.col === oneCol.col);
