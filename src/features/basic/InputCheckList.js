@@ -42,7 +42,7 @@ export default class InputCheckList extends Component {
   static getDerivedStateFromProps(props, state) {
     const list = JSON.parse(props.value) || emptyList;
     if (list.title !== state.title || list.items !== state.items) {
-      return { title: list.title, items: list.items, total: list.total, done: list.done, warn: list.warn};
+      return { title: list.title, items: list.items, total: list.total, done: list.done, warn: list.warn, ask: list.ask };
     }
     return null;
   }
@@ -65,6 +65,7 @@ export default class InputCheckList extends Component {
       total: list.total,
       done: list.done,
       warn: list.warn,
+      ask: list.ask,
       comm: itemsComment,
       open: true,
     };
@@ -122,9 +123,14 @@ export default class InputCheckList extends Component {
   }
 
   onChangeItemQuestion(idx) {
-    let { title, items } = this.state;
+    let { title, items, ask } = this.state;
     items[idx].question = !items[idx].question;
-    const list = { title: title, items: items };
+    if (items[idx].question === true) {
+      ask += 1;
+    } else {
+      ask -= 1;
+    }
+    const list = { title: title, items: items, ask: ask };
     this.onChange(list);
   }
 
@@ -154,9 +160,7 @@ export default class InputCheckList extends Component {
   }
 
   onDelLine(idx) {
-    let { title, items, comm, total, done, warn } = this.state;
-    items.splice(idx, 1);
-    comm.splice(idx, 1);
+    let { title, items, comm, total, done, warn, ask } = this.state;
     total -= 1;
     if (items[idx].done === true) {
       done -= 1;
@@ -164,7 +168,12 @@ export default class InputCheckList extends Component {
     if (items[idx].warning === true) {
       warn -= 1;
     }
-    const list = { title: title, items: items, total: total, done: done, warn: warn, comm: comm };
+     if (items[idx].question === true) {
+      ask -= 1;
+    }
+    comm.splice(idx, 1);
+    items.splice(idx, 1);
+    const list = { title: title, items: items, total: total, done: done, warn: warn, ask: ask, comm: comm };
     this.onChange(list);
   }
 

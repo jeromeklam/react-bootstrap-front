@@ -43,6 +43,23 @@
   overflow: hidden;
 }
 
+.trello-card-detail {
+  border-top: 1px solid #eee;
+  padding-top: 3px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: #4d4d4d;
+  white-space: pre-wrap;
+  line-height: 1;
+}
+
+.trello-card-footer {
+  border-top: 1px solid #eee;
+  padding-top: 3px;
+  margin-top: 3px;
+  text-align: right;
+}
+
 .trello-card-priority {
   width: 18px !important;
   height: 18px !important;
@@ -59,39 +76,23 @@
   &.border-danger {
     border: 2px solid !important;
   }
+  margin-top: 4px;
 }
 
 .trello-card-deadline {
-  width: 30%;
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
+  margin-top: 3px;
 }
 
 .trello-card-progress {
-  width: 30%;
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
+  margin-top: 3px;
 }
 
 .trello-card-comment {
   width: 30%;
   text-align: center;
   font-size: 12px;
-}
-
-.trello-card-detail {
-  border-top: 1px solid #eee;
-  padding-top: 3px;
-  margin-top: 3px;
-  font-size: 12px;
-  color: #4d4d4d;
-  white-space: pre-wrap;
-  line-height: 1;
-}
-
-.trello-card-footer {
-  border-top: 1px solid #eee;
-  padding-top: 3px;
-  margin-top: 3px;
-  text-align: right;
 }
