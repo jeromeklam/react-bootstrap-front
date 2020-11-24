@@ -103,7 +103,9 @@ class Card extends Component {
               </div>
             </Col>
             <Col size={2} textAlign="left">
-              <span className="trello-card-comment text-secondary">{comment}</span>
+              <div className="trello-card-comment text-secondary">
+                {comment}
+              </div>
             </Col>
             <Col size={3} />
             <Col size={3} textAlign="left">

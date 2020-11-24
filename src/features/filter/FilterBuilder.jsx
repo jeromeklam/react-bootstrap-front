@@ -205,7 +205,7 @@ export default class FilterBuilder extends Component {
                         name={colFilterable}
                         value={value}
                         className="form-control border-primary"
-                        onChange={this.props.onChange}
+                        onChange={(e) => this.props.onChange(e,FILTER_OPER_EQUAL)}
                       >
                         <option key="0" value="" />
                         {col.filterable.options.map(elt => (
