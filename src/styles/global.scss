@@ -234,18 +234,20 @@ svg.text-warning.inline-action:hover {
   .row-line {
     min-height: 30px;
     line-height: 30px;
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary-light');
   }
   .row-line.row-even {
-    background: lighten(theme-color('secondary-light'), 6%);
+    background: theme-color('inline-even');
   }
   .row-line.row-even:not(.row-title):hover {
-    background: lighten(theme-color('secondary-light'), 8%);
+    background: theme-color('primary-light');
   }
   .row-line.row-odd {
-    background: lighten(theme-color('secondary-light'), 10%);
+    background: theme-color('inline-odd');
   }
   .row-line.row-odd:not(.row-title):hover {
-    background: lighten(theme-color('secondary-light'), 12%);
+    background: theme-color('primary-light');
   }
   svg.inline-action:hover {
     cursor: pointer;

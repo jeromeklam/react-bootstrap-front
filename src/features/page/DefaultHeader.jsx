@@ -103,6 +103,17 @@ export class DefaultHeader extends Component {
           </div>
           <div className="col-xs-w20 text-right" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             <ul className="navbar-nav justify-content-end">
+              {this.props.badges && this.props.badges.map(oneBadge => (
+                <li key={'badge-' + oneBadge.name} className="nav-badge nav-item">
+                  <button className="btn btn-light" onClick={oneBadge.onClick || null}>
+                    {oneBadge.icon}
+                    <span className={classnames('badge', oneBadge.color && `badge-${oneBadge.color}`)}>{oneBadge.count}</span>
+                  </button>
+                </li>
+              ))}
+              {(this.props.badges && this.props.badges.length > 0) && (
+                <div className="pr-4" />
+              )}
               {this.props.onToggleUser && (
                 <li className="nav-item">
                   <button className="btn btn-light text-secondary" onClick={this.props.onToggleUser}>
