@@ -5,10 +5,7 @@ import classnames from 'classnames';
 import { rbfIntl } from '../intl';
 
 export const DefaultTitle = props => (
-  <div
-    style={props.style}
-    className={classnames('default-list-title row bg-secondary-light text-secondary', props.className)}
-  >
+  <div style={props.style} className={classnames('default-list-title row text-secondary', props.className)}>
     {props.cols.map((oneCol, i) => {
       let addClass = '';
       if (oneCol.align !== '') {
@@ -87,6 +84,10 @@ export const DefaultTitle = props => (
             cols += ' col-xs-last ';
           }
         }
+        let style = {}
+        if (oneCol.sortable) {
+         style.marginRight = '24px';
+        }
         return (
           <div
             key={oneCol.name}
@@ -96,18 +97,16 @@ export const DefaultTitle = props => (
               props.onSort(oneCol, way);
             }}
           >
-            <span style={oneCol.selectable && { marginLeft: '20px' }}>
-              {oneCol.label}
-              <div className={classnames('sort-icon', crt !== 'none' ? 'text-primary' : 'text-secondary')}>
-                {oneCol.sortable &&
-                  {
-                    down: props.sortDownIcon,
-                    up: props.sortUpIcon,
-                    none: props.sortNoneIcon,
-                    default: props.sortNoneIcon,
-                  }[crt]}
-              </div>
-            </span>
+            <span style={style}>{oneCol.label}</span>
+            <div className={classnames('sort-icon', crt !== 'none' ? 'text-primary' : 'text-secondary')}>
+              {oneCol.sortable &&
+                {
+                  down: props.sortDownIcon,
+                  up: props.sortUpIcon,
+                  none: props.sortNoneIcon,
+                  default: props.sortNoneIcon,
+                }[crt]}
+            </div>
           </div>
         );
       }

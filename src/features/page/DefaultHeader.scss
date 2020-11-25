@@ -1,8 +1,14 @@
 .default-header {
   .nav-item {
     .btn {
-      min-width: 54px;
-      min-height: 54px;
+      min-width: 52px;
+      height: 52px;
     }
   }
+}
+.default-header-background {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 60px;
 }

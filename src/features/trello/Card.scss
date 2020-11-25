@@ -10,7 +10,7 @@
   min-width: 330px;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: theme-color('primary-light');
     color: #000;
   }
 }

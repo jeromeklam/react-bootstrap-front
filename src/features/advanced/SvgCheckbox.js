@@ -10,7 +10,7 @@ export default function SvgCheckbox(props) {
   const id = 'cbx-' + uuidv1();
   return (
     <div className="basic-svg-checkbox">
-      <label for={id} className="label-cbx" onClick={props.onChange}>
+      <label htmlFor={id} className="label-cbx" onClick={props.onChange}>
         <input id={id} type="checkbox" class="invisible" {...otherProps} />
         <div className="checkbox" style={{ width: '16px', height: '16px' }}>
           <svg width="16px" height="16px" viewBox="0 0 20 20">

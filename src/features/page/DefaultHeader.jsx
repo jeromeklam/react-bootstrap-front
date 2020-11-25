@@ -17,7 +17,8 @@ const navStyles = {
 
 export class DefaultHeader extends Component {
   static propTypes = {
-    title: PropTypes.func.isRequired,
+    headerBackgroundSrc: PropTypes.element,
+    title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     options: PropTypes.element.isRequired,
     onToggleSide: PropTypes.func,
     onToggleUser: PropTypes.func,
@@ -38,6 +39,7 @@ export class DefaultHeader extends Component {
   };
 
   static defaultProps = {
+    headerBackgroundSrc: null,
     onToggleSide: null,
     onToggleUser: null,
     menuIcon: null,
@@ -88,9 +90,10 @@ export class DefaultHeader extends Component {
     }
     return (
       <div className="default-header bg-light pl-2 overflow-none">
+        {this.props.headerBackgroundSrc && <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />}
         <nav
           style={navStyles}
-          className="default-header-menu navbar navbar-expand-lg navbar-light bg-light border-bottom row"
+          className={classnames('default-header-menu navbar navbar-expand-lg navbar-light border-bottom row', !this.props.headerBackgroundSrc && 'bg-light')}
         >
           <div className="col-xs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             {this.props.authenticated && this.props.onToggleSide && (
@@ -107,7 +110,7 @@ export class DefaultHeader extends Component {
                 <li key={'badge-' + oneBadge.name} className="nav-badge nav-item">
                   <button className="btn btn-light" onClick={oneBadge.onClick || null}>
                     {oneBadge.icon}
-                    <span className={classnames('badge', oneBadge.color && `badge-${oneBadge.color}`)}>{oneBadge.count}</span>
+                    <span className={classnames('badge', oneBadge.text && `text-${oneBadge.text}`, oneBadge.color && `badge-${oneBadge.color}`)}>{oneBadge.count}</span>
                   </button>
                 </li>
               ))}

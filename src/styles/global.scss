@@ -216,17 +216,20 @@ svg.text-warning.inline-action:hover {
 }
 
 .inline-list {
+  color: theme-color('dark');
+  
   svg.inline-action:hover {
     cursor: pointer;
-    color: theme-color('secondary-light');
     fill: theme-color('secondary-light');
     path {
       fill: theme-color('secondary-light') !important;
     }
   }
   .row-title {
-    background-color: theme-color('secondary-light');
+    background-color: transparent;
     color: theme-color('secondary');
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary');
   }
   .row-title span {
     font-weight: bold;

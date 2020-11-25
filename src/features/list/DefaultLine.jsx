@@ -142,7 +142,7 @@ export default class DesktopListLine extends Component {
             onClick={() => {this.props.onClick(item);}}
             style={mystyle}
             className={classnames(
-              'row row-line-separator border-secondary-light text-secondary',
+              'default-list-wrapper row row-line-separator border-secondary-light text-dark',
               this.props.fClassName && this.props.fClassName(item),
               this.props.inlineOpenedId === this.props.id && 'bg-secondary text-light pt-2 pb-0',
               this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover',

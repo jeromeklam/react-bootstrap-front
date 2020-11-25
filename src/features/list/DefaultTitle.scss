@@ -1,12 +1,22 @@
+.default-list-title {
+  font-size: 0.9rem;
+  border-bottom: 1px solid;
+  border-color: theme-color('secondary');
+}
 .sort-icon {
   position: absolute;
   display: inline-block;
   margin-left: 3px;
   margin-top: -2px;
   top: 0px;
+  right: 6px;
 }
 .col-vertical-align {
   overflow: hidden;
+
+  &.sortable:hover {
+    background-color: theme-color('primary-light');
+  }
 }
 .sort-icon:hover {
   cursor: pointer;

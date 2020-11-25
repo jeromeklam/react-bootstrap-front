@@ -244,7 +244,7 @@ export default class DefaultList extends Component {
                             <div>
                               {this.props.items.map(item => (
                                 <div key={item.id}>
-                                  {(this.props.mode === 'right' && this.state.splited) ? (
+                                  {this.props.mode === 'right' && this.state.splited ? (
                                     <MobileLine {...this.props} id={item.id} item={item} />
                                   ) : (
                                     <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
@@ -263,11 +263,11 @@ export default class DefaultList extends Component {
                     </WidthObserver>
                   </div>
                   {this.props.mode === 'right' && (
-                    <WidthObserver>
-                      <div
-                        className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
-                        style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
-                      >
+                    <div
+                      className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
+                      style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
+                    >
+                      <WidthObserver>
                         <div className="row">
                           <div className="col-xs-w1 text-center" />
                           <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
@@ -314,8 +314,8 @@ export default class DefaultList extends Component {
                             </nav>
                           </div>
                         </div>
-                      </div>
-                    </WidthObserver>
+                      </WidthObserver>
+                    </div>
                   )}
                 </div>
               )}
