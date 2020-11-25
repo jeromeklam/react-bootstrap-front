@@ -80,6 +80,7 @@ export default class InputCheckList extends Component {
     this.onAddLine = this.onAddLine.bind(this);
     this.onDelLine = this.onDelLine.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.classTextQuestion = this.classTextQuestion.bind(this);
   }
 
   onToggle() {
@@ -124,11 +125,20 @@ export default class InputCheckList extends Component {
 
   onChangeItemQuestion(idx) {
     let { title, items, ask } = this.state;
-    items[idx].question = !items[idx].question;
-    if (items[idx].question === true) {
-      ask += 1;
-    } else {
-      ask -= 1;
+    switch (items[idx].question) {
+      case 0: case false:
+        ask += 1;
+        items[idx].question = 1
+        break;
+      case 1: case true:
+        items[idx].question = 2
+        break;
+      case 2:
+        ask -= 1;
+        items[idx].question = 0
+        break;
+      default:
+        break;
     }
     const list = { title: title, items: items, ask: ask };
     this.onChange(list);
@@ -168,7 +178,7 @@ export default class InputCheckList extends Component {
     if (items[idx].warning === true) {
       warn -= 1;
     }
-     if (items[idx].question === true) {
+     if (items[idx].question > 0) {
       ask -= 1;
     }
     comm.splice(idx, 1);
@@ -184,6 +194,21 @@ export default class InputCheckList extends Component {
         value: JSON.stringify(list),
       },
     });
+  }
+
+  classTextQuestion(question) {
+    let textAsk = 'text-inactive';
+    switch (question) {
+      case 1: case true:
+        textAsk = 'text-secondary';
+        break;
+      case 2:
+        textAsk = 'text-primary';
+        break;
+      default:
+        break;
+    }
+    return textAsk;
   }
 
   render() {
@@ -267,7 +292,7 @@ export default class InputCheckList extends Component {
                     <button
                       type="button"
                       className={classnames(
-                        `btn btn-input border-secondary-light bg-light`,
+                        'btn btn-input border-secondary-light bg-light',
                         item.warning ? 'text-warning' : 'text-inactive'
                       )}
                       onClick={() => {
@@ -281,8 +306,8 @@ export default class InputCheckList extends Component {
                     <button
                       type="button"
                       className={classnames(
-                        `btn btn-input border-secondary-light bg-light`,
-                        item.question ? 'text-secondary' : 'text-inactive'
+                        'btn btn-input border-secondary-light bg-light',
+                        this.classTextQuestion(item.question)
                       )}
                       onClick={() => {
                         this.onChangeItemQuestion(i);
@@ -294,7 +319,7 @@ export default class InputCheckList extends Component {
                   <div className="input-group-append">
                     <button
                       type="button"
-                      className={classnames(`btn btn-input border-secondary-light bg-light`)}
+                      className={classnames('btn btn-input border-secondary-light bg-light')}
                       onClick={() => this.onOpenItemComment(i)}
                     >
                       {item.comment && item.comment !== ''
@@ -305,7 +330,7 @@ export default class InputCheckList extends Component {
                   <div className="input-group-append">
                     <button
                       type="button"
-                      className={classnames(`btn btn-input border-secondary-light bg-light`)}
+                      className={classnames('btn btn-input border-secondary-light bg-light')}
                       onClick={() => {
                         this.onDelLine(i);
                       }}
