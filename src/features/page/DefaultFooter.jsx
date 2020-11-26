@@ -18,9 +18,9 @@ export const DefaultFooter = props => (
       <Row>
         <Col size={20} />
         <Col size={15} textAlign="right">
-          {props.options.map(option => {
+          {props.options.map((option, i) => {
             if (option.role === 'SOCIAL') {
-              return <span>{option.icon}</span>;
+              return <span key={`footer-social-${i}`}>{option.icon}</span>;
             }
             return null;
           })}

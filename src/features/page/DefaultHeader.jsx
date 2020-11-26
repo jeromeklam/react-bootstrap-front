@@ -102,7 +102,7 @@ export class DefaultHeader extends Component {
               </button>
             )}
             &nbsp;&nbsp;
-            <div className="navbar-brand p-0">{this.props.title}</div>
+            <div className="navbar-brand p-0">{this.props.title || ''}</div>
           </div>
           <div className="col-xs-w20 text-right" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             <ul className="navbar-nav justify-content-end">
@@ -145,6 +145,7 @@ export class DefaultHeader extends Component {
                             if (lang.locale !== this.props.currentLocale) {
                               return (
                                 <button
+                                  key={`header-button-${lang.code}`}
                                   className="btn"
                                   onClick={() => {
                                     this.onCloseFlag();
@@ -176,7 +177,7 @@ export class DefaultHeader extends Component {
                     >
                       {this.props.realms.map(realm => {
                         if (realm.value === this.props.currentRealm) {
-                          return <span>{realm.label}</span>;
+                          return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
                         }
                         return null;
                       })}
@@ -242,7 +243,7 @@ export class DefaultHeader extends Component {
                 this.props.icons.map((icon, i) => {
                   return (
                     <li className="nav-item" key={`nav-item-icon-${i}`}>
-                      <div title={icon.label}>{icon.icon}</div>
+                      <div title={icon.label || ''}>{icon.icon}</div>
                     </li>
                   );
                 })}

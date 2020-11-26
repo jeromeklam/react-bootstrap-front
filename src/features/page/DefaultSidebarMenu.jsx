@@ -14,7 +14,7 @@ export const DefaultSidebarMenu = props => (
       onClick={() => {
         props.toggleMenu(props.option.position);
       }}
-      title={!props.open && props.option.label && props.option.label}
+      title={(!props.open && props.option.label && props.option.label) || ''}
     >
       <Highlight position="right" theme="NAV" title={props.option.help || ''}>
         {props.option.icon}
