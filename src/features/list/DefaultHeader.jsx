@@ -13,13 +13,17 @@ const titlestyle = {
   paddingRight: '10px',
 };
 
-const titlestyle2 = {
+const sortStyle = {
   fontSize: '0.8rem',
   fontWeight: 'normal',
   paddingLeft: '5px',
   paddingRight: '10px',
   display: 'inline-block',
   lineHeight: '1',
+};
+
+const counterStyle = {
+  fontSize: '0.9rem',
 };
 
 const mystyle = {
@@ -158,7 +162,7 @@ export default class DefaultHeader extends Component {
               {`${this.props.title}`}
             </span>
             <Highlight
-              style={titlestyle2}
+              style={sortStyle}
               className="text-light"
               position="bottom"
               theme="LIST"
@@ -180,7 +184,7 @@ export default class DefaultHeader extends Component {
             <ul className="nav justify-content-end">
               {this.props.counter && (
                 <li className="nav-item pr-2">
-                  <span className="default-list-header-counter">{this.props.counter}</span>
+                  <span className="default-list-header-counter" style={counterStyle}>{this.props.counter}</span>
                 </li>
               )}
               {this.props.selectMenu && (
