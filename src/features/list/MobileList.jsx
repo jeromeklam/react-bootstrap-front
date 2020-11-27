@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { MobileLine, MobileHeader, MobileFooter, LoadEmpty } from './';
 
 const datastyle = {
-  top: '40px',
-  height: 'calc(100% - 40px)',
+  top: '50px',
+  height: 'calc(100% - 50px)',
   position: 'absolute',
   overflowY: 'auto',
   overflowX: 'hidden',

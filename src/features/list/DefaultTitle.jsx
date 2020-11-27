@@ -90,7 +90,7 @@ export const DefaultTitle = props => (
         }
         return (
           <div
-            key={oneCol.name}
+            key={oneCol.col}
             title={title}
             className={classnames(cols, 'col-vertical-align', oneCol.sortable && 'sortable', addClass, props.className)}
             onClick={() => {

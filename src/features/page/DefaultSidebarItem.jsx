@@ -20,7 +20,7 @@ export const DefaultSidebarItem = props => (
         'nav-link',
         props.location.pathname === props.option.url ? 'active text-primary' : 'text-secondary'
       )}
-      title={!props.open && props.option.label && props.option.label}
+      title={(!props.open && props.option.label && props.option.label) || ''}
     >
       <Highlight position="right" theme="NAV" title={props.option.help || ''}>
         {props.option.icon}

@@ -4,17 +4,17 @@ import classnames from 'classnames';
 
 const mystyle = {
   position: 'fixed',
-  top: '60px',
+  top: '0px',
   left: '0px',
   right: '0px',
-  height: '40px',
+  height: '50px',
   zIndex: '700',
 };
 
 export const MobileHeader = props => (
-  <div style={mystyle} className="row bg-secondary text-light">
+  <div style={mystyle} className="row row-short bg-secondary text-light">
     <div className="col-xs-w20">
-      <span className="pl-2">{props.title}</span>
+      <h4 className="pl-2 pt-1">{props.title}</h4>
     </div>
     <div className="col-xs-w16 text-right">
       <ul className="nav justify-content-end">
