@@ -49,38 +49,49 @@ export default class DefaultSidebar extends Component {
     return (
       <div className="sidebar-wrapper custom-scrollbar" style={myStyles}>
         <ul className="sidebar-navigation">
-          {this.props.options.map((option) => {
+          {this.props.options.map(option => {
+            let label = '' + (option.url || option.position || '');
+            label = label.replace(/\//gi, '-');
             if (
               option.role === 'HOME' ||
               option.role === 'ABOUT' ||
               (option.role === 'NAV' && (this.props.authenticated || (this.props.authenticated && option.public)))
             ) {
               return (
-                <DefaultSidebarItem key={`option-${option.label}-${option.position}`} {...this.props} option={option} open={this.props.open}/>
+                <DefaultSidebarItem
+                  key={`option-${label}-${option.position}`}
+                  {...this.props}
+                  option={option}
+                  open={this.props.open}
+                />
               );
             } else if (
               option.role === 'MENU' &&
               (this.props.authenticated || (this.props.authenticated && option.public))
             ) {
               return (
-                <div key={`option-${option.label}-${option.position}`}>
+                <div key={`option-${label}-${option.position}`}>
                   <DefaultSidebarMenu
-                    key={`option-${option.label}-${option.position}`}
                     toggleMenu={this.toggleMenu}
                     {...this.props}
                     option={option}
                     {...this.state}
                     open={this.props.open}
                   />
-                  {this.props.open && this.state.menu === option.position &&
-                    option.options.map(option2 => (
-                      <DefaultSidebarItem
-                        className="menu-option"
-                        key={`option-${option2.label}-${option2.position}`}
-                        {...this.props}
-                        option={option2}
-                      />
-                   ))}
+                  {this.props.open &&
+                    this.state.menu === option.position &&
+                    option.options.map(option2 => {
+                      let label2 = '' + (option2.url || option2.position || '');
+                      label2 = label2.replace(/\//gi, '-');
+                      return (
+                        <DefaultSidebarItem
+                          className="menu-option"
+                          key={`option-${label2}-${option2.position}`}
+                          {...this.props}
+                          option={option2}
+                        />
+                      );
+                    })}
                 </div>
               );
             }

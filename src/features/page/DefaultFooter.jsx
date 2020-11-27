@@ -15,20 +15,22 @@ const mystyle = {
 const followStyle = {
   fontWeight: 'bold',
   marginTop: '4px',
-}
+};
 
 export const DefaultFooter = props => (
   <div style={mystyle} className="bg-light">
     <Container>
       <Row>
         <Col size={28} />
-        <Col size={3} textAlign="right" >
-          <div className="text-dark" style={followStyle}>Suivez-nous</div>
+        <Col size={3} textAlign="right">
+          <div className="text-dark" style={followStyle}>
+            Suivez-nous
+          </div>
         </Col>
         <Col size={5}>
           {props.options.map((option, i) => {
             if (option.role === 'SOCIAL') {
-              return <span key={`footer-social-${i}`>{option.icon}</span>;
+              return <span key={`footer-social-${i}`}>{option.icon}</span>;
             }
             return null;
           })}
