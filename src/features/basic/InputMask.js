@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { IMaskInput } from 'react-imask';
 import { getRandomInt } from '../helper';
 import log from 'loglevel';
+import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
 
 export default class InputMask extends Component {
   static propTypes = {
@@ -27,6 +28,8 @@ export default class InputMask extends Component {
     maxLength: PropTypes.number,
     mask: PropTypes.string.isRequired,
     help: PropTypes.string,
+    prepend: PropTypes.element,
+    append: PropTypes.element,
   };
 
   static defaultProps = {
@@ -48,6 +51,8 @@ export default class InputMask extends Component {
     className: '',
     maxLength: 9999,
     help: '',
+    prepend: null,
+    append: null,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -81,73 +86,62 @@ export default class InputMask extends Component {
     this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.render');
     this.state.logger.debug(this.state);
     return (
-      <div className={classnames('form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
-        {this.props.label !== '' && (
-          <label
-            htmlFor={this.state.myId}
-            className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
-              this.props.size && `col-form-label-${this.props.size}`
-            )}
-          >
-            {this.props.label}
-            {this.props.required && <span>&nbsp;*</span>}
-          </label>
+      <InputGroup {...this.props} id={this.state.myId}>
+        {this.props.prepend && this.props.prepend !== '' && (
+          <InputGroupPrepend>
+            <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
+          </InputGroupPrepend>
         )}
-        <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
-          <IMaskInput
-            mask={this.props.mask}
-            type="text"
-            className={classnames(
-              'border-secondary form-control',
-              this.props.size && `form-control-${this.props.size}`,
-              (this.props.error || this.props.warning) && 'is-invalid',
-              this.props.className && this.props.className,
-            )}
-            id={this.state.myId}
-            name={this.props.name}
-            value={this.state.value || ''}
-            required={this.props.required}
-            disabled={this.props.disabled}
-            onAccept={(val) => {
-              this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onAccept');
-              this.state.logger.debug(val);
-              this.setState({value: val});
-              const event = {
-                target: {
-                  name: this.props.name,
-                  value: null,
-                },
-              };
-              this.props.onChange(event);
-            }}
-            onComplete={(val) => {
-              this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onComplete');
-              this.state.logger.debug(val);
-              const event = {
-                target: {
-                  name: this.props.name,
-                  value: val,
-                },
-              };
-              this.props.onChange(event);
-            }}
-            autoComplete={this.props.autoComplete}
-            placeholder={this.props.placeholder}
-            lazy={false}
-            autofix
-            overwrite
-            maxLength={this.props.maxLength || ''}
-          />
-          {this.props.help && this.props.help !== '' && (
-            <small className="form-text text-muted">
-              {this.props.help}
-            </small>
+        <IMaskInput
+          mask={this.props.mask}
+          type="text"
+          className={classnames(
+            'border-secondary form-control',
+            this.props.size && `form-control-${this.props.size}`,
+            (this.props.error || this.props.warning) && 'is-invalid',
+            this.props.className && this.props.className,
           )}
-          {this.props.warning && <div className="invalid-feedback">{this.props.warning}</div>}
-          {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
-        </div>
-      </div>
+          id={this.state.myId}
+          name={this.props.name}
+          value={this.state.value || ''}
+          required={this.props.required}
+          disabled={this.props.disabled}
+          onAccept={(val) => {
+            this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onAccept');
+            this.state.logger.debug(val);
+            this.setState({value: val});
+            const event = {
+              target: {
+                name: this.props.name,
+                value: null,
+              },
+            };
+            this.props.onChange(event);
+          }}
+          onComplete={(val) => {
+            this.state.logger.debug('react-bootstrap-front.inputMask.' +  this.props.name + '.onComplete');
+            this.state.logger.debug(val);
+            const event = {
+              target: {
+                name: this.props.name,
+                value: val,
+              },
+            };
+            this.props.onChange(event);
+          }}
+          autoComplete={this.props.autoComplete}
+          placeholder={this.props.placeholder}
+          lazy={false}
+          autofix
+          overwrite
+          maxLength={this.props.maxLength || ''}
+        />
+        {this.props.append && this.props.append !== '' && (
+          <InputGroupAppend>
+            <InputGroupText className="border-secondary bg-light">{this.props.append}</InputGroupText>
+          </InputGroupAppend>
+        )}
+      </InputGroup>
     );
   }
 };
