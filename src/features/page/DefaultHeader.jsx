@@ -176,7 +176,7 @@ export class DefaultHeader extends Component {
                       ref={this.state.myRef2}
                     >
                       {this.props.realms.map(realm => {
-                        if (realm.value === this.props.currentRealm) {
+                        if (parseInt(realm.value, 10) === parseInt(this.props.currentRealm, 10)) {
                           return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
                         }
                         return null;
@@ -191,7 +191,7 @@ export class DefaultHeader extends Component {
                         {Array.isArray(this.props.realms) &&
                           this.props.realms.map(realm => (
                             <button
-                              key={realm.id}
+                              key={`header-selrealm-${realm.value}`}
                               className="btn btn-light w-100 text-nowrap"
                               onClick={() => {
                                 this.onCloseRealm();

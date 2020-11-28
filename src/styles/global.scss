@@ -217,6 +217,8 @@ svg.text-warning.inline-action:hover {
 
 .inline-list {
   color: theme-color('dark');
+  padding-left: 10px;
+  padding-right: 10px;
   
   svg.inline-action:hover {
     cursor: pointer;
@@ -241,13 +243,13 @@ svg.text-warning.inline-action:hover {
     border-color: theme-color('secondary-light');
   }
   .row-line.row-even {
-    background: theme-color('inline-even');
+    background: transparent;
   }
   .row-line.row-even:not(.row-title):hover {
     background: theme-color('primary-light');
   }
   .row-line.row-odd {
-    background: theme-color('inline-odd');
+    background: transparent;
   }
   .row-line.row-odd:not(.row-title):hover {
     background: theme-color('primary-light');

@@ -270,7 +270,7 @@ export default class DefaultList extends Component {
                       <WidthObserver>
                         <div className="row">
                           <div className="col-xs-w1 text-center" />
-                          <div className="col-xs-w32 bg-white p-0 text-secondary h-100">
+                          <div className="col-xs-w32 p-0 text-secondary h-100">
                             <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
                           </div>
                           <div className="col-xs-w3 text-center">

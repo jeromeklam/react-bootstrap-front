@@ -12,42 +12,48 @@ registerLocale('fr', fr);
 
 export default class InputDate extends Component {
   static propTypes = {
-    id: PropTypes.string,
     borderColor: PropTypes.string,
-    prepend: PropTypes.element,
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    value: PropTypes.string,
-    labelTop: PropTypes.bool,
-    onChange: PropTypes.func,
-    onLockToggle: PropTypes.func,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    size: PropTypes.string,
-    labelSize: PropTypes.number,
-    inputSize: PropTypes.number,
-    delIcon: PropTypes.element.isRequired,
     calIcon: PropTypes.element.isRequired,
-    lockIcon: PropTypes.element,
+    delIcon: PropTypes.element.isRequired,
+    disabled: PropTypes.bool,
     error: PropTypes.element,
+    id: PropTypes.string,
+    inputSize: PropTypes.number,
+    label: PropTypes.string,
+    labelSize: PropTypes.number,
+    labelTop: PropTypes.bool,
+    locked: PropTypes.bool,
+    lockOffIcon: PropTypes.element,
+    lockOnIcon: PropTypes.element,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    onLockOn: PropTypes.func,
+    onLockOff: PropTypes.func,
+    prepend: PropTypes.element,
+    required: PropTypes.bool,
+    size: PropTypes.string,
+    value: PropTypes.string,
   };
 
   static defaultProps = {
     borderColor: 'secondary',
-    prepend: null,
-    labelTop: true,
-    value: '',
-    label: '',
-    id: '',
-    onLockToggle: null,
-    size: null,
-    labelSize: 6,
-    inputSize: 30,
-    onChange: () => {},
     disabled: false,
-    required: false,
     error: false,
-    lockIcon: null,
+    id: '',
+    inputSize: 30,
+    label: '',
+    labelSize: 6,
+    labelTop: true,
+    locked: false,
+    lockOffIcon: null,
+    lockOnIcon: null,
+    onChange: () => {},
+    onLockOn: null,
+    onLockOff: null,
+    prepend: null,
+    required: false,
+    size: null,
+    value: '',
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -57,7 +63,8 @@ export default class InputDate extends Component {
         const myDate = new Date(Date.parse(props.value));
         return { value: newDate, date: !isNaN(myDate.getTime()) ? myDate : null };
       }
-    } if (props.value === null || props.value === '') {
+    }
+    if (props.value === null || props.value === '') {
       if (props.value !== state.value) {
         return { value: '', date: null };
       }
@@ -160,18 +167,16 @@ export default class InputDate extends Component {
         <div
           className={classnames(
             !this.props.labelTop && `col-xs-w${this.props.inputSize}`,
-            this.props.error && 'is-invalid',
+            this.props.error && 'is-invalid'
           )}
         >
           <div className="input-group" ref={this.state.myRef}>
-            {this.props.prepend &&
-              <div className="input-group-prepend border border-primary rounded-left">
-                {this.props.prepend}
-              </div>
-            }
+            {this.props.prepend && (
+              <div className="input-group-prepend border border-primary rounded-left">{this.props.prepend}</div>
+            )}
             <IMaskInput
               mask={Date}
-              disabled={this.props.disabled}
+              disabled={this.props.disabled || this.props.locked}
               pattern={'d1d2{/}`m1m2{/}`Y'}
               blocks={{
                 d1: {
@@ -200,13 +205,13 @@ export default class InputDate extends Component {
                   to: 2099,
                 },
               }}
-              format={(date) => {
+              format={date => {
                 const day = String(date.getDate()).padStart(2, '0');
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const year = date.getFullYear();
                 return [day, month, year].join('/');
               }}
-              parse={(str) => {
+              parse={str => {
                 const [day, month, year] = str.split('/');
                 return new Date(Number(year), Number(month) - 1, Number(day));
               }}
@@ -218,28 +223,32 @@ export default class InputDate extends Component {
               className={classnames(
                 `border-${this.props.borderColor} form-control`,
                 this.props.size && `form-control-${this.props.size}`,
-                (this.props.error || this.props.warning) && 'is-invalid',
+                (this.props.error || this.props.warning) && 'is-invalid'
               )}
             />
             <div className="input-group-append">
-              {this.props.lockIcon !== null &&
+              {this.props.onLockOn !== null && this.props.onLockOff !== null && (
                 <button
                   type="button"
                   className={classnames(
                     `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
-                    this.props.size && `btn-${this.props.size}`,
+                    this.props.size && `btn-${this.props.size}`
                   )}
-                  onClick={this.props.onLockToggle}
+                  onClick={
+                    this.props.locked
+                      ? () => this.props.onLockOff(this.props.name)
+                      : () => this.props.onLockOn(this.props.name)
+                  }
                 >
-                  {this.props.lockIcon}
+                  {this.props.locked ? this.props.lockOnIcon : this.props.lockOffIcon}
                 </button>
-              }
+              )}
               <button
                 type="button"
-                disabled={this.props.disabled}
+                disabled={this.props.disabled || this.props.locked}
                 className={classnames(
-                `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
-                  this.props.size && `btn-${this.props.size}`,
+                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  this.props.size && `btn-${this.props.size}`
                 )}
                 onClick={this.onToggle}
               >
@@ -247,10 +256,10 @@ export default class InputDate extends Component {
               </button>
               <button
                 type="button"
-                disabled={this.props.disabled}
+                disabled={this.props.disabled || this.props.locked}
                 className={classnames(
                   `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
-                  this.props.size && `btn-${this.props.size}`,
+                  this.props.size && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}
               >

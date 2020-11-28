@@ -20,7 +20,7 @@ export default class InputSelect extends Component {
     size: PropTypes.string,
     labelSize: PropTypes.number,
     inputSize: PropTypes.number,
-    options: PropTypes.element,
+    options: PropTypes.array,
     error: PropTypes.element,
     warning: PropTypes.element,
     defaultValue: PropTypes.string,

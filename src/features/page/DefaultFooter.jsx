@@ -24,7 +24,7 @@ export const DefaultFooter = props => (
         <Col size={28} />
         <Col size={3} textAlign="right">
           <div className="text-dark" style={followStyle}>
-            Suivez-nous
+            {props.t({ id: 'rbf.page.footer.followUs', defaultMessage: 'Follow us' })}
           </div>
         </Col>
         <Col size={5}>
@@ -43,4 +43,9 @@ export const DefaultFooter = props => (
 
 DefaultFooter.propTypes = {
   options: PropTypes.element.isRequired,
+  t: PropTypes.func,
+};
+
+DefaultFooter.defaultProps = {
+  t: () => {},
 };
