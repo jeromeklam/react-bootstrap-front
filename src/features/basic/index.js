@@ -31,4 +31,6 @@ export { default as DropdownMenu } from './DropdownMenu';
 export { default as DropdownMenuHeader } from './DropdownMenuHeader';
 export { default as DropdownMenuOption } from './DropdownMenuOption';
 export { default as DropdownMenuDivider } from './DropdownMenuDivider';
+export { default as InputKeyword } from './InputKeyword';
+export { default as InputKeywords } from './InputKeywords';
 export * from './InputChildren';
