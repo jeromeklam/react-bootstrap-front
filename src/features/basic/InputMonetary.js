@@ -1,150 +1,143 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { IMaskInput } from 'react-imask';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
 import { getRandomInt } from '../helper';
 
-export default class InputMonetary extends Component {
-  static propTypes = {
-    id: PropTypes.string,
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    value: PropTypes.string,
-    labelTop: PropTypes.bool,
-    onChange: PropTypes.func,
-    required: PropTypes.bool,
-    disabled: PropTypes.bool,
-    size: PropTypes.string,
-    labelSize: PropTypes.number,
-    inputSize: PropTypes.number,
-    error: PropTypes.element,
-    warning: PropTypes.element,
-    autoComplete: PropTypes.string,
-    placeholder: PropTypes.string,
-    pattern: PropTypes.string,
-    language: PropTypes.string,
-    money: PropTypes.string,
-    inputMoney: PropTypes.string,
-    swapIcon: PropTypes.element,
-    onMoneySwitch: PropTypes.func,
-  };
-
-  static defaultProps = {
-    labelTop: true,
-    value: '',
-    label: '',
-    id: '',
-    onChange: () => {},
-    disabled: false,
-    required: false,
-    size: null,
-    labelSize: 6,
-    inputSize: 30,
-    error: false,
-    warning: false,
-    autoComplete: 'off',
-    placeholder: '',
-    pattern: null,
-    language: 'fr-FR',
-    money: 'EUR',
-    inputMoney: 'EUR',
-    swapIcon: null,
-    onMoneySwitch: null,
-  };
-
-  constructor(props) {
-    super(props);
-    const inputValue = parseFloat(this.props.value || '0', 10);
-    this.state = {
-      value: inputValue,
-    };
+export default function InputMonetary(props) {
+  let myId = props.id;
+  if (myId === '') {
+    myId = props.name;
+    const rnd = getRandomInt(10000, 99999);
+    myId = `${myId}-${rnd}`;
   }
-
-  render() {
-    let myId = this.props.id;
-    if (myId === '') {
-      myId = this.props.name;
-      const rnd = getRandomInt(10000, 99999);
-      myId = `${myId}-${rnd}`;
-    }
-    const value = this.props.value || 0;
-    return (
-      <div
+  const value = props.value || 0;
+  return (
+    <InputGroup {...props} id={myId}>
+      {props.prepend && props.prepend !== '' && (
+        <InputGroupPrepend>
+          <InputGroupText className="border-secondary bg-light">{props.prepend}</InputGroupText>
+        </InputGroupPrepend>
+      )}
+      <IMaskInput
         className={classnames(
-          'form-group',
-          !this.props.labelTop && 'row',
-          this.props.size && `form-group-${this.props.size}`,
+          'border-secondary form-control',
+          props.size && `form-control-${props.size}`,
+          (props.error || props.warning) && 'is-invalid'
         )}
-      >
-        {this.props.label !== '' && (
-          <label
-            htmlFor={myId}
-            className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
-              this.props.size && `col-form-label-${this.props.size}`
-            )}
+        id={myId}
+        name={props.name}
+        value={value.toString().replace('.', ',')}
+        required={props.required}
+        disabled={props.disabled || props.locked}
+        onAccept={val => {
+          const mnt = val.toString().replace(',', '.');
+          const event = {
+            target: {
+              name: props.name,
+              value: mnt,
+            },
+          };
+          props.onChange(event);
+        }}
+        autoComplete={props.autoComplete}
+        placeholder={props.placeholder}
+        mask={Number}
+        scale={2}
+        signed={false}
+        thousandsSeparator=""
+        padFractionalZeros
+        normalizeZeros={false}
+        radix=","
+        mapToRadix={['.']}
+      />
+      <InputGroupAppend>
+        {props.onLockOn !== null && props.onLockOff !== null && (
+          <button
+            type="button"
+            disabled={props.disabled}
+            className={classnames(`btn btn-input btn-outline-secondary bg-light`, props.size && `btn-${props.size}`)}
+            onClick={props.locked ? () => props.onLockOff(props.name) : () => props.onLockOn(props.name)}
           >
-            {this.props.label}
-            {this.props.required && <span>&nbsp;*</span>}
-          </label>
+            {props.locked ? props.lockOnIcon : props.lockOffIcon}
+          </button>
         )}
-        <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
-          <div className="input-group">
-            <IMaskInput
-              className={classnames(
-                'border-secondary form-control',
-                this.props.size && `form-control-${this.props.size}`,
-                (this.props.error || this.props.warning) && 'is-invalid',
-              )}
-              id={myId}
-              name={this.props.name}
-              value={value.toString().replace('.', ',')}
-              required={this.props.required}
-              disabled={this.props.disabled}
-              onAccept={(val) => {
-                const mnt = val.toString().replace(',', '.');
-                const event = {
-                  target: {
-                    name: this.props.name,
-                    value: mnt,
-                  },
-                };
-                this.props.onChange(event);
-              }}
-              autoComplete={this.props.autoComplete}
-              placeholder={this.props.placeholder}
-              mask={Number}
-              scale={2}
-              signed={false}
-              thousandsSeparator=""
-              padFractionalZeros
-              normalizeZeros={false}
-              radix=","
-              mapToRadix={['.']}
-            />
-            <div className="input-group-append">
-              <span className="input-group-text border-secondary bg-light">
-                {this.props.inputMoney}
-              </span>
-              {this.props.swapIcon &&
-                <button
-                  type="button"
-                  disabled={this.props.disabled}
-                  className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
-                    this.props.size && `btn-${this.props.size}`,
-                  )}
-                  onClick={this.props.onMoneySwitch}
-                >
-                  {this.props.swapIcon}
-                </button>
-              }
-            </div>
-          </div>
-          {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
-          {this.props.warning && <div className="invalid-feedback">{this.props.warning}</div>}
-        </div>
-      </div>
-    );
-  }
+        {props.onMoneySwitch && (
+          <button
+            type="button"
+            disabled={props.disabled || props.locked}
+            className={classnames('btn btn-input btn-outline-secondary bg-light', props.size && `btn-${props.size}`)}
+            onClick={props.onMoneySwitch}
+          >
+            {props.inputMoney} {props.swapIcon}
+          </button>
+        )}
+        <InputGroupText className="border-secondary bg-light">
+          {props.onMoneySwitch ? props.rateValue : props.inputMoney}
+        </InputGroupText>
+      </InputGroupAppend>
+      {props.error && <div className="invalid-feedback">{props.error}</div>}
+      {props.warning && <div className="invalid-feedback">{props.warning}</div>}
+    </InputGroup>
+  );
 }
+
+InputMonetary.propTypes = {
+  autoComplete: PropTypes.string,
+  disabled: PropTypes.bool,
+  error: PropTypes.element,
+  id: PropTypes.string,
+  inputMoney: PropTypes.string,
+  inputSize: PropTypes.number,
+  label: PropTypes.string,
+  labelSize: PropTypes.number,
+  labelTop: PropTypes.bool,
+  language: PropTypes.string,
+  locked: PropTypes.bool,
+  lockOffIcon: PropTypes.element,
+  lockOnIcon: PropTypes.element,
+  money: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+  onLockOn: PropTypes.func,
+  onLockOff: PropTypes.func,
+  onMoneySwitch: PropTypes.func,
+  pattern: PropTypes.string,
+  placeholder: PropTypes.string,
+  rateValue: PropTypes.string,
+  required: PropTypes.bool,
+  size: PropTypes.string,
+  swapIcon: PropTypes.element,
+  value: PropTypes.string,
+  warning: PropTypes.element,
+};
+
+InputMonetary.defaultProps = {
+  autoComplete: 'off',
+  disabled: false,
+  error: false,
+  id: '',
+  inputMoney: 'EUR',
+  inputSize: 30,
+  label: '',
+  labelSize: 6,
+  labelTop: true,
+  language: 'fr-FR',
+  locked: false,
+  lockOffIcon: null,
+  lockOnIcon: null,
+  money: 'EUR',
+  onChange: () => {},
+  onLockOn: null,
+  onLockOff: null,
+  onMoneySwitch: null,
+  pattern: null,
+  placeholder: '',
+  rateValue: '',
+  required: false,
+  size: null,
+  swapIcon: null,
+  value: '',
+  warning: false,
+};

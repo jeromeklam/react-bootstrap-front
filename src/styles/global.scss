@@ -407,3 +407,7 @@ hr {
 .row .col-last {
   padding-right: 15px;
 }
+
+.input-group .btn-outline-secondary {
+  border-color: theme-color('secondary') !important;
+}

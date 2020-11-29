@@ -230,6 +230,7 @@ export default class InputDate extends Component {
               {this.props.onLockOn !== null && this.props.onLockOff !== null && (
                 <button
                   type="button"
+                  disabled={this.props.disabled}
                   className={classnames(
                     `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
                     this.props.size && `btn-${this.props.size}`
