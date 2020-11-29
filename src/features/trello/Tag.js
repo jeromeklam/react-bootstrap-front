@@ -6,9 +6,9 @@ class Tag extends Component {
   render() {
     const { title, theme, className, ...otherProps } = this.props;
     return (
-      <div {...otherProps} className={classnames('trello-tag text-white', `bg-${theme}`, className)}>
+      <span {...otherProps} className={classnames('trello-tag text-white', `bg-${theme}`, className)}>
         {title}
-      </div>
+      </span>
     );
   }
 }
