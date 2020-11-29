@@ -34,7 +34,7 @@ export default class InputCheckList extends Component {
     openLinesIcon: null,
     closeLinesIcon: null,
     warningLineIcon: null,
-    questionLineIcon: null,   
+    questionLineIcon: null,
     commentLineIcon: null,
     emptyCommentLineIcon: null,
   };
@@ -42,7 +42,14 @@ export default class InputCheckList extends Component {
   static getDerivedStateFromProps(props, state) {
     const list = JSON.parse(props.value) || emptyList;
     if (list.title !== state.title || list.items !== state.items) {
-      return { title: list.title, items: list.items, total: list.total, done: list.done, warn: list.warn, ask: list.ask };
+      return {
+        title: list.title,
+        items: list.items,
+        total: list.total,
+        done: list.done,
+        warn: list.warn,
+        ask: list.ask,
+      };
     }
     return null;
   }
@@ -100,7 +107,7 @@ export default class InputCheckList extends Component {
     items.push(emptyItem);
     total += 1;
     comm.push(false);
-    const list = { title: title, items: items, total: total};
+    const list = { title: title, items: items, total: total };
     this.onChange(list);
   }
 
@@ -126,16 +133,18 @@ export default class InputCheckList extends Component {
   onChangeItemQuestion(idx) {
     let { title, items, ask } = this.state;
     switch (items[idx].question) {
-      case 0: case false:
+      case 0:
+      case false:
         ask += 1;
-        items[idx].question = 1
+        items[idx].question = 1;
         break;
-      case 1: case true:
-        items[idx].question = 2
+      case 1:
+      case true:
+        items[idx].question = 2;
         break;
       case 2:
         ask -= 1;
-        items[idx].question = 0
+        items[idx].question = 0;
         break;
       default:
         break;
@@ -178,7 +187,7 @@ export default class InputCheckList extends Component {
     if (items[idx].warning === true) {
       warn -= 1;
     }
-     if (items[idx].question > 0) {
+    if (items[idx].question > 0) {
       ask -= 1;
     }
     comm.splice(idx, 1);
@@ -199,7 +208,8 @@ export default class InputCheckList extends Component {
   classTextQuestion(question) {
     let textAsk = 'text-inactive';
     switch (question) {
-      case 1: case true:
+      case 1:
+      case true:
         textAsk = 'text-secondary';
         break;
       case 2:
@@ -288,45 +298,51 @@ export default class InputCheckList extends Component {
                       this.onChangeItemLabel(e, i);
                     }}
                   />
-                  <div className="input-group-append">
-                    <button
-                      type="button"
-                      className={classnames(
-                        'btn btn-input border-secondary-light bg-light',
-                        item.warning ? 'text-warning' : 'text-inactive'
-                      )}
-                      onClick={() => {
-                        this.onChangeItemWarning(i);
-                      }}
-                    >
-                      {this.props.warningLineIcon}
-                    </button>
-                  </div>
-                  <div className="input-group-append">
-                    <button
-                      type="button"
-                      className={classnames(
-                        'btn btn-input border-secondary-light bg-light',
-                        this.classTextQuestion(item.question)
-                      )}
-                      onClick={() => {
-                        this.onChangeItemQuestion(i);
-                      }}
-                    >
-                      {this.props.questionLineIcon}
-                    </button>
-                  </div>
-                  <div className="input-group-append">
-                    <button
-                      type="button"
-                      className={classnames('btn btn-input border-secondary-light bg-light')}
-                      onClick={() => this.onOpenItemComment(i)}
-                    >
-                      {item.comment && item.comment !== ''
-                        ? this.props.commentLineIcon
-                        : this.props.emptyCommentLineIcon}
-                    </button>
-                  </div>
+                  {this.props.warningLineIcon && (
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className={classnames(
+                          'btn btn-input border-secondary-light bg-light',
+                          item.warning ? 'text-warning' : 'text-inactive'
+                        )}
+                        onClick={() => {
+                          this.onChangeItemWarning(i);
+                        }}
+                      >
+                        {this.props.warningLineIcon}
+                      </button>
+                    </div>
+                  )}
+                  {this.props.questionLineIcon && (
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className={classnames(
+                          'btn btn-input border-secondary-light bg-light',
+                          this.classTextQuestion(item.question)
+                        )}
+                        onClick={() => {
+                          this.onChangeItemQuestion(i);
+                        }}
+                      >
+                        {this.props.questionLineIcon}
+                      </button>
+                    </div>
+                  )}
+                  {this.props.commentLineIcon && this.props.emptyCommentLineIcon && (
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className={classnames('btn btn-input border-secondary-light bg-light')}
+                        onClick={() => this.onOpenItemComment(i)}
+                      >
+                        {item.comment && item.comment !== ''
+                          ? this.props.commentLineIcon
+                          : this.props.emptyCommentLineIcon}
+                      </button>
+                    </div>
+                  )}
                   <div className="input-group-append">
                     <button
                       type="button"
