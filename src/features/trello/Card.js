@@ -43,7 +43,18 @@ class Card extends Component {
     } = this.props;
 
     return (
-      <article data-id={id} onDoubleClick={onClick} style={style} className={classnames('trello-card', className)}>
+      <article
+        data-id={id}
+        onDoubleClick={onClick}
+        onClick={evt => {
+          if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+          }
+        }}
+        style={style}
+        className={classnames('trello-card', className)}
+      >
         <Row>
           <Col size={3} textAlign="left">
             {onSelect && (
@@ -93,19 +104,13 @@ class Card extends Component {
               </div>
             </Col>
             <Col size={11} textAlign="left">
-              <div className="trello-card-deadline">
-                {deadline}
-              </div>
+              <div className="trello-card-deadline">{deadline}</div>
             </Col>
             <Col size={12} textAlign="left">
-              <div className="trello-card-progress">
-                {progress}
-              </div>
+              <div className="trello-card-progress">{progress}</div>
             </Col>
             <Col size={2} textAlign="left">
-              <div className="trello-card-comment text-secondary">
-                {comment}
-              </div>
+              <div className="trello-card-comment text-secondary">{comment}</div>
             </Col>
             <Col size={3} />
             <Col size={3} textAlign="left">

@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { MobileFooterMenu } from './';
+import { MobileHeader, MobileFooterMenu } from './';
 
 import { Container } from '../grid';
 
-const MobileFooterHeight = 60;
+const MobileHeaderHeight = 60;
+const MobileFooterHeight = 50;
+
+const headerMobileStyles = {
+  zIndex: '900',
+  position: 'fixed',
+  top: '0px',
+  right: '0px',
+  left: '0px',
+  height: `${MobileHeaderHeight}px`,
+  lineHeight: `${MobileHeaderHeight}px`,
+};
 
 const footerMobileStyles = {
   position: 'fixed',
@@ -13,7 +24,6 @@ const footerMobileStyles = {
   right: '0px',
   bottom: '0px',
   height: `${MobileFooterHeight}px`,
-  lineHeight: `${MobileFooterHeight}px`,
   zIndex: '870',
 };
 
@@ -60,9 +70,19 @@ export default class ResponsivePage extends Component {
   }
 
   render() {
+    if (!this.props.authenticated) {
+      contentMobileStyles.top = `${MobileFooterHeight}px`;
+    } else {
+      contentMobileStyles.top = '0px';
+    }
     return (
       <div id="page-root" className="full-page">
         <Container size="xs" className="display-mobile">
+          {!this.props.authenticated && (
+            <div style={headerMobileStyles}>
+              <MobileHeader {...this.props} />
+            </div>
+          )}
           <div style={{ ...contentMobileStyles }}>{this.props.children}</div>
           <div style={footerMobileStyles}>
             <MobileFooterMenu {...this.props} />

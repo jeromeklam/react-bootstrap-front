@@ -6,6 +6,7 @@ const mystyle = {
   position: 'absolute',
   bottom: '0',
   width: '100%',
+  height: '100%',
   zIndex: '800',
 };
 
@@ -15,19 +16,25 @@ const navLinkStyles = {
 
 export const MobileFooterMenu = props => (
   <div style={mystyle} className="bg-secondary text-light">
-    <div className="container">
-      <div className="row no-gutters">
+    <div className="container h-100">
+      <div className="mobile-footer-menu navbar h-100">
         {props.options.map((option) => {
         if (
           option.role === 'HOME' ||
           option.role === 'ABOUT' ||
+          option.role === 'MOBILESIGNOUT' ||
           (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
         ) {
           return (
-            <div className="col text-center">
+            <div className="mobile-footer-option text-center">
               <a
+                href={option.url}
                 className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
-                onClick={() => {
+                onClick={(evt) => {
+                  if (evt) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                  }
                   props.onNavigate(option.url);
                 }}
                 style={navLinkStyles}

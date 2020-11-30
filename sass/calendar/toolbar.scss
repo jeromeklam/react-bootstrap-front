@@ -10,10 +10,23 @@ $active-border: darken($btn-border, 12%);
   align-items: center;
   margin-bottom: 10px;
   font-size: 16px;
+  overflow: hidden;
 
   .rbc-toolbar-label {
     flex-grow:1;
     padding: 0 10px;
     text-align: center;
+  }
+
+  .rbc-btn-group {
+    .btn {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    &.rbc-btn-group-letter {
+      padding-left: 7px;
+      padding-right: 7px;
+    }
   }
 }

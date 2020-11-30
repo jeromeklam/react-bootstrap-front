@@ -4,8 +4,8 @@ const mystyle = {
   position: 'absolute',
   bottom: '0',
   width: '100%',
-  height: '60px',
-  lineHeight: '60px',
+  height: '40px',
+  lineHeight: '40px',
   zIndex: '800',
 };
 
