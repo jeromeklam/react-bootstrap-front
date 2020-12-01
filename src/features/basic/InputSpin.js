@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-const getValue = (minValue, maxValue, value) => {
-  const min = parseInt(minValue);
-  const max = parseInt(maxValue);
-  const val = parseInt(value);
+const getValue = (minValue, maxValue, value, step = 0, way = 0) => {
+  const min = parseInt(minValue, 10);
+  const max = parseInt(maxValue, 10);
+  let val = parseInt(value, 10);
+  if (step > 0 && way !== 0) {
+    val += step * way;
+  }
   let ret = null;
   if (value !== null) {
     if (val && val >= min && val <= max) {
@@ -31,6 +34,7 @@ export default class InputSpin extends Component {
     minValue: PropTypes.number.isRequired,
     maxValue: PropTypes.number.isRequired,
     step: PropTypes.number,
+    way: PropTypes.string,
     labelTop: PropTypes.bool,
     onChange: PropTypes.func,
     required: PropTypes.bool,
@@ -62,6 +66,7 @@ export default class InputSpin extends Component {
     warning: false,
     addEmpty: false,
     step: 1,
+    way: 1,
     value: 0,
   };
 
@@ -86,7 +91,9 @@ export default class InputSpin extends Component {
     const val = getValue(
       this.props.minValue,
       this.props.maxValue,
-      this.props.value + this.props.step,
+      this.props.value,
+      this.props.step,
+      this.props.way
     );
     const event = {
       target: {
@@ -101,7 +108,9 @@ export default class InputSpin extends Component {
     const val = getValue(
       this.props.minValue,
       this.props.maxValue,
-      this.props.value - this.props.step,
+      this.props.value,
+      this.props.step,
+      (-1 * this.props.way),
     );
     const event = {
       target: {

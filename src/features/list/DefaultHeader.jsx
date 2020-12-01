@@ -117,7 +117,7 @@ export default class DefaultHeader extends Component {
           filterButtonIcon = this.props.filterDefaultIcon;
           filterButtonTitle = this.props.t({
             id: 'rbf.list.header.filter.setDefaultFilter',
-            defaultMessage: 'Set default filers',
+            defaultMessage: 'Set default filters',
           });
           filterButtonAction = this.props.onClearFilters;
         }

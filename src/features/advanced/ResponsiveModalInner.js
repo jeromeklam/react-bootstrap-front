@@ -67,6 +67,7 @@ export default class ResponsiveModalInner extends Component {
     modalClassName: PropTypes.string,
     closeClassName: PropTypes.string,
     header: PropTypes.element,
+    zoom: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -77,6 +78,7 @@ export default class ResponsiveModalInner extends Component {
     modalClassName: 'bg-secondary text-light',
     closeClassName: 'text-light',
     header: null,
+    zoom: false,
   };
 
   constructor(props) {
@@ -144,7 +146,7 @@ export default class ResponsiveModalInner extends Component {
                   state
                 )}
               >
-                <WidthObserver>
+                <WidthObserver zoom={this.props.zoom}>
                   <div className="modal-content modal-shadow">
                     <div
                       className={classnames('modal-header pb-2', this.props.modalClassName)}
