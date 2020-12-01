@@ -31,7 +31,7 @@ export default function WidthObserver(props) {
       {({ width }) => {
         const mediaSize = detectWidth(width, props.prefix);
         return (
-          <div className={classnames(`${props.prefix}-responsive`, `${props.prefix}-${mediaSize}`, props.className)}>
+          <div className={classnames(`${props.prefix}-responsive`, `${props.prefix}-${mediaSize}`, props.className, props.zoom ? "modal-zoom" : "")}>
             {typeof props.children === 'function' ? props.children({ mediaSize }) : props.children}
           </div>
         );
@@ -44,9 +44,11 @@ WidthObserver.propTypes = {
   children: PropTypes.element,
   className: PropTypes.string,
   prefix: PropTypes.string,
+  zoom: PropTypes.bool,
 };
 WidthObserver.defaultProps = {
   children: null,
   className: '',
   prefix: 'container',
+  zoom: false,
 };
