@@ -1,3 +1,8 @@
-.input-check-list .input-group {
-  margin-bottom: 2px;
+.input-check-list {
+  .input-group {
+     margin-bottom: 2px;
+   }
+   .input-checklist-item {
+     font-size: 0.8rem;
+   }
 }

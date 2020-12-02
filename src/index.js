@@ -36,6 +36,10 @@ export { default as InputCheckList } from './features/basic/InputCheckList';
 export { default as InputCheckLists } from './features/basic/InputCheckLists';
 export { default as InputKeywords } from './features/basic/InputKeywords';
 
+export { default as InputGroup } from './features/basic/InputGroup';
+export { default as InputGroupText } from './features/basic/InputGroupText';
+export { default as InputGroupAppend } from './features/basic/InputGroupAppend';
+
 /**
  *******************************************************************************
  * Advanced

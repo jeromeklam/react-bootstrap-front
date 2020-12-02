@@ -275,7 +275,7 @@ export default class InputCheckList extends Component {
             <div className="row" key={`item-${i}`}>
               <div className="col-xs-w32">
                 <div className="input-group">
-                  <div className="input-group-prepend border border-secondary-light rounded-left">
+                  <div className="input-group-prepend border-secondary-light rounded-left">
                     <div
                       className="input-group-text"
                       onClick={() => {

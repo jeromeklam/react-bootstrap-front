@@ -73,7 +73,7 @@ class Card extends Component {
           <Col size={7} textAlign="left">
             <span className="text-secondary">{num}</span>
           </Col>
-          <Col size={19} textAlign="left">
+          <Col size={19} textAlign="right">
             {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.title} {...tag} />)}
           </Col>
           <Col size={3} textAlign="center">
