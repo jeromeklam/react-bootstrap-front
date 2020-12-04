@@ -33,4 +33,5 @@ export { default as DropdownMenuOption } from './DropdownMenuOption';
 export { default as DropdownMenuDivider } from './DropdownMenuDivider';
 export { default as InputKeyword } from './InputKeyword';
 export { default as InputKeywords } from './InputKeywords';
+export { default as InputWorkload } from './InputWorkload';
 export * from './InputChildren';
