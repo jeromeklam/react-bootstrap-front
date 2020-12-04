@@ -21,13 +21,13 @@ export const DefaultFooter = props => (
   <div style={mystyle} className="bg-light">
     <Container>
       <Row>
-        <Col size={28} />
+        <Col size={27} />
         <Col size={3} textAlign="right">
           <div className="text-dark" style={followStyle}>
             {props.t({ id: 'rbf.page.footer.followUs', defaultMessage: 'Follow us' })}
           </div>
         </Col>
-        <Col size={5}>
+        <Col size={4}>
           {props.options.map((option, i) => {
             if (option.role === 'SOCIAL') {
               return <span key={`footer-social-${i}`}>{option.icon}</span>;
@@ -35,7 +35,14 @@ export const DefaultFooter = props => (
             return null;
           })}
         </Col>
-        <Col size={1} />
+        <Col size={2}>
+          {props.options.map((option, i) => {
+            if (option.role === 'JVS') {
+              return <span key={`footer-jvs-${i}`}>{option.icon}</span>;
+            }
+            return null;
+          })}
+        </Col>
       </Row>
     </Container>
   </div>
