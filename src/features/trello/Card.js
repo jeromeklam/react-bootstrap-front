@@ -40,6 +40,7 @@ class Card extends Component {
       progress,
       comment,
       status,
+      attachment,
     } = this.props;
 
     return (
@@ -112,7 +113,9 @@ class Card extends Component {
             <Col size={2} textAlign="left">
               <div className="trello-card-comment text-secondary">{comment}</div>
             </Col>
-            <Col size={3} />
+            <Col size={2} textAlign="left">
+              <div className="trello-card-attachment text-secondary">{attachment}</div>
+            </Col>
             <Col size={3} textAlign="left">
               <div className="trello-card-status">{status}</div>
             </Col>
