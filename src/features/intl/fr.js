@@ -4,6 +4,7 @@ export const translations = {
   'rbf.trello.card.addLink.help': 'Nouvelle carte',
   'rbf.trello.card.addLink': 'Nouvelle carte',
   'rbf.trello.card.update': 'Modifier la carte',
+  'rbf.trello.card.remove': 'Détacher la carte',
   'rbf.trello.card.delete': 'Supprimer la carte',
   'rbf.trello.card.searchLink.help': 'Carte existante',
   'rbf.trello.card.searchLink': 'Carte existante',
