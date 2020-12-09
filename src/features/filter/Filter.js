@@ -143,7 +143,6 @@ export default class Filter {
       elt2.setFilterCrit(value, oper);
       this.data.filters.push(elt2);
     }
-    console.log("FK addFilter",this.data.filters);
     this.checkFilters();
   }
 
