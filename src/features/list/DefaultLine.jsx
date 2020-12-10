@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { HoverObserver, ResponsiveConfirm } from '../advanced';
 import { getObjectmemberValue } from '../helper';
-import { DefaultCol } from './';
+import { DefaultCol, ActionButton } from './';
 
 const duration = 500;
 
@@ -88,31 +88,10 @@ export default class DesktopListLine extends Component {
     super(props);
     this.state = {
       flipped: false,
-      confirm: false,
     };
     this.mouseLeave = this.mouseLeave.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
-    this.onConfirmDel = this.onConfirmDel.bind(this);
-    this.onModalClose = this.onModalClose.bind(this);
-    this.onConfirm = this.onConfirm.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
-  }
-
-  onConfirmDel() {
-    this.setState({ confirm: !this.state.confirm });
-  }
-
-  onModalClose() {
-    this.setState({ confirm: false });
-  }
-
-  onConfirm() {
-    this.setState({ confirm: false });
-    this.props.inlineActions.forEach((action) => {
-      if (action.role === 'DELETE') {
-        action.onClick(this.props.id);
-      }
-    });
   }
 
   mouseLeave() {
@@ -180,24 +159,7 @@ export default class DesktopListLine extends Component {
                     )) {
                       return (
                         <li className="nav-item" key={action.name}>
-                          <button
-                            type="button"
-                            disabled={action.disabled || false}
-                            title={action.label || ''}
-                            className={classnames('btn btn-inline', action.theme && `btn-${action.theme}`)}
-                            onClick={(evt) => {
-                              evt.stopPropagation();
-                              if (action.role === 'DELETE') {
-                                this.onConfirmDel();
-                              } else if (action.param === 'object') {
-                                action.onClick(item);
-                              } else {
-                                action.onClick(this.props.id);
-                              }
-                            }}
-                          >
-                            {action.icon}
-                          </button>
+                          <ActionButton action={action} item={item} />
                         </li>
                       );
                     }
@@ -207,7 +169,6 @@ export default class DesktopListLine extends Component {
             )}
           </div>
         </HoverObserver>
-        <ResponsiveConfirm show={this.state.confirm} onClose={this.onModalClose} onConfirm={this.onConfirm} />
         {this.props.mode === 'inline' && (
           <CSSTransition in={this.props.inlineOpenedId === this.props.id} timeout={duration}>
             {state => (
@@ -244,20 +205,7 @@ export default class DesktopListLine extends Component {
                             this.props.inlineActions.map((action, i) => (
                               <div key={`action-${i}`}>
                                 {action.role !== 'DELETE' && action.role !== 'MODIFY' && (
-                                  <button
-                                    type="button"
-                                    title={action.label || ''}
-                                    className={classnames('btn btn-left', action.active ? 'btn-primary' : 'btn-secondary')}
-                                    onClick={() => {
-                                      if (action.param === 'object') {
-                                        action.onClick(item);
-                                      } else {
-                                        action.onClick(this.props.id);
-                                      }
-                                    }}
-                                  >
-                                    {action.icon}
-                                  </button>
+                                  <ActionButton action={action} item={item} />
                                 )}
                               </div>
                             ))}
