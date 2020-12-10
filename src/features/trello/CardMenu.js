@@ -25,7 +25,14 @@ const CardMenu = props => (
             theme={option.theme || null}
           />
         ))}
-      {props.delete && <DropdownMenuDivider />}
+      {(props.delete || props.remove) && <DropdownMenuDivider />}
+      {props.remove && (
+        <DropdownMenuOption
+          onClick={props.onRemove}
+          label={props.t({ id: 'rbf.trello.card.remove', defaultMessage: 'Remove card' })}
+          theme="warning"
+        />
+      )}
       {props.delete && (
         <DropdownMenuOption
           onClick={props.onDelete}
@@ -38,7 +45,9 @@ const CardMenu = props => (
 );
 
 CardMenu.propTypes = {
+  remove: PropTypes.bool,
   delete: PropTypes.bool,
+  onRemove: PropTypes.func,
   onDelete: PropTypes.func,
   onUpdate: PropTypes.func,
   options: PropTypes.array,
@@ -47,7 +56,9 @@ CardMenu.propTypes = {
 };
 
 CardMenu.defaultProps = {
+  remove: true,
   delete: true,
+  onRemove: () => {},
   onDelete: () => {},
   onUpdate: () => {},
   options: [],
