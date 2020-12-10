@@ -4,7 +4,6 @@ import 'core-js/features/global-this';
  * Basic styles
  *******************************************************************************
  */
-export { default as CookieConsent } from './features/advanced/CookieConsent';
 export { default as Dropdown } from './features/basic/Dropdown';
 export { default as DropdownMenu } from './features/basic/DropdownMenu';
 export { default as DropdownMenuDivider } from './features/basic/DropdownMenuDivider';
@@ -42,6 +41,7 @@ export { default as InputWorkload } from './features/basic/InputWorkload';
  * Advanced
  *******************************************************************************
  */
+export { default as CookieConsent } from './features/advanced/CookieConsent';
 export { default as DropdownWrapper } from './features/advanced/DropdownWrapper';
 export { default as Follower } from './features/advanced/Follower';
 export { default as HoverObserver } from './features/advanced/HoverObserver';
@@ -50,6 +50,13 @@ export * from './features/advanced/ResponsiveConfirm';
 export * from './features/advanced/ResponsiveForm';
 export * from './features/advanced/ResponsiveModal';
 export * from './features/advanced/ResponsiveQuickSearch';
+export { default as SvgMask } from './features/advanced/SvgMask';
+export { default as SvgTimer } from './features/advanced/SvgTimer';
+export { default as SvgPlay } from './features/advanced/SvgPlay';
+export { default as SvgCheckbox } from './features/advanced/SvgCheckbox';
+export { default as SvgPrevious } from './features/advanced/SvgPrevious';
+export { default as SvgNext } from './features/advanced/SvgNext';
+export { default as SvgToday } from './features/advanced/SvgToday';
 export { default as WidthObserver } from './features/advanced/WidthObserver';
 
 /**
