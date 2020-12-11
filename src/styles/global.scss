@@ -416,3 +416,7 @@ hr {
 .input-group .btn-outline-secondary {
   border-color: theme-color('secondary') !important;
 }
+
+.border-secondary-light {
+  border: 1px solid theme-color('sedondary-light');
+}

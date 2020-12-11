@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Portal } from '../advanced';
@@ -68,7 +69,6 @@ export default class Dropdown extends Component {
   render() {
     let divStyle = {
       position: 'absolute',
-      padding: '4px',
       maxHeight: this.props.maxHeight,
       overflow: 'hidden',
     };
@@ -89,7 +89,7 @@ export default class Dropdown extends Component {
     } catch (ex) { console.log(ex); }
     return (
       <Portal>
-        <div className={this.props.className} style={divStyle}>
+        <div className={classnames('rbf-dropdown', this.props.className)} style={divStyle}>
           <div className="custom-scrollbar" style={{ maxHeight: this.props.maxHeight, overflowX: 'hidden', overflowY: 'auto' }}>
             {this.props.children}
           </div>
