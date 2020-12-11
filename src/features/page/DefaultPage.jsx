@@ -199,6 +199,7 @@ export default class ResponsivePage extends Component {
                     <DefaultSidebar {...this.props} open={!this.state.menuSideMini} onOpenSide={this.onOpenSide} />
                   </div>
                   <div
+                    className="rbf-page-content"
                     style={{
                       ...contentDefaultStyles,
                       ...contentStyles[state],
