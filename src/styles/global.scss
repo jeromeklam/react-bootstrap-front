@@ -417,6 +417,14 @@ hr {
   border-color: theme-color('secondary') !important;
 }
 
+.nav-tabs {
+  border-color: theme-color('secondary-light');
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-light');
+}
+
 .border-secondary-light {
   border: 1px solid theme-color('sedondary-light');
 }

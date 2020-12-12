@@ -125,13 +125,15 @@ export const MobileLineCol = props => {
   );
 };
 
-MobileLineCol.defaultProps = {
-  mob_size: 36,
-};
-
 MobileLineCol.propTypes = {
   content: PropTypes.string.isRequired,
   first: PropTypes.bool.isRequired,
   last: PropTypes.bool.isRequired,
   mob_size: PropTypes.number,
+  money: PropTypes.string,
+};
+
+MobileLineCol.defaultProps = {
+  mob_size: 36,
+  money: 'EUR',
 };
