@@ -7,7 +7,7 @@ import { getSizeFromWidth } from '../helper';
 import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
 
-const duration = 500;
+const duration = 200;
 
 const fullDiv = {
   position: 'absolute',
@@ -76,8 +76,8 @@ const titleStyle = {
 };
 
 const listTransitionStyles = {
-  entering: { left: '0px', position: 'absolute', right: '1024px' },
-  entered: { left: '0px', position: 'absolute', right: '1024px' },
+  entering: { left: '0px', position: 'absolute', right: '1200px' },
+  entered: { left: '0px', position: 'absolute', right: '1200px' },
   exiting: { left: '0px', position: 'absolute', right: '0px' },
   exited: { left: '0px', position: 'absolute', right: '0px' },
 };
@@ -86,7 +86,7 @@ const inlineStyle = {
   overflowY: 'auto',
   overflowX: 'hidden',
   right: '0px',
-  width: '1024px',
+  width: '1200px',
   bottom: '0px',
   position: 'absolute',
   top: '50px',
@@ -97,8 +97,8 @@ const inlineStyle = {
 const inlineTransitionStyles = {
   entering: { right: '0px' },
   entered: { right: '0px' },
-  exiting: { right: '-1024px' },
-  exited: { right: '-1024px' },
+  exiting: { right: '-1200px' },
+  exited: { right: '-1200px' },
 };
 
 export default class DefaultList extends Component {

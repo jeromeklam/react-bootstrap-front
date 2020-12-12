@@ -5,6 +5,7 @@ import { HighlightArrow, HighlightClose } from './';
 import reducer from './redux/reducer';
 import initialState from './redux/initialState';
 import {
+  flushHighlight,
   addHighlight,
   startHighlight,
   stopHighlight,
@@ -99,6 +100,7 @@ function HighlightButton(props) {
             e.preventDefault();
             e.stopPropagation();
           }
+          dispatch(flushHighlight());
           if (!state.started) {
             const nodes = document.querySelectorAll('.tour-highlight');
             nodes.forEach(node => {

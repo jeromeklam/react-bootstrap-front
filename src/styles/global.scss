@@ -416,3 +416,11 @@ hr {
 .input-group .btn-outline-secondary {
   border-color: theme-color('secondary') !important;
 }
+
+.nav-tabs {
+  border-color: theme-color('secondary-light');
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-light');
+}

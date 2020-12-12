@@ -6,6 +6,7 @@ import { reducer as stopHighlightReducer } from './stopHighlight';
 import { reducer as nextHighlightReducer } from './nextHighlight';
 import { reducer as prevHighlightReducer } from './prevHighlight';
 import { reducer as startHighlightTimerReducer } from './startHighlightTimer';
+import { reducer as flushHighlightReducer } from './flushHighlight';
 
 const reducers = [
   addHighlightReducer,
@@ -15,6 +16,7 @@ const reducers = [
   nextHighlightReducer,
   prevHighlightReducer,
   startHighlightTimerReducer,
+  flushHighlightReducer,
 ];
 
 export default function reducer(state = initialState, action) {

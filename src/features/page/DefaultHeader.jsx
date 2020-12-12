@@ -36,6 +36,7 @@ export class DefaultHeader extends Component {
     accountOpened: PropTypes.element,
     menuUserOpen: PropTypes.bool.isRequired,
     desktopHeaderHeight: PropTypes.number.isRequired,
+    t: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -90,15 +91,22 @@ export class DefaultHeader extends Component {
     }
     return (
       <div className="default-header bg-light pl-2 overflow-none">
-        {this.props.headerBackgroundSrc && <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />}
+        {this.props.headerBackgroundSrc && (
+          <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />
+        )}
         <nav
           style={navStyles}
-          className={classnames('default-header-menu navbar navbar-expand-lg navbar-light border-bottom row', !this.props.headerBackgroundSrc && 'bg-light')}
+          className={classnames(
+            'default-header-menu navbar navbar-expand-lg navbar-light border-bottom row',
+            !this.props.headerBackgroundSrc && 'bg-light'
+          )}
         >
           <div className="col-xs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             {this.props.authenticated && this.props.onToggleSide && (
               <button className="btn btn-primary" onClick={this.props.onToggleSide} id="menu-toggle">
-                {this.props.menuIcon}
+                <Highlight theme="NAV" title={this.props.t({ id: 'rbf.page.header.menuIcon', defaultMessage: '' })}>
+                  {this.props.menuIcon}
+                </Highlight>
               </button>
             )}
             &nbsp;&nbsp;
@@ -106,38 +114,58 @@ export class DefaultHeader extends Component {
           </div>
           <div className="col-xs-w20 text-right" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
             <ul className="navbar-nav justify-content-end">
-              {this.props.badges && this.props.badges.map(oneBadge => (
-                <li key={'badge-' + oneBadge.name} className="nav-badge nav-item">
-                  <button className="btn btn-light" onClick={oneBadge.onClick || null}>
-                    {oneBadge.icon}
-                    <span className={classnames('badge', oneBadge.text && `text-${oneBadge.text}`, oneBadge.color && `badge-${oneBadge.color}`)}>{oneBadge.count}</span>
-                  </button>
-                </li>
-              ))}
-              {(this.props.badges && this.props.badges.length > 0) && (
-                <div className="pr-4" />
-              )}
-              {this.props.onToggleUser && (
+              {this.props.badges &&
+                this.props.badges.map(oneBadge => (
+                  <li key={'badge-' + oneBadge.name} className="nav-badge nav-item">
+                    <button className="btn btn-light" onClick={oneBadge.onClick || null}>
+                      {oneBadge.icon}
+                      <span
+                        className={classnames(
+                          'badge',
+                          oneBadge.text && `text-${oneBadge.text}`,
+                          oneBadge.color && `badge-${oneBadge.color}`
+                        )}
+                      >
+                        {oneBadge.count}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              {this.props.badges && this.props.badges.length > 0 && <div className="pr-4" />}
+              {this.props.onToggleUser && this.props.accountClosed && (
                 <li className="nav-item">
-                  <button className="btn btn-light text-secondary" onClick={this.props.onToggleUser}>
-                    <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
-                  </button>
+                  <Highlight
+                    theme="NAV"
+                    title={this.props.t({ id: 'rbf.page.header.userMenu.help', defaultMessage: 'User menu' })}
+                  >
+                    <button className="btn btn-light text-secondary" onClick={this.props.onToggleUser}>
+                      <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
+                    </button>
+                  </Highlight>
                 </li>
               )}
               {this.props.locales && (
                 <li className="nav-item">
                   <div className="btn-group">
-                    <button
-                      type="button"
-                      className="btn btn-light text-secondary dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      onClick={this.onToggleFlag}
-                      ref={this.state.myRef}
+                    <Highlight
+                      theme="NAV"
+                      title={this.props.t({
+                        id: 'rbf.page.header.langMenu.help',
+                        defaultMessage: 'Change current lang',
+                      })}
                     >
-                      <Flag code={current.code} height={24} />
-                    </button>
+                      <button
+                        type="button"
+                        className="btn btn-light text-secondary dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        onClick={this.onToggleFlag}
+                        ref={this.state.myRef}
+                      >
+                        <Flag code={current.code} height={24} />
+                      </button>
+                    </Highlight>
                     {this.state.flagsOpen && (
                       <Dropdown myRef={this.state.myRef} onClose={this.onCloseFlag} className="bg-light text-secondary">
                         {Array.isArray(this.props.locales) &&
@@ -166,22 +194,30 @@ export class DefaultHeader extends Component {
               {this.props.realms && Array.isArray(this.props.realms) && this.props.realms.length > 0 && (
                 <li className="nav-item">
                   <div className="btn-group">
-                    <button
-                      type="button"
-                      className="btn btn-light text-secondary dropdown-toggle"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      onClick={this.onToggleRealm}
-                      ref={this.state.myRef2}
-                    >
-                      {this.props.realms.map(realm => {
-                        if (parseInt(realm.value, 10) === parseInt(this.props.currentRealm, 10)) {
-                          return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
-                        }
-                        return null;
+                    <Highlight
+                      theme="NAV"
+                      title={this.props.t({
+                        id: 'rbf.page.header.groupMenu.help',
+                        defaultMessage: 'Change current group',
                       })}
-                    </button>
+                    >
+                      <button
+                        type="button"
+                        className="btn btn-light text-secondary dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        onClick={this.onToggleRealm}
+                        ref={this.state.myRef2}
+                      >
+                        {this.props.realms.map(realm => {
+                          if (parseInt(realm.value, 10) === parseInt(this.props.currentRealm, 10)) {
+                            return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
+                          }
+                          return null;
+                        })}
+                      </button>
+                    </Highlight>
                     {this.state.realmsOpen && (
                       <Dropdown
                         myRef={this.state.myRef2}
