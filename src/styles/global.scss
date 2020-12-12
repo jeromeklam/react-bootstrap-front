@@ -424,3 +424,7 @@ hr {
 .nav-item .nav-link {
   color: theme-color('secondary-light');
 }
+
+.border-secondary-light {
+  border: 1px solid theme-color('sedondary-light');
+}

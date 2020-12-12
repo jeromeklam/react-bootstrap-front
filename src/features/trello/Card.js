@@ -9,6 +9,13 @@ import { Row, Col } from '../grid';
 import { SvgCheckbox } from '../advanced';
 
 class Card extends Component {
+  onRemove = e => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    this.props.onRemove();
+  };
   onDelete = e => {
     if (e) {
       e.stopPropagation();
@@ -19,6 +26,7 @@ class Card extends Component {
 
   render() {
     const {
+      showRemoveButton,
       showDeleteButton,
       style,
       onClick,
@@ -40,6 +48,7 @@ class Card extends Component {
       progress,
       comment,
       status,
+      attachment,
     } = this.props;
 
     return (
@@ -80,7 +89,7 @@ class Card extends Component {
             <div style={{ height: 'px' }}>{user}</div>
           </Col>
           <Col size={4} textAlign="right">
-            <CardMenu delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} t={t} />
+            <CardMenu remove={showRemoveButton} delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} onRemove={this.onRemove} t={t} />
           </Col>
         </Row>
         <Row>
@@ -112,7 +121,9 @@ class Card extends Component {
             <Col size={2} textAlign="left">
               <div className="trello-card-comment text-secondary">{comment}</div>
             </Col>
-            <Col size={3} />
+            <Col size={2} textAlign="left">
+              <div className="trello-card-attachment text-secondary">{attachment}</div>
+            </Col>
             <Col size={3} textAlign="left">
               <div className="trello-card-status">{status}</div>
             </Col>
@@ -124,6 +135,7 @@ class Card extends Component {
 }
 
 Card.propTypes = {
+  showRemoveButton: PropTypes.bool,
   showDeleteButton: PropTypes.bool,
   onDelete: PropTypes.func,
   onClick: PropTypes.func,
@@ -147,6 +159,7 @@ Card.propTypes = {
 };
 
 Card.defaultProps = {
+  showRemoveButton: true,
   showDeleteButton: true,
   onDelete: () => {},
   onClick: () => {},

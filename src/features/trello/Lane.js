@@ -78,16 +78,26 @@ class Lane extends Component {
   }
 
   removeCard = cardId => {
-    if (this.props.onBeforeCardDelete && typeof this.props.onBeforeCardDelete === 'function') {
-      this.props.onBeforeCardDelete(() => {
-        this.props.onCardDelete && this.props.onCardDelete(cardId, this.props.id);
+    if (this.props.onBeforeCardRemove && typeof this.props.onBeforeCardRemove === 'function') {
+      this.props.onBeforeCardRemove(() => {
+        this.props.onCardRemove && this.props.onCardRemove(cardId, this.props.id);
         this.props.actions.removeCard({ laneId: this.props.id, cardId: cardId });
       });
     } else {
-      this.props.onCardDelete && this.props.onCardDelete(cardId, this.props.id);
+      this.props.onCardRemove && this.props.onCardRemove(cardId, this.props.id);
       this.props.actions.removeCard({ laneId: this.props.id, cardId: cardId });
     }
   };
+
+  deleteCard = featId => {
+    if (this.props.onBeforeCardDelete && typeof this.props.onBeforeCardDelete === 'function') {
+      this.props.onBeforeCardDelete(() => {
+        this.props.onCardDelete && this.props.onCardDelete(featId);
+      });
+    } else {
+      this.props.onCardDelete && this.props.onCardDelete(featId);
+    }
+  }
 
   handleCardClick = (e, card) => {
     const { onCardClick } = this.props;
@@ -165,6 +175,7 @@ class Lane extends Component {
       cards,
       laneSortFunction,
       editable,
+      hideCardRemoveIcon,
       hideCardDeleteIcon,
       cardDraggable,
       cardDragClass,
@@ -183,16 +194,19 @@ class Lane extends Component {
     const showableCards = collapsed ? [] : cards;
 
     const cardList = this.sortCards(showableCards, laneSortFunction).map((card, idx) => {
-      const onDeleteCard = () => this.removeCard(card.id);
+      const onRemoveCard = () => this.removeCard(card.id);
+      const onDeleteCard = () => this.deleteCard(card.featId);
       const cardToRender = (
         <Card
           key={card.id}
           index={idx}
           style={card.style || cardStyle}
           className="react-trello-card"
+          onRemove={onRemoveCard}
           onDelete={onDeleteCard}
           onSelect={onCardSelect}
           onClick={e => this.handleCardClick(e, card)}
+          showRemoveButton={!hideCardRemoveIcon}
           showDeleteButton={!hideCardDeleteIcon}
           tagStyle={tagStyle}
           cardDraggable={cardDraggable}
@@ -289,6 +303,7 @@ class Lane extends Component {
       onLaneScroll,
       onCardClick,
       onCardAdd,
+      onBeforeCardRemove,
       onBeforeCardDelete,
       onCardDelete,
       onLaneDelete,
@@ -334,7 +349,9 @@ Lane.propTypes = {
   droppable: PropTypes.bool,
   onCardMoveAcrossLanes: PropTypes.func,
   onCardClick: PropTypes.func,
+  onBeforeCardRemove: PropTypes.func,
   onBeforeCardDelete: PropTypes.func,
+  onCardRemove: PropTypes.func,
   onCardDelete: PropTypes.func,
   onCardAdd: PropTypes.func,
   onLaneDelete: PropTypes.func,

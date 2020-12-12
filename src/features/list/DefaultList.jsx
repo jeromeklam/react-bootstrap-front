@@ -101,6 +101,10 @@ const inlineTransitionStyles = {
   exited: { right: '-1200px' },
 };
 
+const rightInlineButtonsStyle = {
+  position: 'fixed',
+}
+
 export default class DefaultList extends Component {
   static propTypes = {
     cols: PropTypes.element.isRequired,
@@ -274,7 +278,7 @@ export default class DefaultList extends Component {
                             <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
                           </div>
                           <div className="col-xs-w3 text-center">
-                            <nav className="text-center pt-2">
+                            <nav className="text-center pt-2" style={rightInlineButtonsStyle}>
                               <button
                                 type="button"
                                 title="close"
