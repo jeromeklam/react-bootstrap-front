@@ -205,7 +205,7 @@ export default class DesktopListLine extends Component {
                             this.props.inlineActions.map((action, i) => (
                               <div key={`action-${i}`}>
                                 {action.role !== 'DELETE' && action.role !== 'MODIFY' && (
-                                  <ActionButton action={action} item={item} />
+                                  <ActionButton action={action} item={item} classname='btn btn-left'/>
                                 )}
                               </div>
                             ))}
