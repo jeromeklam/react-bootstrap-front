@@ -142,7 +142,7 @@ HighlightButton.propTypes = {
 HighlightButton.defaultProps = {
   children: PropTypes.idRequired,
   className: '',
-  delay: 5,
+  delay: 3,
 };
 
 export default HighlightButton;

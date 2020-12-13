@@ -9,12 +9,10 @@ export const DefaultFooter = props => (
       <div className="mt-2 text-center text-primary">{props.loader ? props.loader : <Loading3Dots />}</div>
     ) : (
       <div>
-        {props.items.length > 0 && (
-          <div>{props.loadMoreFinish ? <LoadComplete /> : <LoadMore onLoadMore={props.onLoadMore} />}</div>
-        )}
+        {props.items.length > 0 && <div>{props.loadMoreFinish ? <LoadComplete /> : <LoadMore {...props} />}</div>}
       </div>
     )}
-    {props.loadMoreError && <LoadError />}
+    {props.loadMoreError && <LoadError {...props} />}
   </div>
 );
 

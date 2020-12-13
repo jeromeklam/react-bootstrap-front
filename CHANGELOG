@@ -1,3 +1,12 @@
+# 3.2.0 : --/--/202-
+
+* List : 
+    * Multiple width in right mode depending on container size
+    * Mobile Line in normal mode with hover on menu
+    * InlineAction active
+    * ScollTO element if bot in viewPort in right mode
+* Nex functions in helpers
+
 # 3.1.0 : 11/12/2020
 
 * Corrections et bugs divers

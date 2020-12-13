@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import Flag from 'react-world-flags';
-import { Dropdown } from '../basic';
+import { Dropdown, DropdownMenu, DropdownMenuOption } from '../basic';
 import { Highlight, HighlightButton } from '../tour';
 
 const navStyles = {
@@ -168,24 +168,25 @@ export class DefaultHeader extends Component {
                     </Highlight>
                     {this.state.flagsOpen && (
                       <Dropdown myRef={this.state.myRef} onClose={this.onCloseFlag} className="bg-light text-secondary">
-                        {Array.isArray(this.props.locales) &&
-                          this.props.locales.map(lang => {
-                            if (lang.locale !== this.props.currentLocale) {
-                              return (
-                                <button
-                                  key={`header-button-${lang.code}`}
-                                  className="btn"
-                                  onClick={() => {
-                                    this.onCloseFlag();
-                                    this.props.onLocale(lang.locale);
-                                  }}
-                                >
-                                  <Flag code={lang.code} height={24} />
-                                </button>
-                              );
-                            }
-                            return null;
-                          })}
+                        <DropdownMenu>
+                          {Array.isArray(this.props.locales) &&
+                            this.props.locales.map(lang => {
+                              if (lang.locale !== this.props.currentLocale) {
+                                return (
+                                  <DropdownMenuOption
+                                    key={`header-button-${lang.code}`}
+                                    onClick={() => {
+                                      this.onCloseFlag();
+                                      this.props.onLocale(lang.locale);
+                                    }}
+                                  >
+                                    <Flag code={lang.code} height={24} />
+                                  </DropdownMenuOption>
+                                );
+                              }
+                              return null;
+                            })}
+                        </DropdownMenu>
                       </Dropdown>
                     )}
                   </div>
@@ -224,19 +225,21 @@ export class DefaultHeader extends Component {
                         onClose={this.onCloseRealm}
                         className="bg-light text-secondary"
                       >
-                        {Array.isArray(this.props.realms) &&
-                          this.props.realms.map(realm => (
-                            <button
-                              key={`header-selrealm-${realm.value}`}
-                              className="btn btn-light w-100 text-nowrap"
-                              onClick={() => {
-                                this.onCloseRealm();
-                                this.props.onRealmSelect(realm.value);
-                              }}
-                            >
-                              <span>{realm.label}</span>
-                            </button>
-                          ))}
+                        <DropdownMenu>
+                          {Array.isArray(this.props.realms) &&
+                            this.props.realms.map(realm => (
+                              <DropdownMenuOption
+                                key={`header-selrealm-${realm.value}`}
+                                className="text-nowrap"
+                                onClick={() => {
+                                  this.onCloseRealm();
+                                  this.props.onRealmSelect(realm.value);
+                                }}
+                              >
+                                <span>{realm.label}</span>
+                              </DropdownMenuOption>
+                            ))}
+                        </DropdownMenu>
                       </Dropdown>
                     )}
                   </div>

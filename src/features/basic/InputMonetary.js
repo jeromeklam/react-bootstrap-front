@@ -77,8 +77,6 @@ export default function InputMonetary(props) {
           {props.onMoneySwitch ? props.rateValue : props.inputMoney}
         </InputGroupText>
       </InputGroupAppend>
-      {props.error && <div className="invalid-feedback">{props.error}</div>}
-      {props.warning && <div className="invalid-feedback">{props.warning}</div>}
     </InputGroup>
   );
 }

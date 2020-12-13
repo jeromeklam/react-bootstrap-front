@@ -1,11 +1,14 @@
-.list-mobile-line {
+.rbf-list-mobile-line {
+  .rbf-list-mobile-line-header-title {
+    font-weight: bold;
+  }
   .card-body {
     background-color: white;
   }
 }
 
 @media (max-width: 768px) {
-  .list-mobile-line {
+  .rbf-list-mobile-line {
     .card-header {
       padding: 0.75rem 0.25rem;
     }

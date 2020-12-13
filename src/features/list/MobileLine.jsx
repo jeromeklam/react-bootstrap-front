@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { MobileLineCol } from './';
+import { ActionButton, MobileLineCol, getCardTitle } from './';
 
+import { HoverObserver } from '../advanced';
 import { getObjectmemberValue } from '../helper';
 import { Row } from '../grid';
 
@@ -13,101 +14,97 @@ const navstyle = {
   float: 'right',
 };
 
-const getCardTitle = (cols, item) => {
-  const pos = cols.findIndex(elem => elem.card && elem.card.role && elem.card.role === 'TITLE');
-  if (pos >= 0) {
-    if (typeof cols[pos].card.fDisplay === 'function') {
-      return cols[pos].card.fDisplay(item);
-    }
-    if (typeof cols[pos].fDisplay === 'function') {
-      return cols[pos].fDisplay(item);
-    }
-    const col = cols[pos].col;
-    if (item[col]) {
-      return item[col];
-    }
-  }
-  return '';
-};
+export class MobileLine extends Component {
+  static propTypes = {
+    className: PropTypes.string,
+    cols: PropTypes.element.isRequired,
+    hideMenu: PropTypes.bool,
+    id: PropTypes.string.isRequired,
+    item: PropTypes.element.isRequired,
+    title: PropTypes.string.isRequired,
+  };
 
-export const MobileLine = props => (
-  <div className={classnames('row list-mobile-line', props.className)}>
-    <div className="col-xs-w36">
+  static defaultProps = {
+    className: '',
+    hideMenu: false,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      flipped: !props.hideMenu || false,
+    };
+    this.mouseLeave = this.mouseLeave.bind(this);
+    this.mouseEnter = this.mouseEnter.bind(this);
+  }
+  mouseLeave() {
+    this.setState({ flipped: false });
+  }
+
+  mouseEnter() {
+    this.setState({ flipped: true });
+  }
+
+  render() {
+    return (
       <div
-        className="card bg-secondary-light m-2"
-        onClick={() => {
-          props.onClick(props.item);
-        }}
+        id={`rbf-list-mobile-line${this.props.item.id}`}
+        className={classnames('row rbf-list-mobile-line', this.props.className)}
       >
-        <div
-          className={classnames(
-            'card-header',
-            props.inlineOpenedId === props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
-          )}
-        >
-          <span className="pl-2">{getCardTitle(props.cols, props.item)}</span>
-          <ul style={navstyle} className="nav nav-pills justify-content-end">
-            {props.inlineActions &&
-              props.inlineActions.map(action => (
-                <li className="nav-item" key={action.name}>
-                  <button
-                    type="button"
-                    disabled={action.disabled || false}
-                    title={action.label || ''}
-                    className={classnames('btn btn-inline', action.theme && `btn-${action.theme}`)}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      if (action.role === 'DELETE') {
-                        this.onConfirmDel();
-                      } else if (action.param === 'object') {
-                        action.onClick(props.item);
-                      } else {
-                        action.onClick(props.id);
-                      }
-                    }}
-                  >
-                    {action.icon}
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </div>
-        <div className="card-body p-2">
-          <Row>
-            {props.cols.map((oneCol, i) => {
-              if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
-                const line = { ...oneCol, id: props.id };
-                const content = getObjectmemberValue(props.item, oneCol.col);
-                const first = i === 0;
-                const last = i === props.cols.length - 1;
-                return (
-                  <MobileLineCol
-                    key={`col-${oneCol.col}`}
-                    first={first}
-                    last={last}
-                    content={content}
-                    item={props.item}
-                    {...line}
-                  />
-                );
-              }
-              return null;
-            })}
-          </Row>
+        <div className="col-xs-w36">
+          <div
+            className="card bg-secondary-light m-2"
+            onClick={() => {
+              this.props.onClick(this.props.item);
+            }}
+          >
+            <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+              <div
+                className={classnames(
+                  'card-header rbf-list-mobile-line-header',
+                  this.props.inlineOpenedId === this.props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
+                )}
+              >
+                <span className="rbf-list-mobile-line-header-title">{getCardTitle(this.props.cols, this.props.item)}</span>
+
+                {(this.state.flipped || this.props.inlineOpenedId === this.props.id) && (
+                  <ul style={navstyle} className="nav nav-pills justify-content-end">
+                    {this.props.inlineActions &&
+                      this.props.inlineActions.map(action => (
+                        <li className="nav-item" key={action.name}>
+                          <ActionButton action={action} item={this.props.item} />
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            </HoverObserver>
+            <div className="card-body p-2">
+              <Row>
+                {this.props.cols.map((oneCol, i) => {
+                  if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
+                    const line = { ...oneCol, id: this.props.id };
+                    const content = getObjectmemberValue(this.props.item, oneCol.col);
+                    const first = i === 0;
+                    const last = i === this.props.cols.length - 1;
+                    return (
+                      <MobileLineCol
+                        key={`col-${oneCol.col}`}
+                        first={first}
+                        last={last}
+                        content={content}
+                        item={this.props.item}
+                        {...line}
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </Row>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-);
-
-MobileLine.propTypes = {
-  className: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  item: PropTypes.element.isRequired,
-  cols: PropTypes.element.isRequired,
-  id: PropTypes.string.isRequired,
-};
-
-MobileLine.defaultProps = {
-  className: '',
-};
+    );
+  }
+}

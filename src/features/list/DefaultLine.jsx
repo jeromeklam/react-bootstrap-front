@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
-import { HoverObserver, ResponsiveConfirm } from '../advanced';
+import { HoverObserver } from '../advanced';
 import { getObjectmemberValue } from '../helper';
 import { DefaultCol, ActionButton } from './';
 

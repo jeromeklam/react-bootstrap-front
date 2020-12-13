@@ -184,13 +184,25 @@ export default class DefaultHeader extends Component {
             <ul className="nav justify-content-end">
               {this.props.counter && (
                 <li className="nav-item pr-2">
-                  <span className="default-list-header-counter" style={counterStyle}>{this.props.counter}</span>
+                  <Highlight
+                    position="bottom"
+                    theme="LIST"
+                    title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
+                  >
+                    <span className="default-list-header-counter" style={counterStyle}>
+                      {this.props.counter}
+                    </span>
+                  </Highlight>
                 </li>
               )}
               {this.props.selectMenu && (
                 <li className="nav-item">
                   <div className="dropdown">
-                    <Highlight position="bottom" theme="LIST" title="Informations sur la sélection en cours">
+                    <Highlight
+                      position="bottom"
+                      theme="LIST"
+                      title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
+                    >
                       <button
                         className="btn btn-secondary dropdown-toggle"
                         ref={this.state.myRef}
