@@ -103,7 +103,7 @@ export default class DesktopListLine extends Component {
   }
 
   handleDoubleClick() {
-    this.props.inlineActions.forEach((action) => {
+    this.props.inlineActions.forEach(action => {
       if (action.role === 'MODIFY') {
         action.onClick(this.props.id);
       }
@@ -118,13 +118,15 @@ export default class DesktopListLine extends Component {
         <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
           <div
             onDoubleClick={this.handleDoubleClick}
-            onClick={() => {this.props.onClick(item);}}
+            onClick={() => {
+              this.props.onClick(item);
+            }}
             style={mystyle}
             className={classnames(
               'default-list-wrapper row row-line-separator border-secondary-light',
               this.props.fClassName && this.props.fClassName(item),
               this.props.inlineOpenedId === this.props.id ? 'bg-secondary text-light pt-2 pb-0' : 'text-dark',
-              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover',
+              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover'
             )}
           >
             {this.props.cols.map((oneCol, i) => {
@@ -147,19 +149,20 @@ export default class DesktopListLine extends Component {
             {highlight && (
               <ul style={navstyle} className="nav justify-content-end">
                 {this.props.inlineActions &&
-                  this.props.inlineActions.map((action) => {
+                  this.props.inlineActions.map(action => {
                     let display = true;
                     if (typeof action.fDisplay === 'function') {
-                       display = action.fDisplay(this.props.item);
+                      display = action.fDisplay(this.props.item);
                     }
-                    if ((display) && (
-                      this.props.inlineOpenedId !== this.props.id ||
-                      action.role === 'DELETE' ||
-                      action.role === 'MODIFY'
-                    )) {
+                    if (
+                      display &&
+                      (this.props.inlineOpenedId !== this.props.id ||
+                        action.role === 'DELETE' ||
+                        action.role === 'MODIFY')
+                    ) {
                       return (
                         <li className="nav-item" key={action.name}>
-                          <ActionButton action={action} item={item} />
+                          <ActionButton action={action} item={item} className={classnames('btn-inline',action.theme && `btn-${action.theme}`)} />
                         </li>
                       );
                     }
@@ -194,7 +197,7 @@ export default class DesktopListLine extends Component {
                             type="button"
                             title="Fermer"
                             className={classnames('btn btn-left', 'btn-secondary')}
-                            onClick={(evt) => {
+                            onClick={evt => {
                               evt.stopPropagation();
                               this.props.onClick(null);
                             }}
@@ -204,8 +207,19 @@ export default class DesktopListLine extends Component {
                           {this.props.inlineActions &&
                             this.props.inlineActions.map((action, i) => (
                               <div key={`action-${i}`}>
-                                {action.role !== 'DELETE' && action.role !== 'MODIFY' && (
-                                  <ActionButton action={action} item={item} classname='btn btn-left'/>
+                                {(action.role === 'OTHER' || action.role === 'DETAIL') && (
+                                  <ActionButton
+                                    action={action}
+                                    item={item}
+                                    className={classnames(
+                                      'btn btn-left',
+                                      action.name === this.props.currentInline
+                                        ? 'btn-primary'
+                                        : action.theme
+                                        ? `btn-${action.theme}`
+                                        : 'btn-secondary'
+                                    )}
+                                  />
                                 )}
                               </div>
                             ))}

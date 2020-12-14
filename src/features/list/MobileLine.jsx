@@ -72,7 +72,7 @@ export class MobileLine extends Component {
                     {this.props.inlineActions &&
                       this.props.inlineActions.map(action => (
                         <li className="nav-item" key={action.name}>
-                          <ActionButton action={action} item={this.props.item} />
+                          <ActionButton action={action} item={this.props.item} className={classnames('btn-inline',action.theme && `btn-${action.theme}`)}/>
                         </li>
                       ))}
                   </ul>
