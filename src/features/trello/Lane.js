@@ -89,13 +89,13 @@ class Lane extends Component {
     }
   };
 
-  deleteCard = featId => {
+  deleteCard = (cardId, featId) => {
     if (this.props.onBeforeCardDelete && typeof this.props.onBeforeCardDelete === 'function') {
       this.props.onBeforeCardDelete(() => {
-        this.props.onCardDelete && this.props.onCardDelete(featId);
+        this.props.onCardDelete && this.props.onCardDelete(cardId, featId);
       });
     } else {
-      this.props.onCardDelete && this.props.onCardDelete(featId);
+      this.props.onCardDelete && this.props.onCardDelete(cardId, featId);
     }
   }
 
@@ -195,7 +195,7 @@ class Lane extends Component {
 
     const cardList = this.sortCards(showableCards, laneSortFunction).map((card, idx) => {
       const onRemoveCard = () => this.removeCard(card.id);
-      const onDeleteCard = () => this.deleteCard(card.featId);
+      const onDeleteCard = (id, featId) => this.deleteCard(card.id, card.featId);
       const cardToRender = (
         <Card
           key={card.id}
