@@ -8,10 +8,10 @@ export default class ActionButton extends Component {
   static propTypes = {
     action: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
-    classname: PropTypes.string,
+    className: PropTypes.string,
   };
   static defaultProps = {
-    classname: 'btn btn-inline',
+    className: 'btn btn-inline',
   };
 
   constructor(props) {
@@ -42,14 +42,14 @@ export default class ActionButton extends Component {
   }
 
   render() {
-    const { action, item, classname } = this.props;
+    const { action, item, className } = this.props;
     if (action.options) {
       const trigger = (
         <button
           type="button"
           disabled={action.disabled || false}
           title={action.label || ''}
-          className={classnames(classname, action.theme && `btn-${action.theme}`)}
+          className={classnames(className, 'btn')}
         >
           {action.icon}
         </button>
@@ -85,7 +85,7 @@ export default class ActionButton extends Component {
           type="button"
           disabled={action.disabled || false}
           title={action.label || ''}
-          className={classnames(classname, action.theme && `btn-${action.theme}`)}
+          className={classnames(className, 'btn')}
           onClick={evt => {
             evt.stopPropagation();
             if (action.role === 'DELETE') {

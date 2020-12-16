@@ -6,6 +6,7 @@ import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, Lo
 import { getSizeFromWidth, isInViewPort } from '../helper';
 import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
+import { ActionButton } from './';
 
 const duration = 200;
 
@@ -362,27 +363,19 @@ export default class DefaultList extends Component {
                                     {this.props.inlineActions &&
                                       this.props.inlineActions.map((action, i) => (
                                         <div key={`action-${i}`}>
-                                          {action.role === 'OTHER' && (
-                                            <button
-                                              type="button"
-                                              title={action.label || ''}
+                                          {(action.role === 'OTHER' || action.role === 'DETAIL') && (
+                                            <ActionButton
+                                              action={action}
+                                              item={this.props.currentItem}
                                               className={classnames(
                                                 'btn btn-left',
                                                 action.name === this.props.currentInline
                                                   ? 'btn-primary'
+                                                  : action.theme
+                                                  ? `btn-${action.theme}`
                                                   : 'btn-secondary'
                                               )}
-                                              onClick={evt => {
-                                                evt.stopPropagation();
-                                                if (action.param === 'object') {
-                                                  action.onClick(this.props.inlineOpenedItem);
-                                                } else {
-                                                  action.onClick(this.props.inlineOpenedId);
-                                                }
-                                              }}
-                                            >
-                                              {action.icon}
-                                            </button>
+                                            />
                                           )}
                                         </div>
                                       ))}

@@ -88,6 +88,7 @@ export default class InputCheckList extends Component {
     this.onDelLine = this.onDelLine.bind(this);
     this.onChange = this.onChange.bind(this);
     this.classTextQuestion = this.classTextQuestion.bind(this);
+    this.titleIconQuestion = this.titleIconQuestion.bind(this);
   }
 
   onToggle() {
@@ -221,6 +222,22 @@ export default class InputCheckList extends Component {
     return textAsk;
   }
 
+  titleIconQuestion(question) {
+    let title = '';
+    switch (question) {
+      case 1:
+      case true:
+        title = "Question";
+        break;
+      case 2:
+        title = "Réponse";
+        break;
+      default:
+        break;
+    }
+    return title;
+  }
+
   render() {
     let multi = false;
     if (this.props.onDelete) {
@@ -325,6 +342,7 @@ export default class InputCheckList extends Component {
                         onClick={() => {
                           this.onChangeItemQuestion(i);
                         }}
+                        title={this.titleIconQuestion(item.question)}
                       >
                         {this.props.questionLineIcon}
                       </button>
