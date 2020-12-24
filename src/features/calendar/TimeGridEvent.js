@@ -38,7 +38,7 @@ function TimeGridEvent(props) {
       {Event ? <Event event={event} title={title} /> : title}
     </div>,
   ]
-
+console.log("FK TimeGridEvent",inner);
   return (
     <EventWrapper type="time" {...props}>
       <div
