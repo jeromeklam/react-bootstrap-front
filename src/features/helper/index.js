@@ -167,11 +167,11 @@ export const htmlToString = html => {
   let text = '';
   if (html && html !== null && html !== '') {
     text = '' + html;
-    text = text.replace(/<br>/gi, "\n");
-    text = text.replace(/<li>/gi, "\n");
-    text = text.replace(/<\/li>/gi, "");
-    text = text.replace(/<br \/>/gi, "\n");
-    text = text.replace(/<\/p><p>/gi, "\n");
+    text = text.replace(/<br>/gi, '\n');
+    text = text.replace(/<li>/gi, '\n');
+    text = text.replace(/<\/li>/gi, '');
+    text = text.replace(/<br \/>/gi, '\n');
+    text = text.replace(/<\/p><p>/gi, '\n');
     text = striptags(text);
   }
   const entities = new AllHtmlEntities();
@@ -228,4 +228,245 @@ export function isInViewPort(el, threshold) {
     rect.bottom <= height + window.innerHeight &&
     rect.right <= width + window.innerWidth
   );
+}
+
+export function purifyString(value) {
+  var r = [];
+  if (value !== null && value !== '') {
+    for (var i = 0, length = value.length; i < length; i++) {
+      r.push(replaceCharacter(value.charAt(i)));
+    }
+  }
+  return r.join('');
+}
+
+function replaceCharacter(character) {
+  switch (character) {
+    case '\r':
+      return '\r';
+    case '\n':
+      return '\n';
+    case '\t':
+      return '\t';
+    case '\f':
+      return '\r\n';
+    case '\v':
+      return '\r\n';
+    case '`':
+      return "'";
+    case '€':
+      return '_';
+    case '‚':
+      return ',';
+    case 'ƒ':
+      return 'f';
+    case '„':
+      return '"';
+    case '…':
+      return '...';
+    case '†':
+      return '_';
+    case '‡':
+      return '_';
+    case 'ˆ':
+      return '^';
+    case '‰':
+      return '%';
+    case 'Š':
+      return 'S';
+    case '‹':
+      return '<';
+    case 'Œ':
+      return 'CE';
+    case 'Ž':
+      return 'Z';
+    case '‘':
+      return "'";
+    case '’':
+      return "'";
+    case '“':
+      return '"';
+    case '”':
+      return '"';
+    case '•':
+      return '-';
+    case '–':
+      return '-';
+    case '—':
+      return '-';
+    case '˜':
+      return '~';
+    case '™':
+      return '(tm)';
+    case 'š':
+      return 's';
+    case '›':
+      return '>';
+    case 'œ':
+      return 'ce';
+    case 'ž':
+      return 'z';
+    case 'Ÿ':
+      return 'Y';
+    case '¡':
+      return 'i';
+    case '¥':
+      return 'Y';
+    case '¦':
+      return '|';
+    case 'ª':
+      return 'a';
+    case '¬':
+      return '-';
+    case '¯':
+      return '-';
+    case '²':
+      return '2';
+    case '³':
+      return '3';
+    case '´':
+      return "'";
+    case '¸':
+      return ',';
+    case '¹':
+      return '1';
+    case 'º':
+      return '0';
+    case '¼':
+      return '1/4';
+    case '½':
+      return '1/2';
+    case '¾':
+      return '3/4';
+    case '¿':
+      return '?';
+    case 'À':
+      return 'A';
+    case 'Á':
+      return 'A';
+    case 'Â':
+      return 'A';
+    case 'Ã':
+      return 'A';
+    case 'Ä':
+      return 'A';
+    case 'Å':
+      return 'A';
+    case 'Æ':
+      return 'AE';
+    case 'Ç':
+      return 'C';
+    case 'È':
+      return 'E';
+    case 'É':
+      return 'E';
+    case 'Ê':
+      return 'E';
+    case 'Ë':
+      return 'E';
+    case 'Ì':
+      return 'I';
+    case 'Í':
+      return 'I';
+    case 'Î':
+      return 'I';
+    case 'Ï':
+      return 'I';
+    case 'Ð':
+      return 'D';
+    case 'Ñ':
+      return 'N';
+    case 'Ò':
+      return 'O';
+    case 'Ó':
+      return 'O';
+    case 'Ô':
+      return 'O';
+    case 'Õ':
+      return 'O';
+    case 'Ö':
+      return 'O';
+    case '×':
+      return 'x';
+    case 'Ø':
+      return 'O';
+    case 'Ù':
+      return 'U';
+    case 'Ú':
+      return 'U';
+    case 'Û':
+      return 'U';
+    case 'Ü':
+      return 'U';
+    case 'Ý':
+      return 'Y';
+    case 'ß':
+      return 'B';
+    case 'à':
+      return 'a';
+    case 'á':
+      return 'a';
+    case 'â':
+      return 'a';
+    case 'ã':
+      return 'a';
+    case 'ä':
+      return 'a';
+    case 'å':
+      return 'a';
+    case 'æ':
+      return 'ae';
+    case 'ç':
+      return 'c';
+    case 'è':
+      return 'e';
+    case 'é':
+      return 'e';
+    case 'ê':
+      return 'e';
+    case 'ë':
+      return 'e';
+    case 'ì':
+      return 'i';
+    case 'í':
+      return 'i';
+    case 'î':
+      return 'i';
+    case 'ï':
+      return 'i';
+    case 'ñ':
+      return 'n';
+    case 'ò':
+      return 'o';
+    case 'ó':
+      return 'o';
+    case 'ô':
+      return 'o';
+    case 'õ':
+      return 'o';
+    case 'ö':
+      return 'o';
+    case '÷':
+      return '/';
+    case 'ø':
+      return 'o';
+    case 'ù':
+      return 'u';
+    case 'ú':
+      return 'u';
+    case 'û':
+      return 'u';
+    case 'ü':
+      return 'u';
+    case 'ý':
+      return 'y';
+    case 'ÿ':
+      return 'y';
+    case '©':
+      return '(c)';
+    case '®':
+      return '(r)';
+    default:
+      return character;
+  }
 }
