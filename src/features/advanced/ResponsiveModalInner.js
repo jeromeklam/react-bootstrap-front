@@ -67,7 +67,7 @@ export default class ResponsiveModalInner extends Component {
     modalClassName: PropTypes.string,
     closeClassName: PropTypes.string,
     header: PropTypes.element,
-    zoom: PropTypes.bool,
+    zoom: PropTypes.number,
   };
 
   static defaultProps = {
@@ -78,7 +78,7 @@ export default class ResponsiveModalInner extends Component {
     modalClassName: 'bg-secondary text-light',
     closeClassName: 'text-light',
     header: null,
-    zoom: false,
+    zoom: 0,
   };
 
   constructor(props) {

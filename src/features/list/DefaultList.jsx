@@ -214,7 +214,7 @@ export default class DefaultList extends Component {
         <WidthObserver>
           {({ mediaSize }) => {
             const globalSize = mediaSize;
-            console.log('size', globalSize);
+            //console.log('size', globalSize);
             switch (globalSize) {
               case 'sm':
                 listTransitionStyles.entering.right = '368px';

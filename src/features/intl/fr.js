@@ -1,5 +1,6 @@
 export const translations = {
   'rbf.page.footer.followUs' : 'Suivez-nous',
+  'rbf.page.header.menuIcon' : 'Menu',
   'rbf.button.help.help': 'Afficher les aides',
   'rbf.trello.card.addLink.help': 'Nouvelle carte',
   'rbf.trello.card.addLink': 'Nouvelle carte',
