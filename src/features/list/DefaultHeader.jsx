@@ -195,7 +195,7 @@ export default class DefaultHeader extends Component {
                   </Highlight>
                 </li>
               )}
-              {this.props.selectMenu && (
+              {this.props.selectMenu && (this.props.selectMenu.length > 0) && (
                 <li className="nav-item">
                   <div className="dropdown">
                     <Highlight
