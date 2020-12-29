@@ -8,7 +8,7 @@ body {
   font-family: sans-serif;
   font-weight: 100;
 }
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   body {
     font-weight: normal;
   }
@@ -167,12 +167,41 @@ svg.text-warning.inline-action:hover {
 }
 
 .modal-fullscreen {
-  width: 90%;
-  max-width: 90%;
-  margin: 1rem auto;
-
+  padding: 0 !important; // override inline padding-right added from js
+  max-width: none;
+  width: none;
+  &.modal-dialog {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+  }
+  .modal-content {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+  }
   .modal-body {
-    max-height: 600px;
+    overflow-y: auto;
+    height: auto !important;
+    min-height: auto !important;
+  }
+}
+@media (max-width: 768px) {
+  .modal-fullscreen {
+    &.modal-dialog {
+      left: 0px;
+      right: 0px;
+      top: 0px;
+      bottom: 0px;
+      margin: 0;
+    }
+    .modal-content {
+      border: 0px;
+    }
   }
 }
 
@@ -200,11 +229,11 @@ svg.text-warning.inline-action:hover {
 
 .nav-item .nav-link {
   color: theme-color('secondary-inactive');
-}  
+}
 
 .nav-item .nav-link.active {
   color: theme-color('primary');
-}  
+}
 
 .nav-item .nav-link:hover {
   cursor: pointer;
@@ -213,18 +242,19 @@ svg.text-warning.inline-action:hover {
   cursor: not-allowed;
 }
 
-.btn-group-xs > .btn, .btn-xs {
-  padding  : .2rem .3rem;
-  font-size  : .8rem;
-  line-height  : .4;
-  border-radius : .2rem;
+.btn-group-xs > .btn,
+.btn-xs {
+  padding: 0.2rem 0.3rem;
+  font-size: 0.8rem;
+  line-height: 0.4;
+  border-radius: 0.2rem;
 }
 
 .inline-list {
   color: theme-color('dark');
   padding-left: 10px;
   padding-right: 10px;
-  
+
   svg.inline-action:hover {
     cursor: pointer;
     fill: theme-color('secondary-light');
@@ -280,21 +310,31 @@ svg.text-warning.inline-action:hover {
 .scrollarea .scrollbar-container.vertical .scrollbar {
   background-color: theme-color('primary') !important;
 }
-.modal-body {
-  font-size: 0.9rem;
+@media (max-width: 1920px) {
+  body {
+    font-size: 0.9rem;
+  }
+  .modal-body {
+    font-size: 0.9rem;
+  }
+  .input-group {
+    font-size: 0.9rem;
+  }
 }
-.input-group {
-  font-size: 0.9rem;
-}
-.modal-body {
-  .card-body {
-/* Par défaut padding: 1.25rem pour les InputImage */
-/*padding: 0px;*/
+@media (max-width: 1200px) {
+  body {
+    font-size: 0.75rem;
+  }
+  .modal-body {
+    font-size: 0.75rem;
+  }
+  .input-group {
+    font-size: 0.75rem;
   }
 }
 .modal-shadow {
-  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
-  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }
 
 .text-line-through {
@@ -366,8 +406,8 @@ svg.text-warning.inline-action:hover {
   }
 }
 .modal-shadow {
-  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
-  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }
 .btn-secondary {
   color: white;

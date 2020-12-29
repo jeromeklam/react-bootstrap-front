@@ -4,7 +4,10 @@
     * Multiple width in right mode depending on container size
     * Mobile Line in normal mode with hover on menu
     * InlineAction active
-    * ScollTO element if bot in viewPort in right mode
+    * ScrollTO element if bot in viewPort in right mode
+    * Responsive
+* Modal :
+    * Responsive
 * Nex functions in helpers
 
 # 3.1.0 : 11/12/2020

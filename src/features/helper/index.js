@@ -1,6 +1,58 @@
 import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
 
+export const getBreakpointAsSize = (p_size) => {
+  const size = p_size || 'xs';
+  switch(size.toLowerCase()) {
+    case 'xl':
+      return 1600;
+    case 'lg':
+      return 1200;
+    case 'md':
+      return 1024;
+    case 'sm':
+      return 768;
+    default:
+      return 376;
+  }
+}
+
+export const sizeLower = (p_size1, p_size2) => {
+  const size1 = getBreakpointAsSize(p_size1);
+  const size2 = getBreakpointAsSize(p_size2);
+  if (size1 < size2) {
+    return true;
+  }
+  return false;
+} 
+
+export const sizeGreater = (p_size1, p_size2) => {
+  const size1 = getBreakpointAsSize(p_size1);
+  const size2 = getBreakpointAsSize(p_size2);
+  if (size1 > size2) {
+    return true;
+  }
+  return false;
+} 
+
+export const sizeLowerOrEqual = (p_size1, p_size2) => {
+  const size1 = getBreakpointAsSize(p_size1);
+  const size2 = getBreakpointAsSize(p_size2);
+  if (size1 <= size2) {
+    return true;
+  }
+  return false;
+} 
+
+export const sizeGreaterOrEqual = (p_size1, p_size2) => {
+  const size1 = getBreakpointAsSize(p_size1);
+  const size2 = getBreakpointAsSize(p_size2);
+  if (size1 >= size2) {
+    return true;
+  }
+  return false;
+} 
+
 export const getSizeFromWidth = width => {
   let testW = parseInt(width, 10);
   if (isNaN(testW)) {

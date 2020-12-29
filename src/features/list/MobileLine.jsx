@@ -68,7 +68,7 @@ export class MobileLine extends Component {
                 <span className="rbf-list-mobile-line-header-title">{getCardTitle(this.props.cols, this.props.item)}</span>
 
                 {(this.state.flipped || this.props.inlineOpenedId === this.props.id) && (
-                  <ul style={navstyle} className="nav nav-pills justify-content-end">
+                  <ul style={navstyle} className="nav nav-pills rbf-list-mobile-line-header-nav">
                     {this.props.inlineActions &&
                       this.props.inlineActions.map(action => (
                         <li className="nav-item" key={action.name}>

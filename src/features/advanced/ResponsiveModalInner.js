@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Transition } from 'react-transition-group';
 import { ResponsiveButton } from '../basic';
+import { sizeGreater } from '../helper';
 import { Portal, WidthObserver } from './';
 
 let zIndex = 1200;
@@ -40,7 +41,7 @@ const modalStyle = {
 const closeStyle = {
   position: 'absolute',
   right: '20px',
-  top: '14px',
+  top: '4px',
   padding: '5px',
   fontSize: '2rem',
 };
@@ -139,66 +140,68 @@ export default class ResponsiveModalInner extends Component {
               className={classnames('modal', state)}
               style={{ ...modalStyle, zIndex: zIndex++, ...defaultStyle, ...transitionStyles[state] }}
             >
-              <div
-                className={classnames(
-                  'modal-dialog h-100 d-flex flex-column justify-content-center my-0',
-                  `modal-${this.props.size}`,
-                  state
-                )}
-              >
-                <WidthObserver zoom={this.props.zoom}>
-                  <div className="modal-content modal-shadow">
-                    <div
-                      className={classnames('modal-header pb-2', this.props.modalClassName)}
-                      style={{ display: 'initial', minHeight: '58px' }}
-                    >
-                      <div className="row">
-                        <div className="col-xs-w36 p-0">
-                          {this.props.tabs && this.props.tabs.length > 0 && (
-                            <ul className="nav nav-tabs w-100">
-                              {this.props.tabs &&
-                                this.props.tabs.map(oneTab => (
-                                  <li key={oneTab.key} data-id={oneTab.key} className="nav-item">
-                                    <a
-                                      className={classnames('nav-link', this.props.tab === oneTab.key && 'active')}
-                                      onClick={() => {
-                                        this.props.onNavTab(oneTab.key);
-                                      }}
-                                    >
-                                      {oneTab.label}
-                                    </a>
-                                  </li>
-                                ))}
-                            </ul>
-                          )}
-                          <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
-                            {this.props.title}
-                          </h5>
-                          <button
-                            type="button"
-                            style={closeStyle}
-                            className={classnames('close', this.props.closeClassName)}
-                            onClick={this.props.onClose}
-                          >
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                      </div>
-                      {this.props.header && <div className="pull-left w-100 pt-3">{this.props.header}</div>}
-                    </div>
-                    <div className="modal-body custom-scrollbar" style={iStyles}>
-                      {this.props.children}
-                    </div>
-                    {this.props.buttons && (
-                      <div className={classnames('modal-footer', this.props.modalClassName)}>
-                        {this.props.buttons.map(button => {
-                          return <ResponsiveButton key={button.name} button={button} />;
-                        })}
-                      </div>
+              <WidthObserver zoom={this.props.zoom}>
+                {({ mediaSize }) => (
+                  <div
+                    className={classnames(
+                      'modal-dialog d-flex flex-column justify-content-center my-0',
+                      sizeGreater(this.props.size, mediaSize) ? 'modal-fullscreen' : `h-100 modal-${this.props.size}`,
+                      state
                     )}
+                  >
+                    <div className="modal-content modal-shadow">
+                      <div
+                        className={classnames('modal-header pb-2', this.props.modalClassName)}
+                        style={{ display: 'initial', minHeight: '58px' }}
+                      >
+                        <div className="row">
+                          <div className="col-xs-w36 p-0">
+                            {this.props.tabs && this.props.tabs.length > 0 && (
+                              <ul className="nav nav-tabs w-100">
+                                {this.props.tabs &&
+                                  this.props.tabs.map(oneTab => (
+                                    <li key={oneTab.key} data-id={oneTab.key} className="nav-item">
+                                      <button
+                                        className={classnames('nav-link', this.props.tab === oneTab.key && 'active')}
+                                        onClick={() => {
+                                          this.props.onNavTab(oneTab.key);
+                                        }}
+                                      >
+                                        {sizeGreater(mediaSize, 'xs') ? oneTab.label : oneTab.shortcut}
+                                      </button>
+                                    </li>
+                                  ))}
+                              </ul>
+                            )}
+                            <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
+                              {sizeGreater(mediaSize, 'xs') && this.props.title}
+                            </h5>
+                            <button
+                              type="button"
+                              style={closeStyle}
+                              className={classnames('close', this.props.closeClassName)}
+                              onClick={this.props.onClose}
+                            >
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                        </div>
+                        {this.props.header && <div className="pull-left w-100 pt-3">{this.props.header}</div>}
+                      </div>
+                      <div className="modal-body custom-scrollbar" style={iStyles}>
+                        {this.props.children}
+                      </div>
+                      {this.props.buttons && (
+                        <div className={classnames('modal-footer', this.props.modalClassName)}>
+                          {this.props.buttons.map(button => {
+                            return <ResponsiveButton key={button.name} button={button} />;
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </WidthObserver>
-              </div>
+                )}
+              </WidthObserver>
             </div>
           )}
         </Transition>

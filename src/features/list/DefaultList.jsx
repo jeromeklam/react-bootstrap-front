@@ -191,7 +191,57 @@ export default class DefaultList extends Component {
   }
 
   render() {
-    const dispCols = this.props.cols.filter(col => !col.hidden);
+    let dispCols = this.props.cols;
+    dispCols.forEach(col => {
+      if (typeof col.size === 'object') {
+        let min = 'none';
+        if (col.size.xs) {
+          min = col.size.xs;
+        } else {
+          if (col.size.sm) {
+            min = col.size.sm;
+          } else {
+            if (col.size.md) {
+              min = col.size.md;
+            } else {
+              if (col.size.lg) {
+                min = col.size.lg;
+              } else {
+                if (col.size.xl) {
+                  min = col.size.xl;
+                }
+              }
+            }
+          }
+        }
+        if (!col.size.xs) {
+          col.size.xs = min;
+        } else {
+          min = col.size.xs;
+        }
+        if (!col.size.sm) {
+          col.size.sm = min;
+        } else {
+          min = col.size.sm;
+        }
+        if (!col.size.md) {
+          col.size.md = min;
+        } else {
+          min = col.size.md;
+        }
+        if (!col.size.lg) {
+          col.size.lg = min;
+        } else {
+          min = col.size.lg;
+        }
+        if (!col.size.xl) {
+          col.size.xl = min;
+        }
+      } else {
+        col.size = { xs: col.size, sm: col.size, md: col.size, lg: col.size, xl: col.size };
+      }
+    });
+    dispCols = dispCols.filter(col => !col.hidden);
     let locTitleStyle = titleStyle;
     let locDataStyle = dataStyle;
     if (this.props.titleMultiline) {
@@ -217,25 +267,25 @@ export default class DefaultList extends Component {
             //console.log('size', globalSize);
             switch (globalSize) {
               case 'sm':
-                listTransitionStyles.entering.right = '368px';
-                listTransitionStyles.entered.right = '368px';
-                inlineTransitionStyles.exiting.right = '-368px';
-                inlineTransitionStyles.exited.right = '-368px';
-                inlineStyle.width = '368px';
-                break;
-              case 'md':
                 listTransitionStyles.entering.right = '624px';
                 listTransitionStyles.entered.right = '624px';
                 inlineTransitionStyles.exiting.right = '-624px';
                 inlineTransitionStyles.exited.right = '-624px';
                 inlineStyle.width = '624px';
                 break;
-              case 'lg':
+              case 'md':
                 listTransitionStyles.entering.right = '800px';
                 listTransitionStyles.entered.right = '800px';
                 inlineTransitionStyles.exiting.right = '-800px';
                 inlineTransitionStyles.exited.right = '-800px';
                 inlineStyle.width = '800px';
+                break;
+              case 'lg':
+                listTransitionStyles.entering.right = '1024px';
+                listTransitionStyles.entered.right = '1024px';
+                inlineTransitionStyles.exiting.right = '-1024px';
+                inlineTransitionStyles.exited.right = '-1024px';
+                inlineStyle.width = '1024px';
                 break;
               case 'xl':
                 listTransitionStyles.entering.right = '1280px';
@@ -334,8 +384,8 @@ export default class DefaultList extends Component {
                           >
                             <WidthObserver>
                               <div className="row">
-                                <div className="col-xs-w1 text-center" />
-                                <div className="col-xs-w32 p-0 text-secondary h-100">
+                                <div className="rbf-list-default-list-right-separator text-center" />
+                                <div className="rbf-list-default-list-right-content p-0 text-secondary h-100">
                                   <div className="row">
                                     <div className="col-xs-w36">
                                       <DefaultRightHeader {...this.props} />
@@ -347,7 +397,7 @@ export default class DefaultList extends Component {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-xs-w3 text-center">
+                                <div className="rbf-list-default-list-right-menu text-center">
                                   <nav className="text-center pt-2" style={rightInlineButtonsStyle}>
                                     <button
                                       type="button"
