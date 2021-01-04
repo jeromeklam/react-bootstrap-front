@@ -144,7 +144,7 @@ export default class ResponsiveModalInner extends Component {
                 {({ mediaSize }) => (
                   <div
                     className={classnames(
-                      'modal-dialog d-flex flex-column justify-content-center my-0',
+                      'modal-dialog d-flex flex-column justify-content-center',
                       sizeGreater(this.props.size, mediaSize) ? 'modal-fullscreen' : `h-100 modal-${this.props.size}`,
                       state
                     )}

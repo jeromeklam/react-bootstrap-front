@@ -1,0 +1,10 @@
+.modal-content {
+  .nav-item {
+    .nav-link {
+      color: theme-color('secondary');
+      &.active {
+        color: theme-color('primary');
+      }
+    }
+  }
+}
