@@ -7,9 +7,11 @@ export default class DropdownWrapper extends Component {
     children: PropTypes.element.isRequired,
     trigger: PropTypes.element.isRequired,
     align: PropTypes.string,
+    tooltip: PropTypes.string
   };
   static defaultProps = {
     align: "bottom-left",
+    tooltip: "",
   }
 
   constructor(props) {
@@ -34,7 +36,7 @@ export default class DropdownWrapper extends Component {
   render() {
     return (
       <>
-        <div ref={this.state.ref} className="advanced-dropdown-wrapper" onClick={this.onClick}>
+        <div ref={this.state.ref} className="advanced-dropdown-wrapper" onClick={this.onClick} title={this.props.tooltip}>
           {this.props.trigger}
         </div>
         {this.state.open && (
