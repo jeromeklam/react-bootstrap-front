@@ -10,6 +10,7 @@ const LaneMenu = props => {
       <DropdownWrapper
         position="bottom"
         trigger={<button className="btn btn-sm btn-light trello-lane-menu-menu">&hellip;</button>}
+        tooltip="Actions à effectuer"
       >
         <DropdownMenu className="trello-lane-menu">
           {props.options &&

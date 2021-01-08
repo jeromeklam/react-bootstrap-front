@@ -7,6 +7,7 @@ const CardMenu = props => (
   <DropdownWrapper
     position="bottom"
     trigger={<button className="btn btn-sm btn-light trello-card-menu-menu">&hellip;</button>}
+    tooltip="Actions à effectuer sur la carte"
   >
     <DropdownMenu className="trello-card-menu">
       {props.update && (

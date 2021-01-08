@@ -80,7 +80,9 @@ class Card extends Component {
             )}
           </Col>
           <Col size={7} textAlign="left">
-            <span className="text-secondary">{num}</span>
+            <span className="text-secondary" title="Numéro">
+              {num}
+            </span>
           </Col>
           <Col size={19} textAlign="right">
             {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.title} {...tag} />)}
@@ -89,34 +91,53 @@ class Card extends Component {
             <div style={{ height: 'px' }}>{user}</div>
           </Col>
           <Col size={4} textAlign="right">
-            <CardMenu remove={showRemoveButton} delete={showDeleteButton} onUpdate={onClick} onDelete={this.onDelete} onRemove={this.onRemove} t={t} />
+            <CardMenu
+              remove={showRemoveButton}
+              delete={showDeleteButton}
+              onUpdate={onClick}
+              onDelete={this.onDelete}
+              onRemove={this.onRemove}
+              t={t}
+              title="Menu"
+            />
           </Col>
         </Row>
         <Row>
           <Col size={26} textAlign="left">
-            <div className="trello-card-title text-secondary" draggable={cardDraggable}>
+            <div className="trello-card-title text-secondary" draggable={cardDraggable} title="Titre">
               {title}
             </div>
           </Col>
           <Col size={10} textAlign="right">
-            <div className="trello-card-project text-secondary" draggable={cardDraggable}>
+            <div className="trello-card-project text-secondary" draggable={cardDraggable} title="Application">
               {project}
             </div>
           </Col>
         </Row>
-        {description && description !== '' && <div className="trello-card-detail">{description}</div>}
+        {description && description !== '' && (
+          <div className="trello-card-detail" title="Description">
+            {description}
+          </div>
+        )}
         <div className="trello-card-footer">
           <Row>
             <Col size={4} textAlign="left">
-              <div className={classnames('trello-card-priority', `text-${classPriority}`, `border-${classPriority}`)}>
+              <div
+                className={classnames('trello-card-priority', `text-${classPriority}`, `border-${classPriority}`)}
+                title="Priorité"
+              >
                 {priority}
               </div>
             </Col>
             <Col size={11} textAlign="left">
-              <div className="trello-card-deadline">{deadline}</div>
+              <div className="trello-card-deadline" title="Echéance">
+                {deadline}
+              </div>
             </Col>
             <Col size={12} textAlign="left">
-              <div className="trello-card-progress">{progress}</div>
+              <div className="trello-card-progress" title="Progression">
+                {progress}
+              </div>
             </Col>
             <Col size={2} textAlign="left">
               <div className="trello-card-comment text-secondary">{comment}</div>

@@ -4,12 +4,14 @@ import uuidv1 from 'uuid/v1';
 
 export default function SvgCheckbox(props) {
   let otherProps = { checked: false };
+  let tooltip = "Sélectionner"
   if ((props.checked && props.checked === true) || (props.selected && props.selected === true)) {
     otherProps.checked = 'checked';
+    tooltip = "Désélectionner"
   }
   const id = 'cbx-' + uuidv1();
   return (
-    <div className="basic-svg-checkbox">
+    <div className="basic-svg-checkbox" title={tooltip}>
       <label htmlFor={id} className="label-cbx" onClick={props.onChange}>
         <input
           type="checkbox"
