@@ -1,5 +1,7 @@
 @import '../../styles/mixins';
 
-.basic-input-gps-coords {
-
+.input-gps-coords {
+  .border-lon {
+    border-left: 0px;
+  }
 }

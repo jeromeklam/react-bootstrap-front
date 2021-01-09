@@ -5,6 +5,7 @@ import { getFieldId } from '../helper';
 
 export default class InputPhone extends Component {
   static propTypes = {
+    borderColor: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
@@ -23,6 +24,7 @@ export default class InputPhone extends Component {
   };
 
   static defaultProps = {
+    borderColor: 'secondary',
     labelTop: true,
     value: '',
     label: '',
@@ -73,19 +75,16 @@ export default class InputPhone extends Component {
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
-              onChange={this.onChange}
+              onChange={this.props.onChange}
             />
             {(this.props.phoneIcon && this.props.phoneIcon !== '') &&
               <div className="input-group-append">
                 <button
                   type="button"
                   className={classnames(
-                    'btn btn-input',
-                    'btn-outline-secondary',
-                    'bg-white text-secondary',
-                    this.props.size === 'sm' && `btn-${this.props.size}`,
+                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  this.props.size && `btn-${this.props.size}`
                   )}
-                  disabled={this.props.disabled}
                 >
                   {this.props.phoneIcon}
                 </button>

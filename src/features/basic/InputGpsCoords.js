@@ -39,8 +39,10 @@ export default class InputGpsCoords extends Component {
 
   render() {
     let myId = getFieldId(this.props.name, this.props.id);
+    let coords = this.props.value;
+    console.log("FK gps", coords);
     return (
-      <div className={classnames('form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
+      <div className={classnames('input-gps-coords form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
         {this.props.label !== '' && (
           <label
             htmlFor={myId}
@@ -59,6 +61,9 @@ export default class InputGpsCoords extends Component {
               (this.props.error || this.props.warning) && 'is-invalid'
             )}  
           >
+            <div class="input-group-prepend">
+              <span className={classnames('input-group-text border-secondary')}>Lat</span>
+            </div>
             <input
               type="text"
               className={classnames(
@@ -67,12 +72,15 @@ export default class InputGpsCoords extends Component {
               )}
               id={myId}
               name={this.props.name}
-              value={this.props.value || ''}
+              value={coords.lat || ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
+            <div class="input-group-prepend">
+              <span className={classnames('input-group-text border-secondary border-lon')}>Lon</span>
+            </div>
             <input
               type="text"
               className={classnames(
@@ -81,7 +89,7 @@ export default class InputGpsCoords extends Component {
               )}
               id={myId}
               name={this.props.name}
-              value={this.props.value || ''}
+              value={coords.lon || ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
