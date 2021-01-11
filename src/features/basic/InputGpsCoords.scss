@@ -1,7 +1,12 @@
 @import '../../styles/mixins';
 
 .input-gps-coords {
-  .border-lon {
+  .input-lat {
+    background-color: transparent;
+  
+  }
+  .input-lon {
     border-left: 0px;
+    background-color: transparent;
   }
 }

@@ -5,6 +5,7 @@ import { getFieldId } from '../helper';
 
 export default class InputGpsCoords extends Component {
   static propTypes = {
+    borderColor: PropTypes.string,
     id: PropTypes.string,
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
@@ -19,9 +20,12 @@ export default class InputGpsCoords extends Component {
     error: PropTypes.element,
     warning: PropTypes.element,
     placeholder: PropTypes.string,
+    zoomIcon: PropTypes.element,
+    onZoomMap: PropTypes.func,
   };
 
   static defaultProps = {
+    borderColor: 'secondary',
     labelTop: true,
     value: '',
     label: '',
@@ -35,12 +39,14 @@ export default class InputGpsCoords extends Component {
     error: false,
     warning: false,
     placeholder: '',
+    zoomIcon: null,
+    onZoomMap: () => {},
   };
 
   render() {
     let myId = getFieldId(this.props.name, this.props.id);
-    let coords = this.props.value;
-    console.log("FK gps", coords);
+    let coord = JSON.parse(this.props.value);
+    console.log("FK coords",coord);
     return (
       <div className={classnames('input-gps-coords form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
         {this.props.label !== '' && (
@@ -62,7 +68,7 @@ export default class InputGpsCoords extends Component {
             )}  
           >
             <div class="input-group-prepend">
-              <span className={classnames('input-group-text border-secondary')}>Lat</span>
+              <span className={classnames(`input-group-text border-${this.props.borderColor} input-lat`)}>Lat</span>
             </div>
             <input
               type="text"
@@ -72,14 +78,14 @@ export default class InputGpsCoords extends Component {
               )}
               id={myId}
               name={this.props.name}
-              value={coords.lat || ''}
+              value={coord.lat || ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
             <div class="input-group-prepend">
-              <span className={classnames('input-group-text border-secondary border-lon')}>Lon</span>
+              <span className={classnames(`input-group-text border-${this.props.borderColor} input-lon`)}>Lon</span>
             </div>
             <input
               type="text"
@@ -89,12 +95,26 @@ export default class InputGpsCoords extends Component {
               )}
               id={myId}
               name={this.props.name}
-              value={coords.lon || ''}
+              value={coord.lon || ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
+            {(this.props.zoomIcon && this.props.zoomIcon !== '') &&
+              <div className="input-group-append">
+                <button
+                  type="button"
+                  className={classnames(
+                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  this.props.size && `btn-${this.props.size}`
+                  )}
+                  onClick={this.props.onZoomMap}
+                >
+                  {this.props.zoomIcon}
+                </button>
+              </div>
+            }
           </div>
           {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
           {this.props.warning && <div className="invalid-feedback">{this.props.warning}</div>}
