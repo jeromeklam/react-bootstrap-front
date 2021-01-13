@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { IMaskInput } from 'react-imask';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { getFieldId } from '../helper';
+
+const emptyCoords = { lat: '', lon: '' };
 
 export default class InputGpsCoords extends Component {
   static propTypes = {
@@ -21,6 +24,7 @@ export default class InputGpsCoords extends Component {
     warning: PropTypes.element,
     placeholder: PropTypes.string,
     zoomIcon: PropTypes.element,
+    zoomInactiveIcon: PropTypes.element,
     onZoomMap: PropTypes.func,
   };
 
@@ -40,13 +44,55 @@ export default class InputGpsCoords extends Component {
     warning: false,
     placeholder: '',
     zoomIcon: null,
+    zoomInactiveIcon: null,
     onZoomMap: () => {},
   };
 
+
+  static getDerivedStateFromProps(props, state) {
+    const coords = JSON.parse(props.value) || {...emptyCoords};
+    if (coords !== state.coords) {
+      return {
+        coords: coords,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    let coords = null;
+    try {
+      coords = JSON.parse(props.value) || {...emptyCoords};
+    } catch (ex) {
+      coords = {...emptyCoords};
+    } 
+    this.state = {
+      coords: coords,
+    };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(event) {
+    let { coords } = this.state;
+    const coord = event.target.value;
+    const latlon = event.target.name;
+    coords[latlon] = coord;
+    this.props.onChange({
+      target: {
+        name: this.props.name,
+        value: JSON.stringify(coords),
+      },
+    });
+  }
+
   render() {
+    const { coords }  = this.state;
     let myId = getFieldId(this.props.name, this.props.id);
-    let coord = JSON.parse(this.props.value);
-    console.log("FK coords",coord);
+    let valid = false;
+    if (coords && coords.lat !== '' && coords.lon !== '') {
+      valid = true;
+    } 
     return (
       <div className={classnames('input-gps-coords form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
         {this.props.label !== '' && (
@@ -67,24 +113,24 @@ export default class InputGpsCoords extends Component {
               (this.props.error || this.props.warning) && 'is-invalid'
             )}  
           >
-            <div class="input-group-prepend">
+            <div className="input-group-prepend">
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lat`)}>Lat</span>
             </div>
             <input
               type="text"
               className={classnames(
-                'border-secondary form-control',
+                `border-${this.props.borderColor} form-control`,
                 this.props.size && `form-control-${this.props.size}`          
               )}
               id={myId}
-              name={this.props.name}
-              value={coord.lat || ''}
+              name="lat"
+              value={coords ? coords.lat : ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
-            <div class="input-group-prepend">
+            <div className="input-group-prepend">
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lon`)}>Lon</span>
             </div>
             <input
@@ -94,14 +140,14 @@ export default class InputGpsCoords extends Component {
                 this.props.size && `form-control-${this.props.size}`,                
               )}
               id={myId}
-              name={this.props.name}
-              value={coord.lon || ''}
+              name="lon"
+              value={coords ? coords.lon : ''}
               required={this.props.required}
               disabled={this.props.disabled}
               placeholder={this.props.placeholder}
               onChange={this.onChange}
             />
-            {(this.props.zoomIcon && this.props.zoomIcon !== '') &&
+            {(this.props.onZoomMap && this.props.zoomIcon && this.props.zoomIcon !== '') &&
               <div className="input-group-append">
                 <button
                   type="button"
@@ -110,8 +156,13 @@ export default class InputGpsCoords extends Component {
                   this.props.size && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onZoomMap}
+                  disabled={!valid} 
                 >
-                  {this.props.zoomIcon}
+                  {valid ? (
+                    this.props.zoomIcon
+                  ): (
+                    this.props.zoomInactiveIcon
+                  )}
                 </button>
               </div>
             }
