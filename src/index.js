@@ -35,6 +35,8 @@ export { default as InputCheckList } from './features/basic/InputCheckList';
 export { default as InputCheckLists } from './features/basic/InputCheckLists';
 export { default as InputKeywords } from './features/basic/InputKeywords';
 export { default as InputWorkload } from './features/basic/InputWorkload';
+export { default as InputGpsCoords } from './features/basic/InputGpsCoords';
+export { default as InputPhone } from './features/basic/InputPhone';
 
 /**
  *******************************************************************************
