@@ -37,7 +37,7 @@ export default class InputKeywords extends Component {
     keywordInactiveIcon: null,
   };
 
-  getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props, state) {
     let newState = null;
     if (props.value !== state.value) {
       if (!newState) {
@@ -84,7 +84,7 @@ export default class InputKeywords extends Component {
           value: list.join(),
         },
       });
-      
+
       let allKeyws = this.state.keywords;
       if (allKeyws.length > 0) {
         let idx = allKeyws.findIndex(item => item.keyw_code === keyw);

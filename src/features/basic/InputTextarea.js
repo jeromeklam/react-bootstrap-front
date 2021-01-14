@@ -14,8 +14,29 @@ const appenStyle = {
 };
 const toHtml = {
   styleToHTML: (style) => {
-    if (style === 'BOLD') {
-      return <span style={{color: 'blue'}} />;
+    const parts = style.split('-');
+    switch (parts[0]) {
+      case 'BOLD':
+        return <strong />;
+      case 'ITALIC':
+        return <i />;
+      case 'STRIKETHROUGH':
+        return <s />;
+      case 'UNDERLINE':
+        return <u />;
+      case 'SUPERSCRIPT':
+        return <sup />;
+      case 'SUBSCRIPT':
+        return <sub />;
+      case 'CODE':
+        return <cite />;
+      case 'color':
+        return <span style={{color: parts[1]}} />;
+      case 'fontsize':
+        return <span style={{fontSize: parts[1]}} />;
+      default:
+        // nothing
+        break;
     }
   },
   blockToHTML: (block) => {
@@ -33,9 +54,45 @@ const toHtml = {
 
 const fromHtml = {
   htmlToStyle: (nodeName, node, currentStyle) => {
-    if (nodeName === 'span' && node.style.color === 'blue') {
-      return currentStyle.add('BLUE');
-    }
+    currentStyle = currentStyle.withMutations((style) => {
+      switch (nodeName) {
+        case 'strong':
+          style.add('BOLD');
+          break;
+        case 'i':
+          style.add('ITALIC');
+          break;
+        case 's':
+          style.add('STRIKETHROUGH');
+          break;
+        case 'u':
+          style.add('UNDERLINE');
+          break;
+        case 'sup':
+          style.add('SUPERSCRIPT');
+          break;
+        case 'sub':
+          style.add('SUBSCRIPT');
+          break;
+        case 'cite':
+          style.add('CODE');
+          break;
+        default:
+          // nothing
+          break;
+      }
+      if (node instanceof HTMLElement) {
+        const color = node.style.color;
+        if (color && color !== '') {
+          const newColor = `color-${color.replace(/ /g, '')}`;
+          style.add(newColor);
+        }
+        const fontSize = node.style.fontSize;
+        if (fontSize && fontSize !== '') {
+          style.add(`fontsize-${fontSize.replace(/px$/g, '')}`);
+        }
+      }
+    }).toOrderedSet();
     return currentStyle;
   },
   htmlToEntity: (nodeName, node, createEntity) => {
@@ -102,6 +159,7 @@ export default class InputTextarea extends Component {
     } else {
       content = '<p/>';
     }
+    console.log(content);
     const value = convertFromHTML(fromHtml)(content);
     this.state = {
       editorState: EditorState.createWithContent(value),
