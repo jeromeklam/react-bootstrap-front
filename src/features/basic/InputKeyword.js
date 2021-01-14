@@ -29,7 +29,7 @@ export default class InputKeyword extends Component {
     keywordInactiveIcon: null,
   };
 
-  getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props, state) {
     let newState = null;
     if (props.value !== state.value) {
       if (!newState) {
