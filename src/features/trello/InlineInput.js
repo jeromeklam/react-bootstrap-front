@@ -63,7 +63,6 @@ class InlineInput extends React.Component {
       <textarea
         className="trello-inline-input text-secondary bold"
         ref={this.setRef}
-        border={border}
         onMouseDown={this.onMouseDown}
         onFocus={this.onFocus}
         onBlur={this.onBlur}

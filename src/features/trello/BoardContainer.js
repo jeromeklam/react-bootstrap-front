@@ -179,9 +179,8 @@ class BoardContainer extends Component {
       'cardOptions',
       't',
     ]);
-
     return (
-      <div style={style} {...otherProps} draggable={false} className={classnames('trello-board-container', className)}>
+      <div style={style} draggable={false} className={classnames('trello-board-container', className)}>
         <Container
           orientation="horizontal"
           onDragStart={this.onDragStart}

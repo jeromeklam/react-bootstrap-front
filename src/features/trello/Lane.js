@@ -247,13 +247,13 @@ class Lane extends Component {
           </div>
         )}
         {addCardMode && (
-          <NewCardForm 
-            t={t} 
+          <NewCardForm
+            t={t}
             laneId={id}
             projects={prjSearchResult}
             onPrjSearch={onPrjSearch}
             onAdd={this.addNewCard}
-            onCancel={this.hideEditableCard}  
+            onCancel={this.hideEditableCard}
           />
         )}
         {searchCardMode && (
@@ -314,12 +314,10 @@ class Lane extends Component {
       onCardMoveAcrossLanes,
       ...otherProps
     } = this.props;
-    console.log('11', otherProps);
     const showFooter = collapsibleLanes && cards.length > 0;
     return (
       <section
         className={classnames('trello-lane react-trello-lane', this.props.className || '')}
-        {...otherProps}
         key={id}
         onClick={() => onLaneClick && onLaneClick(id)}
         draggable={false}

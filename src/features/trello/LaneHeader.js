@@ -27,7 +27,6 @@ const LaneHeader = ({
     <header
       className={classnames('trello-lane-header', editLaneTitle && 'trello-lane-header-editable')}
       onDoubleClick={onDoubleClick}
-      editLaneTitle={editLaneTitle}
     >
       <Row>
         <Col size="30">
