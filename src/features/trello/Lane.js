@@ -187,6 +187,7 @@ class Lane extends Component {
       onPrjSearch,
       cardSearchResult,
       prjSearchResult,
+      cardOptions,
       t,
     } = this.props;
     const { addCardMode, searchCardMode, collapsed } = this.state;
@@ -210,6 +211,8 @@ class Lane extends Component {
           showDeleteButton={!hideCardDeleteIcon}
           tagStyle={tagStyle}
           cardDraggable={cardDraggable}
+          menuOptions={cardOptions}
+          laneId={id}
           t={t}
           {...card}
         />

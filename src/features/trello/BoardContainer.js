@@ -176,6 +176,7 @@ class BoardContainer extends Component {
       'onPrjSearch',
       'prjSearchResult',
       'laneOptions',
+      'cardOptions',
       't',
     ]);
 

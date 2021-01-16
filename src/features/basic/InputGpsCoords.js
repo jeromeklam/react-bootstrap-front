@@ -3,6 +3,7 @@ import { IMaskInput } from 'react-imask';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { getFieldId } from '../helper';
+import { InputMask } from './';
 
 const emptyCoords = { lat: '', lon: '' };
 
@@ -74,6 +75,7 @@ export default class InputGpsCoords extends Component {
   }
 
   onChange(event) {
+    console.log("FK on change", event.target);
     let { coords } = this.state;
     const coord = event.target.value;
     const latlon = event.target.name;
@@ -116,36 +118,41 @@ export default class InputGpsCoords extends Component {
             <div className="input-group-prepend">
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lat`)}>Lat</span>
             </div>
-            <input
+            <IMaskInput
               type="text"
-              className={classnames(
-                `border-${this.props.borderColor} form-control`,
-                this.props.size && `form-control-${this.props.size}`          
-              )}
-              id={myId}
-              name="lat"
-              value={coords ? coords.lat : ''}
+              mask={'00.00000000'}
               required={this.props.required}
               disabled={this.props.disabled}
+              lazy={false}
+              overwrite={true}
+              value={coords ? coords.lat : ''}
+              onComplete={this.onChange}
+              className={classnames(
+                `border-${this.props.borderColor} form-control`,
+                this.props.size && `form-control-${this.props.size}`,
+                (this.props.error || this.props.warning) && 'is-invalid'
+              )}
               placeholder={this.props.placeholder}
-              onChange={this.onChange}
             />
             <div className="input-group-prepend">
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lon`)}>Lon</span>
             </div>
-            <input
+            <IMaskInput
               type="text"
-              className={classnames(
-                'border-secondary form-control',
-                this.props.size && `form-control-${this.props.size}`,                
-              )}
-              id={myId}
-              name="lon"
-              value={coords ? coords.lon : ''}
+              mask={'00.00000000'}
               required={this.props.required}
               disabled={this.props.disabled}
+              lazy={false}
+              overwrite={true}
+              value={coords ? coords.lon : ''}
+              onComplete={this.onChange}
+              unmask={true}
+              className={classnames(
+                `border-${this.props.borderColor} form-control`,
+                this.props.size && `form-control-${this.props.size}`,
+                (this.props.error || this.props.warning) && 'is-invalid'
+              )}
               placeholder={this.props.placeholder}
-              onChange={this.onChange}
             />
             {(this.props.onZoomMap && this.props.zoomIcon && this.props.zoomIcon !== '') &&
               <div className="input-group-append">
