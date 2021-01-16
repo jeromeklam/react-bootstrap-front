@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownWrapper } from '../advanced';
 import { DropdownMenu, DropdownMenuOption, DropdownMenuDivider } from '../basic';
 
 const LaneMenu = props => {
-  const refOptions = React.createRef();
+  const refOptions = useRef();
   return (
     <>
       <DropdownWrapper

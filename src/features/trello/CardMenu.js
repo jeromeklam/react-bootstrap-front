@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownWrapper } from '../advanced';
 import { DropdownMenu, DropdownMenuOption, DropdownMenuDivider } from '../basic';
 
-
- //div className= "rbf-trello-card-menu-big-wrapper" ref={refOptions}>
 const CardMenu = props => {
-  const refOptions = React.createRef();
+  const refOptions = useRef();
   return (
     <>
       <DropdownWrapper

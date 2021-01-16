@@ -15,7 +15,7 @@ export default function SvgCheckbox(props) {
       <label htmlFor={id} className="label-cbx" onClick={props.onChange}>
         <input
           type="checkbox"
-          class="invisible"
+          className="invisible"
           {...otherProps}
           onChange={ev => {
             ev.preventDefault();

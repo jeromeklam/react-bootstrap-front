@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function DropdownMenuDivider() {
   return (
-    <div class="dropdown-divider"></div>
+    <div className="dropdown-divider"></div>
   );
 };
 

@@ -4,13 +4,15 @@ import { Dropdown } from '../basic';
 
 export default class DropdownWrapper extends Component {
   static propTypes = {
-    children: PropTypes.element.isRequired,
-    trigger: PropTypes.element.isRequired,
     align: PropTypes.string,
-    tooltip: PropTypes.string
+    children: PropTypes.element.isRequired,
+    myRef: PropTypes.object,
+    tooltip: PropTypes.string,
+    trigger: PropTypes.element.isRequired,
   };
   static defaultProps = {
     align: "bottom-left",
+    myRef: null,
     tooltip: "",
   }
 

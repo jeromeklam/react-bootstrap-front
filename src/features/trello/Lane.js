@@ -314,6 +314,7 @@ class Lane extends Component {
       onCardMoveAcrossLanes,
       ...otherProps
     } = this.props;
+    console.log('11', otherProps);
     const showFooter = collapsibleLanes && cards.length > 0;
     return (
       <section
