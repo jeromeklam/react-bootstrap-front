@@ -50,7 +50,7 @@ class Card extends Component {
       status,
       attachment,
       menuOptions,
-      laneId,
+      laneId
     } = this.props;
 
     return (
@@ -101,6 +101,7 @@ class Card extends Component {
               onRemove={this.onRemove}
               options={menuOptions}
               laneId={laneId}
+              cardId={id}
               t={t}
               title="Menu"
             />

@@ -25,7 +25,7 @@ const CardMenu = props => {
             props.options.map(option => (
               <DropdownMenuOption
                 key={option.label}
-                onClick={() => option.onClick(props.laneId, refOptions)}
+                onClick={() => option.onClick(props.cardId, props.laneId, refOptions)}
                 label={option.label}
                 theme={option.theme || null}
               />
@@ -61,6 +61,7 @@ CardMenu.propTypes = {
   t: PropTypes.func.isRequired,
   update: PropTypes.bool,
   laneId: PropTypes.number,
+  cardId: PropTypes.number,
 };
 
 CardMenu.defaultProps = {
@@ -72,6 +73,7 @@ CardMenu.defaultProps = {
   options: [],
   update: true,
   laneId: 0,
+  cardId: 0,
 };
 
 export default CardMenu;
