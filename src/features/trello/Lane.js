@@ -22,14 +22,73 @@ import { SmLoading9x9 } from '../spinner';
 import * as laneActions from 'rt/actions/LaneActions';
 
 class Lane extends Component {
-  state = {
-    loading: false,
-    currentPage: this.props.currentPage,
-    addCardMode: false,
-    searchCardMode: false,
-    collapsed: false,
-    isDraggingOver: false,
+  static propTypes = {
+    actions: PropTypes.object,
+    id: PropTypes.string.isRequired,
+    boardId: PropTypes.string,
+    title: PropTypes.node,
+    index: PropTypes.number,
+    laneSortFunction: PropTypes.func,
+    style: PropTypes.object,
+    cardStyle: PropTypes.object,
+    tagStyle: PropTypes.object,
+    titleStyle: PropTypes.object,
+    labelStyle: PropTypes.object,
+    cards: PropTypes.array,
+    label: PropTypes.string,
+    currentPage: PropTypes.number,
+    draggable: PropTypes.bool,
+    collapsibleLanes: PropTypes.bool,
+    droppable: PropTypes.bool,
+    onCardMoveAcrossLanes: PropTypes.func,
+    onCardClick: PropTypes.func,
+    onBeforeCardRemove: PropTypes.func,
+    onBeforeCardDelete: PropTypes.func,
+    onCardRemove: PropTypes.func,
+    onCardDelete: PropTypes.func,
+    onCardAdd: PropTypes.func,
+    onLaneDelete: PropTypes.func,
+    onLaneUpdate: PropTypes.func,
+    onLaneClick: PropTypes.func,
+    onLaneScroll: PropTypes.func,
+    editable: PropTypes.bool,
+    laneDraggable: PropTypes.bool,
+    cardDraggable: PropTypes.bool,
+    cardDragClass: PropTypes.string,
+    cardDropClass: PropTypes.string,
+    canAddLanes: PropTypes.bool,
+    t: PropTypes.func.isRequired,
   };
+
+  static defaultProps = {
+    style: {},
+    titleStyle: {},
+    labelStyle: {},
+    label: undefined,
+    editable: false,
+    onLaneUpdate: () => {},
+    onCardAdd: () => {},
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(props.cards, state.cards)) {
+      return { currentPage: props.currentPage };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      cards: props.cards,
+      loading: false,
+      currentPage: props.currentPage,
+      addCardMode: false,
+      searchCardMode: false,
+      collapsed: false,
+      isDraggingOver: false,
+    };
+  }
 
   handleScroll = evt => {
     const node = evt.target;
@@ -68,14 +127,6 @@ class Lane extends Component {
       node.addEventListener('scroll', this.handleScroll);
     }
   };
-
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(this.props.cards, nextProps.cards)) {
-      this.setState({
-        currentPage: nextProps.currentPage,
-      });
-    }
-  }
 
   removeCard = cardId => {
     if (this.props.onBeforeCardRemove && typeof this.props.onBeforeCardRemove === 'function') {
@@ -225,7 +276,7 @@ class Lane extends Component {
     });
 
     return (
-      <div className="trello-lane-scrollable custom-scrollbar" ref={this.laneDidMount} isDraggingOver={isDraggingOver}>
+      <div className="trello-lane-scrollable custom-scrollbar" ref={this.laneDidMount}>
         <Container
           orientation="vertical"
           groupName={this.groupName}
@@ -330,54 +381,6 @@ class Lane extends Component {
     );
   }
 }
-
-Lane.propTypes = {
-  actions: PropTypes.object,
-  id: PropTypes.string.isRequired,
-  boardId: PropTypes.string,
-  title: PropTypes.node,
-  index: PropTypes.number,
-  laneSortFunction: PropTypes.func,
-  style: PropTypes.object,
-  cardStyle: PropTypes.object,
-  tagStyle: PropTypes.object,
-  titleStyle: PropTypes.object,
-  labelStyle: PropTypes.object,
-  cards: PropTypes.array,
-  label: PropTypes.string,
-  currentPage: PropTypes.number,
-  draggable: PropTypes.bool,
-  collapsibleLanes: PropTypes.bool,
-  droppable: PropTypes.bool,
-  onCardMoveAcrossLanes: PropTypes.func,
-  onCardClick: PropTypes.func,
-  onBeforeCardRemove: PropTypes.func,
-  onBeforeCardDelete: PropTypes.func,
-  onCardRemove: PropTypes.func,
-  onCardDelete: PropTypes.func,
-  onCardAdd: PropTypes.func,
-  onLaneDelete: PropTypes.func,
-  onLaneUpdate: PropTypes.func,
-  onLaneClick: PropTypes.func,
-  onLaneScroll: PropTypes.func,
-  editable: PropTypes.bool,
-  laneDraggable: PropTypes.bool,
-  cardDraggable: PropTypes.bool,
-  cardDragClass: PropTypes.string,
-  cardDropClass: PropTypes.string,
-  canAddLanes: PropTypes.bool,
-  t: PropTypes.func.isRequired,
-};
-
-Lane.defaultProps = {
-  style: {},
-  titleStyle: {},
-  labelStyle: {},
-  label: undefined,
-  editable: false,
-  onLaneUpdate: () => {},
-  onCardAdd: () => {},
-};
 
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(laneActions, dispatch),

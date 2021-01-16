@@ -3,11 +3,44 @@ import PropTypes from 'prop-types';
 import autosize from 'autosize';
 
 class InlineInput extends React.Component {
+
+  static propTypes = {
+    onSave: PropTypes.func,
+    border: PropTypes.bool,
+    placeholder: PropTypes.string,
+    value: PropTypes.string,
+    autoFocus: PropTypes.bool,
+    resize: PropTypes.oneOf(['none', 'vertical', 'horizontal']),
+  };
+
+  static defaultProps = {
+    onSave: () => {},
+    placeholder: '',
+    value: '',
+    border: false,
+    autoFocus: false,
+    resize: 'none',
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.value !== state.value) {
+      return { value: props.value };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: props.value,
+    }
+  }
+
   onFocus = e => e.target.select();
 
   // This is the way to select all text if mouse clicked
   onMouseDown = e => {
-    if (document.activeElement != e.target) {
+    if (document.activeElement !== e.target) {
       e.preventDefault();
       this.refInput.focus();
     }
@@ -18,17 +51,17 @@ class InlineInput extends React.Component {
   };
 
   onKeyDown = e => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       this.refInput.blur();
       e.preventDefault();
     }
-    if (e.keyCode == 27) {
+    if (e.keyCode === 27) {
       this.setValue(this.props.value);
       this.refInput.blur();
       e.preventDefault();
     }
-    if (e.keyCode == 9) {
-      if (this.getValue().length == 0) {
+    if (e.keyCode === 9) {
+      if (this.getValue().length === 0) {
         this.props.onCancel();
       }
       this.refInput.blur();
@@ -40,25 +73,20 @@ class InlineInput extends React.Component {
   setValue = value => (this.refInput.value = value);
 
   updateValue = () => {
-    if (this.getValue() != this.props.value) {
+    if (this.getValue() !== this.props.value) {
       this.props.onSave(this.getValue());
     }
   };
 
   setRef = ref => {
     this.refInput = ref;
-    if (this.props.resize != 'none') {
+    if (this.props.resize !== 'none') {
       autosize(this.refInput);
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    this.setValue(nextProps.value);
-  }
-
   render() {
     const { autoFocus, border, value, placeholder } = this.props;
-
     return (
       <textarea
         className="trello-inline-input text-secondary bold"
@@ -73,30 +101,11 @@ class InlineInput extends React.Component {
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
-        dataGramm="false"
         rows={1}
         autoFocus={autoFocus}
       />
     );
   }
-}
-
-InlineInput.propTypes = {
-  onSave: PropTypes.func,
-  border: PropTypes.bool,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  autoFocus: PropTypes.bool,
-  resize: PropTypes.oneOf(['none', 'vertical', 'horizontal']),
-};
-
-InlineInput.defaultProps = {
-  onSave: () => {},
-  placeholder: '',
-  value: '',
-  border: false,
-  autoFocus: false,
-  resize: 'none',
 };
 
 export default InlineInput;

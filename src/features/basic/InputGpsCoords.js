@@ -67,19 +67,17 @@ export default class InputGpsCoords extends Component {
       coords = JSON.parse(props.value) || {...emptyCoords};
     } catch (ex) {
       coords = {...emptyCoords};
-    } 
+    }
     this.state = {
       coords: coords,
     };
     this.onChange = this.onChange.bind(this);
   }
 
-  onChange(event) {
-    console.log("FK on change", event.target);
+  onChange(value, name) {
     let { coords } = this.state;
-    const coord = event.target.value;
-    const latlon = event.target.name;
-    coords[latlon] = coord;
+    const coord = value.toString().replace(',', '.');
+    coords[name] = coord;
     this.props.onChange({
       target: {
         name: this.props.name,
@@ -94,7 +92,7 @@ export default class InputGpsCoords extends Component {
     let valid = false;
     if (coords && coords.lat !== '' && coords.lon !== '') {
       valid = true;
-    } 
+    }
     return (
       <div className={classnames('input-gps-coords form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
         {this.props.label !== '' && (
@@ -111,22 +109,28 @@ export default class InputGpsCoords extends Component {
         )}
         <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
           <div className={classnames(
-              'input-group', 
+              'input-group',
               (this.props.error || this.props.warning) && 'is-invalid'
-            )}  
+            )}
           >
             <div className="input-group-prepend">
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lat`)}>Lat</span>
             </div>
             <IMaskInput
-              type="text"
-              mask={'00.00000000'}
+              mask={Number}
+              scale={6}
+              signed={false}
+              thousandsSeparator=""
+              padFractionalZeros={false}
+              normalizeZeros={false}
+              radix=","
+              mapToRadix={['.']}
               required={this.props.required}
               disabled={this.props.disabled}
               lazy={false}
               overwrite={true}
               value={coords ? coords.lat : ''}
-              onComplete={this.onChange}
+              onAccept={(val) => this.onChange(val, 'lat')}
               className={classnames(
                 `border-${this.props.borderColor} form-control`,
                 this.props.size && `form-control-${this.props.size}`,
@@ -138,14 +142,20 @@ export default class InputGpsCoords extends Component {
               <span className={classnames(`input-group-text border-${this.props.borderColor} input-lon`)}>Lon</span>
             </div>
             <IMaskInput
-              type="text"
-              mask={'00.00000000'}
+              mask={Number}
+              scale={6}
+              signed={false}
+              thousandsSeparator=""
+              padFractionalZeros={false}
+              normalizeZeros={false}
+              radix=","
+              mapToRadix={['.']}
               required={this.props.required}
               disabled={this.props.disabled}
               lazy={false}
               overwrite={true}
               value={coords ? coords.lon : ''}
-              onComplete={this.onChange}
+              onAccept={(val) => this.onChange(val, 'lon')}
               unmask={true}
               className={classnames(
                 `border-${this.props.borderColor} form-control`,
@@ -163,7 +173,7 @@ export default class InputGpsCoords extends Component {
                   this.props.size && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onZoomMap}
-                  disabled={!valid} 
+                  disabled={!valid}
                 >
                   {valid ? (
                     this.props.zoomIcon

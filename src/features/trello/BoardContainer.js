@@ -16,9 +16,95 @@ import * as boardActions from 'rt/actions/BoardActions';
 import * as laneActions from 'rt/actions/LaneActions';
 
 class BoardContainer extends Component {
-  state = {
-    addLaneMode: false,
+
+  static propTypes = {
+    id: PropTypes.string,
+    actions: PropTypes.object,
+    data: PropTypes.object.isRequired,
+    reducerData: PropTypes.object,
+    onDataChange: PropTypes.func,
+    eventBusHandle: PropTypes.func,
+    onLaneScroll: PropTypes.func,
+    onCardClick: PropTypes.func,
+    onBeforeCardDelete: PropTypes.func,
+    onCardRemove: PropTypes.func,
+    onCardDelete: PropTypes.func,
+    onCardAdd: PropTypes.func,
+    onLaneAdd: PropTypes.func,
+    onLaneDelete: PropTypes.func,
+    onLaneClick: PropTypes.func,
+    onLaneUpdate: PropTypes.func,
+    laneSortFunction: PropTypes.func,
+    draggable: PropTypes.bool,
+    collapsibleLanes: PropTypes.bool,
+    editable: PropTypes.bool,
+    canAddLanes: PropTypes.bool,
+    hideCardRemoveIcon: PropTypes.bool,
+    hideCardDeleteIcon: PropTypes.bool,
+    handleDragStart: PropTypes.func,
+    handleDragEnd: PropTypes.func,
+    handleLaneDragStart: PropTypes.func,
+    handleLaneDragEnd: PropTypes.func,
+    style: PropTypes.object,
+    tagStyle: PropTypes.object,
+    laneDraggable: PropTypes.bool,
+    cardDraggable: PropTypes.bool,
+    cardDragClass: PropTypes.string,
+    laneDragClass: PropTypes.string,
+    laneDropClass: PropTypes.string,
+    onCardMoveAcrossLanes: PropTypes.func.isRequired,
+    t: PropTypes.func.isRequired,
   };
+
+  static defaultProps = {
+    t: v => v,
+    onDataChange: () => {},
+    handleDragStart: () => {},
+    handleDragEnd: () => {},
+    handleLaneDragStart: () => {},
+    handleLaneDragEnd: () => {},
+    onLaneAdd: () => {},
+    onLaneDelete: () => {},
+    onCardMoveAcrossLanes: () => {},
+    onLaneUpdate: () => {},
+    editable: false,
+    canAddLanes: false,
+    hideCardRemoveIcon: false,
+    hideCardDeleteIcon: false,
+    draggable: false,
+    collapsibleLanes: false,
+    laneDraggable: true,
+    cardDraggable: true,
+    cardDragClass: 'react_trello_dragClass',
+    laneDragClass: 'react_trello_dragLaneClass',
+    laneDropClass: '',
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    let newState = null;
+    if (props.reducerData && !isEqual(state.reducerData, props.reducerData)) {
+      if (!newState) {
+        newState = {};
+      }
+      newState.reducerData = props.reducerData;
+    }
+    if (props.data && !isEqual(props.data, state.data)) {
+      if (!newState) {
+        newState = {};
+      }
+      newState.data = props.data;
+    }
+    return newState;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      addLaneMode: false,
+      data: props.data,
+      reducerData: props.reducerData,
+    };
+  }
 
   componentDidMount() {
     const { actions, eventBusHandle } = this.props;
@@ -28,15 +114,14 @@ class BoardContainer extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    // nextProps.data changes when external Board input props change and nextProps.reducerData changes due to event bus or UI changes
-    const { data, reducerData, onDataChange } = this.props;
-    if (nextProps.reducerData && !isEqual(reducerData, nextProps.reducerData)) {
-      onDataChange(nextProps.reducerData);
+  componentDidUpdate(prevProps, prevState) {
+    const { data, reducerData } = this.state;
+    if (reducerData && !isEqual(reducerData, prevState.reducerData)) {
+      this.props.onDataChange(reducerData);
     }
-    if (nextProps.data && !isEqual(nextProps.data, data)) {
-      this.props.actions.loadBoard(nextProps.data);
-      onDataChange(nextProps.data);
+    if (data && !isEqual(prevState.data, data)) {
+      this.props.actions.loadBoard(data);
+      this.props.onDataChange(data);
     }
   }
 
@@ -221,69 +306,6 @@ class BoardContainer extends Component {
     );
   }
 }
-
-BoardContainer.propTypes = {
-  id: PropTypes.string,
-  actions: PropTypes.object,
-  data: PropTypes.object.isRequired,
-  reducerData: PropTypes.object,
-  onDataChange: PropTypes.func,
-  eventBusHandle: PropTypes.func,
-  onLaneScroll: PropTypes.func,
-  onCardClick: PropTypes.func,
-  onBeforeCardDelete: PropTypes.func,
-  onCardRemove: PropTypes.func,
-  onCardDelete: PropTypes.func,
-  onCardAdd: PropTypes.func,
-  onLaneAdd: PropTypes.func,
-  onLaneDelete: PropTypes.func,
-  onLaneClick: PropTypes.func,
-  onLaneUpdate: PropTypes.func,
-  laneSortFunction: PropTypes.func,
-  draggable: PropTypes.bool,
-  collapsibleLanes: PropTypes.bool,
-  editable: PropTypes.bool,
-  canAddLanes: PropTypes.bool,
-  hideCardRemoveIcon: PropTypes.bool,
-  hideCardDeleteIcon: PropTypes.bool,
-  handleDragStart: PropTypes.func,
-  handleDragEnd: PropTypes.func,
-  handleLaneDragStart: PropTypes.func,
-  handleLaneDragEnd: PropTypes.func,
-  style: PropTypes.object,
-  tagStyle: PropTypes.object,
-  laneDraggable: PropTypes.bool,
-  cardDraggable: PropTypes.bool,
-  cardDragClass: PropTypes.string,
-  laneDragClass: PropTypes.string,
-  laneDropClass: PropTypes.string,
-  onCardMoveAcrossLanes: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired,
-};
-
-BoardContainer.defaultProps = {
-  t: v => v,
-  onDataChange: () => {},
-  handleDragStart: () => {},
-  handleDragEnd: () => {},
-  handleLaneDragStart: () => {},
-  handleLaneDragEnd: () => {},
-  onLaneAdd: () => {},
-  onLaneDelete: () => {},
-  onCardMoveAcrossLanes: () => {},
-  onLaneUpdate: () => {},
-  editable: false,
-  canAddLanes: false,
-  hideCardRemoveIcon: false,
-  hideCardDeleteIcon: false,
-  draggable: false,
-  collapsibleLanes: false,
-  laneDraggable: true,
-  cardDraggable: true,
-  cardDragClass: 'react_trello_dragClass',
-  laneDragClass: 'react_trello_dragLaneClass',
-  laneDropClass: '',
-};
 
 const mapStateToProps = state => {
   return state.lanes ? { reducerData: state } : {};
