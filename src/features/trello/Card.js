@@ -49,6 +49,8 @@ class Card extends Component {
       comment,
       status,
       attachment,
+      menuOptions,
+      laneId,
     } = this.props;
 
     return (
@@ -97,6 +99,8 @@ class Card extends Component {
               onUpdate={onClick}
               onDelete={this.onDelete}
               onRemove={this.onRemove}
+              options={menuOptions}
+              laneId={laneId}
               t={t}
               title="Menu"
             />
@@ -177,6 +181,7 @@ Card.propTypes = {
   progress: PropTypes.object,
   comment: PropTypes.object,
   status: PropTypes.object,
+  menuOptions: PropTypes.array,
 };
 
 Card.defaultProps = {
@@ -200,6 +205,7 @@ Card.defaultProps = {
   progress: null,
   comment: null,
   status: null,
+  menuOptions: [],
 };
 
 export default Card;
