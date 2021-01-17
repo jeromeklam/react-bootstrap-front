@@ -468,3 +468,7 @@ hr {
 .border-secondary-light {
   border: 1px solid theme-color('sedondary-light');
 }
+
+button:focus {
+  outline: none;
+}

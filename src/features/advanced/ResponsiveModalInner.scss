@@ -1,9 +1,12 @@
 .modal-content {
   .nav-item {
     .nav-link {
-      color: theme-color('secondary');
+      color: theme-color('light');
+      background-color: theme-color('secondary');
+      border-bottom-color: #fff;
       &.active {
-        color: theme-color('primary');
+        color: theme-color('light');
+        background-color: theme-color('primary');
       }
     }
   }
