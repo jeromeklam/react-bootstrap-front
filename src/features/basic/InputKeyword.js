@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Col } from '../grid';
 import { Dropdown } from './';
 
 export default class InputKeyword extends Component {
@@ -31,12 +32,13 @@ export default class InputKeyword extends Component {
 
   static getDerivedStateFromProps(props, state) {
     let newState = null;
-    if (props.value !== state.value) {
+    if (props.value !== state.valOrig) {
       if (!newState) {
         newState = {};
       }
       const value = props.value || '';
       newState.value = value;
+      newState.valOrig = value;
     }
     return newState;
   }
@@ -47,6 +49,7 @@ export default class InputKeyword extends Component {
       myRef: React.createRef(),
       id: `id-${props.name}`,
       value: props.value,
+      valOrig: props.value,
       listDD: [],
       select: false,
     };
@@ -95,7 +98,7 @@ export default class InputKeyword extends Component {
   render() {
     let open = this.state.listDD && this.state.listDD.length > 0;
     return (
-      <div className="input-keyword col-xs-w36 col-md-w6 col-lg-4 col-xl-4">
+      <Col size={{xs:12, md:8, lg:5, xl:4}} className="input-keyword">
         <div className="input-group" ref={this.state.myRef}>
           <input
             label=""
@@ -157,7 +160,7 @@ export default class InputKeyword extends Component {
             </Dropdown>
           )}
         </div>
-      </div>
+      </Col>
     );
   }
 }

@@ -45,7 +45,11 @@ export default class InputKeywords extends Component {
       }
       const value = props.value || '';
       newState.value = value;
-      newState.list = value.split(',');
+      if (value !== '') {
+        newState.list = value.split(',');
+      } else {
+        newState.list = [];
+      }
     }
     if (props.keywords !== state.keywords) {
       if (!newState) {
@@ -90,7 +94,7 @@ export default class InputKeywords extends Component {
         let idx = allKeyws.findIndex(item => item.keyw_code === keyw);
         if (idx === -1) {
           // création d'une nouveau mot clef
-          this.props.newKeyword(keyw)
+          this.props.newKeyword(keyw);
         }
       }
     }
@@ -111,33 +115,35 @@ export default class InputKeywords extends Component {
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row')}>
         {this.props.label !== '' && (
-          <label
-            htmlFor={this.props.id}
-            className={classnames(!this.props.labelTop && 'col-xs-w6 col-form-label')}
-          >
+          <label htmlFor={this.props.id} className={classnames(!this.props.labelTop && 'col-xs-w6 col-form-label')}>
             {this.props.label}
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
         <div className={classnames(!this.props.labelTop && 'col-xs-w30')}>
           <div className="input-group row" style={myStyle}>
-            {this.state.list.map((keyw, i) => (
-              <InputKeyword
-                name={`keyword-${i}`}
-                value={keyw}
-                addNew={false}
-                onDelete={() => {
-                  this.onDelete(i);
-                }}
-                keywordIcon={this.props.keywordIcon}
-                keywordPlusIcon={this.props.keywordPlusIcon}
-                keywordMinusIcon={this.props.keywordMinusIcon}
-                keywordInactiveIcon={this.props.keywordInactiveIcon}
-              />
-            ))}
+            {this.state.list.map((keyw, i) => {
+              if (keyw !== '') {
+                return (
+                  <InputKeyword
+                    name={`keyword-${i}`}
+                    value={keyw}
+                    addNew={false}
+                    onDelete={() => {
+                      this.onDelete(i);
+                    }}
+                    keywordIcon={this.props.keywordIcon}
+                    keywordPlusIcon={this.props.keywordPlusIcon}
+                    keywordMinusIcon={this.props.keywordMinusIcon}
+                    keywordInactiveIcon={this.props.keywordInactiveIcon}
+                  />
+                );
+              }
+              return null;
+            })}
             <InputKeyword
               value=""
-              name={"keyword-empty"}
+              name={'keyword-empty'}
               addNew={true}
               myKeywords={this.state.list}
               allKeywords={this.state.keywords}

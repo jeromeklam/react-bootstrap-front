@@ -1,5 +1,5 @@
 @import '../../styles/mixins';
 
-.basic-dropdown-menu-option {
-
+.dropdown-item:hover {
+  background-color: theme-color('primary-light');
 }
