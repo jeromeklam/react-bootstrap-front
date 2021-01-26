@@ -3,7 +3,6 @@ import { IMaskInput } from 'react-imask';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { getFieldId } from '../helper';
-import { InputMask } from './';
 
 const emptyCoords = { lat: '', lon: '' };
 
@@ -90,8 +89,12 @@ export default class InputGpsCoords extends Component {
     const { coords }  = this.state;
     let myId = getFieldId(this.props.name, this.props.id);
     let valid = false;
+    let latitude = '';
+    let longitude = '';
     if (coords && coords.lat !== '' && coords.lon !== '') {
       valid = true;
+      latitude = coords.lat.toString();
+      longitude = coords.lon.toString();
     }
     return (
       <div className={classnames('input-gps-coords form-group', !this.props.labelTop && 'row', this.props.size && `form-group-${this.props.size}`)}>
@@ -129,7 +132,7 @@ export default class InputGpsCoords extends Component {
               disabled={this.props.disabled}
               lazy={false}
               overwrite={true}
-              value={coords ? coords.lat : ''}
+              value={latitude}
               onAccept={(val) => this.onChange(val, 'lat')}
               className={classnames(
                 `border-${this.props.borderColor} form-control`,
@@ -154,7 +157,7 @@ export default class InputGpsCoords extends Component {
               disabled={this.props.disabled}
               lazy={false}
               overwrite={true}
-              value={coords ? coords.lon : ''}
+              value={longitude}
               onAccept={(val) => this.onChange(val, 'lon')}
               unmask={true}
               className={classnames(
@@ -172,7 +175,7 @@ export default class InputGpsCoords extends Component {
                   `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
                   this.props.size && `btn-${this.props.size}`
                   )}
-                  onClick={this.props.onZoomMap}
+                  onClick={() => this.props.onZoomMap(this.state.coords)}
                   disabled={!valid}
                 >
                   {valid ? (
