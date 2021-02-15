@@ -130,6 +130,7 @@ export default class InputPicker extends Component {
               {this.props.onAdd && (
                 <button
                   type="button"
+                  disabled={this.props.disabled}
                   className={classnames(
                     'btn btn-input btn-outline-secondary bg-light',
                     this.props.size === 'sm' && `btn-${this.props.size}`
