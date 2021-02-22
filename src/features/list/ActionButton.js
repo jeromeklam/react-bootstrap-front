@@ -9,15 +9,18 @@ export default class ActionButton extends Component {
     action: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
     className: PropTypes.string,
+    options: PropTypes.oneOfType([PropTypes.array,PropTypes.func]),
   };
   static defaultProps = {
     className: 'btn btn-inline',
+    options: null,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       confirm: false,
+      myRef: React.createRef(),
     };
     this.onConfirm = this.onConfirm.bind(this);
     this.onConfirmClose = this.onConfirmClose.bind(this);
@@ -54,10 +57,14 @@ export default class ActionButton extends Component {
           {action.icon}
         </button>
       );
+      let myOptions = action.options;
+      if (!Array.isArray(myOptions) && typeof action.options === 'function') {
+        myOptions = action.options(this.props.item);
+      }
       return (
-        <DropdownWrapper trigger={trigger} align="bottom-right">
+        <DropdownWrapper trigger={trigger} align="bottom-right" myRef={this.state.myRef}>
           <DropdownMenu>
-            {action.options.map(elem => {
+            {myOptions.map(elem => {
               return (
                 <DropdownMenuOption
                   key={`elem-${action.label}`}
@@ -86,14 +93,15 @@ export default class ActionButton extends Component {
           disabled={action.disabled || false}
           title={action.label || ''}
           className={classnames(className, 'btn')}
+          ref={this.state.myRef}
           onClick={evt => {
             evt.stopPropagation();
             if (action.role === 'DELETE') {
               this.onConfirm();
             } else if (action.param === 'object') {
-              action.onClick(item);
+              action.onClick(item, this.state.myRef);
             } else {
-              action.onClick(item.id);
+              action.onClick(item.id, this.state.myRef);
             }
           }}
         >
