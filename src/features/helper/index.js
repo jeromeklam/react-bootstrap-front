@@ -188,6 +188,10 @@ export const displayDatetime = (date, language = 'fr-FR', seconds = true) => {
     return '';
   }
   const myDate = new Date(date);
+  let time =  myDate.toLocaleTimeString(language);
+  if (!seconds) {
+    time = time.substring(0,(time.lastIndexOf(":"))) ;
+  }
   return (
     myDate.toLocaleDateString(language, {
       year: 'numeric',
@@ -195,7 +199,7 @@ export const displayDatetime = (date, language = 'fr-FR', seconds = true) => {
       day: 'numeric',
     }) +
     ' ' +
-    myDate.toLocaleTimeString(language)
+    time
   );
 };
 
