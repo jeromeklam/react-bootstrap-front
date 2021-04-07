@@ -38,6 +38,7 @@ export default class FilterBuilder extends Component {
   render() {
     const mode = this.props.filters.getMode();
     const oper = this.props.filters.getOperator();
+    //console.log("FK col filtre",this.props.cols);
     return (
       <div className="filter-filter-builder">
         <div className="row">
@@ -80,6 +81,7 @@ export default class FilterBuilder extends Component {
         {this.props.cols.map(col => {
           if (col.filterable && col.label !== '') {
             const filter = this.props.filters;
+            //console.log("FK filters", filter);
             let colFilterable = col.col;
             if (col.filterable.col && col.filterable.col !== '') {
               colFilterable = col.filterable.col;
@@ -88,9 +90,18 @@ export default class FilterBuilder extends Component {
             let value = '';
             let colOper = oper;
             if (elem) {
+	//console.log("FK col filtered", colFilterable);
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
             }
+            /** 
+            if (value !== '') {
+              console.log("FK filters", filter);
+              console.log("FK col filtered", colFilterable);
+              console.log("FK val", value);
+              console.log("FK elem", elem);
+            }
+            */
             const prepend = (
               <select
                 id={`oper-${colFilterable}`}

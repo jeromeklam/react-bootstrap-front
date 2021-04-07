@@ -77,6 +77,12 @@ export default class ActionButton extends Component {
 
   render() {
     const { action, item, className } = this.props;
+    let icon = action.icon;
+    if (action.fDisplay) {
+      if (typeof action.fDisplay === 'function') {
+        icon = action.fDisplay(item);
+      } 
+    }
     if (this.state.triggerFct) {
       return (
         <>
@@ -89,10 +95,10 @@ export default class ActionButton extends Component {
               onClick={evt => {
                 this.state.triggerFct(item).then(result => {
                   this.updateOptions(result);
-                });
+                }); 
               }}
             >
-              {action.icon}
+              {icon}
             </button>
           </div>
           {this.state.options && (
@@ -131,7 +137,7 @@ export default class ActionButton extends Component {
             title={action.label || ''}
             className={classnames(className, 'btn')}
           >
-            {action.icon}
+            {icon}
           </button>
         );
         return (
@@ -180,7 +186,7 @@ export default class ActionButton extends Component {
             }
           }}
         >
-          {action.icon}
+          {icon}
         </button>
         <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm} />
       </>

@@ -50,7 +50,8 @@ class Card extends Component {
       status,
       attachment,
       menuOptions,
-      laneId
+      laneId,
+      featId,
     } = this.props;
 
     return (
@@ -102,6 +103,7 @@ class Card extends Component {
               options={menuOptions}
               laneId={laneId}
               cardId={id}
+              featId={featId}
               t={t}
               title="Menu"
             />

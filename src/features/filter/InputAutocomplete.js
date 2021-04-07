@@ -100,7 +100,7 @@ export default class InputAutocomplete extends Component {
   }
 
   render() {
-    let myId = getFieldId(this.props.name, this.props.id);
+    let myId = getFieldId(this.props.name, this.props.value);
     let open = this.state.display !== '' && this.state.list.length > 0;
     return (
       <InputGroup {...this.props} id={myId}>

@@ -45,6 +45,7 @@ export default class InputWorkload extends Component {
 
   constructor(props) {
     super(props);
+    
     let value = props.value || 0;
     let unity = 'M';
     let display = '';
@@ -56,6 +57,8 @@ export default class InputWorkload extends Component {
         if (value >= 60) {
           unity = 'H';
           display = value / 60;
+        } else {
+          display = value;
         }
       }
     }
