@@ -11,7 +11,11 @@ export const ResponsiveButton = props => (
     onClick={props.button.function}
   >
     <Responsive displayIn={['Laptop', 'Tablet']}>
-      <span color="white">{props.button.name}</span>
+      {props.button.name ? (
+        <span color="white">{props.button.name}</span>
+      ) : (
+        props.button.icon
+      )}
     </Responsive>
     <Responsive displayIn={['Mobile']}>
       {props.button.icon}
