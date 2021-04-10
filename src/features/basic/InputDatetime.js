@@ -159,6 +159,9 @@ export default class InputDatetime extends Component {
       };
       this.props.onChange(event2);
     }
+    if (this.state.timerLoop) {
+      this.setState({ timerLoop : false });
+    }
   }
 
   onComplete(val) {
@@ -177,7 +180,6 @@ export default class InputDatetime extends Component {
         value: dd,
       },
     };
-    console.log("FK on complete");
     this.props.onChange(event2);
   }
 
@@ -309,7 +311,7 @@ export default class InputDatetime extends Component {
                   )}
                   onClick={this.onToggleTimer}
                 >
-                  {this.state.timerLoop ? this.props.timerOffIcon : this.props.timerOnIcon}
+                  {this.state.timerLoop ? this.props.timerOnIcon : this.props.timerOffIcon}
                 </button>
               }           
               <button

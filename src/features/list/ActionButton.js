@@ -83,13 +83,17 @@ export default class ActionButton extends Component {
         icon = action.fDisplay(item);
       } 
     }
+    let disabled = action.disabled || false;
+    if (this.state.options && Array.isArray(this.state.options) && this.state.options.length === 0) {
+      disabled = true;
+    }
     if (this.state.triggerFct) {
       return (
         <>
           <div ref={this.state.myRef}>
             <button
               type="button"
-              disabled={action.disabled || false}
+              disabled={disabled}
               title={action.label || ''}
               className={classnames(className, 'btn')}
               onClick={evt => {
@@ -104,7 +108,7 @@ export default class ActionButton extends Component {
           {this.state.options && (
             <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onClose}>
               <DropdownMenu>
-                {Array.isArray(this.state.options) &&
+                {Array.isArray(this.state.options) && (this.state.options.length > 0) &&
                   this.state.options.map(elem => {
                     return (
                       <DropdownMenuOption
@@ -133,7 +137,7 @@ export default class ActionButton extends Component {
         const trigger = (
           <button
             type="button"
-            disabled={action.disabled || false}
+            disabled={disabled}
             title={action.label || ''}
             className={classnames(className, 'btn')}
           >

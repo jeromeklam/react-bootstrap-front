@@ -26,6 +26,7 @@ export default class InputWorkload extends Component {
     value: PropTypes.string,
     oneDay: PropTypes.number,
     mask: PropTypes.string,
+    emptyValue: PropTypes.string,
     locked: PropTypes.bool,
     lockOnIcon: PropTypes.element,
     lockOffIcon: PropTypes.element,
@@ -46,6 +47,7 @@ export default class InputWorkload extends Component {
     value: '',
     oneDay: 480,
     mask: '000',
+    emptyValue: '',
     locked: false,
     lockOnIcon: null,
     lockOffIcon: null,
@@ -57,7 +59,7 @@ export default class InputWorkload extends Component {
     if (props.value != state.value) {
       let value = props.value;
       let unity = 'M';
-      let display = '0';
+      let display = props.emptyValue;
        if (value > 0) {
           if (value >= props.oneDay) {
             unity = 'J';
@@ -71,7 +73,7 @@ export default class InputWorkload extends Component {
             }
           }
         }
-      return {value: value, display: `${display}`};
+      return {unity: unity, value: value, display: `${display}`};
     }
   }
 
@@ -79,7 +81,7 @@ export default class InputWorkload extends Component {
     super(props);
     let value = props.value || 0;
     let unity = 'M';
-    let display = '0';
+    let display = props.emptyValue;
     if (value > 0) {
       if (value >= this.props.oneDay) {
         unity = 'J';
@@ -132,7 +134,6 @@ export default class InputWorkload extends Component {
   }
 
   render() {
-    console.log("FK workload ", this.state);
     return (
       <div className="basic-input-workload">
         <InputGroup {...this.props}>
@@ -146,7 +147,7 @@ export default class InputWorkload extends Component {
             name={this.props.name}
             value={this.state.display}
             required={this.props.required}
-            disabled={this.props.disabled}
+            disabled={this.props.disabled || this.props.locked}
             onChange={this.onChangeValue}
             pattern={this.props.pattern}
             placeholder={this.props.placeholder}
@@ -176,7 +177,7 @@ export default class InputWorkload extends Component {
                 className={classnames(`btn btn-input btn-outline-secondary bg-light`, this.props.size && `btn-${this.props.size}`)}
                 onClick={this.props.locked ? () => this.props.onLockOff(this.props.name) : () => this.props.onLockOn(this.props.name)}
               >
-                {this.props.locked ? this.props.lockOffIcon : this.props.lockOnIcon}
+                {this.props.locked ? this.props.lockOnIcon : this.props.lockOffIcon}
               </button>
             )}
           </InputGroupAppend>
