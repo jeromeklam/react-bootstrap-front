@@ -27,6 +27,13 @@ export default class InputDatetime extends Component {
     delIcon: PropTypes.element.isRequired,
     calIcon: PropTypes.element.isRequired,
     lockIcon: PropTypes.element,
+    lockOnIcon: PropTypes.element,
+    lockOffIcon: PropTypes.element,
+    timerOnIcon: PropTypes.element,
+    timerOffIcon: PropTypes.element,
+    timer: PropTypes.number,
+    timerFct: PropTypes.func,
+    timerLoop: PropTypes.bool,
     error: PropTypes.element,
   };
 
@@ -44,6 +51,11 @@ export default class InputDatetime extends Component {
     required: false,
     error: false,
     lockIcon: null,
+    timerOnIcon: null,
+    timerOffIcon: null,
+    timer: 0,
+    timerFct: null,
+    timerLoop: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -69,12 +81,57 @@ export default class InputDatetime extends Component {
       open: false,
       date: !isNaN(myDate.getTime()) ? myDate : null,
       value: displayDatetime(Date.parse(props.value)),
+      timerId: 0,
+      timerLoop: this.props.timerLoop,
     };
     this.onDatePicker = this.onDatePicker.bind(this);
     this.onClear = this.onClear.bind(this);
     this.onComplete = this.onComplete.bind(this);
     this.onToggle = this.onToggle.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onTimeout = this.onTimeout.bind(this);
+    this.onToggleTimer = this.onToggleTimer.bind(this);
+    this.onTimerDefault = this.onTimerDefault.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.timer > 0) {
+      const timerId = setTimeout(this.onTimeout, this.props.timer);
+      this.setState({ timerId: timerId });
+    }
+  }
+
+  onTimerDefault() { 
+    let now = new Date();
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+    const event = { 
+      target: { 
+        name: this.props.name, 
+        value: now
+      }
+    };
+    this.props.onChange(event);
+  }
+
+  onTimeout() {
+    if (this.props.timerFct) {
+      this.props.timerFct();
+    } else {
+      this.onTimerDefault();
+    }
+    if (this.state.timerLoop) {
+      const timerId = setTimeout(this.onTimeout, this.props.timer);
+      this.setState({ timerId: timerId });
+    }
+  }
+
+  onToggleTimer() {
+    const timerLoop = !this.state.timerLoop;
+    if (timerLoop) {
+      this.onTimeout();
+    }
+    this.setState({ timerLoop : timerLoop });
   }
 
   onClear() {
@@ -120,6 +177,7 @@ export default class InputDatetime extends Component {
         value: dd,
       },
     };
+    console.log("FK on complete");
     this.props.onChange(event2);
   }
 
@@ -241,6 +299,19 @@ export default class InputDatetime extends Component {
                   {this.props.lockIcon}
                 </button>
               }
+              {this.props.timerLoop && 
+                <button
+                  type="button"
+                  disabled={this.props.disabled}
+                  className={classnames(
+                    'btn btn-input btn-outline-secondary bg-light',
+                    this.props.size && `btn-${this.props.size}`,
+                  )}
+                  onClick={this.onToggleTimer}
+                >
+                  {this.state.timerLoop ? this.props.timerOffIcon : this.props.timerOnIcon}
+                </button>
+              }           
               <button
                 type="button"
                 disabled={this.props.disabled}
@@ -288,5 +359,11 @@ export default class InputDatetime extends Component {
         {this.props.error && <div className="invalid-feedback">{this.props.error}</div>}
       </div>
     );
+  }
+
+ componentWillUnmount() {
+    if (this.state.timerId > 0) {
+      clearTimeout(this.state.timerId);
+    }
   }
 }
