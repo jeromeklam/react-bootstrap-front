@@ -163,14 +163,35 @@ export default class ResponsiveModalInner extends Component {
                                     <li key={oneTab.key} data-id={oneTab.key} className="nav-item">
                                       <button
                                         className={classnames('nav-link', this.props.tab === oneTab.key && 'active')}
-                                        onClick={() => {
+                                        onClick={(ev) => {
+                                          ev.preventDefault();
+                                          ev.stopPropagation();
                                           this.props.onNavTab(oneTab.key);
                                         }}
                                       >
-                                        {sizeGreater(mediaSize, 'xs') ? oneTab.label : oneTab.shortcut}
+                                        <>
+                                          {sizeGreater(mediaSize, 'xs') ? oneTab.label : oneTab.shortcut}
+                                          {oneTab.removeable === true && 
+                                            <span className="nav-link-inner-btn">{this.props.delIcon}</span>
+                                          }
+                                        </>
                                       </button>
                                     </li>
                                   ))}
+                                  {this.props.onAddTab &&
+                                    <li key='add-tab' className="nav-item">
+                                      <button
+                                        className={classnames('nav-link')}
+                                        onClick={(ev) => {
+                                          ev.preventDefault();
+                                          ev.stopPropagation();
+                                          this.props.onAddTab();
+                                        }}
+                                      >
+                                        <span>{this.props.addIcon}</span>
+                                      </button>
+                                    </li>
+                                  }
                               </ul>
                             )}
                             <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
