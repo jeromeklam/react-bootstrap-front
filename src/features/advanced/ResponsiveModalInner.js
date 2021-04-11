@@ -162,7 +162,7 @@ export default class ResponsiveModalInner extends Component {
                                   this.props.tabs.map(oneTab => (
                                     <li key={oneTab.key} data-id={oneTab.key} className="nav-item">
                                       <button
-                                        className={classnames('nav-link', this.props.tab === oneTab.key && 'active')}
+                                        className={classnames('nav-link', `${this.props.tab}` === `${oneTab.key}` && 'active')}
                                         onClick={(ev) => {
                                           ev.preventDefault();
                                           ev.stopPropagation();
@@ -171,27 +171,34 @@ export default class ResponsiveModalInner extends Component {
                                       >
                                         <>
                                           {sizeGreater(mediaSize, 'xs') ? oneTab.label : oneTab.shortcut}
-                                          {oneTab.removeable === true && 
-                                            <span className="nav-link-inner-btn">{this.props.delIcon}</span>
+                                          {oneTab.removeable === true &&
+                                            <span className="nav-link-inner-btn" onClick={
+                                              (ev) => {
+                                                ev.preventDefault();
+                                                ev.stopPropagation();
+                                                this.props.onDelTab(oneTab.id)
+                                              }}>
+                                              {this.props.delIcon}
+                                            </span>
                                           }
                                         </>
                                       </button>
                                     </li>
                                   ))}
-                                  {this.props.onAddTab &&
-                                    <li key='add-tab' className="nav-item">
-                                      <button
-                                        className={classnames('nav-link')}
-                                        onClick={(ev) => {
-                                          ev.preventDefault();
-                                          ev.stopPropagation();
-                                          this.props.onAddTab();
-                                        }}
-                                      >
-                                        <span>{this.props.addIcon}</span>
-                                      </button>
-                                    </li>
-                                  }
+                                {this.props.onAddTab &&
+                                  <li key='add-tab' className="nav-item">
+                                    <button
+                                      className={classnames('nav-link')}
+                                      onClick={(ev) => {
+                                        ev.preventDefault();
+                                        ev.stopPropagation();
+                                        this.props.onAddTab();
+                                      }}
+                                    >
+                                      <span>{this.props.addIcon}</span>
+                                    </button>
+                                  </li>
+                                }
                               </ul>
                             )}
                             <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
