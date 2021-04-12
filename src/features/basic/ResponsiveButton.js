@@ -8,6 +8,7 @@ export const ResponsiveButton = props => (
   <CalmButton
     type="button"
     className={classnames('btn', `btn-${props.button.theme}`)}
+    disabled={props.button.disabled || false}
     onClick={props.button.function}
   >
     <Responsive displayIn={['Laptop', 'Tablet']}>
