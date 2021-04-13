@@ -167,7 +167,6 @@ export default class InputTextarea extends Component {
     } else {
       content = '<p/>';
     }
-    //console.log(content);
     const value = convertFromHTML(fromHtml)(content);
     this.state = {
       editorState: EditorState.createWithContent(value),
