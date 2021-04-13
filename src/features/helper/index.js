@@ -1,5 +1,20 @@
 import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
+import { isNull } from 'lodash';
+
+export const ensureDatetimeTZ = (date) => {
+  if (date instanceof Date) {
+    return date.toISOString();
+  } else {
+    try {
+      const nDate = new Date(date);
+      return nDate.toISOString();
+    } catch (ex) {
+
+    }
+  }
+  return isNull;
+}
 
 export const getBreakpointAsSize = (p_size) => {
   const size = p_size || 'xs';
