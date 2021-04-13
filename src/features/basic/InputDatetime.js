@@ -5,7 +5,7 @@ import { IMaskInput } from 'react-imask';
 import IMask from 'imask';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import { displayDatetime } from '../helper';
+import { displayDatetime, ensureDatetimeTZ } from '../helper';
 import { Dropdown } from './';
 
 registerLocale('fr', fr);
@@ -108,7 +108,7 @@ export default class InputDatetime extends Component {
     const event = { 
       target: { 
         name: this.props.name, 
-        value: now
+        value: ensureDatetimeTZ(now)
       }
     };
     this.props.onChange(event);
@@ -170,7 +170,7 @@ export default class InputDatetime extends Component {
       const parts = val.split(' ');
       const [day, month, year] = parts[0].split('/');
       const [hour, minutes] = parts[1].split(':');
-      dd = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minutes));
+      dd = ensureDatetimeTZ(new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minutes)));
     } catch (ex) {
       dd = '';
     }
