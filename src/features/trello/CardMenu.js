@@ -22,14 +22,17 @@ const CardMenu = props => {
           )}
           {props.options &&
             props.options.length > 0 &&
-            props.options.map(option => (
-              <DropdownMenuOption
-                key={option.label}
-                onClick={() => option.onClick(props.cardId, props.laneId, refOptions)}
-                label={option.label}
-                theme={option.theme || null}
-              />
-            ))}
+            props.options.map(
+              option =>
+                !option.hidden && (
+                  <DropdownMenuOption
+                    key={option.label}
+                    onClick={() => option.onClick(props.cardId, props.laneId, props.featId, refOptions)}
+                    label={option.label}
+                    theme={option.theme || null}
+                  />
+                )
+            )}
           {(props.delete || props.remove) && <DropdownMenuDivider />}
           {props.remove && (
             <DropdownMenuOption
@@ -62,6 +65,7 @@ CardMenu.propTypes = {
   update: PropTypes.bool,
   laneId: PropTypes.number,
   cardId: PropTypes.number,
+  featId: PropTypes.number,
 };
 
 CardMenu.defaultProps = {
@@ -74,6 +78,7 @@ CardMenu.defaultProps = {
   update: true,
   laneId: 0,
   cardId: 0,
+  featId: 0,
 };
 
 export default CardMenu;

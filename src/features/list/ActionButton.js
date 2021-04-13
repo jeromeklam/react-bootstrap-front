@@ -77,28 +77,38 @@ export default class ActionButton extends Component {
 
   render() {
     const { action, item, className } = this.props;
+    let icon = action.icon;
+    if (action.fDisplay) {
+      if (typeof action.fDisplay === 'function') {
+        icon = action.fDisplay(item);
+      } 
+    }
+    let disabled = action.disabled || false;
+    if (this.state.options && Array.isArray(this.state.options) && this.state.options.length === 0) {
+      disabled = true;
+    }
     if (this.state.triggerFct) {
       return (
         <>
           <div ref={this.state.myRef}>
             <button
               type="button"
-              disabled={action.disabled || false}
+              disabled={disabled}
               title={action.label || ''}
               className={classnames(className, 'btn')}
               onClick={evt => {
                 this.state.triggerFct(item).then(result => {
                   this.updateOptions(result);
-                });
+                }); 
               }}
             >
-              {action.icon}
+              {icon}
             </button>
           </div>
           {this.state.options && (
             <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onClose}>
               <DropdownMenu>
-                {Array.isArray(this.state.options) &&
+                {Array.isArray(this.state.options) && (this.state.options.length > 0) &&
                   this.state.options.map(elem => {
                     return (
                       <DropdownMenuOption
@@ -127,11 +137,11 @@ export default class ActionButton extends Component {
         const trigger = (
           <button
             type="button"
-            disabled={action.disabled || false}
+            disabled={disabled}
             title={action.label || ''}
             className={classnames(className, 'btn')}
           >
-            {action.icon}
+            {icon}
           </button>
         );
         return (
@@ -180,7 +190,7 @@ export default class ActionButton extends Component {
             }
           }}
         >
-          {action.icon}
+          {icon}
         </button>
         <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm} />
       </>

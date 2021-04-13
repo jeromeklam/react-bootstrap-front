@@ -30,6 +30,7 @@ export default class InputDate extends Component {
     onLockOn: PropTypes.func,
     onLockOff: PropTypes.func,
     prepend: PropTypes.element,
+    append: PropTypes.element,
     required: PropTypes.bool,
     size: PropTypes.string,
     value: PropTypes.string,
@@ -51,6 +52,7 @@ export default class InputDate extends Component {
     onLockOn: null,
     onLockOff: null,
     prepend: null,
+    append: null,
     required: false,
     size: null,
     value: '',
@@ -255,6 +257,9 @@ export default class InputDate extends Component {
               >
                 {this.props.calIcon}
               </button>
+              {this.props.append && (
+                this.props.append
+              )}
               <button
                 type="button"
                 disabled={this.props.disabled || this.props.locked}
