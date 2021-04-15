@@ -133,22 +133,22 @@ export default class ActionButton extends Component {
         </>
       );
     } else {
-      if (this.state.options) {
-        const trigger = (
-          <button
-            type="button"
-            disabled={disabled}
-            title={action.label || ''}
-            className={classnames(className, 'btn')}
-          >
-            {icon}
-          </button>
-        );
-        return (
-          <DropdownWrapper trigger={trigger} align="bottom-right" myRef={this.state.myRef}>
-            <DropdownMenu>
-              {Array.isArray(this.state.options) &&
-                this.state.options.map(elem => {
+      if (this.state.options && Array.isArray(this.state.options)) {
+        if (this.state.options.length > 1) {
+          const trigger = (
+            <button
+              type="button"
+              disabled={disabled}
+              title={action.label || ''}
+              className={classnames(className, 'btn')}
+            >
+              {icon}
+            </button>
+          );
+          return (
+            <DropdownWrapper trigger={trigger} align="bottom-right" myRef={this.state.myRef}>
+              <DropdownMenu>
+                {this.state.options.map(elem => {
                   return (
                     <DropdownMenuOption
                       key={`elem-${action.label}`}
@@ -166,9 +166,33 @@ export default class ActionButton extends Component {
                     />
                   );
                 })}
-            </DropdownMenu>
-          </DropdownWrapper>
-        );
+              </DropdownMenu>
+            </DropdownWrapper>
+          );
+        } else {
+          const elem = this.state.options[0];
+          return (
+            <button
+              type="button"
+              disabled={action.disabled || false}
+              title={action.label || ''}
+              className={classnames(className, 'btn')}
+              ref={this.state.myRef}
+              onClick={ev => {
+                if (ev) {
+                  ev.preventDefault();
+                }
+                if (action.param === 'object') {
+                  elem.onClick(item);
+                } else {
+                  elem.onClick(item.id);
+                }
+              }}
+            >
+              {icon}
+            </button>
+          );
+        }
       }
     }
     return (

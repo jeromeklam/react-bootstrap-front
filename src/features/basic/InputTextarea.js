@@ -6,6 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { DropdownWrapper, ResponsiveConfirm } from '../advanced';
 import { DropdownMenu, DropdownMenuOption, Dropdown } from '../basic';
+import { htmlToString } from '../helper';
 
 const myStyle = {
   height: 'auto',
@@ -214,39 +215,37 @@ export default class InputTextarea extends Component {
 
   onPresetText() {
     this.props.onPresetText();
-    this.setState( { presetText : true } );
+    this.setState({ presetText: true });
   }
 
   onAddPresetText(contentMore) {
-    /**
-     * const editorState = this.state.editorState;
+    const editorState = this.state.editorState;
     let content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
-		content = Modifier.insertText(content, selection, ' ') 
-		content = Modifier.insertText(
+    //const contentStateWithEntity = content.createEntity('MY_ENTITY_TYPE','IMMUTABLE');
+    //const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    content = Modifier.insertText(content, selection, htmlToString(contentMore));
+    /**content = Modifier.insertText(
       content,
       selection,
       contentMore,
-    )
-    let newState = EditorState.push(
-      editorState,
-      content,
-      'insert-characters'
-    )
-    //this.setState({ editorState: newState });
+      null,
+      entityKey,
+    );*/
+    let newState = EditorState.push(editorState, content);
+    this.setState({ editorState: newState });
+    const newContent = newState.getCurrentContent();
     const event = {
       target: {
         name: this.props.name,
-        value: convertToHTML(toHtml)(newState),
+        value: convertToHTML(toHtml)(newContent),
       },
     };
     this.props.onChange(event);
-     */
-    
   }
 
   onPresetTextClose() {
-    this.setState({ presetText : false });
+    this.setState({ presetText: false });
   }
 
   render() {
@@ -288,7 +287,12 @@ export default class InputTextarea extends Component {
                     {this.props.presetTextIcon}
                   </button>
                   {this.props.presetTexts && this.props.presetTexts.length > 0 && this.state.presetText && (
-                    <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onPresetTextClose}>
+                    <Dropdown
+                      align="bottom-right"
+                      myRef={this.state.myRef}
+                      maxHeight="250px"
+                      onClose={this.onPresetTextClose}
+                    >
                       <DropdownMenu>
                         {Array.isArray(this.props.presetTexts) &&
                           this.props.presetTexts.map(text => {
@@ -296,7 +300,9 @@ export default class InputTextarea extends Component {
                               <DropdownMenuOption
                                 key={`text-${text.id}`}
                                 label={text.text_code}
-                                onClick={() => this.onAddPresetText(text.text_content)}
+                                onClick={() => {
+                                  this.onAddPresetText(text.text_content);
+                                }}
                               />
                             );
                           })}
