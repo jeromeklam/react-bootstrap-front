@@ -41,15 +41,16 @@ const modalStyle = {
 const closeStyle = {
   position: 'absolute',
   right: '20px',
-  top: '4px',
+  top: '0px',
   padding: '5px',
   fontSize: '2rem',
+  fontWeight: '200',
 };
 
 const titleStyle = {
   position: 'absolute',
   right: '50px',
-  top: '5px',
+  top: '0px',
 };
 
 const inlineStyle = {

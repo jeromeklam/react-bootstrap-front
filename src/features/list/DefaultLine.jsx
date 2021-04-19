@@ -102,12 +102,19 @@ export default class DesktopListLine extends Component {
     this.setState({ flipped: true });
   }
 
-  handleDoubleClick() {
+  handleDoubleClick(ev) {
+    if (ev) {
+      ev.preventDefault();
+    }
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    }
     this.props.inlineActions.forEach(action => {
       if (action.role === 'MODIFY') {
         action.onClick(this.props.id);
       }
     });
+    return false;
   }
 
   render() {

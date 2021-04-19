@@ -472,3 +472,10 @@ hr {
 button:focus {
   outline: none;
 }
+
+a.bg-light:hover:disabled, a.bg-light:focus:disabled, button.bg-light:hover:disabled, button.bg-light:focus:disabled {
+  background-color: theme-color('light') !important;
+}
+a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondary:hover:disabled, button.bg-secondary:focus:disabled {
+  background-color: theme-color('secondary') !important;
+}
