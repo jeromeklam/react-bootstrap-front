@@ -187,7 +187,7 @@ export default class InputDatetime extends Component {
     const event = {
       target: {
         name: this.props.name,
-        value: date,
+        value: ensureDatetimeTZ(date),
       },
     };
     this.props.onChange(event);
