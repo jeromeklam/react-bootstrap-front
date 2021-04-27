@@ -20,8 +20,8 @@ export default class InputPicker extends Component {
     addIcon: PropTypes.element,
     value: PropTypes.string,
     display: PropTypes.string,
-    onClear: PropTypes.func.isRequired,
-    onMore: PropTypes.func.isRequired,
+    onClear: PropTypes.func,
+    onMore: PropTypes.func,
     onZoom: PropTypes.func,
     onAdd: PropTypes.func,
     pickerUp: PropTypes.bool,
@@ -55,6 +55,8 @@ export default class InputPicker extends Component {
     labelTop: true,
     onAdd: null,
     onZoom: null,
+    onMore: null,
+    onClear: null,
     disabled: false,
   };
 
@@ -152,7 +154,8 @@ export default class InputPicker extends Component {
                   {this.props.zoomIcon}
                 </button>
               )}
-              {this.props.onMore && (
+              {this.props.onMore && 
+                ((this.props.value === null || this.props.value === '' || this.props.value === 0)) && (
                 <button
                   type="button"
                   disabled={this.props.disabled}
