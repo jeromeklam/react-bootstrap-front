@@ -479,3 +479,9 @@ a.bg-light:hover:disabled, a.bg-light:focus:disabled, button.bg-light:hover:disa
 a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondary:hover:disabled, button.bg-secondary:focus:disabled {
   background-color: theme-color('secondary') !important;
 }
+
+.no-select, .select-none {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}

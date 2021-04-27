@@ -111,24 +111,24 @@ export default class ResponsiveModalInner extends Component {
     } else {
       switch (this.props.size) {
         case 'xl':
-          iStyles.height = '510px';
-          iStyles.minHeight = '510px';
-          scrollStyles.maxHeight = '510px';
+          iStyles.height = '540px';
+          iStyles.minHeight = '540px';
+          scrollStyles.maxHeight = '540px';
           break;
         case 'lg':
+          iStyles.height = '500px';
+          iStyles.minHeight = '500px';
+          scrollStyles.maxHeight = '500px';
+          break;
+        case 'md':
           iStyles.height = '480px';
           iStyles.minHeight = '480px';
           scrollStyles.maxHeight = '480px';
           break;
-        case 'md':
-          iStyles.height = '450px';
-          iStyles.minHeight = '450px';
-          scrollStyles.maxHeight = '450px';
-          break;
         default:
-          iStyles.height = '350px';
-          iStyles.minHeight = '350px';
-          scrollStyles.maxHeight = '350px';
+          iStyles.height = '380px';
+          iStyles.minHeight = '380px';
+          scrollStyles.maxHeight = '380px';
           break;
       }
     }

@@ -78,9 +78,9 @@ export default class ActionButton extends Component {
   render() {
     const { action, item, className } = this.props;
     let icon = action.icon;
-    if (action.fDisplay) {
-      if (typeof action.fDisplay === 'function') {
-        icon = action.fDisplay(item);
+    if (action.fIcon) {
+      if (typeof action.fIcon === 'function') {
+        icon = action.fIcon(item);
       } 
     }
     let disabled = action.disabled || false;
