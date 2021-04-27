@@ -92,6 +92,7 @@ export default class InputDatetime extends Component {
     this.onTimeout = this.onTimeout.bind(this);
     this.onToggleTimer = this.onToggleTimer.bind(this);
     this.onTimerDefault = this.onTimerDefault.bind(this);
+    this.onStopTimer = this.onStopTimer.bind(this);
   }
 
   componentDidMount() {
@@ -114,24 +115,25 @@ export default class InputDatetime extends Component {
     this.props.onChange(event);
   }
 
-  onTimeout() {
+  onTimeout(timerLoop = false) {
     if (this.props.timerFct) {
       this.props.timerFct();
     } else {
       this.onTimerDefault();
     }
-    if (this.state.timerLoop) {
+    if (this.state.timerLoop || timerLoop) {
       const timerId = setTimeout(this.onTimeout, this.props.timer);
-      this.setState({ timerId: timerId });
+      this.setState({ timerId: timerId, timerLoop: timerLoop });
     }
   }
 
   onToggleTimer() {
     const timerLoop = !this.state.timerLoop;
     if (timerLoop) {
-      this.onTimeout();
+      this.onTimeout(true);
+    } else {
+      this.onStopTimer();
     }
-    this.setState({ timerLoop : timerLoop });
   }
 
   onClear() {
@@ -159,9 +161,7 @@ export default class InputDatetime extends Component {
       };
       this.props.onChange(event2);
     }
-    if (this.state.timerLoop) {
-      this.setState({ timerLoop : false });
-    }
+    this.onStopTimer();
   }
 
   onComplete(val) {
@@ -192,6 +192,14 @@ export default class InputDatetime extends Component {
     };
     this.props.onChange(event);
     this.onToggle();
+    this.onStopTimer();
+  }
+
+  onStopTimer() {
+    if (this.state.timerId > 0 ) {
+      clearTimeout(this.state.timerId);
+    }
+    this.setState({ timerId: 0, timerLoop: false});
   }
 
   render() {
