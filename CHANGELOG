@@ -1,4 +1,12 @@
-# 3.2.0 : 19/04/202-
+# 3.2.1 : 28/04/2021
+
+* Basic :
+    * InputDatetime : verified Date format
+* Modal :
+    * Defaulkt height
+    * Actions buttons in footer
+
+# 3.2.0 : 19/04/2021
 
 * List : 
     * Multiple width in right mode depending on container size
