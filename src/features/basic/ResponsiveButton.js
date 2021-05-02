@@ -10,6 +10,8 @@ export const ResponsiveButton = props => (
     className={classnames('btn', `btn-${props.button.theme}`)}
     disabled={props.button.disabled || false}
     onClick={props.button.function}
+    options={props.button.options}
+    optionsAlign={props.button.optionsAlign}
   >
     <Responsive displayIn={['Laptop', 'Tablet']}>
       {props.button.name ? (

@@ -155,7 +155,7 @@ export default class InputPicker extends Component {
                 </button>
               )}
               {this.props.onMore && 
-                ((this.props.value === null || this.props.value === '' || this.props.value === 0)) && (
+                ((this.props.value === null || this.props.value === '' || this.props.value <= 0)) && (
                 <button
                   type="button"
                   disabled={this.props.disabled}

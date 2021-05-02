@@ -286,16 +286,18 @@ export default class InputTextarea extends Component {
                   >
                     {this.props.presetTextIcon}
                   </button>
-                  {this.props.presetTexts && this.props.presetTexts.length > 0 && this.state.presetText && (
-                    <Dropdown
-                      align="bottom-right"
-                      myRef={this.state.myRef}
-                      maxHeight="250px"
-                      onClose={this.onPresetTextClose}
-                    >
-                      <DropdownMenu>
-                        {Array.isArray(this.props.presetTexts) &&
-                          this.props.presetTexts.map(text => {
+                  {this.props.presetTexts &&
+                    Array.isArray(this.props.presetTexts) &&
+                    this.props.presetTexts.length > 0 &&
+                    this.state.presetText && (
+                      <Dropdown
+                        align="bottom-right"
+                        myRef={this.state.myRef}
+                        maxHeight="250px"
+                        onClose={this.onPresetTextClose}
+                      >
+                        <DropdownMenu>
+                          {this.props.presetTexts.map(text => {
                             return (
                               <DropdownMenuOption
                                 key={`text-${text.id}`}
@@ -306,9 +308,9 @@ export default class InputTextarea extends Component {
                               />
                             );
                           })}
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
+                        </DropdownMenu>
+                      </Dropdown>
+                    )}
                 </>
               )}
               <button

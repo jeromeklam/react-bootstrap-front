@@ -80,6 +80,10 @@ export default class Dropdown extends Component {
             divStyle.right = -1 * (coords.left + coords.width);
             divStyle.top = coords.top + coords.height;
             break;
+          case 'top-left':
+            divStyle.right = -1 * coords.left;
+            divStyle.bottom = -1 * (coords.top + coords.height);
+            break;
           default:
             divStyle.left = coords.left;
             divStyle.top = coords.top + coords.height;
