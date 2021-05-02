@@ -1,3 +1,9 @@
+# 3.2.2 : 02/05/2021
+
+* InputDatetime : timer stop on manual input
+* InputPicker : Fix bug with object id
+* ActionButton : can have dropdown with more actions
+
 # 3.2.1 : 28/04/2021
 
 * Basic :
