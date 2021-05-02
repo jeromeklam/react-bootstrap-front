@@ -123,7 +123,7 @@ export default class InputDatetime extends Component {
     }
     if (this.state.timerLoop || timerLoop) {
       const timerId = setTimeout(this.onTimeout, this.props.timer);
-      this.setState({ timerId: timerId, timerLoop: timerLoop });
+      this.setState({ timerId: timerId, timerLoop: true });
     }
   }
 
