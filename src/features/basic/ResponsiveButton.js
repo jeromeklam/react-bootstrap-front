@@ -12,6 +12,7 @@ export const ResponsiveButton = props => (
     onClick={props.button.function}
     options={props.button.options}
     optionsAlign={props.button.optionsAlign}
+    optionsOpenMulti={props.button.optionsOpenMulti}
   >
     <Responsive displayIn={['Laptop', 'Tablet']}>
       {props.button.name ? (
