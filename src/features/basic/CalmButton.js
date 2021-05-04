@@ -8,11 +8,13 @@ export default class CalmButton extends Component {
     onClick: PropTypes.func.isRequired,
     options: PropTypes.array,
     optionsAlign: PropTypes.string,
+    optionsOpenMulti: PropTypes.bool, 
   };
   static defaultProps = {
     disabled: false,
     options: [],
     optionsAlign: "bottom-right",
+    optionsOpenMulti: true, // Ouvre le menu des options quand on a au moins 2 options
   };
 
   constructor(props) {
@@ -29,7 +31,7 @@ export default class CalmButton extends Component {
   }
 
   onRealClick(event) {
-    if (this.props.options && this.props.options.length > 0) {
+    if (this.props.options && this.props.options.length > this.props.optionsOpenMulti) {
       this.onOptionsMenuOpen();
     } else {
       this.timer = setTimeout(() => {
@@ -67,7 +69,7 @@ export default class CalmButton extends Component {
         </button>
         {this.props.options &&
           Array.isArray(this.props.options) &&
-          this.props.options.length > 0 &&
+          this.props.options.length > this.props.optionsOpenMulti &&
           this.state.optionsMenu && (
             <Dropdown align={this.props.optionsAlign} myRef={this.state.myRef} maxHeight="250px" onClose={this.onOptionsMenuClose}>
               <DropdownMenu>
