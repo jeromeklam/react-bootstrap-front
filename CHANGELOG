@@ -1,3 +1,7 @@
+# 3.2.3 : 06/05/2021
+
+* ConsentCookie : onDecline not mandatory
+
 # 3.2.2 : 02/05/2021
 
 * InputDatetime : timer stop on manual input
