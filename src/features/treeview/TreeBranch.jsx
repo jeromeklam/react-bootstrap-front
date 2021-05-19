@@ -10,7 +10,7 @@ const itemStyle = {
 };
 
 const sidebarArrow = {
-  border: 'solid black',
+  border: 'solid',
   borderWidth: '0 3px 3px 0',
   padding: '3px',
   position: 'absolute',
@@ -19,7 +19,7 @@ const sidebarArrow = {
 };
 
 const sidebarArrowDown = {
-  border: 'solid black',
+  border: 'solid',
   borderWidth: '0 3px 3px 0',
   padding: '3px',
   position: 'absolute',
