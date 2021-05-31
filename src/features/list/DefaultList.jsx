@@ -259,6 +259,7 @@ export default class DefaultList extends Component {
     if (this.state.splited && this.props.mode === 'right') {
       locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
     }
+    let counter = 1;
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -357,15 +358,24 @@ export default class DefaultList extends Component {
                               <div className="default-list-body">
                                 {this.props.items.length > 0 ? (
                                   <div>
-                                    {this.props.items.map(item => (
-                                      <div key={item.id}>
-                                        {this.props.mode === 'right' && this.state.splited ? (
-                                          <MobileLine {...this.props} id={item.id} item={item} hideMenu={true} />
-                                        ) : (
-                                          <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
-                                        )}
-                                      </div>
-                                    ))}
+                                    {this.props.items.map(item => {
+                                      counter++;
+                                      return (
+                                        <div key={item.id}>
+                                          {this.props.mode === 'right' && this.state.splited ? (
+                                            <MobileLine {...this.props} id={item.id} item={item} hideMenu={true} />
+                                          ) : (
+                                            <DefaultLine
+                                              {...this.props}
+                                              id={item.id}
+                                              item={item}
+                                              cols={dispCols}
+                                              counter={counter}
+                                            />
+                                          )}
+                                        </div>
+                                      );
+                                    })}
                                   </div>
                                 ) : (
                                   <div>{!this.props.loadMorePending && <LoadEmpty />}</div>

@@ -120,6 +120,7 @@ export default class DesktopListLine extends Component {
   render() {
     const { item } = this.props;
     const highlight = this.state.flipped || this.props.inlineOpenedId === this.props.id;
+    //console.log("FK DefaultLine",this.props);
     return (
       <div className={this.props.className}>
         <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
@@ -133,7 +134,8 @@ export default class DesktopListLine extends Component {
               'default-list-wrapper row row-line-separator border-secondary-light',
               this.props.fClassName && this.props.fClassName(item),
               this.props.inlineOpenedId === this.props.id ? 'bg-secondary text-light pt-2 pb-0' : 'text-dark',
-              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover'
+              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover',
+              this.props.counter % 2 !== 1 ? 'row-odd' : 'row-even',
             )}
           >
             {this.props.cols.map((oneCol, i) => {

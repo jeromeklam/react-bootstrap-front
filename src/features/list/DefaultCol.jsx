@@ -30,6 +30,9 @@ export const DefaultCol = (props) => {
   if (content === null) {
     content = '';
   }
+  if (typeof props.fContent === 'function') {
+    content = props.fContent(props.item, content);
+  }
   if (props.type) {
     switch (props.type) {
       case 'text': {

@@ -261,14 +261,17 @@ export default class InputTextarea extends Component {
         )}
         <div className={classnames(!this.props.labelTop && 'col-xs-w30')}>
           <div
-            className={classnames('input-group', (this.props.error || this.props.warning) && 'is-invalid')}
+            className={classnames(
+              'input-group',
+              (this.props.error || this.props.warning) && 'is-invalid',
+            )}
             style={myStyle}
           >
             <Editor
               toolbarHidden={!toolbar}
               editorState={editorState}
               toolbarClassName="toolbarClassName"
-              wrapperClassName="form-control border-secondary h-auto"
+              wrapperClassName={classnames("form-control border-secondary h-auto", this.props.disabled && 'is-disabled')}
               editorClassName="editorClassName overflow-hidden"
               onEditorStateChange={this.onEditorStateChange}
             />
@@ -282,6 +285,7 @@ export default class InputTextarea extends Component {
                       this.props.size === 'sm' && `btn-${this.props.size}`
                     )}
                     onClick={this.onPresetText}
+                    disabled={this.props.disabled}
                     ref={this.state.myRef}
                   >
                     {this.props.presetTextIcon}
@@ -320,6 +324,7 @@ export default class InputTextarea extends Component {
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onToolbar}
+                disabled={this.props.disabled}
               >
                 {this.props.toolbarIcon}
               </button>
@@ -330,6 +335,7 @@ export default class InputTextarea extends Component {
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}
+                disabled={this.props.disabled}
               >
                 {this.props.clearIcon}
               </button>
