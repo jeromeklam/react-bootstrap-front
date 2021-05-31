@@ -278,7 +278,7 @@ svg.text-warning.inline-action:hover {
     border-color: theme-color('secondary-light');
   }
   .row-line.row-even {
-    background: transparent;
+    background: theme-color('light'); 
   }
   .row-line.row-even:not(.row-title):hover {
     background: theme-color('primary-light');

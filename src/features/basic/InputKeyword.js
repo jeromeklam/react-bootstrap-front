@@ -17,6 +17,7 @@ export default class InputKeyword extends Component {
     keywordInactiveIcon: PropTypes.element,
     onAdd: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -28,6 +29,7 @@ export default class InputKeyword extends Component {
     keywordPlusIcon: null,
     keywordMinusIcon: null,
     keywordInactiveIcon: null,
+    disabled: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -96,6 +98,7 @@ export default class InputKeyword extends Component {
   }
 
   render() {
+    //console.log("FK keywpord",this.props);
     let open = this.state.listDD && this.state.listDD.length > 0;
     return (
       <Col size={{ xs: 9, md: 6, lg: 6 }} className="input-keyword">
@@ -109,6 +112,7 @@ export default class InputKeyword extends Component {
             onChange={this.onChange}
             onClick={this.onChange}
             autoComplete="off"
+            disabled={this.props.disabled}
           />
           <input type="hidden" name="autocomplete-field-@" value={this.props.value || ''} />
           <div className="input-group-append">
@@ -120,6 +124,7 @@ export default class InputKeyword extends Component {
                   this.props.onAdd(this.state.value);
                   this.setState({ value: '', listDD: [] });
                 }}
+                disabled={(this.state.value === '') || this.props.disabled}
               >
                 {this.state.value === '' ? (
                   this.props.keywordInactiveIcon
@@ -134,6 +139,7 @@ export default class InputKeyword extends Component {
                 type="button"
                 className={classnames(`btn btn-input border-secondary bg-light`)}
                 onClick={this.props.onDelete}
+                disabled={this.props.disabled}
               >
                 {this.props.keywordMinusIcon}
               </button>
