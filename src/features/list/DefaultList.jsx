@@ -259,7 +259,7 @@ export default class DefaultList extends Component {
     if (this.state.splited && this.props.mode === 'right') {
       locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
     }
-    let counter = 1;
+
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -358,8 +358,7 @@ export default class DefaultList extends Component {
                               <div className="default-list-body">
                                 {this.props.items.length > 0 ? (
                                   <div>
-                                    {this.props.items.map(item => {
-                                      counter++;
+                                    {this.props.items.map((item, idx) => {
                                       return (
                                         <div key={item.id}>
                                           {this.props.mode === 'right' && this.state.splited ? (
@@ -370,7 +369,7 @@ export default class DefaultList extends Component {
                                               id={item.id}
                                               item={item}
                                               cols={dispCols}
-                                              counter={counter}
+                                              counter={idx}
                                             />
                                           )}
                                         </div>
