@@ -250,6 +250,20 @@ svg.text-warning.inline-action:hover {
   border-radius: 0.2rem;
 }
 
+.default-list-wrapper {
+  &.row.row-line-even {
+    background: transparent;
+  }
+  &.row.row-line-odd {
+    background: theme-color('light'); 
+  }	
+  /* Hover des lignes des listes */
+  &.row.row-line-hover {
+    background-color: theme-color('primary-light');
+    color: theme-color('secondary');
+  }
+}
+
 .inline-list {
   color: theme-color('dark');
   padding-left: 10px;
@@ -278,13 +292,13 @@ svg.text-warning.inline-action:hover {
     border-color: theme-color('secondary-light');
   }
   .row-line.row-even {
-    background: theme-color('light'); 
+    background: transparent;
   }
   .row-line.row-even:not(.row-title):hover {
     background: theme-color('primary-light');
   }
   .row-line.row-odd {
-    background: transparent;
+    background: theme-color('light'); 
   }
   .row-line.row-odd:not(.row-title):hover {
     background: theme-color('primary-light');
