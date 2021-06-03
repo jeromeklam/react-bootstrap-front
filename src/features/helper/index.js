@@ -238,6 +238,9 @@ export const htmlToString = html => {
   let text = '';
   if (html && html !== null && html !== '') {
     text = '' + html;
+    text = text.replace(/<style.*?<\/style>/g, '');
+    text = text.replace(/<script.*?<\/script>/g, '');
+    text = text.replace(/<head.*?<\/head>/g, '');
     text = text.replace(/<br>/gi, '\n');
     text = text.replace(/<li>/gi, '\n');
     text = text.replace(/<\/li>/gi, '');

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import striptags from 'striptags';
+import { htmlToString } from '../helper';
 
 const optionsDate = {
   year: 'numeric',
@@ -41,10 +42,7 @@ export const DefaultCol = (props) => {
       }
       case 'html': {
         if (content && content !== null && content !== '') {
-          content = content.replace(/<br>/gi, ' ');
-          content = content.replace(/<br \/>/gi, ' ');
-          content = content.replace(/<\/p><p>/gi, ' ');
-          content = striptags(content);
+          content = htmlToString(content);
           content = <div dangerouslySetInnerHTML={{ __html: `${content}` }} />;
         }
         break;
