@@ -105,12 +105,12 @@ export default class InputAutocomplete extends Component {
     return (
       <InputGroup {...this.props} id={myId}>
         {this.props.prepend && this.props.prepend !== '' && (
-          <InputGroupPrepend className=" border border-primary rounded-left">{this.props.prepend}</InputGroupPrepend>
+          <InputGroupPrepend className=" border border-secondary rounded-left">{this.props.prepend}</InputGroupPrepend>
         )}
         <input
           type="text"
           className={classnames(
-            'border-primary form-control',
+            'border-secondary form-control',
             this.props.size && `form-control-${this.props.size}`,
             (this.props.error || this.props.warning) && 'is-invalid',
             this.props.className && this.props.className
@@ -137,7 +137,7 @@ export default class InputAutocomplete extends Component {
             <button
               type="button"
               className={classnames(
-                'btn btn-input btn-outline-primary bg-light',
+                'btn btn-input btn-outline-secondary bg-light',
                 this.props.size && `btn-${this.props.size}`
               )}
               disabled={this.props.disabled}
@@ -149,7 +149,7 @@ export default class InputAutocomplete extends Component {
         )}
         {open && (
           <Dropdown
-            className="border rounded border-primary bg-white text-secondary"
+            className="border rounded border-secondary bg-white text-secondary"
             myRef={this.state.myRef}
             onClose={this.onSelect}
             maxHeight="250px"

@@ -304,7 +304,7 @@ export default class DefaultList extends Component {
                 <CSSTransition in={this.state.panelOpen} timeout={duration}>
                   {state => (
                     <div
-                      className="default-list-panel bg-primary-light text-secondary"
+                      className="default-list-panel bg-light text-secondary"
                       style={{
                         ...defaultStyle,
                         ...transitionStyles[state],

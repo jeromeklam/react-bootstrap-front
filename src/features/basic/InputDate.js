@@ -175,7 +175,7 @@ export default class InputDate extends Component {
         >
           <div className="input-group" ref={this.state.myRef}>
             {this.props.prepend && (
-              <div className="input-group-prepend border border-primary rounded-left">{this.props.prepend}</div>
+              <div className="input-group-prepend border border-secondary rounded-left">{this.props.prepend}</div>
             )}
             <IMaskInput
               mask={Date}

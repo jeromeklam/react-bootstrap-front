@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import Flag from 'react-world-flags';
-import { Dropdown, DropdownMenu, DropdownMenuOption } from '../basic';
+import { Dropdown, DropdownMenu, DropdownMenuOption, Badge } from '../basic';
 import { Highlight, HighlightButton } from '../tour';
 
 const navStyles = {
@@ -117,18 +117,7 @@ export class DefaultHeader extends Component {
               {this.props.badges &&
                 this.props.badges.map(oneBadge => (
                   <li key={'badge-' + oneBadge.name} className="nav-badge nav-item">
-                    <button className="btn btn-light" onClick={oneBadge.onClick || null}>
-                      {oneBadge.icon}
-                      <span
-                        className={classnames(
-                          'badge',
-                          oneBadge.text && `text-${oneBadge.text}`,
-                          oneBadge.color && `badge-${oneBadge.color}`
-                        )}
-                      >
-                        {oneBadge.count}
-                      </span>
-                    </button>
+                    {oneBadge.component ? oneBadge.component : <Badge {...oneBadge} />}
                   </li>
                 ))}
               {this.props.badges && this.props.badges.length > 0 && <div className="pr-4" />}

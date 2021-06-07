@@ -90,18 +90,9 @@ export default class FilterBuilder extends Component {
             let value = '';
             let colOper = oper;
             if (elem) {
-	//console.log("FK col filtered", colFilterable);
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
             }
-            /** 
-            if (value !== '') {
-              console.log("FK filters", filter);
-              console.log("FK col filtered", colFilterable);
-              console.log("FK val", value);
-              console.log("FK elem", elem);
-            }
-            */
             const prepend = (
               <select
                 id={`oper-${colFilterable}`}
@@ -162,7 +153,7 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <InputDate
-                        borderColor="primary"
+                        borderColor="secondary"
                         prepend={prepend}
                         id={colFilterable}
                         name={colFilterable}
@@ -215,7 +206,7 @@ export default class FilterBuilder extends Component {
                         id={colFilterable}
                         name={colFilterable}
                         value={value}
-                        className="form-control border-primary"
+                        className="form-control border-secondary"
                         onChange={(e) => this.props.onChange(e,FILTER_OPER_EQUAL)}
                       >
                         <option key="0" value="" />
@@ -239,13 +230,13 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border border-primary rounded-left">{prepend}</div>
+                        <div className="input-group-prepend border border-secondary rounded-left">{prepend}</div>
                         <input
                           type="text"
                           id={colFilterable}
                           name={colFilterable}
                           value={value}
-                          className="form-control border-primary rounded-right"
+                          className="form-control border-secondary rounded-right"
                           onChange={this.props.onChange}
                         />
                       </div>

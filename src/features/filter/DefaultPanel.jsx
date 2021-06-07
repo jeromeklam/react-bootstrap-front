@@ -6,9 +6,9 @@ import { SortableList } from '../sort';
 
 const sortLocal = (cols, sort) => {
   let local = [];
-  sort.forEach((elt) => {
+  sort.forEach(elt => {
     let elt3 = false;
-    cols.forEach((elt2) => {
+    cols.forEach(elt2 => {
       if (elt.col === elt2.col) {
         elt3 = elt2;
         return true;
@@ -22,9 +22,9 @@ const sortLocal = (cols, sort) => {
     };
     local.push(newElt);
   });
-  cols.forEach((elt) => {
+  cols.forEach(elt => {
     if (elt.sortable) {
-      const found = local.find((elt2) => {
+      const found = local.find(elt2 => {
         return elt2.col === elt.col;
       });
       if (!found) {
@@ -53,7 +53,7 @@ const innerstyle = {
   position: 'absolute',
   left: '0px',
   right: '0px',
-  top: '60px',
+  top: '100px',
   bottom: '0px',
   overflowX: 'hidden',
   overflowY: 'auto',
@@ -62,7 +62,7 @@ const innerstyle = {
 const btStyle = {
   position: 'absolute',
   right: '2px',
-  top: '2px',
+  top: '5px',
 };
 
 export default class DefaultPanel extends Component {
@@ -169,7 +169,7 @@ export default class DefaultPanel extends Component {
 
   onSortChange(col) {
     let newSort = this.state.sort;
-    newSort.forEach((elt) => {
+    newSort.forEach(elt => {
       if (elt.col === col.col) {
         if (elt.way === 'none') {
           elt.way = 'up';
@@ -191,7 +191,7 @@ export default class DefaultPanel extends Component {
       event.preventDefault();
     }
     let sort = [];
-    this.state.sort.forEach((elt) => {
+    this.state.sort.forEach(elt => {
       if (elt.way !== 'none') {
         const nElt = {
           col: elt.col,
@@ -210,8 +210,9 @@ export default class DefaultPanel extends Component {
   render() {
     return (
       <div className="default-list-panel-inner" style={mystyle}>
-        <div className="default-list-panel-navbar clearfix">
-        <div className="common-responsive-list-panels-close btn-group" style={btStyle}>
+        <div className="default-list-panel-header bg-secondary text-light">
+          <span>Filtres et Tris</span>
+          <div className="common-responsive-list-panels-close btn-group" style={btStyle}>
             <button className="btn btn-primary text-light" onClick={this.onValid}>
               {this.props.validPanelIcon}
             </button>
@@ -219,10 +220,15 @@ export default class DefaultPanel extends Component {
               {this.props.cancelPanelIcon}
             </button>
           </div>
+        </div>
+        <div className="default-list-panel-navbar clearfix">
           <ul className="nav nav-tabs float-left">
             <li className="nav-item">
               <a
-                className={classnames('nav-link', this.state.panel === 'filter' && 'text-primary')}
+                className={classnames(
+                  'nav-link text-light',
+                  this.state.panel === 'filter' ? 'bg-primary' : 'bg-secondary'
+                )}
                 onClick={() => {
                   this.changePanel('filter');
                 }}
@@ -232,7 +238,10 @@ export default class DefaultPanel extends Component {
             </li>
             <li className="nav-item">
               <a
-                className={classnames('nav-link', this.state.panel === 'sort' && 'text-primary')}
+                className={classnames(
+                  'nav-link text-light',
+                  this.state.panel === 'sort' ? 'bg-primary' : 'bg-secondary'
+                )}
                 onClick={() => {
                   this.changePanel('sort');
                 }}

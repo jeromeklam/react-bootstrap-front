@@ -36,4 +36,5 @@ export { default as InputKeywords } from './InputKeywords';
 export { default as InputWorkload } from './InputWorkload';
 export { default as InputGpsCoords } from './InputGpsCoords';
 export { default as InputPhone } from './InputPhone';
+export { default as Badge } from './Badge';
 export * from './InputChildren';

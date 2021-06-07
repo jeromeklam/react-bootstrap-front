@@ -38,11 +38,11 @@ export default class DropdownWrapper extends Component {
   render() {
     return (
       <>
-        <div ref={this.state.ref} className="advanced-dropdown-wrapper" onClick={this.onClick} title={this.props.tooltip}>
+        <div ref={this.state.ref} className="advanced-dropdown-wrapper" onClick={this.onClose} title={this.props.tooltip}>
           {this.props.trigger}
         </div>
         {this.state.open && (
-          <Dropdown align={this.props.align} myRef={this.state.ref} onClose={this.onClose}>
+          <Dropdown align={this.props.align} myRef={this.state.myRef} onClose={this.onClose}>
             <div onClick={this.onClose}>
               {this.props.children}
             </div>
