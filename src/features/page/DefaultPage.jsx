@@ -36,21 +36,21 @@ const userMenuDefaultStyles = {
   position: 'fixed',
   left: '0px',
   right: '0px',
-  top: '-400px',
-  height: '400px',
+  top: '-350px',
+  height: '350px',
   zIndex: '900',
 };
 
 const userMenuStyles = {
   entering: { top: '0px' },
   entered: { top: '0px' },
-  exiting: { top: '-400px' },
-  exited: { top: '-400px' },
+  exiting: { top: '-350px' },
+  exited: { top: '-350px' },
 };
 
 const headerMenuStyles = {
-  entering: { top: '400px' },
-  entered: { top: '400px' },
+  entering: { top: '350px' },
+  entered: { top: '350px' },
   exiting: { top: '0px' },
   exited: { top: '0px' },
 };
