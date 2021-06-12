@@ -261,6 +261,7 @@ svg.text-warning.inline-action:hover {
   &.row.row-line-hover {
     background-color: theme-color('primary-light');
     color: theme-color('secondary');
+    cursor: pointer;
   }
 }
 
@@ -498,4 +499,27 @@ a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondar
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+}
+.input-group-prepend .btn, .input-group-append .btn {
+  font-size: 0.9rem;
+}
+.card-header {
+  background-color: theme-color('secondary');
+  color: theme-color('light');
+}
+
+* {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+p, span, label, input {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -o-user-select: text;
+    user-select: text;
 }

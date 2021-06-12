@@ -90,7 +90,7 @@ const inlineStyle = {
   width: '1200px',
   bottom: '0px',
   position: 'absolute',
-  top: '50px',
+  top: '110px',
   zIndex: '700',
   transition: `right ${duration}ms ease ${duration}ms, top ${duration}ms ease ${duration}ms`,
 };
@@ -387,62 +387,65 @@ export default class DefaultList extends Component {
                           </WidthObserver>
                         </div>
                         {this.props.mode === 'right' && (
-                          <div
-                            className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
-                            style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
-                          >
-                            <WidthObserver>
-                              <div className="row">
-                                <div className="rbf-list-default-list-right-separator text-center" />
-                                <div className="rbf-list-default-list-right-content p-0 text-secondary h-100">
-                                  <div className="row">
-                                    <div className="col-xs-w36">
-                                      <DefaultRightHeader {...this.props} />
+                          <>
+                            <div
+                              className="rbf-list-default-list-right-top p-0 text-secondary"
+                              style={{ ...inlineStyle, ...inlineTransitionStyles[state], top: '50px' }}
+                            >
+                              <DefaultRightHeader {...this.props} />
+                            </div>
+                            <div
+                              className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
+                              style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
+                            >
+                              <WidthObserver>
+                                <div className="row">
+                                  <div className="rbf-list-default-list-right-separator text-center" />
+                                  <div className="rbf-list-default-list-right-content p-0 text-secondary h-100">
+                                    <div className="row">
+                                      <div className="col-xs-w36">
+                                        <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
+                                      </div>
                                     </div>
                                   </div>
-                                  <div className="row">
-                                    <div className="col-xs-w36">
-                                      <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
-                                    </div>
+                                  <div className="rbf-list-default-list-right-menu text-center">
+                                    <nav className="text-center pt-0" style={rightInlineButtonsStyle}>
+                                      <button
+                                        type="button"
+                                        title="close"
+                                        className={classnames('btn btn-left', 'btn-secondary')}
+                                        onClick={evt => {
+                                          evt.stopPropagation();
+                                          this.props.onClick(null);
+                                        }}
+                                      >
+                                        {this.props.closeIcon}
+                                      </button>
+                                      {this.props.inlineActions &&
+                                        this.props.inlineActions.map((action, i) => (
+                                          <div key={`action-${i}`}>
+                                            {(action.role === 'OTHER' || action.role === 'DETAIL') && (
+                                              <ActionButton
+                                                action={action}
+                                                item={this.props.currentItem}
+                                                className={classnames(
+                                                  'btn btn-left',
+                                                  action.name === this.props.currentInline
+                                                    ? 'btn-primary'
+                                                    : action.theme
+                                                    ? `btn-${action.theme}`
+                                                    : 'btn-secondary'
+                                                )}
+                                              />
+                                            )}
+                                          </div>
+                                        ))}
+                                    </nav>
                                   </div>
                                 </div>
-                                <div className="rbf-list-default-list-right-menu text-center">
-                                  <nav className="text-center pt-2" style={rightInlineButtonsStyle}>
-                                    <button
-                                      type="button"
-                                      title="close"
-                                      className={classnames('btn btn-left', 'btn-secondary')}
-                                      onClick={evt => {
-                                        evt.stopPropagation();
-                                        this.props.onClick(null);
-                                      }}
-                                    >
-                                      {this.props.closeIcon}
-                                    </button>
-                                    {this.props.inlineActions &&
-                                      this.props.inlineActions.map((action, i) => (
-                                        <div key={`action-${i}`}>
-                                          {(action.role === 'OTHER' || action.role === 'DETAIL') && (
-                                            <ActionButton
-                                              action={action}
-                                              item={this.props.currentItem}
-                                              className={classnames(
-                                                'btn btn-left',
-                                                action.name === this.props.currentInline
-                                                  ? 'btn-primary'
-                                                  : action.theme
-                                                  ? `btn-${action.theme}`
-                                                  : 'btn-secondary'
-                                              )}
-                                            />
-                                          )}
-                                        </div>
-                                      ))}
-                                  </nav>
-                                </div>
-                              </div>
-                            </WidthObserver>
-                          </div>
+                              </WidthObserver>
+                            </div>
+                          </>
                         )}
                       </div>
                     )}

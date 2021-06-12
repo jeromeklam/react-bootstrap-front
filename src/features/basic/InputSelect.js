@@ -110,6 +110,7 @@ export default class InputSelect extends Component {
   }
 
   render() {
+    const myId = getFieldId(this.props.name, this.props.id);
     const { options, value } = this.state;
     this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.render.' + (value || '~'));
     let datasProps = {};
@@ -119,7 +120,7 @@ export default class InputSelect extends Component {
       }
     }
     return (
-      <InputGroup {...this.props} id={this.state.id}>
+      <InputGroup {...this.props} id={myId}>
         {this.props.prepend && this.props.prepend !== '' && (
           <InputGroupPrepend>
             <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
@@ -133,7 +134,8 @@ export default class InputSelect extends Component {
             this.props.size && `form-control-${this.props.size}`
           )}
           name={this.props.name}
-          id={this.props.name}
+          id={myId}
+          inputId={myId}
           disabled={this.props.disabled}
           required={this.props.required}
           value={value}

@@ -41,7 +41,7 @@ const modalStyle = {
 const closeStyle = {
   position: 'absolute',
   right: '20px',
-  top: '0px',
+  top: '5px',
   padding: '5px',
   fontSize: '2rem',
   fontWeight: '200',

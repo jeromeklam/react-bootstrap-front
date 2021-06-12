@@ -81,7 +81,7 @@ export default class ActionButton extends Component {
     if (action.fIcon) {
       if (typeof action.fIcon === 'function') {
         icon = action.fIcon(item);
-      } 
+      }
     }
     let disabled = action.disabled || false;
     if (this.state.options && Array.isArray(this.state.options) && this.state.options.length === 0) {
@@ -99,7 +99,7 @@ export default class ActionButton extends Component {
               onClick={evt => {
                 this.state.triggerFct(item).then(result => {
                   this.updateOptions(result);
-                }); 
+                });
               }}
             >
               {icon}
@@ -108,7 +108,8 @@ export default class ActionButton extends Component {
           {this.state.options && (
             <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onClose}>
               <DropdownMenu>
-                {Array.isArray(this.state.options) && (this.state.options.length > 0) &&
+                {Array.isArray(this.state.options) &&
+                  this.state.options.length > 0 &&
                   this.state.options.map(elem => {
                     return (
                       <DropdownMenuOption

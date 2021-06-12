@@ -1,6 +1,15 @@
 .rbf-list-mobile-line {
+  .rbf-list-mobile-line-header:hover {
+    cursor: pointer;
+  }
+  .rbf-list-mobile-line-header-select {
+    position: absolute;
+    left: 5px;
+    top: 2px;
+  }
   .rbf-list-mobile-line-header-title {
     font-weight: bold;
+    margin-left: 5px;
   }
   .rbf-list-mobile-line-header-nav {
     position: absolute;

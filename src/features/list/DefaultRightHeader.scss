@@ -2,5 +2,11 @@
 
 .rbf-list-default-right-header {
   font-weight: bold;
-  min-height: 70px;
+  min-height: 44px;
+  color: theme-color('light');
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  background-color: theme-color('secondary');
 }

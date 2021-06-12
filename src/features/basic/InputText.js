@@ -5,7 +5,7 @@ import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from 
 import { getFieldId } from '../helper';
 
 export const InputText = props => {
-  let myId = getFieldId(props.name, props.id);
+  const myId = getFieldId(props.name, props.id);
   return (
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
@@ -22,6 +22,7 @@ export const InputText = props => {
           props.className && props.className
         )}
         id={myId}
+        inputId={myId}
         name={props.name}
         value={props.value || ''}
         required={props.required}

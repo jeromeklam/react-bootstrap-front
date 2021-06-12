@@ -3,7 +3,15 @@
 }
 .rbf-list-default-list-right-menu {
   width: 70px !important;
+  padding-left: 5px;
+}
+.rbf-list-default-list-right-top {
+  position: absolute;
+  z-index: 708 !important;
+  height: 60px !important;
+  overflow: hidden !important;
 }
 .rbf-list-default-list-right-content {
-  width: calc(100% - 85px) !important;
+  width: calc(100% - 90px) !important;
+  top: 100px !important;
 }

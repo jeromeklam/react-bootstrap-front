@@ -5,7 +5,7 @@ import { IMaskInput } from 'react-imask';
 import IMask from 'imask';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import { displayDate, ensureDatetimeTZ } from '../helper';
+import { displayDate, ensureDatetimeTZ, getFieldId } from '../helper';
 import { Dropdown } from './';
 
 registerLocale('fr', fr);
@@ -147,6 +147,7 @@ export default class InputDate extends Component {
   }
 
   render() {
+    const myId = getFieldId(this.props.name, this.props.id);
     return (
       <div
         className={classnames(
@@ -157,7 +158,7 @@ export default class InputDate extends Component {
       >
         {this.props.label !== '' && (
           <label
-            htmlFor={this.props.id}
+            htmlFor={myId}
             className={classnames(
               !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
@@ -221,6 +222,8 @@ export default class InputDate extends Component {
               lazy={false}
               overwrite={true}
               value={this.state.value}
+              id={myId}
+              inputId={myId}
               onInput={this.onChange}
               onComplete={this.onComplete}
               className={classnames(

@@ -1,3 +1,12 @@
+# 3.2.5 : 12/06/2021
+
+* list right split
+    * fixed header
+    * selectable via card
+    * primary color for selected card
+* Input
+    * htmlFor
+
 # 3.2.4 : 25/05/2021
 
 * Filter init

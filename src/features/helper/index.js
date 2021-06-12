@@ -254,7 +254,7 @@ export const htmlToString = html => {
 
 export const getFieldId = (name, id = null) => {
   if (id && id !== '') {
-    return id;
+    return  getRandomInt(10000, 99999) + '-' + id;
   }
   const rnd = getRandomInt(10000, 99999);
   return `${name}-${rnd}`;

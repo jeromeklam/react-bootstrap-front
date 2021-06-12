@@ -8,7 +8,7 @@ export const DefaultTitle = props => (
   <div style={props.style} className={classnames('default-list-title row text-secondary', props.className)}>
     {props.cols.map((oneCol, i) => {
       let addClass = '';
-      if (oneCol.align !== '') {
+      if (oneCol.align && oneCol.align !== '') {
         addClass = 'text-' + props.align;
       }
       switch (oneCol.type) {

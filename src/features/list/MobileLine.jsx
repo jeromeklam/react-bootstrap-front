@@ -46,6 +46,7 @@ export class MobileLine extends Component {
   }
 
   render() {
+    const selectable = this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
     return (
       <div
         id={`rbf-list-mobile-line${this.props.item.id}`}
@@ -62,19 +63,48 @@ export class MobileLine extends Component {
               <div
                 className={classnames(
                   'card-header rbf-list-mobile-line-header',
-                  this.props.inlineOpenedId === this.props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
+                  this.props.inlineOpenedId === this.props.id ? 'text-white bg-primary' : 'text-secondary bg-white'
                 )}
               >
-                <span className="rbf-list-mobile-line-header-title">{getCardTitle(this.props.cols, this.props.item)}</span>
+                {selectable && (
+                  <div className="rbf-list-mobile-line-header-select">
+                    <div
+                      className={classnames(
+                        'select-line border border-secondary mr-2 bg-light',
+                        this.props.selected.find(elem => elem === this.props.id) && 'selected',
+                      )}
+                      onClick={(ev) => {
+                        if (ev) {
+                          ev.preventDefault();
+                          ev.stopPropagation();
+                        }
+                        this.props.onSelect(this.props.id);
+                      }}
+                    >
+                      <div className="select-line-inner bg-secondary" />
+                    </div>
+                  </div>
+                )}
+                <span className="rbf-list-mobile-line-header-title">
+                  {getCardTitle(this.props.cols, this.props.item)}
+                </span>
 
                 {(this.state.flipped || this.props.inlineOpenedId === this.props.id) && (
                   <ul style={navstyle} className="nav nav-pills rbf-list-mobile-line-header-nav">
                     {this.props.inlineActions &&
-                      this.props.inlineActions.map(action => (
-                        <li className="nav-item" key={action.name}>
-                          <ActionButton action={action} item={this.props.item} className={classnames('btn-inline',action.theme && `btn-${action.theme}`)}/>
-                        </li>
-                      ))}
+                      this.props.inlineActions.map(action => {
+                        return !this.props.hideMenu || action.role === 'MODIFY' || action.role === 'DELETE' ? (
+                          <li className="nav-item" key={action.name}>
+                            <ActionButton
+                              action={action}
+                              item={this.props.item}
+                              className={classnames('btn-inline', action.theme && `btn-${action.theme}`)}
+                            />
+                          </li>
+                        ) : (
+                          <></>
+                        );
+                      })}
                   </ul>
                 )}
               </div>
