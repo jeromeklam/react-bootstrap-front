@@ -47,7 +47,8 @@ const sliderdetailstyle = {
 };
 
 const inputstyle = {
-  display: 'none',
+  width: '0px',
+  height: '0px',
 };
 
 export const InputCheckbox = props => (
@@ -59,18 +60,21 @@ export const InputCheckbox = props => (
       </label>
     )}
     <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
-      <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
-        <input
-          style={inputstyle}
-          type="checkbox"
-          className="form-check-input primary"
-          id={props.id}
-          name={props.name}
-          required={props.required}
-          disabled={props.disabled}
-          onChange={props.onChange}
-          checked={props.checked || false}
-        />
+      <input
+        style={inputstyle}
+        type="checkbox"
+        className="form-check-input primary"
+        id={props.id}
+        name={props.name}
+        required={props.required}
+        disabled={props.disabled}
+        onChange={props.onChange}
+        checked={props.checked || false}
+      />
+      <label
+        style={switchstyle}
+        className={classnames('slider bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}
+      >
         <div style={sliderbeforestyle}>
           <span
             style={props.checked === true ? slideronstyle : sliderstyle}

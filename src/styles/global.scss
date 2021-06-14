@@ -516,7 +516,7 @@ a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondar
     user-select: none;
 }
 
-p, span, label, input {
+p, span, input {
     -webkit-user-select: text;
     -khtml-user-select: text;
     -moz-user-select: text;

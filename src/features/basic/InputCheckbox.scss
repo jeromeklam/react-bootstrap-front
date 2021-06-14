@@ -1,0 +1,5 @@
+.form-check-input:focus + .slider {
+    border-color: $input-focus-border-color !important;
+    outline: 0 !important;
+    box-shadow: $input-focus-box-shadow !important;
+}

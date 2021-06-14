@@ -78,6 +78,7 @@ export default class InputAutocomplete extends Component {
   }
 
   onSelect(item) {
+    console.log(item);
     if (item) {
       this.props.onSelect({ target: { name: this.props.name, value: item.id } }, FILTER_OPER_EQUAL);
       let display = '';

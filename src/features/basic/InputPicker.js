@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { Dropdown } from './';
+import { getFieldId } from '../helper';
 
 const listStyle = {
   maxHeight: '200px',
@@ -70,13 +71,50 @@ export default class InputPicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selected: 0,
       myRef: React.createRef(),
-      id: `id-${props.name}`,
       open: props.list && props.list.length > 0 && props.display !== '',
     };
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
+    this.onEnter = this.onEnter.bind(this);
+  }
+
+  onKeyUp() {
+    if (this.props.list && this.props.list.length > 0) {
+      let selected = this.state.selected;
+      if (selected > 1) {
+        selected = selected - 1;
+      } else {
+        selected = this.props.list.length;
+      }
+      this.setState({ selected });
+    }
+  }
+
+  onKeyDown() {
+    if (this.props.list && this.props.list.length > 0) {
+      let selected = this.state.selected;
+      if (selected > this.props.list.length) {
+        selected = 1;
+      } else {
+        selected = selected + 1;
+      }
+      this.setState({ selected });
+    }
+  }
+
+  onEnter() {
+    if (this.props.list && this.props.list.length > 0 && this.state.selected > 0) {
+      const idx = this.state.selected - 1;
+      if (this.props.list[idx]) {
+        this.props.onSelect(this.props.list[idx]);
+      }
+    }
   }
 
   render() {
+    const myId = getFieldId(this.props.name, this.props.id);
     return (
       <div
         className={classnames(
@@ -87,6 +125,7 @@ export default class InputPicker extends Component {
       >
         {!this.props.inline && this.props.label !== '' && (
           <label
+            htmlFor={myId}
             className={classnames(
               !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
@@ -108,7 +147,8 @@ export default class InputPicker extends Component {
           >
             <input
               type="text"
-              id={this.state.id}
+              id={myId}
+              inputId={myId}
               name={this.props.name}
               value={this.props.display || ''}
               disabled={this.props.disabled}
@@ -120,9 +160,30 @@ export default class InputPicker extends Component {
               onClick={() => {
                 this.props.onSelect();
               }}
-              onKeyUp={(e) => {
-                if (e && e.key === 'Escape') {
-                  this.props.onSelect();
+              onKeyUp={e => {
+                if (e && e.key) {
+                  switch (e.key) {
+                    case 'ArrowUp':
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.onKeyUp();
+                      break;
+                    case 'ArrowDown':
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.onKeyDown();
+                      break;
+                    case 'Enter':
+                      e.preventDefault();
+                      e.stopPropagation();
+                      this.onEnter();
+                      break;
+                    case 'Escape':
+                      this.props.onSelect();
+                      break;
+                    default:
+                      break;
+                  }
                 }
               }}
               autoComplete="off"
@@ -142,7 +203,7 @@ export default class InputPicker extends Component {
                   {this.props.addIcon}
                 </button>
               )}
-              {this.props.onZoom && (this.props.value && this.props.value > 0) && (
+              {this.props.onZoom && this.props.value && this.props.value > 0 && (
                 <button
                   type="button"
                   className={classnames(
@@ -154,8 +215,7 @@ export default class InputPicker extends Component {
                   {this.props.zoomIcon}
                 </button>
               )}
-              {this.props.onMore && 
-                ((this.props.value === null || this.props.value === '' || this.props.value <= 0)) && (
+              {this.props.onMore && (this.props.value === null || this.props.value === '' || this.props.value <= 0) && (
                 <button
                   type="button"
                   disabled={this.props.disabled}
@@ -170,18 +230,18 @@ export default class InputPicker extends Component {
               )}
               {this.props.onClear &&
                 ((this.props.value && this.props.value > 0) || (this.props.display && this.props.display !== '')) && (
-                <button
-                  type="button"
-                  disabled={this.props.disabled}
-                  className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
-                    this.props.size === 'sm' && `btn-${this.props.size}`
-                  )}
-                  onClick={this.props.onClear}
-                >
-                  {this.props.clearIcon}
-                </button>
-              )}
+                  <button
+                    type="button"
+                    disabled={this.props.disabled}
+                    className={classnames(
+                      'btn btn-input btn-outline-secondary bg-light',
+                      this.props.size === 'sm' && `btn-${this.props.size}`
+                    )}
+                    onClick={this.props.onClear}
+                  >
+                    {this.props.clearIcon}
+                  </button>
+                )}
             </div>
             {this.state.open && (
               <Dropdown
@@ -190,10 +250,10 @@ export default class InputPicker extends Component {
                 onClose={this.props.onSelect}
                 maxHeight="250px"
               >
-                {this.props.list.map(item => (
-                  <a
+                {this.props.list.map((item, idx) => (
+                  <div
                     key={item[this.props.pickerId]}
-                    className="dropdown-item"
+                    className={classnames('dropdown-item', this.state.selected === (idx + 1) && 'active')}
                     onClick={() => {
                       item.id = '' + item[this.props.pickerId];
                       this.props.onSelect(item);
@@ -208,7 +268,7 @@ export default class InputPicker extends Component {
                         ))}
                       </div>
                     )}
-                  </a>
+                  </div>
                 ))}
               </Dropdown>
             )}
