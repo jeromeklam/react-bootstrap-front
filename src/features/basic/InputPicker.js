@@ -148,7 +148,6 @@ export default class InputPicker extends Component {
             <input
               type="text"
               id={myId}
-              inputId={myId}
               name={this.props.name}
               value={this.props.display || ''}
               disabled={this.props.disabled}

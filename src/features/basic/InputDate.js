@@ -223,7 +223,6 @@ export default class InputDate extends Component {
               overwrite={true}
               value={this.state.value}
               id={myId}
-              inputId={myId}
               onInput={this.onChange}
               onComplete={this.onComplete}
               className={classnames(

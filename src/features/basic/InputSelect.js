@@ -135,7 +135,6 @@ export default class InputSelect extends Component {
           )}
           name={this.props.name}
           id={myId}
-          inputId={myId}
           disabled={this.props.disabled}
           required={this.props.required}
           value={value}

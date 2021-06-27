@@ -22,7 +22,6 @@ export const InputText = props => {
           props.className && props.className
         )}
         id={myId}
-        inputId={myId}
         name={props.name}
         value={props.value || ''}
         required={props.required}

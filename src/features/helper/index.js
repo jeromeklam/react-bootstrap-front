@@ -2,6 +2,35 @@ import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
 import { isNull } from 'lodash';
 
+export const verifyScope = (p_user_scope, p_scope) => {
+  const allScopes = p_user_scope.toUpperCase().split(',');
+  const testScope = p_scope.toUpperCase();
+  let authorized = false;
+  allScopes.forEach(scope => {
+    const parts = scope.split('.');
+    let resp = 'crud';
+    if (parts.length > 1) {
+      resp = parts[1];
+    }
+    if (scope.trim() !== '') {
+      if (scope === 'ZEUS') {
+        authorized = resp;
+        return true;
+      }
+      if (testScope.indexOf(parts[0]) === 0) {
+        authorized = resp;
+        return true;
+      } else {
+        if (parts[0].indexOf(testScope) === 0) {
+          authorized = resp;
+          return true;
+        }
+      }
+    }
+  })
+  return authorized;
+}
+
 export const ensureDatetimeTZ = (date) => {
   if (date instanceof Date) {
     return date.toISOString();
