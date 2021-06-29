@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownMenu, DropdownMenuOption, Dropdown } from '../basic';
+import { SmLoading9x9 } from '../spinner';
 
 export default class CalmButton extends Component {
   static propTypes = {
@@ -8,12 +9,12 @@ export default class CalmButton extends Component {
     onClick: PropTypes.func.isRequired,
     options: PropTypes.array,
     optionsAlign: PropTypes.string,
-    optionsOpenMulti: PropTypes.bool, 
+    optionsOpenMulti: PropTypes.bool,
   };
   static defaultProps = {
     disabled: false,
     options: [],
-    optionsAlign: "bottom-right",
+    optionsAlign: 'bottom-right',
     optionsOpenMulti: true, // Ouvre le menu des options quand on a au moins 2 options
   };
 
@@ -36,7 +37,7 @@ export default class CalmButton extends Component {
     } else {
       this.timer = setTimeout(() => {
         this.setState({ executing: false });
-      }, 1000);
+      }, 2000);
       this.setState({ executing: true });
       this.props.onClick(event);
     }
@@ -65,13 +66,25 @@ export default class CalmButton extends Component {
           disabled={this.state.executing || this.props.disabled}
           ref={this.state.myRef}
         >
-          {this.props.children || ''}
+          <>
+            {this.state.executing && (
+              <div className="calm-button-loader pr-1 text-light">
+                <SmLoading9x9 width={24} height={24} />
+              </div>
+            )}
+            {this.props.children || ''}
+          </>
         </button>
         {this.props.options &&
           Array.isArray(this.props.options) &&
           this.props.options.length > this.props.optionsOpenMulti &&
           this.state.optionsMenu && (
-            <Dropdown align={this.props.optionsAlign} myRef={this.state.myRef} maxHeight="250px" onClose={this.onOptionsMenuClose}>
+            <Dropdown
+              align={this.props.optionsAlign}
+              myRef={this.state.myRef}
+              maxHeight="250px"
+              onClose={this.onOptionsMenuClose}
+            >
               <DropdownMenu>
                 {this.props.options.map(option => {
                   return (

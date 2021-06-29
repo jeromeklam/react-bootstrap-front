@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, LoadEmpty, DefaultRightHeader } from './';
-import { getSizeFromWidth, isInViewPort } from '../helper';
+import { getSizeFromWidth, isInViewPort, randomString, isDescendant } from '../helper';
 import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
 import { ActionButton } from './';
@@ -120,6 +120,7 @@ export default class DefaultList extends Component {
     inlineComponent: PropTypes.element,
     inlineOpenedItem: PropTypes.element,
     mode: PropTypes.string,
+    onSelect: PropTypes.func,
     closeIcon: PropTypes.element,
   };
   static defaultProps = {
@@ -130,6 +131,7 @@ export default class DefaultList extends Component {
     inlineOpenedItem: null,
     mode: 'inline',
     closeIcon: null,
+    onSelect: () => {},
     titleMultiline: false,
   };
 
@@ -157,11 +159,30 @@ export default class DefaultList extends Component {
       listSize: 'lg',
       dataSize: 'none',
       panelOpen: false,
+      id: randomString(32),
       currentItem: props.currentItem,
       splited: props.inlineOpenedId && parseInt(props.inlineOpenedId, 10) > 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
+    this.downHandler = this.downHandler.bind(this);
+    this.upHandler = this.upHandler.bind(this);
+  }
+
+  componentDidMount() {
+    /*const elem = document.getElementById(this.state.id);
+    if (elem) {
+      document.addEventListener("keydown", this.downHandler);
+      document.addEventListener("keyup", this.upHandler);
+    }*/
+  }
+
+  componentWillUnmount() {
+    /*const elem = document.getElementById(this.state.id);
+    if (elem) {
+      document.removeEventListener("keydown", this.downHandler);
+      document.removeEventListener("keyup", this.upHandler);
+    }*/
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -174,6 +195,14 @@ export default class DefaultList extends Component {
         }
       } catch (ex) {}
     }
+  }
+
+  downHandler(ev) {
+
+  }
+
+  upHandler(ev) {
+    //console.log(isDescendant(ev.target, this.state.id));    
   }
 
   updateDimensions(width, height) {
@@ -261,7 +290,7 @@ export default class DefaultList extends Component {
     }
 
     return (
-      <div style={fullDiv}>
+      <div style={fullDiv} id={this.state.id}>
         <WidthObserver>
           {({ mediaSize }) => {
             const globalSize = mediaSize;

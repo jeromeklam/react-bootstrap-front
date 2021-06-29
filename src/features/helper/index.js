@@ -2,33 +2,56 @@ import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
 import { isNull } from 'lodash';
 
-export const verifyScope = (p_user_scope, p_scope) => {
+export const isDescendant = (el, parentId) => {
+  let isChild = false
+  if (el.id === parentId) {
+    isChild = true
+  }
+  while (el = el.parentNode) {
+    if (el.id == parentId) {
+      isChild = true
+    }
+  }
+  return isChild
+}
+
+export const verifyScope = (p_user_scope, p_scope, p_crud = false) => {
+  if (!p_scope) {
+    return 'CRUDPS';
+  }
   const allScopes = p_user_scope.toUpperCase().split(',');
   const testScope = p_scope.toUpperCase();
   let authorized = false;
-  allScopes.forEach(scope => {
-    const parts = scope.split('.');
-    let resp = 'crud';
-    if (parts.length > 1) {
-      resp = parts[1];
-    }
+  allScopes.some(scope => {
     if (scope.trim() !== '') {
-      if (scope === 'ZEUS') {
+      const parts = scope.split('.');
+      let resp = 'CRUDPS';
+      if (parts.length > 1) {
+        resp = parts[1];
+      }
+      if (parts[0] === 'ZEUS') {
         authorized = resp;
         return true;
       }
       if (testScope.indexOf(parts[0]) === 0) {
         authorized = resp;
         return true;
-      } else {
-        if (parts[0].indexOf(testScope) === 0) {
+      }
+      if (testScope.indexOf('*') > 0) {
+        if (parts[0].indexOf(testScope.replace(/\*/g, '')) === 0) {
           authorized = resp;
           return true;
-        }
+        } 
       }
     }
   })
-  return authorized;
+  if (!p_crud || !authorized) {
+    return authorized;
+  }
+  if (authorized.indexOf(p_crud.toUpperCase()) >= 0) {
+    return authorized;
+  }
+  return false;
 }
 
 export const ensureDatetimeTZ = (date) => {
