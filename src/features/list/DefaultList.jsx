@@ -386,7 +386,7 @@ export default class DefaultList extends Component {
                             {({ mediaSize }) => (
                               <div className="default-list-body">
                                 {this.props.items.length > 0 ? (
-                                  <div>
+                                  <>
                                     {this.props.items.map((item, idx) => {
                                       return (
                                         <div key={item.id}>
@@ -404,7 +404,7 @@ export default class DefaultList extends Component {
                                         </div>
                                       );
                                     })}
-                                  </div>
+                                  </>
                                 ) : (
                                   <div>{!this.props.loadMorePending && <LoadEmpty />}</div>
                                 )}

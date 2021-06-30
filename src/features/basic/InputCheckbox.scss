@@ -1,5 +1,13 @@
-.form-check-input:focus + .slider {
+.ui-input-checkbox {
+  .form-check-input:focus + .slider {
     border-color: $input-focus-border-color !important;
     outline: 0 !important;
     box-shadow: $input-focus-box-shadow !important;
+    cursor: pointer;
+  }
+  .form-check-input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
 }
