@@ -10,4 +10,12 @@
     -moz-appearance: none;
     -webkit-appearance: none;
   }
+  .ui-slide {
+    &.bg-secondary:hover {
+      background-color: theme-color('secondary-dark') !important;
+    }
+    &.bg-light:hover {
+      background-color: theme-color('secondary-light') !important;
+    }
+  }   
 }
