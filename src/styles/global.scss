@@ -523,3 +523,11 @@ p, span, input {
     -o-user-select: text;
     user-select: text;
 }
+
+.no-selector {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}

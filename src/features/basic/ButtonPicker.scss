@@ -1,0 +1,21 @@
+@import '../../styles/mixins';
+
+.ui-button-picker {
+  .btn-picker {
+    display: block;
+    text-align: left;
+    background-color: white;
+    border-color: theme-color('secondary'),
+  }
+  .btn-picker:hover {
+    background-color: theme-color('primary-light')
+  }
+  .btn-clear {
+    text-align: right;
+  }
+  .btn-group-vertical {
+    position: absolute;
+    bottom: 12px;
+    right: 15px;
+  }
+}

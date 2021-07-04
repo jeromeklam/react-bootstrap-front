@@ -1,3 +1,10 @@
+# 3.3.0 : 04/07/2021
+
+* Basic :
+    * InputChecked : off style, no selector
+    * ButtonPicker : for selected inputPicker
+    * Dropdown: no more stopPropagation on outside click
+
 # 3.2.6 : 27/06/2021
 
 * Scope in menus

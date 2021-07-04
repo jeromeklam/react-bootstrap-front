@@ -24,6 +24,7 @@ const sliderstyle = {
   bottom: '0',
   transition: '0.4s',
   borderRadius: '30px',
+  border: '1px solid',
 };
 const slideronstyle = {
   ...sliderstyle,
@@ -55,11 +56,11 @@ const inputstyle = {
 export const InputCheckbox = props => {
   const myId = getFieldId(props.name, props.id);
   return (
-    <div className={classnames('ui-input-checkbox form-group', !props.labelTop && 'row')}>
+    <div className={classnames('ui-input-checkbox form-group no-selector', !props.labelTop && 'row')}>
       {props.label !== '' && (
         <label
           htmlFor={props.id}
-          className={classnames(!props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}
+          className={classnames('no-selector', !props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}
         >
           {props.label}
           {props.required && <span>&nbsp;*</span>}
@@ -80,16 +81,16 @@ export const InputCheckbox = props => {
         <label
           style={switchstyle}
           htmlFor={myId}
-          className={classnames('slider bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}
+          className={classnames('slider bg-white no-selector', props.disabled ? 'border-secondary-light' : 'border-secondary')}
         >
           <div style={sliderbeforestyle}>
             <span
               style={props.checked === true ? slideronstyle : sliderstyle}
-              className={classnames(props.checked === true ? 'bg-secondary' : 'bg-light')}
+              className={classnames('no-selector', props.checked === true ? 'bg-secondary' : 'bg-light')}
             />
           </div>
         </label>
-        {props.detail && <span style={sliderdetailstyle}>{props.detail}</span>}
+        {props.detail && <span className="no-selector" style={sliderdetailstyle}>{props.detail}</span>}
       </div>
     </div>
   );

@@ -56,7 +56,7 @@ export default class Dropdown extends Component {
     if (!domNode || !domNode.contains(event.target)) {   
       if (this.props.myRef && this.props.myRef.current &&this.props.myRef.current.contains(event.target)) {
         event.preventDefault();
-        event.stopPropagation();
+        //event.stopPropagation();
       }
       this.props.onClose && this.props.onClose();
     }

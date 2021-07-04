@@ -5,6 +5,7 @@ import 'core-js/features/global-this';
  *******************************************************************************
  */
 export { default as Badge } from './features/basic/Badge';
+export { default as ButtonPicker } from './features/basic/ButtonPicker';
 export { default as Dropdown } from './features/basic/Dropdown';
 export { default as DropdownMenu } from './features/basic/DropdownMenu';
 export { default as DropdownMenuDivider } from './features/basic/DropdownMenuDivider';
