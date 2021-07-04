@@ -92,7 +92,7 @@ export class DefaultHeader extends Component {
     return (
       <div className="default-header bg-light pl-2 overflow-none">
         {this.props.headerBackgroundSrc && (
-          <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />
+          <img className="default-header-background bg-light" src={this.props.headerBackgroundSrc} alt="background header" />
         )}
         <nav
           style={navStyles}
