@@ -86,7 +86,7 @@ export const InputCheckbox = props => {
           <div style={sliderbeforestyle}>
             <span
               style={props.checked === true ? slideronstyle : sliderstyle}
-              className={classnames('no-selector', props.checked === true ? 'bg-secondary' : 'bg-light')}
+              className={classnames('ui-slide no-selector', props.checked === true ? 'bg-secondary' : 'bg-light')}
             />
           </div>
         </label>
