@@ -17,35 +17,43 @@ const navLinkStyles = {
 export const MobileFooterMenu = props => (
   <div style={mystyle} className="bg-secondary text-light">
     <div className="container h-100">
-      <div className="mobile-footer-menu navbar h-100">
-        {props.options.map((option) => {
-        if (
-          option.role === 'HOME' ||
-          option.role === 'ABOUT' ||
-          option.role === 'MOBILESIGNOUT' ||
-          (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
-        ) {
-          return (
-            <div className="mobile-footer-option text-center">
-              <a
-                href={option.url}
-                className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
-                onClick={(evt) => {
-                  if (evt) {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                  }
-                  props.onNavigate(option.url);
-                }}
-                style={navLinkStyles}
-              >
-                {option.icon}
-              </a>
-            </div>
-          );
-        }
-        return null;
-      })}
+      <div className="mobile-footer-menu row text-center flex-nowrap h-100">
+        {props.options.map(option => {
+          if (
+            option.role === 'HOME' ||
+            (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
+          ) {
+            return (
+              <div className="mobile-footer-option col-xs-w8 text-center">
+                <a
+                  href={option.url}
+                  className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
+                  onClick={evt => {
+                    if (evt) {
+                      evt.preventDefault();
+                      evt.stopPropagation();
+                    }
+                    props.onCloseMenu()
+                    props.onNavigate(option.url);
+                  }}
+                  style={navLinkStyles}
+                >
+                  {option.icon}
+                  <br />
+                  <span className="mobile-footer-option-label">{option.label}</span>
+                </a>
+              </div>
+            );
+          }
+          return null;
+        })}
+        <div className="mobile-footer-option col-xs-w8 text-center">
+          <a href="#" className="nav-link text-light btn-humburger" onClick={props.onToggleMenu} id="menu-toggle">
+            {props.menuIcon}
+            <br />
+            <span className="mobile-footer-option-label">Menu</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>

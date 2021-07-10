@@ -1,0 +1,12 @@
+/* The heart of the matter */
+.mobile-footer-menu {
+  &.row {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  &.row > .col-xs-w8 {
+    display: inline-block;
+    float: none;
+    margin: auto;
+  }
+}

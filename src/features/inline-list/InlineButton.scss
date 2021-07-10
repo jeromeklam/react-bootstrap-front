@@ -1,0 +1,7 @@
+@import '../../styles/mixins';
+
+.inline-list-inline-button {
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -90,6 +90,8 @@ export * from './features/page/ResponsivePage.jsx';
  * Lists
  *******************************************************************************
  */
+export { default as InlineButton } from './features/inline-list/InlineButton.jsx';
+export * from './features/inline-list/InlineEmpty.jsx';
 export * from './features/inline-list/ResponsiveInlineList.jsx';
 export * from './features/list/ResponsiveList.jsx';
 export * from './features/list/LoadMore.jsx';

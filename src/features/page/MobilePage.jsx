@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { MobileHeader, MobileFooterMenu } from './';
-
+import { MobilePublicHeader, MobileFooterMenu, MobileMenu } from './';
 import { Container } from '../grid';
 
 const MobileHeaderHeight = 60;
-const MobileFooterHeight = 50;
+const MobileFooterHeight = 60;
 
 const headerMobileStyles = {
   zIndex: '900',
@@ -31,7 +29,7 @@ const contentMobileStyles = {
   position: 'fixed',
   left: '0px',
   right: '0px',
-  top: '0px',
+  top: `${MobileHeaderHeight}px`,
   bottom: `${MobileFooterHeight}px`,
   height: 'auto',
   overflowX: 'hidden',
@@ -39,7 +37,7 @@ const contentMobileStyles = {
   zIndex: '810',
 };
 
-export default class ResponsivePage extends Component {
+export default class MobilePage extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     userForm: PropTypes.element.isRequired,
@@ -50,11 +48,12 @@ export default class ResponsivePage extends Component {
     this.state = {
       menuDataOpen: false,
       menuUserOpen: false,
-      menuSideOpen: false,
+      menuOpened: false,
     };
     this.onToggleData = this.onToggleData.bind(this);
-    this.onToggleSide = this.onToggleSide.bind(this);
+    this.onToggleMenu = this.onToggleMenu.bind(this);
     this.onToggleUser = this.onToggleUser.bind(this);
+    this.onCloseMenu = this.onCloseMenu.bind(this);
   }
 
   onToggleData() {
@@ -65,8 +64,12 @@ export default class ResponsivePage extends Component {
     this.setState({ menuUserOpen: !this.state.menuUserOpen });
   }
 
-  onToggleSide() {
-    this.setState({ menuSideOpen: !this.state.menuSideOpen });
+  onToggleMenu() {
+    this.setState({ menuOpened: !this.state.menuOpened });
+  }
+
+  onCloseMenu() {
+    this.setState({ menuOpened: false });
   }
 
   render() {
@@ -80,12 +83,18 @@ export default class ResponsivePage extends Component {
         <Container size="xs" className="display-mobile">
           {!this.props.authenticated && (
             <div style={headerMobileStyles}>
-              <MobileHeader {...this.props} />
+              <MobilePublicHeader {...this.props} />
             </div>
           )}
-          <div style={{ ...contentMobileStyles }}>{this.props.children}</div>
+          <div style={{ ...contentMobileStyles }}>
+            {this.state.menuOpened ? (
+              <MobileMenu {...this.props} onCloseMenu={this.onCloseMenu} />
+            ) : (
+              this.props.children
+            )}
+          </div>
           <div style={footerMobileStyles}>
-            <MobileFooterMenu {...this.props} />
+            <MobileFooterMenu {...this.props} onToggleMenu={this.onToggleMenu} onCloseMenu={this.onCloseMenu} />
           </div>
         </Container>
       </div>

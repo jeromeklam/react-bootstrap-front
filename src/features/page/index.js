@@ -9,6 +9,8 @@ export * from './MobileContent.jsx';
 export * from './MobileFooter.jsx';
 export * from './MobileFooterMenu.jsx';
 export { default as MobilePage } from './MobilePage.jsx';
+export { default as MobileMenu } from './MobileMenu.jsx';
+export * from './MobilePublicHeader.jsx';
 export * from './MobileHeader.jsx';
 export * from './ResponsiveContent.jsx';
 export * from './ResponsiveFooter.jsx';

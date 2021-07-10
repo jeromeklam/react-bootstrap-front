@@ -255,13 +255,37 @@ svg.text-warning.inline-action:hover {
     background: transparent;
   }
   &.row.row-line-odd {
-    background: theme-color('light'); 
-  }	
+    background: theme-color('light');
+  }
   /* Hover des lignes des listes */
   &.row.row-line-hover {
     background-color: theme-color('primary-light');
     color: theme-color('secondary');
     cursor: pointer;
+  }
+  /* Couleur de fond spécifique des lignes des listes */
+  &.row-line-warning,
+  &.row.row-line-even.row-line-warning,
+  &.row.row-line-odd.row-line-warning {
+    background-color: theme-color('warning-light');
+  }
+  &.row-line-warning.row-line-hover,
+  &.row.row-line-even.row-line-warning.row-line-hover,
+  &.row.row-line-odd.row-line-warning.row-line-hover {
+    background-color: darken(theme-color('warning-light'), 5%);
+    color: theme-color('secondary');
+  }
+  /* Couleur de fond spécifique des lignes des listes */
+  &.row-line-danger,
+  &.row.row-line-even.row-line-danger,
+  &.row.row-line-odd.row-line-danger {
+    background-color: theme-color('danger-light');
+  }
+  &.row-line-danger.row-line-hover,
+  &.row.row-line-even.row-line-danger.row-line-hover,
+  &.row.row-line-odd.row-line-danger.row-line-hover {
+    background-color: darken(theme-color('danger-light'), 5%);
+    color: theme-color('secondary');
   }
 }
 
@@ -295,14 +319,34 @@ svg.text-warning.inline-action:hover {
   .row-line.row-even {
     background: transparent;
   }
-  .row-line.row-even:not(.row-title):hover {
+  .row-line.row-even:not(.row-title).row-hover {
     background: theme-color('primary-light');
   }
   .row-line.row-odd {
-    background: theme-color('light'); 
+    background: theme-color('light');
   }
-  .row-line.row-odd:not(.row-title):hover {
+  .row-line.row-odd:not(.row-title).row-hover {
     background: theme-color('primary-light');
+  }
+  .row-line.row-warning,
+  .row-line.row-warning.row-even,
+  .row-line.row-warning.row-odd {
+    background: theme-color('warning-light');
+  }
+  .row-line.row-warning:hover.row-hover,
+  .row-line.row-warning.row-even.row-hover,
+  .row-line.row-warning.row-odd.row-hover {
+    background: darken(theme-color('warning-light'), 5%);
+  }
+  .row-line.row-danger,
+  .row-line.row-danger.row-even,
+  .row-line.row-danger.row-odd {
+    background: theme-color('danger-light');
+  }
+  .row-line.row-danger.row-hover,
+  .row-line.row-danger.row-even.row-hover,
+  .row-line.row-danger.row-odd.row-hover {
+    background: darken(theme-color('danger-light'), 5%);
   }
   svg.inline-action:hover {
     cursor: pointer;
@@ -365,24 +409,6 @@ svg.text-warning.inline-action:hover {
 /* Hover des lignes des listes */
 .row-line-hover {
   background-color: theme-color('primary-light');
-  color: theme-color('secondary');
-}
-
-/* Couleur de fond spécifique des lignes des listes */
-.row-line-warning {
-  background-color: theme-color('warning-light');
-}
-.row-line-warning.row-line-hover {
-  background-color: darken(theme-color('warning-light'), 5%);
-  color: theme-color('secondary');
-}
-
-/* Couleur de fond spécifique des lignes des listes */
-.row-line-danger {
-  background-color: theme-color('danger-light');
-}
-.row-line-danger.row-line-hover {
-  background-color: darken(theme-color('danger-light'), 5%);
   color: theme-color('secondary');
 }
 
@@ -488,19 +514,27 @@ button:focus {
   outline: none;
 }
 
-a.bg-light:hover:disabled, a.bg-light:focus:disabled, button.bg-light:hover:disabled, button.bg-light:focus:disabled {
+a.bg-light:hover:disabled,
+a.bg-light:focus:disabled,
+button.bg-light:hover:disabled,
+button.bg-light:focus:disabled {
   background-color: theme-color('light') !important;
 }
-a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondary:hover:disabled, button.bg-secondary:focus:disabled {
+a.bg-secondary:hover:disabled,
+a.bg-secondary:focus:disabled,
+button.bg-secondary:hover:disabled,
+button.bg-secondary:focus:disabled {
   background-color: theme-color('secondary') !important;
 }
 
-.no-select, .select-none {
+.no-select,
+.select-none {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
 }
-.input-group-prepend .btn, .input-group-append .btn {
+.input-group-prepend .btn,
+.input-group-append .btn {
   font-size: 0.9rem;
 }
 .card-header {
@@ -509,25 +543,57 @@ a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondar
 }
 
 * {
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
 }
 
-p, span, input {
-    -webkit-user-select: text;
-    -khtml-user-select: text;
-    -moz-user-select: text;
-    -o-user-select: text;
-    user-select: text;
+p,
+span,
+input {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
 }
 
 .no-selector {
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+select:not([disabled]) {
+  background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+)
+    no-repeat 95% 50%;
+  background-position-x: right;
+}
+
+.nav-tabs {
+  border-color: theme-color('secondary-light');
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-light');
+}
+
+a.bg-light:hover:disabled,
+a.bg-light:focus:disabled,
+button.bg-light:hover:disabled,
+button.bg-light:focus:disabled {
+  background-color: theme-color('light');
+}
+
+.react-grid-item {
+  overflow: hidden;
 }

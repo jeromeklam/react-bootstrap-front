@@ -16,7 +16,6 @@ export default class Filter {
     this.data = {
       operator: FILTER_OPER_LIKE,
       mode: FILTER_MODE_OR,
-      origs: [],
       filters: [],
       filter: FILTER_TYPE_GROUP,
       filter_name: '',
@@ -30,16 +29,9 @@ export default class Filter {
   }
 
   init(mode = FILTER_MODE_OR, operator = FILTER_OPER_LIKE) {
-    const { origs } = this.data || [];
-    let newFilters = [];
-    origs.forEach(elem => {
-      if (elem.isFixed() || (elem.isDefault() && elem.isEnable())) {
-        newFilters.push(elem);
-      }
-    });
     this.data.mode = mode;
     this.data.operator = operator;
-    this.data.filters = newFilters;
+    this.data.filters = [];
   }
 
   setOperator(oper, all = true) {
@@ -151,17 +143,6 @@ export default class Filter {
       elt2.setFilterName(name, fixed, def, enable);
       elt2.setFilterCrit(value, oper);
       this.data.filters.push(elt2);
-    }
-    if (fixed || def) {
-      let elem = this.data.origs.find(elt => elt.getFilterName() === name);
-      if (elem) {
-        elem.setFilterCrit(value, oper);
-      } else {
-        let elt2 = new Filter();
-        elt2.setFilterName(name, fixed, def, enable);
-        elt2.setFilterCrit(value, oper);
-        this.data.origs.push(elt2);
-      }
     }
     this.checkFilters();
   }
@@ -275,8 +256,8 @@ export default class Filter {
 
   isDefaultExist() {
     let filterDefault = false;
-    if (this.data.origs.length > 0) {
-      const found = this.data.origs.find(elem => elem.isDefault() === true);
+    if (this.data.filters.length > 0) {
+      const found = this.data.filters.find(elem => elem.isDefault() === true);
       if (found) {
         filterDefault = true;
       }
@@ -285,19 +266,21 @@ export default class Filter {
   }
 
   disableDefaults() {
-    const { origs } = this.data || [];
-    origs.forEach(elem => {
+    let filters = this.data.filters || [];
+    filters.forEach(elem => {
       if (elem.isDefault()) {
         elem.setEnable(false);
+        elem.disableDefaults();
       }
     });
   }
 
   enableDefaults() {
-    const { origs } = this.data || [];
-    origs.forEach(elem => {
+    const filters = this.data.filters || [];
+    filters.forEach(elem => {
       if (elem.isDefault()) {
         elem.setEnable(true);
+        elem.enableDefaults();
       }
     });
   }
