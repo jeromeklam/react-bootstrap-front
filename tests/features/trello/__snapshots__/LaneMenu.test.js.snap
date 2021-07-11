@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders standard 1`] = `
+<div
+  className="advanced-dropdown-wrapper"
+  onClick={[Function]}
+  title="Actions à effectuer sur la carte"
+>
+  <button
+    className="btn btn-sm btn-light trello-card-menu-menu"
+  >
+    …
+  </button>
+</div>
+`;

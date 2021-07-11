@@ -73,19 +73,12 @@ export default class MobilePage extends Component {
   }
 
   render() {
-    if (!this.props.authenticated) {
-      contentMobileStyles.top = `${MobileFooterHeight}px`;
-    } else {
-      contentMobileStyles.top = '0px';
-    }
     return (
       <div id="page-root" className="full-page">
         <Container size="xs" className="display-mobile">
-          {!this.props.authenticated && (
-            <div style={headerMobileStyles}>
-              <MobilePublicHeader {...this.props} />
-            </div>
-          )}
+          <div style={headerMobileStyles}>
+            <MobilePublicHeader {...this.props} />
+          </div>
           <div style={{ ...contentMobileStyles }}>
             {this.state.menuOpened ? (
               <MobileMenu {...this.props} onCloseMenu={this.onCloseMenu} />

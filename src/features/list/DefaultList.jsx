@@ -391,7 +391,7 @@ export default class DefaultList extends Component {
                                       return (
                                         <div key={item.id}>
                                           {this.props.mode === 'right' && this.state.splited ? (
-                                            <MobileLine {...this.props} id={item.id} item={item} hideMenu={true} />
+                                            <MobileLine {...this.props} id={item.id} item={item} hideMenu={true} mobile={false} />
                                           ) : (
                                             <DefaultLine
                                               {...this.props}

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 const mystyle = {
   position: 'fixed',
-  top: '0px',
+  top: '60px',
   left: '0px',
   right: '0px',
   height: '50px',

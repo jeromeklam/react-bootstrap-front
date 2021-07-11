@@ -21,8 +21,8 @@ export class MobileLine extends Component {
     hideMenu: PropTypes.bool,
     id: PropTypes.string.isRequired,
     item: PropTypes.element.isRequired,
-    title: PropTypes.string.isRequired,
     mobile: PropTypes.bool,
+    title: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -38,7 +38,6 @@ export class MobileLine extends Component {
     };
     this.mouseLeave = this.mouseLeave.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
-    this.flip = this.flip.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
   }
 
@@ -48,10 +47,6 @@ export class MobileLine extends Component {
 
   mouseEnter() {
     this.setState({ flipped: true });
-  }
-
-  flip() {
-    this.setState({ flipped: !this.state.flipped });
   }
 
   handleDoubleClick(ev) {
@@ -70,6 +65,7 @@ export class MobileLine extends Component {
   }
 
   render() {
+    const selectable = this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
     return (
       <div
         id={`rbf-list-mobile-line${this.props.item.id}`}
@@ -77,8 +73,11 @@ export class MobileLine extends Component {
       >
         <div className="col-xs-w36">
           <div
-            className="card bg-secondary-light m-2"
-            onClick={(ev) => {
+            className={classnames(
+              'card shadow-sm m-2',
+              this.props.fClassName && this.props.fClassName(this.props.item)
+            )}
+            onClick={ev => {
               if (this.props.mobile) {
                 this.handleDoubleClick(ev);
               } else {
@@ -90,9 +89,28 @@ export class MobileLine extends Component {
               <div
                 className={classnames(
                   'card-header rbf-list-mobile-line-header',
-                  this.props.inlineOpenedId === this.props.id ? 'text-white bg-secondary' : 'text-secondary bg-white'
+                  this.props.inlineOpenedId === this.props.id ? 'text-secondary bg-primary-light' : 'text-secondary'
                 )}
               >
+                {selectable && (
+                  <div className="rbf-list-mobile-line-header-select">
+                    <div
+                      className={classnames(
+                        'select-line border border-secondary mr-2 bg-light',
+                        this.props.selected.find(elem => elem === this.props.id) && 'selected'
+                      )}
+                      onClick={ev => {
+                        if (ev) {
+                          ev.preventDefault();
+                          ev.stopPropagation();
+                        }
+                        this.props.onSelect(this.props.id);
+                      }}
+                    >
+                      <div className="select-line-inner bg-secondary" />
+                    </div>
+                  </div>
+                )}
                 <span className="rbf-list-mobile-line-header-title">
                   {getCardTitle(this.props.cols, this.props.item)}
                 </span>
@@ -109,24 +127,52 @@ export class MobileLine extends Component {
                           />
                         </li>
                       ))}
-                    <li className="nav-item" key={'zoom'}>
-                      <button type="button" className="btn btn-xs" onClick={this.flip}>
-                        <span>...</span>
-                      </button>
-                    </li>
+                    {!this.props.hideMenu && (
+                      <li className="nav-item" key="openclose">
+                        <button
+                          type="button"
+                          disabled={false}
+                          title=""
+                          className={classnames('btn btn-inline')}
+                          onClick={ev => {
+                            if (ev) {
+                              ev.preventDefault();
+                              ev.stopPropagation();
+                            }
+                            this.setState({ flipped: !this.state.flipped });
+                          }}
+                        >
+                          <span className="rbf-list-mobile-line-3dots">...</span>
+                        </button>
+                      </li>
+                    )}
                   </ul>
                 ) : (
-                  <ul style={navstyle} className="nav nav-pills rbf-list-mobile-line-header-nav">
-                    <li className="nav-item" key={'zoom'}>
-                      <button type="button" className="btn btn-xs" onClick={this.flip}>
-                        <span>...</span>
-                      </button>
-                    </li>
-                  </ul>
+                  !this.props.hideMenu && (
+                    <ul style={navstyle} className="nav nav-pills rbf-list-mobile-line-header-nav">
+                      <li className="nav-item" key="openclose">
+                        <button
+                          type="button"
+                          disabled={false}
+                          title=""
+                          className={classnames('btn btn-inline')}
+                          onClick={ev => {
+                            if (ev) {
+                              ev.preventDefault();
+                              ev.stopPropagation();
+                            }
+                            this.setState({ flipped: !this.state.flipped });
+                          }}
+                        >
+                          <span className="rbf-list-mobile-line-3dots">...</span>
+                        </button>
+                      </li>
+                    </ul>
+                  )
                 )}
               </div>
             </HoverObserver>
-            <div className="card-body p-2" onDoubleClick={this.handleDoubleClick}>
+            <div className="card-body p-2">
               <Row>
                 {this.props.cols.map((oneCol, i) => {
                   if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {

@@ -1,5 +1,5 @@
 import React from 'react';
-//import classnames from 'classnames';
+import classnames from 'classnames';
 import { Row, Col } from '../grid';
 // import PropTypes from 'prop-types';
 
@@ -8,8 +8,7 @@ export default function MobileMenu(props) {
     <div className="page-mobile-menu">
       <Row className="no-gutters">
         {props.options.map(option => {
-          let label = '' + (option.url || option.position || '');
-          label = label.replace(/\//gi, '');
+          let label = option.label;
           if (
             option.role === 'HOME' ||
             option.role === 'ABOUT' ||
@@ -18,7 +17,7 @@ export default function MobileMenu(props) {
             return (
               <Col className="text-center" size={{ xs: 12, sm: 8 }} key={`option-${label}-${option.position}`}>
                 <button
-                  className="page-mobile-menu btn bg-secondary text-light"
+                  className="page-mobile-menu btn bg-white border border-rounded border-outline-secondary text-secondary"
                   onClick={ev => {
                     if (ev) {
                       ev.preventDefault();
@@ -36,12 +35,11 @@ export default function MobileMenu(props) {
           } else {
             if (option.role === 'MENU' && (props.authenticated || (props.authenticated && option.public))) {
               return option.options.map(option2 => {
-                let label2 = '' + (option2.url || option2.position || '');
-                label2 = label2.replace(/\//gi, '');
+                let label2 = option2.label;
                 return (
                   <Col className="text-center" size={{ xs: 12, sm: 8 }} key={`option-${label2}-${option2.position}`}>
                     <button
-                      className="page-mobile-menu btn bg-secondary text-light"
+                      className="page-mobile-menu btn bg-white border border-rounded border-outline-secondary text-secondary"
                       onClick={ev => {
                         if (ev) {
                           ev.preventDefault();

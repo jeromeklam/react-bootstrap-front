@@ -9,15 +9,21 @@
   }
   .rbf-list-mobile-line-header-title {
     font-weight: bold;
-    margin-left: 5px;
+    margin-left: 25px;
   }
   .rbf-list-mobile-line-header-nav {
     position: absolute;
     top: 10px;
     right: 10px;
   }
-  .card-body {
-    background-color: white;
+  .card, .card-header {
+    background-color: theme-color('light');
+  }
+  .card.row-line-warning, .card.row-line-warning .card-header {
+    background-color: theme-color('warning-light');
+  }
+  .card.row-line-danger, .card.row-line-danger .card-header {
+    background-color: theme-color('danger-light');
   }
 }
 

@@ -255,12 +255,12 @@ export default class Filter {
   }
 
   isDefaultExist() {
+    if (this.data.filter_default) {
+      return true;
+    }
     let filterDefault = false;
     if (this.data.filters.length > 0) {
-      const found = this.data.filters.find(elem => elem.isDefault() === true);
-      if (found) {
-        filterDefault = true;
-      }
+      filterDefault = this.data.filters.some(elem => elem.isDefaultExist);
     }
     return filterDefault;
   }
