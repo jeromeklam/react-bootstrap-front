@@ -16,8 +16,15 @@
     top: 10px;
     right: 10px;
   }
+  .card {
+    box-shadow: 0 0.3rem 0.6rem theme-color('secondary-light') !important;
+  }
+  .card-header span {
+    color: black;
+    font-size: 0.9rem;
+  }
   .card, .card-header {
-    background-color: theme-color('light');
+    background-color: white;
   }
   .card.row-line-warning, .card.row-line-warning .card-header {
     background-color: theme-color('warning-light');

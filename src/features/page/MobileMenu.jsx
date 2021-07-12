@@ -15,9 +15,9 @@ export default function MobileMenu(props) {
             (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
           ) {
             return (
-              <Col className="text-center" size={{ xs: 12, sm: 8 }} key={`option-${label}-${option.position}`}>
+              <Col className="text-left" size={{ xs: 18, sm: 12 }} key={`option-${label}-${option.position}`}>
                 <button
-                  className="page-mobile-menu btn bg-white border border-rounded border-outline-secondary text-secondary"
+                  className="page-mobile-menu-option btn bg-white border border-rounded border-outline-secondary text-secondary"
                   onClick={ev => {
                     if (ev) {
                       ev.preventDefault();
@@ -37,9 +37,9 @@ export default function MobileMenu(props) {
               return option.options.map(option2 => {
                 let label2 = option2.label;
                 return (
-                  <Col className="text-center" size={{ xs: 12, sm: 8 }} key={`option-${label2}-${option2.position}`}>
+                  <Col className="text-left" size={{ xs: 18, sm: 12 }} key={`option-${label2}-${option2.position}`}>
                     <button
-                      className="page-mobile-menu btn bg-white border border-rounded border-outline-secondary text-secondary"
+                      className="page-mobile-menu-option btn bg-white border border-rounded border-outline-secondary text-secondary"
                       onClick={ev => {
                         if (ev) {
                           ev.preventDefault();
