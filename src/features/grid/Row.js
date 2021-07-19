@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
 export default function Row(props) {
-  return <div className={classnames('row', props.className)}>{props.children}</div>;
+  return <div {...props} className={classnames('row', props.className)}>{props.children}</div>;
 }
 
 Row.propTypes = {

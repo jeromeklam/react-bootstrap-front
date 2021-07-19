@@ -5,7 +5,7 @@ import { IMaskInput } from 'react-imask';
 import IMask from 'imask';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
-import { displayDatetime, ensureDatetimeTZ } from '../helper';
+import { displayDatetime, ensureDatetimeTZ } from '../helpers';
 import { Dropdown } from './';
 
 registerLocale('fr', fr);
@@ -92,7 +92,6 @@ export default class InputDatetime extends Component {
     this.onTimeout = this.onTimeout.bind(this);
     this.onToggleTimer = this.onToggleTimer.bind(this);
     this.onTimerDefault = this.onTimerDefault.bind(this);
-    this.onStopTimer = this.onStopTimer.bind(this);
   }
 
   componentDidMount() {
@@ -115,25 +114,24 @@ export default class InputDatetime extends Component {
     this.props.onChange(event);
   }
 
-  onTimeout(timerLoop = false) {
+  onTimeout() {
     if (this.props.timerFct) {
       this.props.timerFct();
     } else {
       this.onTimerDefault();
     }
-    if (this.state.timerLoop || timerLoop) {
+    if (this.state.timerLoop) {
       const timerId = setTimeout(this.onTimeout, this.props.timer);
-      this.setState({ timerId: timerId, timerLoop: true });
+      this.setState({ timerId: timerId });
     }
   }
 
   onToggleTimer() {
     const timerLoop = !this.state.timerLoop;
     if (timerLoop) {
-      this.onTimeout(true);
-    } else {
-      this.onStopTimer();
+      this.onTimeout();
     }
+    this.setState({ timerLoop : timerLoop });
   }
 
   onClear() {
@@ -161,7 +159,9 @@ export default class InputDatetime extends Component {
       };
       this.props.onChange(event2);
     }
-    this.onStopTimer();
+    if (this.state.timerLoop) {
+      this.setState({ timerLoop : false });
+    }
   }
 
   onComplete(val) {
@@ -187,19 +187,11 @@ export default class InputDatetime extends Component {
     const event = {
       target: {
         name: this.props.name,
-        value: ensureDatetimeTZ(date),
+        value: date,
       },
     };
     this.props.onChange(event);
     this.onToggle();
-    this.onStopTimer();
-  }
-
-  onStopTimer() {
-    if (this.state.timerId > 0 ) {
-      clearTimeout(this.state.timerId);
-    }
-    this.setState({ timerId: 0, timerLoop: false});
   }
 
   render() {

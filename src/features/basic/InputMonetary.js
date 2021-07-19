@@ -3,7 +3,7 @@ import { IMaskInput } from 'react-imask';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
-import { getRandomInt } from '../helper';
+import { getRandomInt } from '../helpers';
 
 export default function InputMonetary(props) {
   let myId = props.id;

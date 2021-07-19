@@ -51,7 +51,7 @@ const sortToText = (sort, cols) => {
 };
 
 export const DefaultHeader = props => (
-  <div style={mystyle} className="default-list-header bg-secondary text-ligh">
+  <div style={mystyle} className="default-list-header text-secondary">
     <div className="row">
       <div className="col-xs-w20">
         <span style={titlestyle} className="text-light">

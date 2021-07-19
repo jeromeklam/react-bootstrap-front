@@ -14,29 +14,6 @@ export const MobilePublicHeader = props => (
         <span className="header-title pl-2">{props.title}</span>
       </div>
       <div className="col-xs-w16 text-right">
-        <ul className="nav justify-content-end">
-          {props.options.map((option) => {
-            if (
-              (option.role === 'SIGNIN' && !props.authenticated) ||
-              (option.role === 'SIGNOUT' && props.authenticated)
-            ) {
-              return (
-                <li className="nav-item">
-                  <a
-                    className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}
-                    onClick={() => {
-                      props.onNavigate(option.url);
-                    }}
-                    style={navLinkStyles}
-                  >
-                    <span>{option.icon}</span>
-                  </a>
-                </li>
-              );
-            }
-            return null;
-          })}
-        </ul>
       </div>
     </div>
   </MobileHeader>

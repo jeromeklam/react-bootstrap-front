@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { getFieldId } from '../helper';
 
 const switchstyle = {
   position: 'relative',
@@ -24,7 +23,6 @@ const sliderstyle = {
   bottom: '0',
   transition: '0.4s',
   borderRadius: '30px',
-  border: '1px solid',
 };
 const slideronstyle = {
   ...sliderstyle,
@@ -49,52 +47,41 @@ const sliderdetailstyle = {
 };
 
 const inputstyle = {
-  width: '0px',
-  height: '0px',
+  display: 'none',
 };
 
-export const InputCheckbox = props => {
-  const myId = getFieldId(props.name, props.id);
-  return (
-    <div className={classnames('ui-input-checkbox form-group no-selector', !props.labelTop && 'row')}>
-      {props.label !== '' && (
-        <label
-          htmlFor={props.id}
-          className={classnames('no-selector', !props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}
-        >
-          {props.label}
-          {props.required && <span>&nbsp;*</span>}
-        </label>
-      )}
-      <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
+export const InputCheckbox = props => (
+  <div className={classnames('ui-input-checkbox form-group', !props.labelTop && 'row')}>
+    {props.label !== '' && (
+      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}>
+        {props.label}
+        {props.required && <span>&nbsp;*</span>}
+      </label>
+    )}
+    <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
+      <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
         <input
           style={inputstyle}
           type="checkbox"
           className="form-check-input primary"
-          id={myId}
+          id={props.id}
           name={props.name}
           required={props.required}
           disabled={props.disabled}
           onChange={props.onChange}
           checked={props.checked || false}
         />
-        <label
-          style={switchstyle}
-          htmlFor={myId}
-          className={classnames('slider bg-white no-selector', props.disabled ? 'border-secondary-light' : 'border-secondary')}
-        >
-          <div style={sliderbeforestyle}>
-            <span
-              style={props.checked === true ? slideronstyle : sliderstyle}
-              className={classnames('ui-slide no-selector', props.checked === true ? 'bg-secondary' : 'bg-light')}
-            />
-          </div>
-        </label>
-        {props.detail && <span className="no-selector" style={sliderdetailstyle}>{props.detail}</span>}
-      </div>
+        <div style={sliderbeforestyle}>
+          <span
+            style={props.checked === true ? slideronstyle : sliderstyle}
+            className={classnames('ui-slide', props.checked === true ? 'bg-secondary' : 'bg-light')}
+          />
+        </div>
+      </label>
+      {props.detail && <span style={sliderdetailstyle}>{props.detail}</span>}
     </div>
-  );
-};
+  </div>
+);
 
 InputCheckbox.propTypes = {
   id: PropTypes.string,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Highlight } from '../tour';
 import { DefaultSidebarItem, DefaultSidebarMenu } from './';
-import { verifyScope } from '../helper';
 
 const myStyles = {
   position: 'absolute',
@@ -21,11 +21,12 @@ export default class DefaultSidebar extends Component {
     onNavigate: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     onOpenSide: PropTypes.func,
-    scope: PropTypes.string,
+    onToggleSide: PropTypes.func,
   };
   static defaultProps = {
-    scope: 'ZEUS',
-  };
+    onToggleSide: null,
+    onOpenSide: null,
+  }
 
   constructor(props) {
     super(props);
@@ -53,6 +54,15 @@ export default class DefaultSidebar extends Component {
     }
     return (
       <div className="sidebar-wrapper custom-scrollbar" style={myStyles}>
+        {this.props.authenticated && this.props.onToggleSide && (
+          <div className='ml-1'>
+          <button className="btn btn-humburger" onClick={this.props.onToggleSide} id="menu-toggle">
+            <Highlight theme="NAV" title={this.props.t({ id: 'rbf.page.header.menuIcon', defaultMessage: '' })}>
+              {this.props.menuIcon}
+            </Highlight>
+          </button>
+          </div>
+        )}
         <ul className="sidebar-navigation">
           {this.props.options.map(option => {
             let label = '' + (option.url || option.position || '');
@@ -60,8 +70,7 @@ export default class DefaultSidebar extends Component {
             if (
               option.role === 'HOME' ||
               option.role === 'ABOUT' ||
-              (option.role === 'NAV' && verifyScope(this.props.scope, option.scope, 'S') &&
-                (this.props.authenticated || (this.props.authenticated && option.public)))
+              (option.role === 'NAV' && (this.props.authenticated || (this.props.authenticated && option.public)))
             ) {
               return (
                 <DefaultSidebarItem
@@ -71,45 +80,35 @@ export default class DefaultSidebar extends Component {
                   open={this.props.open}
                 />
               );
-            } else {
-              if (
-                option.role === 'MENU' &&
-                verifyScope(this.props.scope, option.scope + '/*', 'S') &&
-                (this.props.authenticated || (this.props.authenticated && option.public))
-              ) {
-                return (
-                  <div key={`option-${label}-${option.position}`}>
-                    <DefaultSidebarMenu
-                      toggleMenu={this.toggleMenu}
-                      {...this.props}
-                      option={option}
-                      {...this.state}
-                      open={this.props.open}
-                    />
-                    {this.props.open &&
-                      this.state.menu === option.position &&
-                      option.options.map(option2 => {
-                        let authorized2 = true;
-                        if (option2.scope) {
-                          authorized2 = verifyScope(this.props.scope, option2.scope, 'S');
-                        }
-                        if (authorized2) {
-                          let label2 = '' + (option2.url || option2.position || '');
-                          label2 = label2.replace(/\//gi, '-');
-                          return (
-                            <DefaultSidebarItem
-                              className="menu-option"
-                              key={`option-${label2}-${option2.position}`}
-                              {...this.props}
-                              option={option2}
-                            />
-                          );
-                        }
-                        return null;
-                      })}
-                  </div>
-                );
-              }
+            } else if (
+              option.role === 'MENU' &&
+              (this.props.authenticated || (this.props.authenticated && option.public))
+            ) {
+              return (
+                <div key={`option-${label}-${option.position}`}>
+                  <DefaultSidebarMenu
+                    toggleMenu={this.toggleMenu}
+                    {...this.props}
+                    option={option}
+                    {...this.state}
+                    open={this.props.open}
+                  />
+                  {this.props.open &&
+                    this.state.menu === option.position &&
+                    option.options.map(option2 => {
+                      let label2 = '' + (option2.url || option2.position || '');
+                      label2 = label2.replace(/\//gi, '-');
+                      return (
+                        <DefaultSidebarItem
+                          className="menu-option"
+                          key={`option-${label2}-${option2.position}`}
+                          {...this.props}
+                          option={option2}
+                        />
+                      );
+                    })}
+                </div>
+              );
             }
             return null;
           })}

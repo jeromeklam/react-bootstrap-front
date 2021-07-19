@@ -8,7 +8,7 @@ export const DefaultTitle = props => (
   <div style={props.style} className={classnames('default-list-title row text-secondary', props.className)}>
     {props.cols.map((oneCol, i) => {
       let addClass = '';
-      if (oneCol.align && oneCol.align !== '') {
+      if (oneCol.align !== '') {
         addClass = 'text-' + props.align;
       }
       switch (oneCol.type) {
@@ -97,7 +97,7 @@ export const DefaultTitle = props => (
               props.onSort(oneCol, way);
             }}
           >
-            <span style={style}>{oneCol.label}</span>
+            <span style={style}>{oneCol.shortLabel ? oneCol.shortLabel : oneCol.label}</span>
             <div className={classnames('sort-icon', crt !== 'none' ? 'text-primary' : 'text-secondary')}>
               {oneCol.sortable &&
                 {

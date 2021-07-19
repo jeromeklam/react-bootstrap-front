@@ -20,3 +20,4 @@ export { default as CookieConsent } from './CookieConsent';
 export { default as SvgPrevious } from './SvgPrevious';
 export { default as SvgNext } from './SvgNext';
 export { default as SvgToday } from './SvgToday';
+export { default as TouchHandler } from './TouchHandler';

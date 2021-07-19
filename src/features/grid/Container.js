@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ObserveSize from 'react-observe-size';
-import { getSizeFromWidth } from '../helper';
+import { getSizeFromWidth } from '../helpers';
 
 const detectWidth = width => {
   return 'container-' + getSizeFromWidth(width);

@@ -5,7 +5,7 @@ import { SmLoading3Dots } from '../spinner';
 
 export const DefaultTreeview = props => (
   <div className="treview">
-    <ul className="list-group text-secondary">
+    <ul className="list-group">
       {props.tree.isInitiated() ? (
         <TreeBranch {...props} node={props.tree.getRootNode()} paddingLeft={20} />
       ) : (

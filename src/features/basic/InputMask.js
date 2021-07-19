@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { IMaskInput } from 'react-imask';
-import { getRandomInt } from '../helper';
+import { getRandomInt } from '../helpers';
 import log from 'loglevel';
 import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-
 import { Highlight, HighlightButton } from '../tour';
 import { Dropdown } from '../basic';
 import { rbfIntl } from '../intl';
@@ -70,6 +69,7 @@ export default class DefaultHeader extends Component {
     onToggleFilter: PropTypes.func.isRequired,
     onClearFilters: PropTypes.func,
     onClearFiltersDefault: PropTypes.func,
+    onFilters: PropTypes.func,
     quickSearch: PropTypes.element,
     selected: PropTypes.element,
     selectMenu: PropTypes.element,
@@ -83,8 +83,9 @@ export default class DefaultHeader extends Component {
     globalActions: [],
     onClearFilters: null,
     onClearFiltersDefault: null,
+    onFilters: null,
     quickSearch: '',
-    selected: [],
+    selected: null,
     selectMenu: null,
     sort: {},
     t: rbfIntl,
@@ -148,7 +149,7 @@ export default class DefaultHeader extends Component {
       }
     }
     return (
-      <div style={mystyle} className={classnames('default-list-header bg-secondary text-light', this.props.className)}>
+      <div style={mystyle} className={classnames('default-list-header text-secondary overflow-hidden', this.props.className)}>
         <div className="row">
           <div className="col-xs-w2 text-center">
             <HighlightButton className="text-light" theme="LIST">
@@ -158,7 +159,7 @@ export default class DefaultHeader extends Component {
             </HighlightButton>
           </div>
           <div className="col-xs-w14">
-            <span style={titlestyle} className="text-light">
+            <span style={titlestyle} className="text-secondary">
               {`${this.props.title}`}
             </span>
             <Highlight
@@ -195,7 +196,7 @@ export default class DefaultHeader extends Component {
                   </Highlight>
                 </li>
               )}
-              {this.props.selectMenu && (this.props.selectMenu.length > 0) && (
+              {this.props.selectMenu && this.props.selectMenu.length > 0 && (
                 <li className="nav-item">
                   <div className="dropdown">
                     <Highlight
@@ -204,12 +205,12 @@ export default class DefaultHeader extends Component {
                       title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
                     >
                       <button
-                        className="btn btn-secondary dropdown-toggle"
+                        className="btn btn-secondary"
                         ref={this.state.myRef}
                         type="button"
                         onClick={this.onToggle}
                       >
-                        {this.props.selected.length}
+                        {this.props.selectMenuIcon}
                       </button>
                     </Highlight>
                     {this.state.show && (
@@ -249,7 +250,11 @@ export default class DefaultHeader extends Component {
                     theme="LIST"
                     title={this.props.t({ id: 'rbf.list.header.filter.help', defaultMessage: 'Filter helper' })}
                   >
-                    <button type="button" className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary text-light"
+                      onClick={this.props.onFilters ? this.props.onFilters : this.props.onToggleFilter}
+                    >
                       {filterMenuIcon}
                     </button>
                   </Highlight>

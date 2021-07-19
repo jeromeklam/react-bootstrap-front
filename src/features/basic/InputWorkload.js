@@ -56,7 +56,7 @@ export default class InputWorkload extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.value !== state.value) {
+    if (props.value != state.value) {
       let value = props.value;
       let unity = 'M';
       let display = props.emptyValue;

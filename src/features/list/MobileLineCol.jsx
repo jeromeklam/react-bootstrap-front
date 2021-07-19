@@ -116,7 +116,7 @@ export const MobileLineCol = props => {
   return (
     <>
       <Col size={12}>
-        <span className="text-secondary">{props.label}</span>
+        <span className="text-secondary">{props.shortLabel ? props.shortLabel : props.label}</span>
       </Col>
       <Col size={24}>
         <span className="text-dark">{content}</span>

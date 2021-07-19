@@ -17,7 +17,7 @@ const mystyle = {
 };
 
 export const SortableItem = SortableElement(props => (
-  <li className="list-group-item bg-primary-light border-primary text-secondary noselect" style={liStyle}>
+  <li className="list-group-item bg-light border-secondary text-secondary noselect" style={liStyle}>
     <span className="noselect" style={mystyle}>{props.value}{' '}</span>
     <div className="sort-icon float-right">
       {' '}

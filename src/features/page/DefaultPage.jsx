@@ -8,7 +8,9 @@ const duration = 500;
 
 const DesktopHeaderHeight = 60;
 const DesktopFooterHeight = 60;
+const DesktopRightWidthMini = 60;
 const DesktopSideWidthMaxi = 250;
+const DesktopRightWidthMaxi = 500;
 const DesktopSideWidthMini = 64;
 
 const sideMenuDefaultStyles = {
@@ -55,6 +57,13 @@ const headerMenuStyles = {
   exited: { top: '0px' },
 };
 
+const rightPanel = {
+  entering: { right: `0px` },
+  entered: { right: `0px` },
+  exiting: { right: `-${DesktopRightWidthMaxi -DesktopRightWidthMini}px` },
+  exited: { right: `-${DesktopRightWidthMaxi -DesktopRightWidthMini}px` },
+};
+
 const headerMenuDefaultStyles = {
   zIndex: '900',
   position: 'fixed',
@@ -68,16 +77,26 @@ const headerMenuDefaultStyles = {
 };
 
 const contentDefaultStyles = {
-  transition: `left ${duration}ms ease ${duration}ms`,
+  transition: `all ${duration}ms ease ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   left: `${DesktopSideWidthMaxi}px`,
-  right: '0px',
+  right: `${DesktopRightWidthMini}px`,
   top: `${DesktopHeaderHeight}px`,
   bottom: `${DesktopFooterHeight}px`,
   height: 'auto',
-  /*overflowX: 'hidden',*/
-  /*overflowY: 'none',*/
+  zIndex: '810',
+};
+
+const rightPanelStyles = {
+  transition: `right ${duration}ms ease ${duration}ms`,
+  animationIterationCount: '1',
+  position: 'fixed',
+  right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px`,
+  top: `${DesktopHeaderHeight}px`,
+  bottom: `0px`,
+  height: 'auto',
+  width: `${DesktopRightWidthMaxi}px`,
   zIndex: '810',
 };
 
@@ -87,6 +106,13 @@ const contentStyles = {
   exiting: { left: `${DesktopSideWidthMini}px` },
   exited: { left: `${DesktopSideWidthMini}px` },
 };
+
+const contentStylesPanel = {
+  entering: { right: `${DesktopRightWidthMaxi}px` },
+  entered: { right: `${DesktopRightWidthMaxi}px` },
+  exiting: { right: `${DesktopRightWidthMini}px` },
+  exited: { right: `${DesktopRightWidthMini}px` },
+}
 
 const footerStyles = {
   position: 'fixed',
@@ -105,9 +131,13 @@ export default class ResponsivePage extends Component {
     settings: PropTypes.element.isRequired,
     onChangeSettings: PropTypes.func.isRequired,
     footer: PropTypes.bool,
+    rightPanel: PropTypes.element,
+    rightPanelOpened: PropTypes.bool,
   };
   static defaultProps = {
     footer: true,
+    rightPanel: null,
+    rightPanelOpened: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -163,6 +193,11 @@ export default class ResponsivePage extends Component {
 
   render() {
     const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
+    if (!this.props.rightPanel) {
+      contentDefaultStyles.right = '0px';
+    } else {
+      contentDefaultStyles.right = `${DesktopRightWidthMini}px`;
+    }
     return (
       <div id="page-root" className="full-page">
         <div className="display-desktop">
@@ -170,7 +205,7 @@ export default class ResponsivePage extends Component {
             <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
               {state => (
                 <div>
-                  <div className="bg-primary-light" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
+                  <div className="bg-white overflow-hidden" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
                     {userForm}
                   </div>
                   <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
@@ -179,7 +214,6 @@ export default class ResponsivePage extends Component {
                       {...this.state}
                       desktopHeaderHeight={DesktopHeaderHeight}
                       onToggleUser={this.onToggleUser}
-                      onToggleSide={this.onToggleSide}
                     />
                   </div>
                 </div>
@@ -189,25 +223,43 @@ export default class ResponsivePage extends Component {
               {state => (
                 <div>
                   <div
-                    className="bg-light"
+                    className="bg-white"
                     style={{
                       ...sideMenuDefaultStyles,
                       ...sideMenuStyles[state],
                       bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
                     }}
                   >
-                    <DefaultSidebar {...this.props} open={!this.state.menuSideMini} onOpenSide={this.onOpenSide} />
+                    <DefaultSidebar
+                      {...this.props}
+                      open={!this.state.menuSideMini}
+                      onOpenSide={this.onOpenSide}
+                      onToggleSide={this.onToggleSide}
+                    />
                   </div>
-                  <div
-                    className="rbf-page-content"
-                    style={{
-                      ...contentDefaultStyles,
-                      ...contentStyles[state],
-                      bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
-                    }}
-                  >
-                    {this.props.children}
-                  </div>
+                  <CSSTransition in={this.props.rightPanelOpened} timeout={duration}>
+                    {state2 => (
+                      <div
+                        className="rbf-page-content"
+                        style={{
+                          ...contentDefaultStyles,
+                          ...contentStyles[state],
+                          ...contentStylesPanel[state2],
+                          bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
+                        }}
+                      >
+                        {this.props.backgroundImg && <img className="fond-page-content" src={this.props.backgroundImg} alt="Background" />}
+                        {this.props.children}
+                      </div>
+                    )}
+                  </CSSTransition>
+                  <CSSTransition in={this.props.rightPanelOpened} timeout={duration}>
+                    {state2 => (
+                      <div className="ui-page-right-panel" style={{ ...rightPanelStyles, ...rightPanel[state2] }}>
+                        {this.props.rightPanel}
+                      </div>
+                    )}
+                  </CSSTransition>
                 </div>
               )}
             </CSSTransition>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import {
   FILTER_MODE_OR,
   FILTER_MODE_AND,
@@ -17,7 +18,7 @@ import {
   FILTER_OPER_GREATER_OR_EQUAL_OR_NULL,
 } from './';
 import { InputRadio, InputDate } from '../basic';
-import { InputAutocomplete } from './';
+import { InputAutocomplete, FilterHeader } from './';
 
 export default class FilterBuilder extends Component {
   static propTypes = {
@@ -25,7 +26,13 @@ export default class FilterBuilder extends Component {
     filters: PropTypes.element.isRequired,
     onFilterOperator: PropTypes.func.isRequired,
     calIcon: PropTypes.element.isRequired,
+    className: PropTypes.string,
     clearIcon: PropTypes.element.isRequired,
+    withHeader: PropTypes.bool,
+  };
+  static defaultProps = {
+    className: '',
+    withHeader: true,
   };
 
   constructor(props) {
@@ -38,50 +45,17 @@ export default class FilterBuilder extends Component {
   render() {
     const mode = this.props.filters.getMode();
     const oper = this.props.filters.getOperator();
-    //console.log("FK col filtre",this.props.cols);
     return (
-      <div className="filter-filter-builder">
-        <div className="row">
-          <div className="col-xs-w16 col-first">
-            <label htmlFor="filter-or" className="">
-              <span>Opérateur</span>
-            </label>
-            <InputRadio
-              className="ml-3 mr-1"
-              id="filter-or"
-              type="radio"
-              name="mode"
-              value={mode}
-              onChange={this.props.onMode}
-              options={[
-                { label: 'et', value: FILTER_MODE_AND },
-                { label: 'ou', value: FILTER_MODE_OR },
-              ]}
-            />
-          </div>
-          <div className="col-xs-w16">
-            <label htmlFor="filter-oper" className="">
-              <span>Condition par défaut</span>
-            </label>
-            <select id="filter-oper" className="form-control" onChange={this.props.onOperator} value={oper}>
-              <option value={FILTER_OPER_EQUAL}>Egal =</option>
-              <option value={FILTER_OPER_NOT_EQUAL}>Différent !=</option>
-              <option value={FILTER_OPER_LIKE}>Contient *</option>
-              <option value={FILTER_OPER_NOT_LIKE}>Ne contient pas !*</option>
-              <option value={FILTER_OPER_EMPTY}>Vide &Oslash;</option>
-              <option value={FILTER_OPER_NOT_EMPTY}>Pas vide !&Oslash;</option>
-              <option value={FILTER_OPER_LOWER}>Inférieur &lt;</option>
-              <option value={FILTER_OPER_LOWER_OR_EQUAL}>Inférieur ou égal &lt;=</option>
-              <option value={FILTER_OPER_GREATER}>Supérieur &gt;</option>
-              <option value={FILTER_OPER_GREATER_OR_EQUAL}>Supérieur ou égal &gt;=</option>
-            </select>
-          </div>
-        </div>
-        <hr />
+      <div className={classnames('filter-filter-builder', this.props.className)}>
+        {this.props.withHeader && (
+          <>
+            <FilterHeader {...this.props} />
+            <hr />
+          </>
+        )}
         {this.props.cols.map(col => {
           if (col.filterable && col.label !== '') {
             const filter = this.props.filters;
-            //console.log("FK filters", filter);
             let colFilterable = col.col;
             if (col.filterable.col && col.filterable.col !== '') {
               colFilterable = col.filterable.col;
@@ -93,6 +67,7 @@ export default class FilterBuilder extends Component {
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
             }
+
             const prepend = (
               <select
                 id={`oper-${colFilterable}`}
@@ -117,7 +92,7 @@ export default class FilterBuilder extends Component {
             );
             const prependPicker = (
               <button
-                type="button" 
+                type="button"
                 className="border-0 bg-light text-secondary rounded-left"
                 id={`oper-${colFilterable}`}
                 value={FILTER_OPER_EQUAL}
@@ -130,7 +105,7 @@ export default class FilterBuilder extends Component {
             switch (col.filterable.type) {
               case 'picker':
                 return (
-                  <div key={colFilterable}>
+                  <div key={col.label}>
                     <InputAutocomplete
                       prepend={prependPicker}
                       id={colFilterable}
@@ -147,13 +122,13 @@ export default class FilterBuilder extends Component {
                 );
               case 'date':
                 return (
-                  <div key={colFilterable}>
+                  <div key={col.label}>
                     <div className="form-group">
                       <label htmlFor={colFilterable} className="">
                         {col.label}
                       </label>
                       <InputDate
-                        borderColor="secondary"
+                        borderColor="primary"
                         prepend={prepend}
                         id={colFilterable}
                         name={colFilterable}
@@ -167,15 +142,17 @@ export default class FilterBuilder extends Component {
                 );
               case 'boolean':
               case 'bool':
-                if (value === true) {
+                if (value === true || value === 1 || value === '1') {
                   value = 1;
                 } else {
-                  if (value === false) {
+                  if (value === false || value === 0 || value === '0') {
                     value = 0;
+                  } else {
+                    value = '';
                   }
                 }
                 return (
-                  <div className="form-group">
+                  <div key={col.label} className="form-group">
                     <label htmlFor={colFilterable} className="">
                       {col.label}
                     </label>
@@ -186,6 +163,7 @@ export default class FilterBuilder extends Component {
                         name={colFilterable}
                         value={'' + value}
                         onChange={this.props.onChange}
+                        borderColor="primary"
                         options={[
                           { label: 'Oui', value: '1' },
                           { label: 'Non', value: '0' },
@@ -195,9 +173,25 @@ export default class FilterBuilder extends Component {
                     </div>
                   </div>
                 );
+              case 'component':
+                const clonedElementWithMoreProps = React.cloneElement(col.filterable.component, {
+                  onChange: e => this.props.onChange(e, FILTER_OPER_EQUAL),
+                  id: colFilterable,
+                  name: colFilterable,
+                });
+                return (
+                  <div key={col.name}>
+                    <div className="form-group">
+                      <label htmlFor={colFilterable} className="">
+                        {col.label}
+                      </label>
+                      {clonedElementWithMoreProps}
+                    </div>
+                  </div>
+                );
               case 'select':
                 return (
-                  <div key={colFilterable}>
+                  <div key={col.name}>
                     <div className="form-group">
                       <label htmlFor={colFilterable} className="">
                         {col.label}
@@ -206,15 +200,12 @@ export default class FilterBuilder extends Component {
                         id={colFilterable}
                         name={colFilterable}
                         value={value}
-                        className="form-control border-secondary"
-                        onChange={(e) => this.props.onChange(e,FILTER_OPER_EQUAL)}
+                        className="form-control border-primary"
+                        onChange={e => this.props.onChange(e, FILTER_OPER_EQUAL)}
                       >
                         <option key="0" value="" />
                         {col.filterable.options.map(elt => (
-                          <option
-                            key={elt.value}
-                            value={elt.value}
-                          >
+                          <option key={elt.value} value={elt.value}>
                             {elt.label}
                           </option>
                         ))}
@@ -224,19 +215,19 @@ export default class FilterBuilder extends Component {
                 );
               default:
                 return (
-                  <div key={colFilterable}>
+                  <div key={col.name}>
                     <div className="form-group">
                       <label htmlFor={colFilterable} className="">
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border border-secondary rounded-left">{prepend}</div>
+                        <div className="input-group-prepend border border-primary rounded-left">{prepend}</div>
                         <input
                           type="text"
                           id={colFilterable}
                           name={colFilterable}
                           value={value}
-                          className="form-control border-secondary rounded-right"
+                          className="form-control border-primary rounded-right"
                           onChange={this.props.onChange}
                         />
                       </div>

@@ -1,27 +1,4 @@
-.default-list-panel-inner {
-  border: 1px solid;
-  border-color: theme-color('secondary-light');
-}
-.default-list-panel-header {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  height: 50px;
-
-  span {
-    position: absolute;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-left: 15px;
-    margin-top: 10px;
-  }
-}
 .default-list-panel-navbar {
-  position: absolute;
-  top: 50px;
-  left: 0px;
-  right: 0px;
-  padding-top: 4px;
-  border-bottom: 1px solid;
+  height: 50px;
 }
+ 

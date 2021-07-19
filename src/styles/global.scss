@@ -597,3 +597,19 @@ button.bg-light:focus:disabled {
 .react-grid-item {
   overflow: hidden;
 }
+
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.modal {
+  display: flex !important;
+  align-items: center !important;
+  .modal-dialog {
+    flex-grow: 1;
+  }
+}

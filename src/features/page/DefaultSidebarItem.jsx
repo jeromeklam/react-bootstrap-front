@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+
 import { Highlight } from '../tour';
 
 export const DefaultSidebarItem = props => (

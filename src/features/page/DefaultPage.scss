@@ -1,3 +1,13 @@
 .rbf-page-content {
-  border: 1px solid theme-color('secondary-light'),
+  border-left: 1px solid theme-color('secondary-light');
+  border-right: 1px solid theme-color('secondary-light');
+}
+.ui-page-right-panel {
+  background-color: white;
+}
+.fond-page-content {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  opacity: 0.25;
 }

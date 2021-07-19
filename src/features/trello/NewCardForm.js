@@ -10,7 +10,6 @@ class NewCardForm extends Component {
     this.state = {
       ref: React.createRef(),
       newLabel: '',
-      open: false,
     };
     this.updateField = this.updateField.bind(this);
     this.projectSelect = this.projectSelect.bind(this);
@@ -21,12 +20,11 @@ class NewCardForm extends Component {
     this.setState({ [field]: value });
     if (field === 'label') {
       this.props.onPrjSearch(value);
-      this.setState({ open: true });
     }
   };
 
   projectSelect = (prj) => {
-    this.setState({ project: prj, newLabel: prj.label, open: false });
+    this.setState({ project: prj, newLabel: prj.label });
   };
 
   handleAdd = () => {
@@ -53,7 +51,7 @@ class NewCardForm extends Component {
                 onKeyUp={e => this.updateField('label', e.target.value)}
               />
             </span>
-            {this.state.open && projects && projects.length > 0 && (
+            {projects && projects.length > 0 && (
               <Dropdown
                 className="border rounded border-secondary bg-white text-secondary"
                 myRef={this.state.ref}

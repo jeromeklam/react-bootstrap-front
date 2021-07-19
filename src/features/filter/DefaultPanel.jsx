@@ -53,7 +53,7 @@ const innerstyle = {
   position: 'absolute',
   left: '0px',
   right: '0px',
-  top: '100px',
+  top: '60px',
   bottom: '0px',
   overflowX: 'hidden',
   overflowY: 'auto',
@@ -62,7 +62,7 @@ const innerstyle = {
 const btStyle = {
   position: 'absolute',
   right: '2px',
-  top: '5px',
+  top: '2px',
 };
 
 export default class DefaultPanel extends Component {
@@ -75,12 +75,14 @@ export default class DefaultPanel extends Component {
     sortNoneIcon: PropTypes.element,
     sortUpIcon: PropTypes.element,
     sortDownIcon: PropTypes.element,
+    simpleMode: PropTypes.bool,
   };
 
   static defaultProps = {
     sortNoneIcon: '',
     sortUpIcon: '',
     sortDownIcon: '',
+    simpleMode: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -121,7 +123,6 @@ export default class DefaultPanel extends Component {
   }
 
   onFilterChange(event, oper = false) {
-    console.log("onFilterChange", event);
     let { filter } = this.state;
     filter.addFilter(event.target.name, event.target.value, oper);
     filter.setSearch(FILTER_SEARCH_SIMPLE);
@@ -211,8 +212,7 @@ export default class DefaultPanel extends Component {
   render() {
     return (
       <div className="default-list-panel-inner" style={mystyle}>
-        <div className="default-list-panel-header bg-secondary text-light">
-          <span>Filtres et Tris</span>
+        <div className={classnames("default-list-panel-navbar clearfix")}>
           <div className="common-responsive-list-panels-close btn-group" style={btStyle}>
             <button className="btn btn-primary text-light" onClick={this.onValid}>
               {this.props.validPanelIcon}
@@ -221,40 +221,40 @@ export default class DefaultPanel extends Component {
               {this.props.cancelPanelIcon}
             </button>
           </div>
-        </div>
-        <div className="default-list-panel-navbar clearfix">
-          <ul className="nav nav-tabs float-left">
-            <li className="nav-item">
-              <a
-                className={classnames(
-                  'nav-link text-light',
-                  this.state.panel === 'filter' ? 'bg-primary' : 'bg-secondary'
-                )}
-                onClick={() => {
-                  this.changePanel('filter');
-                }}
-              >
-                Filtres
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={classnames(
-                  'nav-link text-light',
-                  this.state.panel === 'sort' ? 'bg-primary' : 'bg-secondary'
-                )}
-                onClick={() => {
-                  this.changePanel('sort');
-                }}
-              >
-                Tri
-              </a>
-            </li>
-          </ul>
+          {!this.props.simpleMode && (
+            <ul className="nav nav-tabs float-left">
+              <li className="nav-item">
+                <a
+                  className={classnames(
+                    'nav-link',
+                    this.state.panel === 'filter' ? 'bg-secondary text-light' : 'text-secondary'
+                  )}
+                  onClick={() => {
+                    this.changePanel('filter');
+                  }}
+                >
+                  Filtres
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className={classnames(
+                    'nav-link',
+                    this.state.panel === 'sort' ? 'bg-secondary text-light' : 'text-secondary'
+                  )}
+                  onClick={() => {
+                    this.changePanel('sort');
+                  }}
+                >
+                  Tri
+                </a>
+              </li>
+            </ul>
+          )}
         </div>
         <div className="custom-scrollbar" style={innerstyle}>
           <div className="default-list-panel-content">
-            {this.state.panel === 'filter' && (
+            {(this.props.simpleMode || this.state.panel === 'filter') && (
               <div className="default-list-panel-tab p-2">
                 <FilterBuilder
                   {...this.props}
@@ -266,7 +266,7 @@ export default class DefaultPanel extends Component {
                 />
               </div>
             )}
-            {this.state.panel === 'sort' && (
+            {!this.props.simpleMode && this.state.panel === 'sort' && (
               <div className="default-list-panel-tab p-2">
                 <SortableList
                   items={this.state.sort}

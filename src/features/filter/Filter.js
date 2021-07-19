@@ -16,6 +16,7 @@ export default class Filter {
     this.data = {
       operator: FILTER_OPER_LIKE,
       mode: FILTER_MODE_OR,
+      origs: [],
       filters: [],
       filter: FILTER_TYPE_GROUP,
       filter_name: '',
@@ -255,12 +256,12 @@ export default class Filter {
   }
 
   isDefaultExist() {
-    if (this.data.filter_default) {
-      return true;
-    }
     let filterDefault = false;
     if (this.data.filters.length > 0) {
-      filterDefault = this.data.filters.some(elem => elem.isDefaultExist);
+      const found = this.data.filters.find(elem => elem.isDefault() === true);
+      if (found) {
+        filterDefault = true;
+      }
     }
     return filterDefault;
   }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Portal } from '../advanced';
-import { getRefCoords } from '../helper';
+import { getRefCoords } from '../helpers';
 
 export default class Follower extends Component {
   static propTypes = {

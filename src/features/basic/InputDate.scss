@@ -1,7 +1,5 @@
-.react-datepicker-wrapper {
-  width: 100%;
-}
-.react-datepicker-popper {
-  z-index: 99999;
-  line-height: 20px;
+@import '../../styles/mixins';
+
+.basic-input-date {
+
 }

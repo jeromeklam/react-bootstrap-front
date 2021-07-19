@@ -28,3 +28,4 @@ export { default as DefaultPanel } from './DefaultPanel.jsx';
 export { default as Filter } from './Filter.js';
 export { default as FilterBuilder } from './FilterBuilder.jsx';
 export { default as InputAutocomplete } from './InputAutocomplete';
+export { default as FilterHeader } from './FilterHeader.jsx';

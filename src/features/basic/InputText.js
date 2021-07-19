@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
-import { getFieldId } from '../helper';
+import { getFieldId } from '../helpers';
 
 export const InputText = props => {
-  const myId = getFieldId(props.name, props.id);
+  let myId = getFieldId(props.name, props.id);
   return (
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (

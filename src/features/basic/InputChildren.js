@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
-import { getFieldId } from '../helper';
+import { getFieldId } from '../helpers';
 
 export const InputChildren = props => {
   let myId = getFieldId(props.name, props.id);

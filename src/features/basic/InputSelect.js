@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import log from 'loglevel';
 import { InputGroup, InputGroupAppend, InputGroupPrepend, InputGroupText } from './';
-import { getFieldId } from '../helper';
+import { getFieldId } from '../helpers';
 
 export default class InputSelect extends Component {
   static propTypes = {
@@ -110,7 +110,6 @@ export default class InputSelect extends Component {
   }
 
   render() {
-    const myId = getFieldId(this.props.name, this.props.id);
     const { options, value } = this.state;
     this.state.logger.info('react-bootstrap-front.inputSelect.' + this.state.name + '.render.' + (value || '~'));
     let datasProps = {};
@@ -120,7 +119,7 @@ export default class InputSelect extends Component {
       }
     }
     return (
-      <InputGroup {...this.props} id={myId}>
+      <InputGroup {...this.props} id={this.state.id}>
         {this.props.prepend && this.props.prepend !== '' && (
           <InputGroupPrepend>
             <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
@@ -134,7 +133,7 @@ export default class InputSelect extends Component {
             this.props.size && `form-control-${this.props.size}`
           )}
           name={this.props.name}
-          id={myId}
+          id={this.props.name}
           disabled={this.props.disabled}
           required={this.props.required}
           value={value}

@@ -13,7 +13,7 @@ import {
   nextHighlight,
   startHighlightTimer,
 } from './redux/actions';
-import { getRefCoords } from '../helper';
+import { getRefCoords } from '../helpers';
 import { Portal, SvgMask, SvgTimer, SvgPlay, Follower } from '../advanced';
 import { Container, Row, Col } from '../grid';
 

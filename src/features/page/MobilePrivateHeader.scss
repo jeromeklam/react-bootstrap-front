@@ -1,0 +1,17 @@
+@import '../../styles/mixins';
+
+.header-title-private img {
+  height: 50px;
+  width: 50px;
+}
+.mobile-private-header {
+  .navbar-nav {
+    flex-direction: row;
+  }
+  .nav-item {
+    .btn {
+      min-width: 52px;
+      height: 52px;
+    }
+  }
+}

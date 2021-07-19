@@ -14,7 +14,6 @@ export default class InputKeywords extends Component {
     label: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
-    disabled: PropTypes.bool,
     labelTop: PropTypes.bool,
     keywords: PropTypes.array,
     onChange: PropTypes.func.isRequired,
@@ -30,7 +29,6 @@ export default class InputKeywords extends Component {
     value: '',
     keywords: [],
     required: false,
-    disabled: false,
     labelTop: true,
     newKeyWord: null,
     keywordIcon: null,
@@ -134,7 +132,6 @@ export default class InputKeywords extends Component {
                     onDelete={() => {
                       this.onDelete(i);
                     }}
-                    disabled={this.props.disabled}
                     keywordIcon={this.props.keywordIcon}
                     keywordPlusIcon={this.props.keywordPlusIcon}
                     keywordMinusIcon={this.props.keywordMinusIcon}
@@ -153,7 +150,6 @@ export default class InputKeywords extends Component {
               onAdd={keyw => {
                 this.onAdd(keyw);
               }}
-              disabled={this.props.disabled}
               keywordIcon={this.props.keywordIcon}
               keywordPlusIcon={this.props.keywordPlusIcon}
               keywordMinusIcon={this.props.keywordMinusIcon}

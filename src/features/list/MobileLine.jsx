@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { ActionButton, MobileLineCol, getCardTitle } from './';
 
 import { HoverObserver } from '../advanced';
-import { getObjectmemberValue } from '../helper';
+import { getObjectmemberValue } from '../helpers';
 import { Row } from '../grid';
 
 const navstyle = {
@@ -23,12 +23,18 @@ export class MobileLine extends Component {
     item: PropTypes.element.isRequired,
     mobile: PropTypes.bool,
     title: PropTypes.string.isRequired,
+    selectable: PropTypes.bool,
+    onSelect: PropTypes.func,
+    forSelectOne: PropTypes.bool,
   };
 
   static defaultProps = {
     className: '',
     hideMenu: false,
     mobile: true,
+    selectable: true,
+    onSelect: null,
+    forSelectOne: false,
   };
 
   constructor(props) {
@@ -56,16 +62,21 @@ export class MobileLine extends Component {
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
     }
-    this.props.inlineActions.forEach(action => {
-      if (action.role === 'MODIFY') {
-        action.onClick(this.props.id);
-      }
-    });
+    if (this.props.forSelectOne) {
+      this.props.onSelect(this.props.item);
+    } else {
+      this.props.inlineActions.forEach(action => {
+        if (action.role === 'MODIFY') {
+          action.onClick(this.props.id);
+        }
+      });
+    }
     return false;
   }
 
   render() {
-    const selectable = this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
+    const selectable =
+      this.props.selectable && this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
     return (
       <div
         id={`rbf-list-mobile-line${this.props.item.id}`}
@@ -73,10 +84,7 @@ export class MobileLine extends Component {
       >
         <div className="col-xs-w36">
           <div
-            className={classnames(
-              'card shadow-sm m-2',
-              this.props.fClassName && this.props.fClassName(this.props.item)
-            )}
+            className="card shadow-sm m-2"
             onClick={ev => {
               if (this.props.mobile) {
                 this.handleDoubleClick(ev);
@@ -89,14 +97,16 @@ export class MobileLine extends Component {
               <div
                 className={classnames(
                   'card-header rbf-list-mobile-line-header',
-                  this.props.inlineOpenedId === this.props.id ? 'text-secondary bg-primary-light' : 'text-secondary'
+                  this.state.flipped || this.props.inlineOpenedId === this.props.id
+                    ? 'text-white bg-primary-light'
+                    : 'text-secondary bg-white'
                 )}
               >
                 {selectable && (
                   <div className="rbf-list-mobile-line-header-select">
                     <div
                       className={classnames(
-                        'select-line border border-secondary mr-2 bg-light',
+                        'select-line border border-secondary mr-2 white',
                         this.props.selected.find(elem => elem === this.props.id) && 'selected'
                       )}
                       onClick={ev => {

@@ -8,7 +8,9 @@ export const MobileFooter = props => (
     {props.loadMorePending ? (
       <div className="text-primary mt-2 text-center">{props.loader ? props.loader : <Loading9x9 />}</div>
     ) : (
-      <div>{props.loadMoreFinish ? <LoadComplete /> : <MobileLoadMore onLoadMore={props.onLoadMore} />}</div>
+      <div>
+        {props.loadMoreFinish ? <LoadComplete /> : <MobileLoadMore onLoadMore={props.onLoadMore} />}
+      </div>
     )}
     {props.loadMoreError && <LoadError />}
   </div>

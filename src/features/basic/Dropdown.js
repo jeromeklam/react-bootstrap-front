@@ -56,7 +56,7 @@ export default class Dropdown extends Component {
     if (!domNode || !domNode.contains(event.target)) {   
       if (this.props.myRef && this.props.myRef.current &&this.props.myRef.current.contains(event.target)) {
         event.preventDefault();
-        //event.stopPropagation();
+        event.stopPropagation();
       }
       this.props.onClose && this.props.onClose();
     }
@@ -79,10 +79,6 @@ export default class Dropdown extends Component {
           case 'bottom-right':
             divStyle.right = -1 * (coords.left + coords.width);
             divStyle.top = coords.top + coords.height;
-            break;
-          case 'top-left':
-            divStyle.right = -1 * coords.left;
-            divStyle.bottom = -1 * (coords.top + coords.height);
             break;
           default:
             divStyle.left = coords.left;

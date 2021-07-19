@@ -35,4 +35,5 @@ export const translations = {
   'rbf.list.header.filter.removeDefaultFilter': 'Supprimer les filtres par défaut',
   'rbf.list.header.filter.removeCustomFilter': 'Supprimer les filtres ajoutés aux filtres par défaut',
   'rbf.list.header.filter.removeAllFilter': 'Supprimer les filtres',
+  'rbf.calendar.agenda.test': 'test intl',
 };

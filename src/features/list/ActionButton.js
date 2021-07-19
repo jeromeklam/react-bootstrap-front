@@ -78,10 +78,10 @@ export default class ActionButton extends Component {
   render() {
     const { action, item, className } = this.props;
     let icon = action.icon;
-    if (action.fIcon) {
-      if (typeof action.fIcon === 'function') {
-        icon = action.fIcon(item);
-      }
+    if (action.fDisplay) {
+      if (typeof action.fDisplay === 'function') {
+        icon = action.fDisplay(item);
+      } 
     }
     let disabled = action.disabled || false;
     if (this.state.options && Array.isArray(this.state.options) && this.state.options.length === 0) {
@@ -96,10 +96,14 @@ export default class ActionButton extends Component {
               disabled={disabled}
               title={action.label || ''}
               className={classnames(className, 'btn')}
-              onClick={evt => {
+              onClick={ev => {
+                if (ev) {
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                }
                 this.state.triggerFct(item).then(result => {
                   this.updateOptions(result);
-                });
+                }); 
               }}
             >
               {icon}
@@ -108,25 +112,28 @@ export default class ActionButton extends Component {
           {this.state.options && (
             <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onClose}>
               <DropdownMenu>
-                {Array.isArray(this.state.options) &&
-                  this.state.options.length > 0 &&
+                {Array.isArray(this.state.options) && (this.state.options.length > 0) &&
                   this.state.options.map(elem => {
-                    return (
-                      <DropdownMenuOption
-                        key={`elem-${action.label}`}
-                        label={elem.label}
-                        onClick={ev => {
-                          if (ev) {
-                            ev.preventDefault();
-                          }
-                          if (action.param === 'object') {
-                            elem.onClick(item);
-                          } else {
-                            elem.onClick(item.id);
-                          }
-                        }}
-                      />
-                    );
+                    if (elem) {
+                      return (
+                        <DropdownMenuOption
+                          key={`elem-${action.label}`}
+                          label={elem.label}
+                          onClick={ev => {
+                            if (ev) {
+                              ev.preventDefault();
+                              ev.stopPropagation();
+                            }
+                            if (action.param === 'object') {
+                              elem.onClick(item);
+                            } else {
+                              elem.onClick(item.id);
+                            }
+                          }}
+                        />
+                      );
+                    }
+                    return null;
                   })}
               </DropdownMenu>
             </Dropdown>
@@ -157,6 +164,7 @@ export default class ActionButton extends Component {
                       onClick={ev => {
                         if (ev) {
                           ev.preventDefault();
+                          ev.stopPropagation();
                         }
                         if (action.param === 'object') {
                           elem.onClick(item);
@@ -172,27 +180,31 @@ export default class ActionButton extends Component {
           );
         } else {
           const elem = this.state.options[0];
-          return (
-            <button
-              type="button"
-              disabled={action.disabled || false}
-              title={action.label || ''}
-              className={classnames(className, 'btn')}
-              ref={this.state.myRef}
-              onClick={ev => {
-                if (ev) {
-                  ev.preventDefault();
-                }
-                if (action.param === 'object') {
-                  elem.onClick(item);
-                } else {
-                  elem.onClick(item.id);
-                }
-              }}
-            >
-              {icon}
-            </button>
-          );
+          if (elem) {
+            return (
+              <button
+                type="button"
+                disabled={action.disabled || false}
+                title={action.label || ''}
+                className={classnames(className, 'btn')}
+                ref={this.state.myRef}
+                onClick={ev => {
+                  if (ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                  }
+                  if (action.param === 'object') {
+                    elem.onClick(item);
+                  } else {
+                    elem.onClick(item.id);
+                  }
+                }}
+              >
+                {icon}
+              </button>
+            );
+          }
+          return null;
         }
       }
     }
@@ -204,8 +216,10 @@ export default class ActionButton extends Component {
           title={action.label || ''}
           className={classnames(className, 'btn')}
           ref={this.state.myRef}
-          onClick={evt => {
-            evt.stopPropagation();
+          onClick={ev => {
+            if (ev) {
+              ev.stopPropagation();
+            }
             if (action.role === 'DELETE') {
               this.onConfirm();
             } else if (action.param === 'object') {

@@ -1,5 +1,9 @@
 @import '../../styles/mixins';
 
-.basic-badge {
-
+.div-badge {
+  display: inline;
+}
+.btn-badge-div.btn-secondary:hover {
+  background-color: theme-color('secondary') !important;
+  cursor: initial !important;
 }

@@ -18,7 +18,7 @@ export const MobileFooterMenu = props => (
   <div style={mystyle} className="bg-secondary text-light">
     <div className="container h-100">
       <div className="mobile-footer-menu row text-center flex-nowrap h-100">
-        <div className="mobile-footer-option col-xs-w18 text-center">
+        <div className="mobile-footer-option col-xs-w10 text-center">
           <a href="#" className="nav-link text-light btn-humburger" onClick={props.onToggleMenu} id="menu-toggle">
             {props.menuIcon}
             <br />
@@ -31,7 +31,7 @@ export const MobileFooterMenu = props => (
             (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
           ) {
             return (
-              <div className="mobile-footer-option col-xs-w18 text-center">
+              <div key={`${option.label}-${option.url}`} className="mobile-footer-option col-xs-w10 text-center">
                 <a
                   href={option.url}
                   className={classnames('nav-link text-light', props.location.pathname === option.url && 'active')}

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MobilePublicHeader, MobileFooterMenu, MobileMenu } from './';
+import { CSSTransition } from 'react-transition-group';
+import { MobilePublicHeader, MobilePrivateHeader, MobileFooterMenu, MobileMenu } from './';
 import { Container } from '../grid';
 
+const duration = 500;
 const MobileHeaderHeight = 60;
-const MobileFooterHeight = 60;
+const MobileFooterHeight = 80;
 
 const headerMobileStyles = {
   zIndex: '900',
@@ -14,6 +16,8 @@ const headerMobileStyles = {
   left: '0px',
   height: `${MobileHeaderHeight}px`,
   lineHeight: `${MobileHeaderHeight}px`,
+  transition: `top ${duration}ms ease ${duration}ms`,
+  animationIterationCount: '1',
 };
 
 const footerMobileStyles = {
@@ -35,6 +39,32 @@ const contentMobileStyles = {
   overflowX: 'hidden',
   overflowY: 'auto',
   zIndex: '810',
+};
+
+const userMenuDefaultStyles = {
+  transition: `top ${duration}ms ease ${duration}ms`,
+  animationIterationCount: '1',
+  position: 'fixed',
+  left: '0px',
+  right: '0px',
+  top: 'calc(-100% - 60px)',
+  height: 'calc(100% - 60px)',
+  zIndex: '900',
+  overflowY: 'auto',
+};
+
+const userMenuStyles = {
+  entering: { top: '0px' },
+  entered: { top: '0px' },
+  exiting: { top: 'calc(-100% - 60px)' },
+  exited: { top: 'calc(-100% - 60px)' },
+};
+
+const headerMenuStyles = {
+  entering: { top: 'calc(100% - 60px)' },
+  entered: { top: 'calc(100% - 60px)' },
+  exiting: { top: '0px' },
+  exited: { top: '0px' },
 };
 
 export default class MobilePage extends Component {
@@ -73,22 +103,42 @@ export default class MobilePage extends Component {
   }
 
   render() {
+    const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
     return (
       <div id="page-root" className="full-page">
         <Container size="xs" className="display-mobile">
-          <div style={headerMobileStyles}>
-            <MobilePublicHeader {...this.props} />
-          </div>
-          <div style={{ ...contentMobileStyles }}>
-            {this.state.menuOpened ? (
-              <MobileMenu {...this.props} onCloseMenu={this.onCloseMenu} />
-            ) : (
-              this.props.children
+          <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
+            {state => (
+              <div>
+                <div className="bg-white" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
+                  {userForm}
+                </div>
+                <div style={{ ...headerMobileStyles, ...headerMenuStyles[state] }}>
+                  {this.props.authenticated ? (
+                    <MobilePrivateHeader {...this.props} {...this.state} onToggleUser={this.onToggleUser} />
+                  ) : (
+                    <MobilePublicHeader {...this.props} />
+                  )}
+                </div>
+              </div>
             )}
-          </div>
-          <div style={footerMobileStyles}>
-            <MobileFooterMenu {...this.props} onToggleMenu={this.onToggleMenu} onCloseMenu={this.onCloseMenu} />
-          </div>
+          </CSSTransition>
+          <CSSTransition in={!this.state.menuSideMini} timeout={duration}>
+            {state => (
+              <>
+                <div className="page-root-mobile-content" style={{ ...contentMobileStyles }}>
+                  {this.state.menuOpened ? (
+                    <MobileMenu {...this.props} onCloseMenu={this.onCloseMenu} />
+                  ) : (
+                    this.props.children
+                  )}
+                </div>
+                <div style={footerMobileStyles}>
+                  <MobileFooterMenu {...this.props} onToggleMenu={this.onToggleMenu} onCloseMenu={this.onCloseMenu} />
+                </div>
+              </>
+            )}
+          </CSSTransition>
         </Container>
       </div>
     );

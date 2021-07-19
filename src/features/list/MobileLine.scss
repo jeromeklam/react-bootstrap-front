@@ -16,12 +16,12 @@
     top: 10px;
     right: 10px;
   }
-  .card {
-    box-shadow: 0 0.3rem 0.6rem theme-color('secondary-light') !important;
-  }
   .card-header span {
     color: black;
     font-size: 0.9rem;
+  }
+  .card {
+    /*box-shadow: 0 0.1rem 0.2rem theme-color('secondary') !important;*/
   }
   .card, .card-header {
     background-color: white;
@@ -31,6 +31,9 @@
   }
   .card.row-line-danger, .card.row-line-danger .card-header {
     background-color: theme-color('danger-light');
+  }
+  .rbf-list-mobile-line-3dots {
+    font-weight: bold;
   }
 }
 

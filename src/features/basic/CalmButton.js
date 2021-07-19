@@ -5,17 +5,23 @@ import { SmLoading9x9 } from '../spinner';
 
 export default class CalmButton extends Component {
   static propTypes = {
+    className: PropTypes.string,
     disabled: PropTypes.bool,
+    loader: PropTypes.bool,
     onClick: PropTypes.func.isRequired,
     options: PropTypes.array,
     optionsAlign: PropTypes.string,
     optionsOpenMulti: PropTypes.bool,
+    title: PropTypes.string,
   };
   static defaultProps = {
+    className: '',
     disabled: false,
+    loader: true,
     options: [],
     optionsAlign: 'bottom-right',
     optionsOpenMulti: true, // Ouvre le menu des options quand on a au moins 2 options
+    title: '',
   };
 
   constructor(props) {
@@ -31,13 +37,22 @@ export default class CalmButton extends Component {
     this.onOptionsMenuClose = this.onOptionsMenuClose.bind(this);
   }
 
+  componentWillUnmount() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  }
+
   onRealClick(event) {
+    if (event) {
+      event.stopPropagation();
+    }
     if (this.props.options && this.props.options.length > this.props.optionsOpenMulti) {
       this.onOptionsMenuOpen();
     } else {
       this.timer = setTimeout(() => {
         this.setState({ executing: false });
-      }, 2000);
+      }, 1000);
       this.setState({ executing: true });
       this.props.onClick(event);
     }
@@ -51,23 +66,18 @@ export default class CalmButton extends Component {
     this.setState({ optionsMenu: false });
   }
 
-  componentWillUnmount() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
-  }
-
   render() {
     return (
       <>
         <button
-          {...this.props}
+          className={this.props.className}
+          title={this.props.title}
           onClick={this.onRealClick}
           disabled={this.state.executing || this.props.disabled}
           ref={this.state.myRef}
         >
           <>
-            {this.state.executing && (
+            {this.state.executing && this.props.loader && (
               <div className="calm-button-loader pr-1 text-light">
                 <SmLoading9x9 width={24} height={24} />
               </div>

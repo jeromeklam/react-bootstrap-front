@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Container, Row, Col } from '../grid';
 
 export default function CookieConsent(props) {
-  console.log(props);
   return (
     <div className="advanced-cookie-consent">
       <Container size="xs" className="advanced-cookie-consent-inner">
@@ -20,11 +19,9 @@ export default function CookieConsent(props) {
         </Row>
         <Row>
           <Col size={36} className="text-right">
-            {props.onDecline &&
-              <button type="button" className="btn btn-warning" onClick={props.onDecline}>
-                {props.decline}
-              </button>
-            }
+            <button type="button" className="btn btn-warning" onClick={props.onDecline}>
+              {props.decline}
+            </button>
             <button type="button" className="btn btn-primary" onClick={props.onAccept}>
               {props.accept}
             </button>
@@ -36,14 +33,11 @@ export default function CookieConsent(props) {
 }
 
 CookieConsent.propTypes = {
-  accept: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  decline: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  accept: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  decline: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   onAccept: PropTypes.func.isRequired,
-  onDecline: PropTypes.func,
+  onDecline: PropTypes.func.isRequired,
   text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  title: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 };
-CookieConsent.defaultProps = {
-  decline: "",
-  onDecline: null,
-};
+CookieConsent.defaultProps = {};

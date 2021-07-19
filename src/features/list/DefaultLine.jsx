@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { HoverObserver } from '../advanced';
-import { getObjectmemberValue } from '../helper';
+import { getObjectmemberValue } from '../helpers';
 import { DefaultCol, ActionButton } from './';
 
 const duration = 500;
@@ -58,7 +58,6 @@ export default class DesktopListLine extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     className: PropTypes.string,
-    currentitem: PropTypes.object,
     cols: PropTypes.element.isRequired,
     item: PropTypes.element.isRequired,
     fClassName: PropTypes.func,
@@ -75,7 +74,6 @@ export default class DesktopListLine extends Component {
 
   static defaultProps = {
     className: '',
-    currentItem: null,
     inlineOpenedId: 0,
     inlineComponent: null,
     onSelect: () => {},
@@ -135,12 +133,7 @@ export default class DesktopListLine extends Component {
               'default-list-wrapper row row-line-separator border-secondary-light',
               this.props.fClassName && this.props.fClassName(item),
               this.props.inlineOpenedId === this.props.id ? 'bg-secondary text-light pt-2 pb-0' : 'text-dark',
-              this.props.inlineOpenedId !== this.props.id &&
-                (this.state.flipped || (false && this.props.currentItem && this.props.currentItem.id === this.props.id)) &&
-                'row-line-hover',
-              !this.state.flipped && this.props.oddEven && this.props.counter % 2 !== 1
-                ? 'row-line-odd'
-                : 'row-line-even'
+              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover'
             )}
           >
             {this.props.cols.map((oneCol, i) => {
@@ -176,11 +169,7 @@ export default class DesktopListLine extends Component {
                     ) {
                       return (
                         <li className="nav-item" key={action.name}>
-                          <ActionButton
-                            action={action}
-                            item={item}
-                            className={classnames('btn-inline', action.theme && `btn-${action.theme}`)}
-                          />
+                          <ActionButton action={action} item={item} className={classnames('btn-inline',action.theme && `btn-${action.theme}`)} />
                         </li>
                       );
                     }

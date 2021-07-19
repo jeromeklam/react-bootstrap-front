@@ -12,3 +12,19 @@
   top: 0px;
   height: 60px;
 }
+
+.default-header-border-bottom {
+	height: 4px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+  .default-header-border-bottom-img {
+	position: absolute;
+	width: 100%;
+    height: 100%;
+  }
+}

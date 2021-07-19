@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { InputGroup, InputGroupPrepend, InputGroupAppend, Dropdown } from '../basic';
-import { getFieldId } from '../helper';
+import { getFieldId } from '../helpers';
 import { FILTER_OPER_EQUAL } from '.';
 
 export default class InputAutocomplete extends Component {
@@ -78,7 +78,6 @@ export default class InputAutocomplete extends Component {
   }
 
   onSelect(item) {
-    console.log(item);
     if (item) {
       this.props.onSelect({ target: { name: this.props.name, value: item.id } }, FILTER_OPER_EQUAL);
       let display = '';
@@ -106,12 +105,12 @@ export default class InputAutocomplete extends Component {
     return (
       <InputGroup {...this.props} id={myId}>
         {this.props.prepend && this.props.prepend !== '' && (
-          <InputGroupPrepend className=" border border-secondary rounded-left">{this.props.prepend}</InputGroupPrepend>
+          <InputGroupPrepend className=" border border-primary rounded-left">{this.props.prepend}</InputGroupPrepend>
         )}
         <input
           type="text"
           className={classnames(
-            'border-secondary form-control',
+            'border-primary form-control',
             this.props.size && `form-control-${this.props.size}`,
             (this.props.error || this.props.warning) && 'is-invalid',
             this.props.className && this.props.className
@@ -138,7 +137,7 @@ export default class InputAutocomplete extends Component {
             <button
               type="button"
               className={classnames(
-                'btn btn-input btn-outline-secondary bg-light',
+                'btn btn-input btn-outline-primary bg-light',
                 this.props.size && `btn-${this.props.size}`
               )}
               disabled={this.props.disabled}
@@ -150,7 +149,7 @@ export default class InputAutocomplete extends Component {
         )}
         {open && (
           <Dropdown
-            className="border rounded border-secondary bg-white text-secondary"
+            className="border rounded border-primary bg-white text-secondary"
             myRef={this.state.myRef}
             onClose={this.onSelect}
             maxHeight="250px"

@@ -1,14 +1,16 @@
 import React from 'react';
-import { Responsive } from '../layout';
 import { MobileList, DefaultList } from './';
+import { WidthObserver } from '../advanced';
+import { rbfIntl } from '../intl';
 
 export const ResponsiveInlineList = props => (
-  <div>
-    <Responsive displayIn={['Mobile']}>
-      <MobileList {...props} />
-    </Responsive>
-    <Responsive displayIn={['Laptop', 'Tablet']}>
-      <DefaultList {...props} />
-    </Responsive>
-  </div>
+  <WidthObserver>
+    {({ mediaSize }) => {
+      if (mediaSize !== 'xs') {
+        return <DefaultList {...props} t={props.t ? props.t : rbfIntl} />;
+      } else {
+        return <MobileList {...props} t={props.t ? props.t : rbfIntl} />;
+      }
+    }}
+  </WidthObserver>
 );

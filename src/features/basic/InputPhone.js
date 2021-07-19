@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { getFieldId } from '../helper';
+import { getFieldId } from '../helpers';
 
 export default class InputPhone extends Component {
   static propTypes = {

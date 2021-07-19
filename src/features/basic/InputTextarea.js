@@ -6,7 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { DropdownWrapper, ResponsiveConfirm } from '../advanced';
 import { DropdownMenu, DropdownMenuOption, Dropdown } from '../basic';
-import { htmlToString } from '../helper';
+import { htmlToString } from '../helpers';
 
 const myStyle = {
   height: 'auto',
@@ -261,17 +261,14 @@ export default class InputTextarea extends Component {
         )}
         <div className={classnames(!this.props.labelTop && 'col-xs-w30')}>
           <div
-            className={classnames(
-              'input-group',
-              (this.props.error || this.props.warning) && 'is-invalid',
-            )}
+            className={classnames('input-group', (this.props.error || this.props.warning) && 'is-invalid')}
             style={myStyle}
           >
             <Editor
               toolbarHidden={!toolbar}
               editorState={editorState}
               toolbarClassName="toolbarClassName"
-              wrapperClassName={classnames("form-control border-secondary h-auto", this.props.disabled && 'is-disabled')}
+              wrapperClassName="form-control border-secondary h-auto"
               editorClassName="editorClassName overflow-hidden"
               onEditorStateChange={this.onEditorStateChange}
             />
@@ -285,23 +282,20 @@ export default class InputTextarea extends Component {
                       this.props.size === 'sm' && `btn-${this.props.size}`
                     )}
                     onClick={this.onPresetText}
-                    disabled={this.props.disabled}
                     ref={this.state.myRef}
                   >
                     {this.props.presetTextIcon}
                   </button>
-                  {this.props.presetTexts &&
-                    Array.isArray(this.props.presetTexts) &&
-                    this.props.presetTexts.length > 0 &&
-                    this.state.presetText && (
-                      <Dropdown
-                        align="bottom-right"
-                        myRef={this.state.myRef}
-                        maxHeight="250px"
-                        onClose={this.onPresetTextClose}
-                      >
-                        <DropdownMenu>
-                          {this.props.presetTexts.map(text => {
+                  {this.props.presetTexts && this.props.presetTexts.length > 0 && this.state.presetText && (
+                    <Dropdown
+                      align="bottom-right"
+                      myRef={this.state.myRef}
+                      maxHeight="250px"
+                      onClose={this.onPresetTextClose}
+                    >
+                      <DropdownMenu>
+                        {Array.isArray(this.props.presetTexts) &&
+                          this.props.presetTexts.map(text => {
                             return (
                               <DropdownMenuOption
                                 key={`text-${text.id}`}
@@ -312,9 +306,9 @@ export default class InputTextarea extends Component {
                               />
                             );
                           })}
-                        </DropdownMenu>
-                      </Dropdown>
-                    )}
+                      </DropdownMenu>
+                    </Dropdown>
+                  )}
                 </>
               )}
               <button
@@ -324,7 +318,6 @@ export default class InputTextarea extends Component {
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onToolbar}
-                disabled={this.props.disabled}
               >
                 {this.props.toolbarIcon}
               </button>
@@ -335,7 +328,6 @@ export default class InputTextarea extends Component {
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}
-                disabled={this.props.disabled}
               >
                 {this.props.clearIcon}
               </button>

@@ -1,21 +1,6 @@
+
 .ui-input-checkbox {
-  .form-check-input:focus + .slider {
-    border-color: $input-focus-border-color !important;
-    outline: 0 !important;
-    box-shadow: $input-focus-box-shadow !important;
-    cursor: pointer;
-  }
-  .form-check-input {
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-  }
-  .ui-slide {
-    &.bg-secondary:hover {
-      background-color: theme-color('secondary-dark') !important;
-    }
-    &.bg-light:hover {
-      background-color: theme-color('secondary-light') !important;
-    }
-  }   
+  .ui-slide:hover {
+    filter: brightness(85%);
+  } 
 }

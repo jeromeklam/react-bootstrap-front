@@ -18,10 +18,14 @@ const followStyle = {
 };
 
 export const DefaultFooter = props => (
-  <div style={mystyle} className="bg-light">
+  <div style={mystyle} className="rbf-page-footer bg-white">
     <Container>
       <Row>
-        <Col size={27} />
+        <Col size={5} textAlign="left">
+          {props.copyright}
+        </Col>
+        <Col size={22} textAlign="center">
+        </Col>
         <Col size={3} textAlign="right">
           <div className="text-dark" style={followStyle}>
             {props.t({ id: 'rbf.page.footer.followUs', defaultMessage: 'Follow us' })}

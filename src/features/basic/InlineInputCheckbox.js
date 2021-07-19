@@ -51,8 +51,8 @@ const inputstyle = {
 };
 
 export const InlineInputCheckbox = props => (
-  <div>
-    <label style={switchstyle} className="bg-white">
+  <div className="ui-inline-input-checkbox" >
+    <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
       <input
         style={inputstyle}
         type="checkbox"
@@ -67,7 +67,7 @@ export const InlineInputCheckbox = props => (
       <div style={sliderbeforestyle}>
         <span
           style={props.checked === true ? slideronstyle : sliderstyle}
-          className={classnames(props.checked === true ? 'bg-secondary' : 'bg-light')}
+          className={classnames('ui-slide', props.checked === true ? 'bg-secondary' : 'bg-light')}
         />
       </div>
     </label>

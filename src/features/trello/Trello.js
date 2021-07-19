@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Board from './Board';
 import locales from './locales';
-import createTranslate from './helpers/createTranslate';
+import createTranslate from '../helpers/createTranslate';
 
 export default function Trello(props) {
   const { lang, ...otherProps } = props;

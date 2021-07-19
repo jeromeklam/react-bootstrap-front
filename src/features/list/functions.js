@@ -1,5 +1,3 @@
-import { displayDatetime } from  '../helper';
-
 /**
  * Get col content for title
  * 
@@ -18,12 +16,8 @@ export const getCardTitle = (cols, item) => {
       return cols[pos].fDisplay(item);
     }
     const col = cols[pos].col;
-    let title = item[col];
-    if (title) {
-      if (cols[pos].type === 'date') {
-        title = displayDatetime(title, 'fr-FR', false);
-      }
-      return title;
+    if (item[col]) {
+      return item[col];
     }
   }
   return '';
