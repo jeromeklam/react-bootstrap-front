@@ -1,0 +1,473 @@
+@import './mixins/scrollbar';
+
+// Here you put all global css rules.
+body {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+@media (max-width: 768px) {
+  body {
+    font-weight: normal;
+  }
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+  label {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.form-group-sm {
+  margin-bottom: 0rem;
+}
+
+.custom-scrollbar {
+  @include scrollbars(10px, theme-color('primary'), theme-color('primary-light'));
+}
+
+.noselect {
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+.text-danger > svg {
+  fill: theme-color('danger');
+  path {
+    fill: theme-color('danger');
+  }
+}
+.text-warning > svg {
+  fill: theme-color('warning');
+  path {
+    fill: theme-color('warning');
+  }
+}
+.text-success > svg {
+  fill: theme-color('success');
+  path {
+    fill: theme-color('success');
+  }
+}
+.text-dark > svg {
+  fill: theme-color('dark');
+  path {
+    fill: theme-color('dark');
+  }
+}
+.text-light > svg {
+  fill: theme-color('light');
+  path {
+    fill: theme-color('light');
+  }
+}
+.text-secondary > svg {
+  fill: theme-color('secondary');
+  path {
+    fill: theme-color('secondary');
+  }
+}
+.text-primary > svg {
+  fill: theme-color('primary');
+  path {
+    fill: theme-color('primary');
+  }
+}
+svg.text-primary.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('primary-dark');
+  fill: theme-color('primary-dark');
+  path {
+    fill: theme-color('primary-dark') !important;
+  }
+}
+svg.text-secondary.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('secondary-dark');
+  fill: theme-color('secondary-dark');
+  path {
+    fill: theme-color('secondary-dark') !important;
+  }
+}
+svg.text-warning.inline-action:hover {
+  cursor: pointer;
+  color: theme-color('warning-dark');
+  fill: theme-color('warning-dark');
+  path {
+    fill: theme-color('warning-dark') !important;
+  }
+}
+
+.inline-add-one .inline-action:hover {
+  cursor: pointer;
+}
+
+.btn-sm {
+  &.btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  svg {
+    height: 1.2rem !important;
+    width: 1.2rem !important;
+  }
+}
+
+.sidebar-navigation li:hover a {
+  color: theme-color('primary-light') !important;
+}
+.sidebar-navigation li:hover i {
+  border: solid theme-color('primary-light') !important;
+  border-width: 0 3px 3px 0 !important;
+}
+.sidebar-navigation li:hover a > svg {
+  fill: theme-color('primary-light') !important;
+  path {
+    fill: theme-color('primary-light') !important;
+  }
+}
+
+.btn-left {
+  &.btn {
+    padding: 1rem;
+  }
+  svg {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+  }
+}
+
+.btn-inline {
+  &.btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  svg {
+    height: 1rem !important;
+    width: 1rem !important;
+  }
+}
+
+.modal-body {
+  padding: 1em;
+}
+
+.modal-fullscreen {
+  padding: 0 !important; // override inline padding-right added from js
+  max-width: none;
+  width: none;
+  &.modal-dialog {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: -20px;
+    bottom: 10px;
+  }
+  .modal-content {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+  }
+  .modal-body {
+    overflow-y: auto;
+    height: auto !important;
+    min-height: auto !important;
+  }
+}
+@media (max-width: 768px) {
+  .modal-fullscreen {
+    &.modal-dialog {
+      left: 0px;
+      right: 0px;
+      top: 0px;
+      bottom: 0px;
+      margin: 0;
+    }
+    .modal-content {
+      border: 0px;
+    }
+  }
+}
+
+.modal-xl {
+  .modal-body {
+    min-height: 550px;
+  }
+}
+
+.modal-lg {
+  .modal-body {
+    min-height: 450px;
+  }
+}
+
+.modal-md {
+  .modal-body {
+    min-height: 350px;
+  }
+}
+
+.nav-tabs {
+  border-color: theme-color('secondary-inactive');
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-inactive');
+}
+
+.nav-item .nav-link.active {
+  color: theme-color('primary');
+}
+
+.nav-item .nav-link:hover {
+  cursor: pointer;
+}
+.nav-item .nav-link.disabled:hover {
+  cursor: not-allowed;
+}
+
+.btn-group-xs > .btn,
+.btn-xs {
+  padding: 0.2rem 0.3rem;
+  font-size: 0.8rem;
+  line-height: 0.4;
+  border-radius: 0.2rem;
+}
+
+.inline-list {
+  color: theme-color('dark');
+  padding-left: 10px;
+  padding-right: 10px;
+
+  svg.inline-action:hover {
+    cursor: pointer;
+    fill: theme-color('secondary-light');
+    path {
+      fill: theme-color('secondary-light') !important;
+    }
+  }
+  .row-title {
+    background-color: transparent;
+    color: theme-color('secondary');
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary');
+  }
+  .row-title span {
+    font-weight: bold;
+  }
+  .row-line {
+    min-height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary-light');
+  }
+  .row-line.row-even {
+    background: transparent;
+  }
+  .row-line.row-even:not(.row-title):hover {
+    background: theme-color('primary-light');
+  }
+  .row-line.row-odd {
+    background: transparent;
+  }
+  .row-line.row-odd:not(.row-title):hover {
+    background: theme-color('primary-light');
+  }
+  svg.inline-action:hover {
+    cursor: pointer;
+    color: theme-color('light');
+    fill: theme-color('light');
+    path {
+      fill: theme-color('light') !important;
+    }
+  }
+  .btn-group {
+    position: absolute;
+    right: 10px;
+  }
+}
+
+.list-group-item {
+  background-color: transparent;
+}
+
+.scrollarea .scrollbar-container.vertical .scrollbar {
+  background-color: theme-color('primary') !important;
+}
+@media (max-width: 1920px) {
+  body {
+    font-size: 0.9rem;
+  }
+  .modal-body {
+    font-size: 0.9rem;
+  }
+  .input-group {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 1200px) {
+  body {
+    font-size: 0.75rem;
+  }
+  .modal-body {
+    font-size: 0.75rem;
+  }
+  .input-group {
+    font-size: 0.75rem;
+  }
+}
+.modal-shadow {
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+
+.text-line-through {
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+/* Ligne de séparation entre les lignes des listes */
+.row-line-separator {
+  border-bottom: 1px solid;
+}
+
+/* Hover des lignes des listes */
+.row-line-hover {
+  background-color: theme-color('primary-light');
+  color: theme-color('secondary');
+}
+
+/* Couleur de fond spécifique des lignes des listes */
+.row-line-warning .col-highlighter {
+  background-color: theme-color('warning');
+}
+
+/* Couleur de fond spécifique des lignes des listes */
+.row-line-danger .col-highlighter {
+  background-color: theme-color('danger');
+}
+
+/* On force la couleur des icones dans les colonnes des listes */
+.text-secondary svg.col-icon {
+  fill: theme-color('secondary');
+  path {
+    fill: theme-color('secondary');
+  }
+}
+
+.text-light svg.col-icon {
+  fill: theme-color('light');
+  path {
+    fill: theme-color('light');
+  }
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.input-group .btn {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.modal-body {
+  font-size: 0.9rem;
+}
+.input-group {
+  font-size: 0.9rem;
+}
+.modal-body {
+  .card-body {
+    padding: 0px;
+  }
+}
+.modal-shadow {
+  -webkit-box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+.btn-secondary {
+  color: white;
+  background-color: theme-color('secondary');
+  border-color: theme-color('secondary-light');
+}
+.btn-primary {
+  color: white;
+  background-color: theme-color('primary');
+  border-color: theme-color('primary-light');
+}
+.btn-warning {
+  color: white;
+  background-color: theme-color('warning');
+  border-color: theme-color('warning-light');
+}
+hr {
+  border-top: 2px solid;
+  border-top-color: theme-color('secondary');
+}
+
+.highlight-toggler {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+}
+
+::placeholder {
+  color: theme-color('secondary-light');
+  font-style: italic;
+  font-size: 0.9em;
+  font-weight: 200;
+}
+
+.form-group label {
+  color: theme-color('secondary');
+}
+
+.row .col-first {
+  padding-left: 15px;
+}
+.row .col-last {
+  padding-right: 15px;
+}
+
+.input-group .btn-outline-secondary {
+  border-color: theme-color('secondary') !important;
+}
+
+.nav-tabs {
+  border-color: theme-color('secondary-light');
+}
+
+.nav-item .nav-link {
+  color: theme-color('secondary-light');
+}
+
+.border-secondary-light {
+  border: 1px solid theme-color('sedondary-light');
+}
+
+button:focus {
+  outline: none;
+}
+
+a.bg-light:hover:disabled, a.bg-light:focus:disabled, button.bg-light:hover:disabled, button.bg-light:focus:disabled {
+  background-color: theme-color('light') !important;
+}
+a.bg-secondary:hover:disabled, a.bg-secondary:focus:disabled, button.bg-secondary:hover:disabled, button.bg-secondary:focus:disabled {
+  background-color: theme-color('secondary') !important;
+}

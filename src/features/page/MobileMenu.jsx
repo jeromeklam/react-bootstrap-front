@@ -1,68 +1,78 @@
-import React from 'react';
-import classnames from 'classnames';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col } from '../grid';
 // import PropTypes from 'prop-types';
 
-export default function MobileMenu(props) {
-  return (
-    <div className="page-mobile-menu">
-      <Row className="no-gutters">
-        {props.options.map(option => {
-          let label = option.label;
-          if (
-            option.role === 'HOME' ||
-            option.role === 'ABOUT' ||
-            (option.role === 'NAV' && (props.authenticated || (props.authenticated && option.public)))
-          ) {
-            return (
-              <Col className="text-left" size={{ xs: 18, sm: 12 }} key={`option-${label}-${option.position}`}>
-                <button
-                  className="page-mobile-menu-option btn bg-white border border-rounded border-outline-secondary text-secondary"
-                  onClick={ev => {
-                    if (ev) {
-                      ev.preventDefault();
-                    }
-                    props.onCloseMenu();
-                    props.onNavigate(option.url);
-                  }}
-                >
-                  {option.icon}
-                  <br />
-                  <span>{label}</span>
-                </button>
-              </Col>
-            );
-          } else {
-            if (option.role === 'MENU' && (props.authenticated || (props.authenticated && option.public))) {
-              return option.options.map(option2 => {
-                let label2 = option2.label;
-                return (
-                  <Col className="text-left" size={{ xs: 18, sm: 12 }} key={`option-${label2}-${option2.position}`}>
-                    <button
-                      className="page-mobile-menu-option btn bg-white border border-rounded border-outline-secondary text-secondary"
-                      onClick={ev => {
-                        if (ev) {
-                          ev.preventDefault();
-                        }
-                        props.onCloseMenu();
-                        props.onNavigate(option2.url);
-                      }}
-                    >
-                      {option2.icon}
-                      <br />
-                      <span>{label2}</span>
-                    </button>
-                  </Col>
-                );
-              });
-            }
-          }
-          return null;
-        })}
-      </Row>
-    </div>
-  );
-}
+export default class MobileMenu extends Component {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+    userForm: PropTypes.element.isRequired,
+  };
+  static defaultProps = {};
 
-MobileMenu.propTypes = {};
-MobileMenu.defaultProps = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      options: this.props.options,
+    };
+    this.onOpenMenu = this.onOpenMenu.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.menuGeneral !== this.props.menuGeneral && this.props.menuGeneral) {
+      this.setState({ options: this.props.options });
+    }
+  }
+
+  onOpenMenu(menu) {
+    if (menu.role === 'MENU') {
+      let options = [];
+      menu.options.forEach(option => {
+        let subMenu = option;
+        subMenu.icon = option.icon ? option.icon : menu.icon;
+        options.push(subMenu);
+      });
+      this.props.onChangeMenu();
+      this.setState({ options: options });
+    } else {
+      this.props.onCloseMenu();
+      this.props.onNavigate(menu.url);
+    }
+  }
+
+  render() {
+    return (
+      <div className="page-mobile-menu"> 
+        <Row className="no-gutters">
+          {this.state.options.map(option => {
+            let label = option.label;
+            let color = 'text-secondary';
+            if (option.color && option.color !== '') {
+              color = 'text-' + option.color;
+            }
+            if (
+              option.role === 'HOME' ||
+              option.role === 'ABOUT' ||
+              option.role === 'MENU' ||
+              (option.role === 'NAV' && (this.props.authenticated || (this.props.authenticated && option.public)))
+            ) {
+              return (
+                <Col className="text-left" size={{ xs: 18, sm: 12 }} key={`option-${label}-${option.position}`}>
+                  <button
+                    className="page-mobile-menu-option btn bg-white border border-rounded border-outline-secondary text-secondary"
+                    onClick={() => this.onOpenMenu(option)}
+                  >
+                    <div className={color}>{option.icon}</div>
+                    <br />
+                    <span>{label}</span>
+                  </button>
+                </Col>
+              );
+            }
+            return null;
+          })}
+        </Row>
+      </div>
+    );
+  }
+}

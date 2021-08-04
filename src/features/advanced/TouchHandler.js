@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class TouchHandler extends Component {
-  static propTypes = {};
+  static propTypes = {
+    className: PropTypes.string,
+  };
+  static defaultProps = {
+    classname: "",
+  };
 
   constructor(props) {
     super(props);
@@ -83,6 +89,10 @@ export default class TouchHandler extends Component {
   }
 
   render() {
-    return <div ref={this.state.ref}>{this.props.children}</div>;
+    return (
+      <div className={this.props.className} ref={this.state.ref}>
+        {this.props.children}
+      </div>
+    );
   }
 }

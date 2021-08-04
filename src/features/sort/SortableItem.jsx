@@ -8,6 +8,7 @@ const liStyle = {
   paddingTop: '0px',
   paddingBottom: '0px',
   paddingLeft: '20px',
+  cursor: 'grab',
 };
 
 const mystyle = {
@@ -17,7 +18,7 @@ const mystyle = {
 };
 
 export const SortableItem = SortableElement(props => (
-  <li className="list-group-item bg-light border-secondary text-secondary noselect" style={liStyle}>
+  <li className="rbf-sortable-item list-group-item bg-light border-secondary text-secondary noselect" style={liStyle}>
     <span className="noselect" style={mystyle}>{props.value}{' '}</span>
     <div className="sort-icon float-right">
       {' '}

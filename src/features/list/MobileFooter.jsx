@@ -9,7 +9,13 @@ export const MobileFooter = props => (
       <div className="text-primary mt-2 text-center">{props.loader ? props.loader : <Loading9x9 />}</div>
     ) : (
       <div>
-        {props.loadMoreFinish ? <LoadComplete /> : <MobileLoadMore onLoadMore={props.onLoadMore} />}
+        {props.loadMoreFinish ? (
+          <LoadComplete />
+        ) : Array.isArray(props.items) && props.items.length > 0 ? (
+          <MobileLoadMore onLoadMore={props.onLoadMore} />
+        ) : (
+          <div />
+        )}
       </div>
     )}
     {props.loadMoreError && <LoadError />}

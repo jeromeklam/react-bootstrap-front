@@ -16,7 +16,7 @@ const headerMobileStyles = {
   left: '0px',
   height: `${MobileHeaderHeight}px`,
   lineHeight: `${MobileHeaderHeight}px`,
-  transition: `top ${duration}ms ease ${duration}ms`,
+  transition: `top ${duration}ms`,
   animationIterationCount: '1',
 };
 
@@ -42,7 +42,7 @@ const contentMobileStyles = {
 };
 
 const userMenuDefaultStyles = {
-  transition: `top ${duration}ms ease ${duration}ms`,
+  transition: `top ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   left: '0px',
@@ -79,10 +79,12 @@ export default class MobilePage extends Component {
       menuDataOpen: false,
       menuUserOpen: false,
       menuOpened: false,
+      menuGeneral: false, 
     };
     this.onToggleData = this.onToggleData.bind(this);
-    this.onToggleMenu = this.onToggleMenu.bind(this);
     this.onToggleUser = this.onToggleUser.bind(this);
+    this.onOpenMenu = this.onOpenMenu.bind(this);
+    this.onChangeMenu = this.onChangeMenu.bind(this);
     this.onCloseMenu = this.onCloseMenu.bind(this);
   }
 
@@ -94,8 +96,12 @@ export default class MobilePage extends Component {
     this.setState({ menuUserOpen: !this.state.menuUserOpen });
   }
 
-  onToggleMenu() {
-    this.setState({ menuOpened: !this.state.menuOpened });
+  onChangeMenu() {
+    this.setState({ menuGeneral: false });
+  }
+
+  onOpenMenu() {
+    this.setState({ menuOpened: true, menuGeneral: true });
   }
 
   onCloseMenu() {
@@ -128,13 +134,13 @@ export default class MobilePage extends Component {
               <>
                 <div className="page-root-mobile-content" style={{ ...contentMobileStyles }}>
                   {this.state.menuOpened ? (
-                    <MobileMenu {...this.props} onCloseMenu={this.onCloseMenu} />
+                    <MobileMenu {...this.props} menuGeneral={this.state.menuGeneral} onChangeMenu={this.onChangeMenu} onCloseMenu={this.onCloseMenu} />
                   ) : (
                     this.props.children
                   )}
                 </div>
                 <div style={footerMobileStyles}>
-                  <MobileFooterMenu {...this.props} onToggleMenu={this.onToggleMenu} onCloseMenu={this.onCloseMenu} />
+                  <MobileFooterMenu {...this.props} onInitMenu={this.onOpenMenu} onCloseMenu={this.onCloseMenu} />
                 </div>
               </>
             )}

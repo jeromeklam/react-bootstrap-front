@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Highlight, HighlightButton } from '../tour';
 import { Dropdown } from '../basic';
+import { SortPanel, sortToLocal, validSort } from '../sort';
 import { rbfIntl } from '../intl';
 
 const titlestyle = {
@@ -65,6 +66,8 @@ export default class DefaultHeader extends Component {
     counter: PropTypes.element,
     filterIcon: PropTypes.element,
     globalActions: PropTypes.element,
+    headerBackgroundTheme: PropTypes.string,
+    headerTextTheme: PropTypes.string,
     title: PropTypes.string.isRequired,
     onToggleFilter: PropTypes.func.isRequired,
     onClearFilters: PropTypes.func,
@@ -81,6 +84,8 @@ export default class DefaultHeader extends Component {
     counter: null,
     filterIcon: null,
     globalActions: [],
+    headerBackgroundTheme: 'light',
+    headerTextTheme: 'secondary',
     onClearFilters: null,
     onClearFiltersDefault: null,
     onFilters: null,
@@ -95,13 +100,26 @@ export default class DefaultHeader extends Component {
     super(props);
     this.state = {
       myRef: React.createRef(),
+      mySortRef: React.createRef(),
       show: false,
+      sortMenu: false,
+      sort: sortToLocal(props.cols, props.sort),
     };
     this.onToggle = this.onToggle.bind(this);
+    this.onToggleSortMenu = this.onToggleSortMenu.bind(this);
+    this.onSortChange = this.onSortChange.bind(this);
   }
 
   onToggle() {
     this.setState({ show: !this.state.show });
+  }
+
+  onToggleSortMenu() {
+    this.setState({ sortMenu: !this.state.sortMenu });
+  }
+
+  onSortChange(obj) {
+    this.setState({ sort: obj.sort });
   }
 
   render() {
@@ -149,7 +167,15 @@ export default class DefaultHeader extends Component {
       }
     }
     return (
-      <div style={mystyle} className={classnames('default-list-header text-secondary overflow-hidden', this.props.className)}>
+      <div
+        style={mystyle}
+        className={classnames(
+          'default-list-header text-secondary overflow-hidden',
+          this.props.className,
+          'bg-' + this.props.headerBackgroundTheme,
+          'text' + this.props.headerTextTheme
+        )}
+      >
         <div className="row">
           <div className="col-xs-w2 text-center">
             <HighlightButton className="text-light" theme="LIST">
@@ -158,28 +184,58 @@ export default class DefaultHeader extends Component {
               </div>
             </HighlightButton>
           </div>
-          <div className="col-xs-w14">
-            <span style={titlestyle} className="text-secondary">
+          <div className="col-xs-w24">
+            <span style={titlestyle} className={'text-' + this.props.headerTextTheme}>
               {`${this.props.title}`}
             </span>
-            <Highlight
-              style={sortStyle}
-              className="text-light"
-              position="bottom"
-              theme="LIST"
-              title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
-            >
-              <span>{` ${sortToText(this.props.sort, this.props.cols)}`}</span>
-            </Highlight>
-          </div>
-          <div className="col-xs-w10" style={quickStyles}>
-            <Highlight
-              position="bottom"
-              theme="LIST"
-              title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
-            >
-              {this.props.quickSearch}
-            </Highlight>
+            <div className="pl-2" style={{ display: 'inline-block' }}>
+              <Highlight
+                position="bottom"
+                theme="LIST"
+                title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
+              >
+                {this.props.quickSearch}
+              </Highlight>
+            </div>
+            <div className="pl-2" style={{ display: 'inline-block' }}>
+              <Highlight
+                style={sortStyle}
+                className="text-light"
+                position="bottom"
+                theme="LIST"
+                title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
+              >
+                <div className="input-group" ref={this.state.mySortRef}>
+                  <input className="form-control" disabled value={` ${sortToText(this.props.sort, this.props.cols)}`} />
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary bg-light" onClick={this.onToggleSortMenu}>
+                      {this.props.sortNoneIcon}
+                    </button>
+                  </div>
+                </div>
+                {this.state.sortMenu && (
+                  <Dropdown
+                    className="border rounded border-secondary bg-white text-secondary"
+                    myRef={this.state.mySortRef}
+                    onClose={() => {
+                      this.setState({ sortMenu: false });
+                      this.props.onSetFiltersAndSort(this.props.filters, validSort(this.state.sort));
+                    }}
+                  >
+                    <div className="p-2" style={{ minWidth: '300px' }}>
+                      <SortPanel
+                        sort={this.state.sort}
+                        sortNoneIcon={this.props.sortNoneIcon}
+                        sortUpIcon={this.props.sortUpIcon}
+                        sortDownIcon={this.props.sortDownIcon}
+                        onSortChange={this.onSortChange}
+                        pressDelay={200}
+                      />
+                    </div>
+                  </Dropdown>
+                )}
+              </Highlight>
+            </div>
           </div>
           <div className="col-xs-w10 text-right">
             <ul className="nav justify-content-end">

@@ -1,13 +1,10 @@
 import {
   Filter,
-  FILTER_MODE_AND,
   FILTER_MODE_OR,
   FILTER_OPER_LIKE,
   FILTER_TYPE_GROUP,
   FILTER_TYPE_ELEM,
   FILTER_SEARCH_NONE,
-  FILTER_OPER_GREATER_OR_EQUAL_OR_NULL,
-  FILTER_OPER_EQUAL,
 } from '../../../src/features/filter';
 
 /**
@@ -35,15 +32,4 @@ test('simple Filter', () => {
   expect(myFilter.data.filters.length).toBe(1);
   const elem = myFilter.data.filters[0];
   expect(elem).toBeInstanceOf(Filter);
-});
-
-/**
- * simple filter
- */
-test('Double Filter', () => {
-  const myFilter = new Filter();
-  myFilter.setMode(FILTER_MODE_AND);
-  myFilter.addFilter('cau_to', '2021-12-31', FILTER_OPER_GREATER_OR_EQUAL_OR_NULL, false, true);
-  myFilter.addFilter('caut_id', 355, FILTER_OPER_EQUAL, true);
-  expect(myFilter.data.filters.length).toBe(2);
 });

@@ -62,6 +62,27 @@ export const isMobileDevice = () => {
   }
 };
 
+export const hasUserMedia = () => {
+  navigator.getUserMedia =
+    navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
+  return !!navigator.getUserMedia;
+};
+
+export const beep = (context, freq = 2800, duration = 80, vol = 50) => {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.connect(gain);
+  oscillator.frequency.value = freq;
+  oscillator.type = "square";
+  gain.connect(context.destination);
+  gain.gain.value = vol * 0.01;
+  oscillator.start(context.currentTime);
+  oscillator.stop(context.currentTime + duration * 0.001);
+};
+
 export const ensureDatetimeTZ = date => {
   if (date instanceof Date) {
     return date.toISOString();

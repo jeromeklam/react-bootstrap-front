@@ -23,7 +23,7 @@ const navstyle = {
 const defaultStyle = {
   height: '0px',
   display: 'none',
-  transition: `height ${duration}ms opacity ${duration}ms ease ${duration}ms`,
+  transition: `height ${duration}ms opacity ${duration}ms`,
   animationIterationCount: '1',
 };
 
@@ -130,12 +130,13 @@ export default class DesktopListLine extends Component {
             }}
             style={mystyle}
             className={classnames(
-              'default-list-wrapper row row-line-separator border-secondary-light',
+              'default-list-wrapper row row-line-separator',
               this.props.fClassName && this.props.fClassName(item),
               this.props.inlineOpenedId === this.props.id ? 'bg-secondary text-light pt-2 pb-0' : 'text-dark',
               this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover'
             )}
           >
+            <div className="col-highlighter"></div>
             {this.props.cols.map((oneCol, i) => {
               if (!oneCol.hidden) {
                 const line = { ...oneCol, id: this.props.id };
@@ -153,8 +154,8 @@ export default class DesktopListLine extends Component {
               }
               return null;
             })}
-            {highlight && (
-              <ul style={navstyle} className="nav justify-content-end">
+            {(highlight) && (
+              <ul style={navstyle} className="default-line-menu nav">
                 {this.props.inlineActions &&
                   this.props.inlineActions.map(action => {
                     let display = true;

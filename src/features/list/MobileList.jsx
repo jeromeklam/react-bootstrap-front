@@ -21,9 +21,9 @@ const defaultStyle = {
   right: 'calc(-100%)',
   width: 'calc(100%)',
   top: '60px',
-  bottom: '60px',
+  bottom: '80px',
   zIndex: '877',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `right ${duration}ms`,
   animationIterationCount: '1',
 };
 
@@ -82,7 +82,6 @@ export default class MobileList extends Component {
   handleObserver(entities, observer) {
     const y = entities[0].boundingClientRect.y;
     if (y < this.state.prevY) {
-      console.log('LoadMore');
       this.props.onLoadMore();
     }
     this.setState({ prevY: y });

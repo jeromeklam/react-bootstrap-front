@@ -1,8 +1,7 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { useToggle } from "./hooks";
-
-let imageCapture = null;
-let imageName = null;
+import { ResponsiveModalCamera } from "../advanced";
 
 const hasUserMedia = () => {
   navigator.getUserMedia =
@@ -12,6 +11,9 @@ const hasUserMedia = () => {
     navigator.msGetUserMedia;
   return !!navigator.getUserMedia;
 };
+
+let imageCapture = null;
+let track = null;
 
 let options = {
   quality: 50,
@@ -30,10 +32,11 @@ if (window.cordova !== undefined) {
 }
 
 export default function InputPhoto(props) {
-  const [file, setFile] = useState(null);
-  const [showVideoRow, toggleShowVideoRow] = useToggle(false);
+  const [filename, setFileName] = useState(null);
+  const [showVideo, setShowVideo] = useState(false);
   const [loading, toggleLoading] = useToggle(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [shoot, setShoot] = useState(false);
 
   const cameraSuccess = (imageUri) => {
     setImageUrl(imageUri);
@@ -48,14 +51,15 @@ export default function InputPhoto(props) {
   };
 
   const onGetUserMediaButtonClick = () => {
-    toggleShowVideoRow(showVideoRow);
+    setShoot(false);
+    setShowVideo(true);
     toggleLoading(loading);
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then((mediaStream) => {
         document.querySelector("video").srcObject = mediaStream;
         toggleLoading(loading);
-        const track = mediaStream.getVideoTracks()[0];
+        track = mediaStream.getVideoTracks()[0];
         imageCapture = new ImageCapture(track);
       })
       .catch((error) => alert(error));
@@ -66,87 +70,119 @@ export default function InputPhoto(props) {
     imageCapture
       .takePhoto()
       .then((blob) => {
+        let nBlob = blob.slice();
         toggleLoading(loading);
-        setImageUrl(URL.createObjectURL(blob.slice()));
+        setShoot(true);
+        let url = URL.createObjectURL(nBlob);
+        setImageUrl(url);
+        setFileName(url.substring(src.lastIndexOf("/") + 1) + ".png");
       })
       .catch((error) => alert(error));
   };
 
-  const handleChange = (e) => {
-    setImageUrl(URL.createObjectURL(e.target.files[0]));
-    setFile(e.target.files[0]);
+  const handleCloseVideo = () => {
+    setShowVideo(false);
+    track.stop();
+    track = false;
+    imageCapture = false;
   };
 
-  const handleSave = (e) => alert(e.target.files[0]);
-
-  const handleRemovePicture = () => {
+  const handleCancelShoot = () => {
     setImageUrl(null);
+    setShoot(false);
+    setFileName(null);
   };
-  const handleToggleShowVideoRow = () => toggleShowVideoRow(showVideoRow);
 
   return (
     <div>
-      {window.cordova !== undefined ? (
-        !showVideoRow ? (
-          <button onClick={handleOpenCamera} className="icon">
-            {props.camIcon}
-          </button>
-        ) : (
-          <button onClick={handleToggleShowVideoRow} className="icon">
-            {props.closeIcon}
-          </button>
-        )
+      {!!window.cordova ? (
+        <button onClick={handleOpenCamera} className="btn btn-primary">
+          {props.camIcon}
+        </button>
       ) : (
         hasUserMedia() && (
           <div>
-            {!showVideoRow ? (
-              <button onClick={onGetUserMediaButtonClick} className="icon">
+            {!showVideo ? (
+              <button
+                onClick={onGetUserMediaButtonClick}
+                className="btn btn-primary"
+              >
                 {props.camIcon}
               </button>
-            ) : loading ? (
-              <img>{props.centLoad9xIcon}</img>
             ) : (
-              <button onClick={handleToggleShowVideoRow} className="icon">
-                {props.closeIcon}
-              </button>
-            )}
-            {showVideoRow && (
-              <div className="video-row">
-                <video autoPlay className="video"></video>
-                <button onClick={onTakePhotoButtonClick} className="icon">
-                  {props.camIcon}
-                </button>
-              </div>
+              <ResponsiveModalCamera
+                onClose={handleCloseVideo}
+                onTakePhotoButtonClick={onTakePhotoButtonClick}
+                loader={loading}
+                {...props}
+              >
+                <div className="video-container">
+                  {!shoot ? (
+                    <>
+                      <video autoPlay className="video h-100"></video>
+                      {!loading && (
+                        <button
+                          onClick={onTakePhotoButtonClick}
+                          className="camera-icon"
+                        >
+                          {props.camIcon}
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <img className="shoot-picture" src={imageUrl} />
+                      <div className="shoot-btns">
+                        <button
+                          className="valid shoot-btn mr-3"
+                          onClick={handleCloseVideo}
+                        >
+                          {props.validIcon}
+                        </button>
+                        <button
+                          className="cancel shoot-btn ml-3"
+                          onClick={onGetUserMediaButtonClick}
+                        >
+                          {props.cancelIcon}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </ResponsiveModalCamera>
             )}
           </div>
         )
       )}
-      <div>
-        <label className="image-upload">
-          <input className="file-input" type="file" onChange={handleChange} />
-          <button className="icon">{props.uploadIcon} </button>
-        </label>
-      </div>
-      <div>
-        {imageUrl && (
-          <div>
-            {loading ? (
-              <button className="icon">{props.centLoad9xIcon}</button>
-            ) : (
-              <div>
-                <button onClick={handleRemovePicture} className="icon">
-                  {props.closeIcon}
-                </button>
-                <img className="media-image-upload" src={imageUrl} />
-                <button onClick={handleSave}>{props.SaveIcon}</button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {imageUrl && (
+        <div>
+          {loading ? (
+            <button className="btn btn-primary">{props.centLoad9xIcon}</button>
+          ) : (
+            <div>
+              <button onClick={handleCancelShoot} className="btn btn-primary">
+                {props.closeIcon}
+              </button>
+              <img
+                className="media-image-upload"
+                src={imageUrl}
+                name={filename}
+                onChange={props.onChange}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
-InputPhoto.propTypes = {};
-InputPhoto.defaultProps = {};
+InputPhoto.propTypes = {
+  onChange: PropTypes.func,
+  size: PropTypes.string,
+};
+
+InputPhoto.defaultProps = {
+  onChange: () => {},
+  size: null,
+};

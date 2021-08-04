@@ -19,7 +19,7 @@ export const MobileFooterMenu = props => (
     <div className="container h-100">
       <div className="mobile-footer-menu row text-center flex-nowrap h-100">
         <div className="mobile-footer-option col-xs-w10 text-center">
-          <a href="#" className="nav-link text-light btn-humburger" onClick={props.onToggleMenu} id="menu-toggle">
+          <a href="#" className="nav-link text-light btn-humburger" onClick={props.onInitMenu} id="menu-toggle">
             {props.menuIcon}
             <br />
             <span className="mobile-footer-option-label">Menu</span>

@@ -8,7 +8,7 @@ import { DefaultPanel } from '../filter';
 import { WidthObserver } from '../advanced';
 import { ActionButton } from './';
 
-const duration = 200;
+const duration = 600;
 
 const fullDiv = {
   position: 'absolute',
@@ -25,25 +25,25 @@ const defaultStyle = {
   top: '60px',
   bottom: '0px',
   zIndex: '877',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `all ${duration}ms `,
   animationIterationCount: '1',
 };
 
-const dataStyle = {
-  top: '90px',
-  height: 'calc(100% - 90px)',
+const listStyle = {
+  top: '50px',
+  height: 'calc(100% - 50px)',
   position: 'absolute',
   left: '0px',
   right: '0px',
-  overflowY: 'scroll',
-  overflowX: 'hidden',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  bottom: '0px',
+  overflow: 'hidden',
+  transition: `all ${duration}ms `,
 };
 
 const footerstyle = {
   marginLeft: '-5px',
   marginRight: '-5px',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `all ${duration}ms `,
 };
 
 const transitionStyles = {
@@ -59,7 +59,7 @@ const titleLineStyle = {
   right: '0px',
   top: '50px',
   zIndex: '700',
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `all ${duration}ms `,
 };
 
 const titleStyle = {
@@ -86,13 +86,13 @@ let listTransitionStyles = {
 const inlineStyle = {
   overflowY: 'scroll',
   overflowX: 'hidden',
-  right: '0px',
+  right: '-1200px',
   width: '1200px',
   bottom: '0px',
   position: 'absolute',
   top: '50px',
   zIndex: '700',
-  transition: `right ${duration}ms ease ${duration}ms, top ${duration}ms ease ${duration}ms`,
+  transition: `all ${duration}ms `,
 };
 
 let inlineTransitionStyles = {
@@ -163,6 +163,7 @@ export default class DefaultList extends Component {
     this.togglePanel = this.togglePanel.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.handleObserver = this.handleObserver.bind(this);
+    this.toggleSplit = this.toggleSplit.bind(this);
   }
 
   componentDidMount() {
@@ -177,11 +178,6 @@ export default class DefaultList extends Component {
     }
   }
 
-  handleObserver(entities, observer) {
-    const y = entities[0].boundingClientRect.y;
-    console.log(y, entities);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (this.props.mode === 'right' && this.state.currentItem && prevState.currentItem !== this.state.currentItem) {
       try {
@@ -192,6 +188,14 @@ export default class DefaultList extends Component {
         }
       } catch (ex) {}
     }
+  }
+
+  toggleSplit() {
+    this.setState({ splited: !this.state.splited });
+  }
+
+  handleObserver(entities, observer) {
+    const y = entities[0].boundingClientRect.y;
   }
 
   updateDimensions(width, height) {
@@ -261,22 +265,7 @@ export default class DefaultList extends Component {
     });
     dispCols = dispCols.filter(col => !col.hidden);
     let locTitleStyle = titleStyle;
-    let locDataStyle = dataStyle;
-    if (this.props.titleMultiline) {
-      locTitleStyle = {
-        ...titleStyle,
-        height: '80px',
-        lineHeight: '40px',
-      };
-      locDataStyle = {
-        ...dataStyle,
-        top: '130px',
-        height: 'calc(100% - 130px)',
-      };
-    }
-    if (this.state.splited && this.props.mode === 'right') {
-      locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
-    }
+    let locListStyle = listStyle;
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -290,6 +279,7 @@ export default class DefaultList extends Component {
                 inlineTransitionStyles.exiting.right = '-624px';
                 inlineTransitionStyles.exited.right = '-624px';
                 inlineStyle.width = '624px';
+                inlineStyle.right = '-624px';
                 break;
               case 'md':
                 listTransitionStyles.entering.right = '800px';
@@ -297,6 +287,7 @@ export default class DefaultList extends Component {
                 inlineTransitionStyles.exiting.right = '-800px';
                 inlineTransitionStyles.exited.right = '-800px';
                 inlineStyle.width = '800px';
+                inlineStyle.right = '-800px';
                 break;
               case 'lg':
                 listTransitionStyles.entering.right = '1024px';
@@ -304,6 +295,7 @@ export default class DefaultList extends Component {
                 inlineTransitionStyles.exiting.right = '-1024px';
                 inlineTransitionStyles.exited.right = '-1024px';
                 inlineStyle.width = '1024px';
+                inlineStyle.right = '-1024px';
                 break;
               case 'xl':
                 listTransitionStyles.entering.right = '1280px';
@@ -311,6 +303,7 @@ export default class DefaultList extends Component {
                 inlineTransitionStyles.exiting.right = '-1280px';
                 inlineTransitionStyles.exited.right = '-1280px';
                 inlineStyle.width = '1280px';
+                inlineStyle.right = '-1280px';
                 break;
               default:
                 break;
@@ -334,56 +327,56 @@ export default class DefaultList extends Component {
                 <div className={classnames('default-list', 'content-' + this.state.contentSize)}>
                   <CSSTransition in={this.state.splited} timeout={duration}>
                     {state => (
-                      <div>
+                      <div className="list-inset">
                         <div
-                          style={
-                            this.props.mode === 'right'
-                              ? { ...titleLineStyle, ...listTransitionStyles[state] }
-                              : { ...titleLineStyle }
-                          }
+                          className="default-list-list list-inset"
+                          style={{ ...locListStyle, ...listTransitionStyles[state] }}
                         >
                           <WidthObserver>
                             {({ mediaSize }) => {
+                              let lHeaderStyles = { height: '0px', display: 'none' };
+                              let lListStyles = { top: '0px', height: '100%' };
                               if (mediaSize !== 'xs') {
-                                return (
-                                  <DefaultTitle
-                                    style={locTitleStyle}
-                                    {...this.props}
-                                    cols={dispCols}
-                                    className={'list-' + this.state.listSize}
-                                  />
-                                );
-                              }
-                              return null;
-                            }}
-                          </WidthObserver>
-                        </div>
-                        <WidthObserver>
-                          {({ mediaSize }) => {
-                            if (mediaSize === 'xs') {
-                              locDataStyle = { ...locDataStyle, top: '50px', height: 'calc(100% - 50px)' };
-                            } else {
-                              locDataStyle = { ...locDataStyle, top: '90px', height: 'calc(100% - 90px)' };
-                            }
-                            return (
-                              <div
-                                className={classnames(
-                                  'custom-scrollbar',
-                                  'inline-' + this.state.dataSize,
-                                  'list-' + this.state.listSize
-                                )}
-                                style={
-                                  this.props.mode === 'right'
-                                    ? { ...locDataStyle, ...listTransitionStyles[state] }
-                                    : { ...locDataStyle }
+                                if (this.props.titleMultiline) {
+                                  lHeaderStyles = { height: '80px', display: 'block' };
+
+                                  lListStyles = { top: '80px', height: 'calc(100% - 80px)' };
+                                  locTitleStyle = {
+                                    ...titleStyle,
+                                    height: '80px',
+                                    lineHeight: '40px',
+                                  };
+                                } else {
+                                  lHeaderStyles = { height: '40px', display: 'block' };
+                                  lListStyles = { top: '40px', height: 'calc(100% - 40px)' };
+                                  locTitleStyle = {
+                                    ...titleStyle,
+                                    height: '40px',
+                                    lineHeight: '40px',
+                                  };
                                 }
-                              >
-                                <div className="default-list-body">
+                              }
+                              return (
+                                <div className="list-inset">
+                                  <div
+                                    className="default-list-list-header overflow-hidden"
+                                    style={{ ...lHeaderStyles }}
+                                  >
+                                    <DefaultTitle
+                                      style={locTitleStyle}
+                                      {...this.props}
+                                      cols={dispCols}
+                                      className={'list-' + this.state.listSize}
+                                    />
+                                  </div>
                                   {this.props.items.length > 0 ? (
-                                    <div className={mediaSize}>
+                                    <div
+                                      className="default-list-list-body custom-scrollbar overflowY"
+                                      style={{ ...lListStyles }}
+                                    >
                                       {this.props.items.map(item => (
                                         <div key={item.id}>
-                                          {mediaSize === 'xs' || (this.props.mode === 'right' && this.state.splited) ? (
+                                          {mediaSize === 'xs' ? (
                                             <MobileLine
                                               {...this.props}
                                               id={item.id}
@@ -404,13 +397,13 @@ export default class DefaultList extends Component {
                                     <DefaultFooter {...this.props} />
                                   )}
                                 </div>
-                              </div>
-                            );
-                          }}
-                        </WidthObserver>
+                              );
+                            }}
+                          </WidthObserver>
+                        </div>
                         {this.props.mode === 'right' && (
                           <div
-                            className={classnames('custom-scrollbar', 'inline-' + this.state.dataSize)}
+                            className="default-list-right custom-scrollbar"
                             style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
                           >
                             <WidthObserver>

@@ -14,7 +14,7 @@ const DesktopRightWidthMaxi = 500;
 const DesktopSideWidthMini = 64;
 
 const sideMenuDefaultStyles = {
-  transition: `width ${duration}ms ease ${duration}ms`,
+  transition: `width ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   left: '0px',
@@ -33,7 +33,7 @@ const sideMenuStyles = {
 };
 
 const userMenuDefaultStyles = {
-  transition: `top ${duration}ms ease ${duration}ms`,
+  transition: `top ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   left: '0px',
@@ -60,8 +60,8 @@ const headerMenuStyles = {
 const rightPanel = {
   entering: { right: `0px` },
   entered: { right: `0px` },
-  exiting: { right: `-${DesktopRightWidthMaxi -DesktopRightWidthMini}px` },
-  exited: { right: `-${DesktopRightWidthMaxi -DesktopRightWidthMini}px` },
+  exiting: { right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px` },
+  exited: { right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px` },
 };
 
 const headerMenuDefaultStyles = {
@@ -72,12 +72,12 @@ const headerMenuDefaultStyles = {
   left: '0px',
   height: `${DesktopHeaderHeight}px`,
   lineHeight: `${DesktopHeaderHeight}px`,
-  transition: `top ${duration}ms ease ${duration}ms`,
+  transition: `top ${duration}ms`,
   animationIterationCount: '1',
 };
 
-const contentDefaultStyles = {
-  transition: `all ${duration}ms ease ${duration}ms`,
+let contentDefaultStyles = {
+  transition: `all ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   left: `${DesktopSideWidthMaxi}px`,
@@ -89,7 +89,7 @@ const contentDefaultStyles = {
 };
 
 const rightPanelStyles = {
-  transition: `right ${duration}ms ease ${duration}ms`,
+  transition: `right ${duration}ms`,
   animationIterationCount: '1',
   position: 'fixed',
   right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px`,
@@ -100,7 +100,7 @@ const rightPanelStyles = {
   zIndex: '810',
 };
 
-const contentStyles = {
+let contentStyles = {
   entering: { left: `${DesktopSideWidthMaxi}px` },
   entered: { left: `${DesktopSideWidthMaxi}px` },
   exiting: { left: `${DesktopSideWidthMini}px` },
@@ -112,7 +112,7 @@ const contentStylesPanel = {
   entered: { right: `${DesktopRightWidthMaxi}px` },
   exiting: { right: `${DesktopRightWidthMini}px` },
   exited: { right: `${DesktopRightWidthMini}px` },
-}
+};
 
 const footerStyles = {
   position: 'fixed',
@@ -198,45 +198,73 @@ export default class ResponsivePage extends Component {
     } else {
       contentDefaultStyles.right = `${DesktopRightWidthMini}px`;
     }
+    if (this.props.authenticated) {
+      contentDefaultStyles.left = `${DesktopSideWidthMaxi}px`;
+      contentDefaultStyles.right = `${DesktopRightWidthMini}px`;
+      contentDefaultStyles.top = `${DesktopHeaderHeight}px`;
+      contentStyles = {
+        entering: { left: `${DesktopSideWidthMaxi}px` },
+        entered: { left: `${DesktopSideWidthMaxi}px` },
+        exiting: { left: `${DesktopSideWidthMini}px` },
+        exited: { left: `${DesktopSideWidthMini}px` },
+      };
+    } else {
+      contentDefaultStyles.left = `0px`;
+      contentDefaultStyles.right = `0px`;
+      contentDefaultStyles.top = `0px`;
+      contentStyles = {
+        entering: { left: `0px` },
+        entered: { left: `0px` },
+        exiting: { left: `0px` },
+        exited: { left: `0px` },
+      };
+    }
     return (
       <div id="page-root" className="full-page">
         <div className="display-desktop">
           <WidthObserver>
-            <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
-              {state => (
-                <div>
-                  <div className="bg-white overflow-hidden" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
-                    {userForm}
+            {this.props.authenticated && (
+              <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
+                {state => (
+                  <div>
+                    <div
+                      className="bg-white overflow-hidden"
+                      style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}
+                    >
+                      {userForm}
+                    </div>
+                    <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
+                      <DefaultHeader
+                        {...this.props}
+                        {...this.state}
+                        desktopHeaderHeight={DesktopHeaderHeight}
+                        onToggleUser={this.onToggleUser}
+                      />
+                    </div>
                   </div>
-                  <div style={{ ...headerMenuDefaultStyles, ...headerMenuStyles[state] }}>
-                    <DefaultHeader
-                      {...this.props}
-                      {...this.state}
-                      desktopHeaderHeight={DesktopHeaderHeight}
-                      onToggleUser={this.onToggleUser}
-                    />
-                  </div>
-                </div>
-              )}
-            </CSSTransition>
+                )}
+              </CSSTransition>
+            )}
             <CSSTransition in={!this.state.menuSideMini} timeout={duration}>
               {state => (
                 <div>
-                  <div
-                    className="bg-white"
-                    style={{
-                      ...sideMenuDefaultStyles,
-                      ...sideMenuStyles[state],
-                      bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
-                    }}
-                  >
-                    <DefaultSidebar
-                      {...this.props}
-                      open={!this.state.menuSideMini}
-                      onOpenSide={this.onOpenSide}
-                      onToggleSide={this.onToggleSide}
-                    />
-                  </div>
+                  {this.props.authenticated && (
+                    <div
+                      className="bg-white"
+                      style={{
+                        ...sideMenuDefaultStyles,
+                        ...sideMenuStyles[state],
+                        bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
+                      }}
+                    >
+                      <DefaultSidebar
+                        {...this.props}
+                        open={!this.state.menuSideMini}
+                        onOpenSide={this.onOpenSide}
+                        onToggleSide={this.onToggleSide}
+                      />
+                    </div>
+                  )}
                   <CSSTransition in={this.props.rightPanelOpened} timeout={duration}>
                     {state2 => (
                       <div
@@ -248,7 +276,9 @@ export default class ResponsivePage extends Component {
                           bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
                         }}
                       >
-                        {this.props.backgroundImg && <img className="fond-page-content" src={this.props.backgroundImg} alt="Background" />}
+                        {this.props.backgroundImg && (
+                          <img className="fond-page-content" src={this.props.backgroundImg} alt="Background" />
+                        )}
                         {this.props.children}
                       </div>
                     )}

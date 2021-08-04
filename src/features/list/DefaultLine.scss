@@ -1,3 +1,29 @@
 .default-list-wrapper {
   font-size: 0.9rem;
+  position: relative;
+
+  &.row {
+    margin-left: 0px;
+  }
+  &.row-line-separator {
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary-light');
+  }
+  .col-highlighter {
+    position: absolute;
+    width: 10px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: transparent;
+  }
+}
+.default-line-menu {
+  position: absolute;
+  right: 15px;
+  top: 7px;
+
+  .nav-item {
+    line-height: 1;
+  }
 }

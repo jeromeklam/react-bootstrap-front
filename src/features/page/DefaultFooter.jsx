@@ -21,28 +21,18 @@ export const DefaultFooter = props => (
   <div style={mystyle} className="rbf-page-footer bg-white">
     <Container>
       <Row>
-        <Col size={5} textAlign="left">
+        <Col size={5} textAlign="right">
           {props.copyright}
         </Col>
-        <Col size={22} textAlign="center">
-        </Col>
-        <Col size={3} textAlign="right">
-          <div className="text-dark" style={followStyle}>
+        <Col size={26} textAlign="right">
+          <div className="text-secondary" style={followStyle}>
             {props.t({ id: 'rbf.page.footer.followUs', defaultMessage: 'Follow us' })}
           </div>
         </Col>
-        <Col size={4}>
+        <Col size={5} textAlign="left">
           {props.options.map((option, i) => {
             if (option.role === 'SOCIAL') {
               return <span key={`footer-social-${i}`}>{option.icon}</span>;
-            }
-            return null;
-          })}
-        </Col>
-        <Col size={2}>
-          {props.options.map((option, i) => {
-            if (option.role === 'JVS') {
-              return <span key={`footer-jvs-${i}`}>{option.icon}</span>;
             }
             return null;
           })}

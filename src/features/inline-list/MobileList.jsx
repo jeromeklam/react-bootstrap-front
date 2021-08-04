@@ -32,7 +32,7 @@ export const MobileList = props => (
       props.items.length > 0 && (
         <MobileLineAction
           className="btn btn-primary text-light"
-          label={props.t({ id: 'rbf.inlinelist.more', defaultMessage: 'Plus de résultats' })}
+          label={props.t({ id: 'rbf.inline-list.list.more', defaultMessage: 'Plus de résultats' })}
           onClick={ev => {
             if (ev) {
               ev.stopPropagation();

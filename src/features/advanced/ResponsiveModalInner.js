@@ -230,7 +230,6 @@ export default class ResponsiveModalInner extends Component {
                                   style={closeStyle}
                                   className={classnames('close', this.props.closeClassName)}
                                   onClick={ev => {
-                                    console.log('Close', ev);
                                     if (ev) {
                                       ev.stopPropagation();
                                     }

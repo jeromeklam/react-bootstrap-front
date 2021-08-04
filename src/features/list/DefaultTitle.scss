@@ -1,8 +1,9 @@
 .default-list-title {
   font-size: 0.9rem;
-  border-bottom: 1px solid;
-  border-color: theme-color('secondary');
   padding-right: 10px;
+  &.row {
+    margin-left: 0px;
+  }
 }
 .sort-icon {
   position: absolute;

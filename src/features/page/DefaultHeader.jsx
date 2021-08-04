@@ -19,6 +19,7 @@ export class DefaultHeader extends Component {
   static propTypes = {
     headerBackgroundSrc: PropTypes.element,
     headerBackgroundTheme: PropTypes.string,
+    headerTextTheme: PropTypes.string,
     headerBorderBottomSrc: PropTypes.element,
     title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     options: PropTypes.element.isRequired,
@@ -42,8 +43,9 @@ export class DefaultHeader extends Component {
 
   static defaultProps = {
     headerBackgroundSrc: null,
-    headerBackgroundTheme: 'secondary',
     headerBorderBottomSrc: null,
+    headerBackgroundTheme: "secondary",
+    headerTextTheme: "light",
     onToggleUser: null,
     menuIcon: null,
     onLocale: null,
@@ -93,7 +95,7 @@ export class DefaultHeader extends Component {
     }
     return (
       <div>
-        <div className={classnames('default-header pl-2 overflow-none', 'bg-' + this.props.headerBackgroundTheme)}>
+        <div className={classnames("default-header bg-secondary pl-2 overflow-none", "bg-" + this.props.headerBackgroundTheme)}>
           {this.props.headerBackgroundSrc && (
             <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />
           )}
@@ -106,7 +108,7 @@ export class DefaultHeader extends Component {
           >
             <div className="col-xs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
               &nbsp;&nbsp;
-              <div className="navbar-brand p-0">{this.props.title || ''}</div>
+              <div className={classnames("navbar-brand p-0", "text-" + this.props.headerTextTheme)}>{this.props.title || ''}</div>
             </div>
             <div className="col-xs-w20 text-right pr-0" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
               <ul className="navbar-nav justify-content-end">
@@ -266,6 +268,18 @@ export class DefaultHeader extends Component {
                       </li>
                     );
                   })}
+                {this.props.onToggleUser && this.props.accountClosed && (
+                  <li className="nav-item">
+                    <Highlight
+                      theme="NAV"
+                      title={this.props.t({ id: 'rbf.page.header.userMenu.help', defaultMessage: 'User menu' })}
+                    >
+                      <button className={classnames("btn", "btn-" + this.props.headerBackgroundTheme)} onClick={this.props.onToggleUser}>
+                        <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
+                      </button>
+                    </Highlight>
+                  </li>
+                )}
                 {false && (
                   <li className="nav-item">
                     <HighlightButton theme="NAV">
@@ -273,21 +287,6 @@ export class DefaultHeader extends Component {
                         <button className="btn btn-secondary">?</button>
                       </div>
                     </HighlightButton>
-                  </li>
-                )}
-                {this.props.onToggleUser && this.props.accountClosed && (
-                  <li className="nav-item">
-                    <Highlight
-                      theme="NAV"
-                      title={this.props.t({ id: 'rbf.page.header.userMenu.help', defaultMessage: 'User menu' })}
-                    >
-                      <button
-                        className={classnames('btn', 'btn-' + this.props.headerBackgroundTheme)}
-                        onClick={this.props.onToggleUser}
-                      >
-                        <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
-                      </button>
-                    </Highlight>
                   </li>
                 )}
               </ul>

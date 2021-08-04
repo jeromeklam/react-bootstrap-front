@@ -11,7 +11,6 @@ import { htmlToString } from '../helpers';
 const myStyle = {
   height: 'auto',
 };
-
 const appenStyle = {
   maxHeight: '40px',
 };

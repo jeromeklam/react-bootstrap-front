@@ -32,11 +32,20 @@ export const InputDateNatif = props => {
         placeholder={props.placeholder}
         maxLength={props.maxLength || ''}
       />
-      {props.append && props.append !== '' && (
-        <InputGroupAppend>
-          <InputGroupText className="border-secondary bg-light">{props.append}</InputGroupText>
-        </InputGroupAppend>
-      )}
+      <InputGroupAppend>
+        {props.append && props.append !== '' && props.append}
+        <button
+          type="button"
+          disabled={props.disabled}
+          className={classnames(
+            `btn btn-input btn-outline-${props.borderColor} bg-light`,
+            props.size && `btn-${props.size}`
+          )}
+          onClick={props.onClear}
+        >
+          {props.delIcon}
+        </button>
+      </InputGroupAppend>
     </InputGroup>
   );
 };
@@ -58,6 +67,7 @@ InputDateNatif.propTypes = {
   size: PropTypes.string,
   value: PropTypes.string,
   warning: PropTypes.element,
+  borderColor: PropTypes.string,
 };
 
 InputDateNatif.defaultProps = {
@@ -73,7 +83,8 @@ InputDateNatif.defaultProps = {
   placeholder: '',
   prepend: null,
   required: false,
-  size: null,
+  size: '',
   value: '',
   warning: false,
+  borderColor: 'secondary',
 };
