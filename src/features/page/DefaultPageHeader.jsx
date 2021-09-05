@@ -9,11 +9,12 @@ const headerStyles = {
   left: '0px',
   right: '0px',
   height: `${DefaultHeaderHeight}px`,
+  lineHeight: `${DefaultHeaderHeight}px`,
   zIndex: '9999',
 };
 
 export const DefaultPageHeader = props => (
-  <header className="page-default-page-header w-100 text-secondary" style={headerStyles}>
+  <header className="page-default-page-header w-100 text-secondary bg-light" style={headerStyles}>
     {props.children && props.children}
   </header>
 );

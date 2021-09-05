@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-export class ButtonPicker extends Component {
+export default class ButtonPicker extends Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     size: PropTypes.string,
     labelSize: PropTypes.number,
     buttonSize: PropTypes.number,
-    disabled: PropTypes.bool,
     labelTop: PropTypes.bool,
     required: PropTypes.bool,
     clearIcon: PropTypes.element,
@@ -16,11 +15,11 @@ export class ButtonPicker extends Component {
     display: PropTypes.string,
     onZoom: PropTypes.func,
     onClear: PropTypes.func,
+    disabled: PropTypes.bool,
   };
   static defaultProps = {
     clearIcon: null,
     size: null,
-    disabled: false,
     labelSize: 6,
     buttonSize: 30,
     labelTop: true,
@@ -29,6 +28,7 @@ export class ButtonPicker extends Component {
     diplay: '',
     onZoom: null,
     onClear: null,
+    disabled: false,
   };
 
   constructor(props) {
@@ -40,7 +40,7 @@ export class ButtonPicker extends Component {
     return (
       <div
         className={classnames(
-          'ui-button-picker form-group',
+          'basic-button-picker form-group',
           !this.props.labelTop && 'row',
           this.props.size && `form-group-${this.props.size}`
         )}
@@ -56,31 +56,18 @@ export class ButtonPicker extends Component {
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className="ui-button-picker-wrapper">
-          <button
-            className={classnames(
-              'btn btn-picker bg-light w-100',
-              !this.props.labelTop && `col-xs-w${this.props.buttonSize}`
-            )}
-            onClick={this.props.onZoom}
-          >
-            <span>
-              {' '}
-              <div dangerouslySetInnerHTML={{ __html: `${this.props.display}` }} />
-            </span>
-          </button>
+        <div
+          className={classnames('btn btn-picker', !this.props.labelTop && `col-xs-w${this.props.buttonSize}`)}
+          onClick={this.props.onZoom}
+        >
           {!this.props.disabled && (
             <div className="btn-group-vertical">
               <button
                 type="button"
                 disabled={this.props.disabled}
-                className={classnames(
-                  'btn btn-clear btn-xs bg-light',
-                  this.props.size === 'sm' && `btn-${this.props.size}`
-                )}
+                className={classnames('btn btn-clear', this.props.size === 'sm' && `btn-${this.props.size}`)}
                 onClick={ev => {
                   if (ev) {
-                    ev.preventDefault();
                     ev.stopPropagation();
                   }
                   this.props.onClear();
@@ -90,13 +77,17 @@ export class ButtonPicker extends Component {
               </button>
             </div>
           )}
+
+          {typeof this.props.display === 'string' || this.props.display instanceof String ? (
+            <span>
+              {' '}
+              <div dangerouslySetInnerHTML={{ __html: `${this.props.display}` }} />
+            </span>
+          ) : (
+            <span>{this.props.display}</span>
+          )}
         </div>
       </div>
     );
   }
 }
-
-/**
- *
- */
-export default ButtonPicker;

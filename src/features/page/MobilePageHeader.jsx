@@ -9,11 +9,12 @@ const headerStyles = {
   left: '0px',
   right: '0px',
   height: `${MobileHeaderHeight}px`,
+  lineHeight: `${MobileHeaderHeight}px`,
   zIndex: '9999',
 };
 
 export const MobilePageHeader = props => (
-  <header className="page-mobile-page-header w-100 bg-secondary text-light" style={headerStyles}>
+  <header className="page-mobile-page-header w-100 bg-light text-secondary border-bottom border-secondary-light" style={headerStyles}>
     {props.children && props.children}
   </header>
 );

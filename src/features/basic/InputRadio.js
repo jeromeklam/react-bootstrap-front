@@ -4,6 +4,7 @@ import classnames from 'classnames';
 
 const wrappestyle = {
   position: 'relative',
+  minHeight: '24px',
 };
 
 const circlestyle = {
@@ -42,11 +43,11 @@ const highlightstyle = {
 export const InputRadio = props => (
   <div className={classnames('ui-input-radio form-group', !props.labelTop && 'row')}>
     {props.label !== '' && (
-      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}>
+      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-xxs-w${props.labelSize} col-form-label`)}>
         {props.label}
       </label>
     )}
-    <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
+    <div className={classnames(!props.labelTop && `col-xxs-w${props.inputSize}`)}>
       <div className="form-check form-check-inline text-secondary">
         {props.options.map(elt => {
           return (

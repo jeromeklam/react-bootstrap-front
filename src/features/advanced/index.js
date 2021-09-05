@@ -8,7 +8,6 @@ export * from './ResponsiveConfirm';
 export * from './ResponsiveForm';
 export * from './ResponsiveModal';
 export { default as ResponsiveModalInner } from './ResponsiveModalInner';
-export { default as ResponsiveModalCamera } from './ResponsiveModalCamera';
 export * from './ResponsiveQuickSearch';
 export { default as WidthObserver } from './WidthObserver';
 export { default as SvgMask } from './SvgMask';

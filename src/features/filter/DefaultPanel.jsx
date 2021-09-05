@@ -53,7 +53,7 @@ const innerstyle = {
   position: 'absolute',
   left: '0px',
   right: '0px',
-  top: '60px',
+  top: '50px',
   bottom: '0px',
   overflowX: 'hidden',
   overflowY: 'auto',
@@ -212,13 +212,18 @@ export default class DefaultPanel extends Component {
   render() {
     return (
       <div className="default-list-panel-inner" style={mystyle}>
-        <div className={classnames("default-list-panel-navbar clearfix")}>
+        <div className={classnames('default-list-panel-navbar clearfix')}>
           <div className="common-responsive-list-panels-close btn-group" style={btStyle}>
+            {!this.props.simpleMode && (
+              <button
+                className="btn btn-light btn-outline-secondary-light text-secondary"
+                onClick={this.props.onToggleFilter}
+              >
+                {this.props.cancelPanelIcon}
+              </button>
+            )}
             <button className="btn btn-primary text-light" onClick={this.onValid}>
               {this.props.validPanelIcon}
-            </button>
-            <button className="btn btn-secondary text-light" onClick={this.props.onToggleFilter}>
-              {this.props.cancelPanelIcon}
             </button>
           </div>
           {!this.props.simpleMode && (

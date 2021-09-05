@@ -9,14 +9,15 @@ export const InputDateNatif = props => {
   return (
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
-        <InputGroupPrepend>
-          <InputGroupText className="border-secondary bg-light">{props.prepend}</InputGroupText>
+        <InputGroupPrepend className={classnames('border rounded-left', `border-${props.borderColor}`)}>
+          {props.prepend}
         </InputGroupPrepend>
       )}
       <input
         type="date"
         className={classnames(
-          'border-secondary form-control',
+          'form-control',
+          `border-${props.borderColor}`,
           props.size && `form-control-${props.size}`,
           (props.error || props.warning) && 'is-invalid',
           props.className && props.className

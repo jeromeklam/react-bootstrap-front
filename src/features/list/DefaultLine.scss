@@ -1,9 +1,19 @@
 .default-list-wrapper {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   position: relative;
+
+  a {
+    color: theme-color('secondary');
+    text-decoration-color: theme-color('primary');
+  }
 
   &.row {
     margin-left: 0px;
+    line-height: 28px;
+    vertical-align: middle;
+  }
+  &.row-no-odd-even {
+    border-bottom: 1px solid theme-color('secondary-light');
   }
   &.row-line-separator {
     border-bottom: 1px solid;
@@ -11,7 +21,7 @@
   }
   .col-highlighter {
     position: absolute;
-    width: 10px;
+    width: 6px;
     top: 0px;
     left: 0px;
     bottom: 0px;
@@ -20,8 +30,22 @@
 }
 .default-line-menu {
   position: absolute;
-  right: 15px;
-  top: 7px;
+  right: 20px;
+
+  .btn-action {
+    height: 28px;
+    line-height: 28px;
+    margin-top: 1px;
+    padding: 2px;
+    min-width: 28px;
+
+    svg {
+      width: 1rem !important;
+      height: 1rem !important;
+      display: list-item;
+      margin: 0 auto;
+    }
+  }
 
   .nav-item {
     line-height: 1;

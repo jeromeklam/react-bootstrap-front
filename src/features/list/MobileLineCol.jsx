@@ -1,9 +1,8 @@
 import React from 'react';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import striptags from 'striptags';
 
-import { Col } from '../grid';
+import { Row, Col } from '../grid';
 
 const optionsDate = {
   year: 'numeric',
@@ -14,6 +13,25 @@ const optionsDate = {
 const optionsTime = {
   hour: 'numeric',
   minute: 'numeric',
+};
+
+const getContent = (type, content) => {
+  switch (type) {
+    case 'mail':
+      return (
+        <a href={`mailto:${content}`} onClick={ev => ev.stopPropagation()}>
+          {content}
+        </a>
+      );
+    case 'phone':
+      return (
+        <a href={`tel:${content}`} onClick={ev => ev.stopPropagation()}>
+          {content}
+        </a>
+      );
+    default:
+      return <span>{content}</span>;
+  }
 };
 
 export const MobileLineCol = props => {
@@ -77,14 +95,7 @@ export const MobileLineCol = props => {
         break;
       }
       case 'bool': {
-        const pos = props.values.find(element => element.value === props.content);
-        if (pos) {
-          if (pos.icon) {
-            content = pos.icon;
-          } else {
-            content = pos.label;
-          }
-        } else if (content === '1' || content === 'O' || content === true) {
+        if (content === '1' || content === 'O' || content === true) {
           content = 'Oui';
         } else {
           content = 'Non';
@@ -108,20 +119,22 @@ export const MobileLineCol = props => {
   }
   if (props.card && props.card.noLabel) {
     return (
-      <Col size={36}>
-        <span className="text-dark">{content}</span>
-      </Col>
+      <Row className="">
+        <Col size={36} className="mobile-col-content">
+          <span className="text-dark">{content}</span>
+        </Col>
+      </Row>
     );
   }
   return (
-    <>
-      <Col size={12}>
+    <Row className="">
+      <Col size={12} className="mobile-col-title pt-1">
         <span className="text-secondary">{props.shortLabel ? props.shortLabel : props.label}</span>
       </Col>
-      <Col size={24}>
-        <span className="text-dark">{content}</span>
+      <Col size={24} className="mobile-col-content text-dark pt-1">
+        {getContent(props.type, content)}
       </Col>
-    </>
+    </Row>
   );
 };
 

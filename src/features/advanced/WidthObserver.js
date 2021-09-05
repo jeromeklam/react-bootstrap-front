@@ -2,27 +2,10 @@ import React from 'react';
 import classnames from 'classnames';
 import ObserveSize from 'react-observe-size';
 import PropTypes from 'prop-types';
+import { getSizeFromWidth } from '../helpers';
 
-const detectWidth = (width, prefix) => {
-  let clWidth = '';
-  if (width < 768) {
-    clWidth = 'xs';
-  } else {
-    if (width < 1024) {
-      clWidth = 'sm';
-    } else {
-      if (width < 1200) {
-        clWidth = 'md';
-      } else {
-        if (width < 1600) {
-          clWidth = 'lg';
-        } else {
-          clWidth = 'xl';
-        }
-      }
-    }
-  }
-  return clWidth;
+const detectWidth = width => {
+  return getSizeFromWidth(width);
 };
 
 export default function WidthObserver(props) {

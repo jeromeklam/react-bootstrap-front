@@ -1,12 +1,32 @@
 .modal-content {
+  .modal-header {
+    position: relative;
+    border: 0px;
+    min-height: 50px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .nav-full {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    border: 0px;
+    width: fit-content;
+    right: auto;
+    flex-wrap: nowrap;
+
+    button {
+      height: 100%;
+    }
+  }
   .nav-item {
     .nav-link {
       color: theme-color('light');
       background-color: theme-color('secondary');
-      border-bottom-color: #fff;
       &.active {
-        color: theme-color('light');
-        background-color: theme-color('primary');
+        color: theme-color('secondary');
+        background-color: white;
       }
       .nav-link-inner-btn {
         position: relative;
@@ -24,4 +44,19 @@
     position: absolute;
     right: 5px;
   }
+  .modal-footer {
+    padding: 0.2rem;
+    background-color: theme-color('secondary');
+
+    button.btn {
+      font-size: 1rem;
+      min-height: 36px;
+      min-width: 36px;
+    }
+  }
+}
+
+.container-xxs .modal-content .modal-footer,
+.container-xs .modal-content .modal-footer {
+    background-color: theme-color('secondary');
 }

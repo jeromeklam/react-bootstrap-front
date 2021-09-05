@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { CSSTransition } from 'react-transition-group';
 import { HoverObserver } from '../advanced';
-import { getObjectmemberValue } from '../helpers';
-import { DefaultCol, ActionButton } from './';
+import { getObjectmemberValue, isMobileDevice } from '../helpers';
+import { DefaultLineCol, ActionButton } from './';
 
-const duration = 500;
-
-const mystyle = {
-  minHeight: '40px',
-  lineHeight: '40px',
-  verticalAlign: 'middle',
-};
+const mystyle = {};
 
 const navstyle = {
   position: 'absolute',
@@ -20,45 +13,12 @@ const navstyle = {
   padding: '0px',
 };
 
-const defaultStyle = {
-  height: '0px',
-  display: 'none',
-  transition: `height ${duration}ms opacity ${duration}ms`,
-  animationIterationCount: '1',
-};
-
-const transitionStyles = {
-  entering: {
-    height: '0px',
-    display: 'block',
-    opacity: '0',
-  },
-  entered: {
-    height: '100%',
-    display: 'block',
-    opacity: '1',
-  },
-  exiting: {
-    height: '100%',
-    opacity: '1',
-  },
-  exited: {
-    height: '0px',
-    display: 'none',
-    opacity: '0',
-  },
-};
-
-const inlineStyle = {
-  overflowY: 'auto',
-  overflowX: 'hidden',
-};
-
 export default class DesktopListLine extends Component {
   static propTypes = {
-    id: PropTypes.string.isRequired,
     className: PropTypes.string,
+    counter: PropTypes.number,
     cols: PropTypes.element.isRequired,
+    id: PropTypes.string.isRequired,
     item: PropTypes.element.isRequired,
     fClassName: PropTypes.func,
     fDisplay: PropTypes.func,
@@ -74,6 +34,7 @@ export default class DesktopListLine extends Component {
 
   static defaultProps = {
     className: '',
+    counter: 0,
     inlineOpenedId: 0,
     inlineComponent: null,
     onSelect: () => {},
@@ -119,30 +80,34 @@ export default class DesktopListLine extends Component {
 
   render() {
     const { item } = this.props;
-    const highlight = this.state.flipped || this.props.inlineOpenedId === this.props.id;
+    let rowOddEven = 'row-no-odd-even';
+    if (this.props.counter) {
+      rowOddEven = this.props.counter % 2 === 0 ? 'row-even' : 'row-odd';
+    }
     return (
       <div className={this.props.className}>
         <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
           <div
             onDoubleClick={this.handleDoubleClick}
-            onClick={() => {
+            onClick={ev => {
               this.props.onClick(item);
             }}
             style={mystyle}
             className={classnames(
-              'default-list-wrapper row row-line-separator',
+              'default-list-wrapper row row-line',
               this.props.fClassName && this.props.fClassName(item),
-              this.props.inlineOpenedId === this.props.id ? 'bg-secondary text-light pt-2 pb-0' : 'text-dark',
-              this.props.inlineOpenedId !== this.props.id && this.state.flipped && 'row-line-hover'
+              this.props.inlineOpenedId === this.props.id ? 'bg-selected' : 'text-dark',
+              this.state.flipped && 'row-line-hover',
+              rowOddEven
             )}
           >
-            <div className="col-highlighter"></div>
+            <div className="col-highlighter" />
             {this.props.cols.map((oneCol, i) => {
               if (!oneCol.hidden) {
                 const line = { ...oneCol, id: this.props.id };
                 const content = getObjectmemberValue(item, oneCol.col);
                 return (
-                  <DefaultCol
+                  <DefaultLineCol
                     key={line.name}
                     selected={this.props.selected}
                     onSelect={this.props.onSelect}
@@ -154,8 +119,8 @@ export default class DesktopListLine extends Component {
               }
               return null;
             })}
-            {(highlight) && (
-              <ul style={navstyle} className="default-line-menu nav">
+            {this.state.flipped && (
+              <div style={navstyle} className="default-line-menu btn-group">
                 {this.props.inlineActions &&
                   this.props.inlineActions.map(action => {
                     let display = true;
@@ -168,78 +133,34 @@ export default class DesktopListLine extends Component {
                         action.role === 'DELETE' ||
                         action.role === 'MODIFY')
                     ) {
+                      if (action.role === 'DETAIL' || action.role === 'SUMMARY') {
+                        return null;
+                      }
+                      let actionClass = '';
+                      switch (action.role) {
+                        case 'PRINT':
+                        case 'MODIFY':
+                          actionClass = 'white btn-secondary';
+                          break;
+                        default:
+                          actionClass = 'btn-' + action.theme;
+                          break;
+                      }
                       return (
-                        <li className="nav-item" key={action.name}>
-                          <ActionButton action={action} item={item} className={classnames('btn-inline',action.theme && `btn-${action.theme}`)} />
-                        </li>
+                        <ActionButton
+                          key={action.name}
+                          action={action}
+                          item={item}
+                          className={classnames('btn-inline btn-action', actionClass)}
+                        />
                       );
                     }
                     return null;
                   })}
-              </ul>
+              </div>
             )}
           </div>
         </HoverObserver>
-        {this.props.mode === 'inline' && (
-          <CSSTransition in={this.props.inlineOpenedId === this.props.id} timeout={duration}>
-            {state => (
-              <div
-                className="row bg-secondary text-light pt-2 pb-2"
-                style={{
-                  ...defaultStyle,
-                  ...transitionStyles[state],
-                }}
-              >
-                <div className="col-xs-w36 pb-3">
-                  {this.props.inlineOpenedId === this.props.id && (
-                    <div className="row">
-                      <div className="col-xs-w1 text-center bg-secondary" />
-                      <div className="col-xs-w32 bg-white p-0 text-secondary">
-                        <div className="custom-scrollbar p-0" style={inlineStyle}>
-                          {this.props.inlineComponent}
-                        </div>
-                      </div>
-                      <div className="col-xs-w3 text-center">
-                        <nav className="text-center pt-2">
-                          <button
-                            type="button"
-                            title="Fermer"
-                            className={classnames('btn btn-left', 'btn-secondary')}
-                            onClick={evt => {
-                              evt.stopPropagation();
-                              this.props.onClick(null);
-                            }}
-                          >
-                            {this.props.closeIcon}
-                          </button>
-                          {this.props.inlineActions &&
-                            this.props.inlineActions.map((action, i) => (
-                              <div key={`action-${i}`}>
-                                {(action.role === 'OTHER' || action.role === 'DETAIL') && (
-                                  <ActionButton
-                                    action={action}
-                                    item={item}
-                                    className={classnames(
-                                      'btn btn-left',
-                                      action.name === this.props.currentInline
-                                        ? 'btn-primary'
-                                        : action.theme
-                                        ? `btn-${action.theme}`
-                                        : 'btn-secondary'
-                                    )}
-                                  />
-                                )}
-                              </div>
-                            ))}
-                        </nav>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </CSSTransition>
-        )}
       </div>
     );
   }

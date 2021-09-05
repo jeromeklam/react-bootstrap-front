@@ -15,6 +15,7 @@ export { default as MobilePrivateHeader } from './MobilePrivateHeader.jsx';
 export * from './ResponsiveInner.jsx';
 export { default as DefaultInner } from './DefaultInner.jsx';
 export { default as MobileInner } from './MobileInner.jsx';
+export { default as DefaultSidebarOption } from './DefaultSidebarOption';
 export * from './ResponsivePageHeader.jsx';
 export * from './MobilePageHeader.jsx';
 export * from './DefaultPageHeader.jsx';

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 export default function DefaultLineAction(props) {
   return (
-    <div className="inline-list-default-line-action">
+    <div className="inline-list-default-line-action w-100 border-0">
       <button className={classnames('', props.className)} onClick={props.onClick}>
         {props.label}
       </button>

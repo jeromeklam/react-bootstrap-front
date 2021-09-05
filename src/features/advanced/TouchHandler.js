@@ -4,9 +4,17 @@ import PropTypes from 'prop-types';
 export default class TouchHandler extends Component {
   static propTypes = {
     className: PropTypes.string,
+    onDoubleTap: PropTypes.func,
+    onTap: PropTypes.func,
+    swipLeft: PropTypes.func,
+    swipRight: PropTypes.func,
   };
   static defaultProps = {
-    classname: "",
+    classname: '',
+    onDoubleTap: () => {},
+    onTap: () => {},
+    swipLeft: () => {},
+    swipRight: () => {},
   };
 
   constructor(props) {
@@ -17,6 +25,8 @@ export default class TouchHandler extends Component {
       starty: 0,
       endy: 0,
       ref: React.createRef(),
+      timer: null,
+      clickTimer: null,
     };
     this.handleTouchStart = this.handleTouchStart.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
@@ -38,18 +48,34 @@ export default class TouchHandler extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
+  }
+
   handleTouchStart(e) {
+    const self = this;
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+    }
     if (e && e.targetTouches) {
       this.setState({
         startx: e.targetTouches[0].clientX,
         starty: e.targetTouches[0].clientY,
         endx: e.targetTouches[0].clientX,
         endy: e.targetTouches[0].clientY,
+        timer: setTimeout(() => self.props.onTap(e), 700),
       });
     }
   }
 
   handleTouchMove(e) {
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
     if (e && e.targetTouches) {
       this.setState({ endx: e.targetTouches[0].clientX, endy: e.targetTouches[0].clientY });
     } else {
@@ -58,14 +84,42 @@ export default class TouchHandler extends Component {
   }
 
   handleTouchCancel(e) {
-    console.log('Cancel', e);
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
+    //console.log('Cancel', e);
   }
 
   handleTouchLeave(e) {
-    console.log('Leave', e);
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
+    //console.log('Leave', e);
   }
 
-  handleTouchEnd() {
+  handleTouchEnd(e) {
+    // Double Tap
+    const self = this;
+    if (this.state.clickTimer === null) {
+      const clickTimer = setTimeout(function() {
+        if (self.state.clickTimer) {
+          clearTimeout(self.state.clickTimer);
+        }
+        self.setState({ clickTimer: null });
+      }, 500);
+      this.setState({ clickTimer: clickTimer });
+    } else {
+      clearTimeout(this.state.clickTimer);
+      this.setState({ clickTimer: null });
+      this.props.onDoubleTap(e);
+    }
+    // End
+    if (this.state.timer) {
+      clearTimeout(this.state.timer);
+      this.setState({ timer: null });
+    }
     const x = this.state.endx - this.state.startx;
     const y = this.state.endy - this.state.starty;
     if (x > 150) {

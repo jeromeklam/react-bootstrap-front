@@ -1,5 +1,20 @@
 @import '../../styles/mixins';
 
-.inline-list-default-line {
+.inline-default-list-wrapper {
+  font-size: 0.9rem;
+  position: relative;
 
+  &.row-line-separator {
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary-light');
+  }
+
+  .col-highlighter {
+    position: absolute;
+    width: 5px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: transparent;
+  }
 }

@@ -1,14 +1,15 @@
-import PropTypes from 'prop-types'
-import React, { useRef, useEffect } from 'react'
-import addClass from 'dom-helpers/addClass'
-import removeClass from 'dom-helpers/removeClass'
-import getWidth from 'dom-helpers/width'
-import scrollbarSize from 'dom-helpers/scrollbarSize'
-
-import * as dates from './utils/dates'
-import { navigate } from './utils/constants'
-import { inRange } from './utils/eventLevels'
-import { isSelected } from './utils/selection'
+import PropTypes from "prop-types";
+import React, { useRef, useEffect } from "react";
+import addClass from "dom-helpers/addClass";
+import removeClass from "dom-helpers/removeClass";
+import getWidth from "dom-helpers/width";
+import scrollbarSize from "dom-helpers/scrollbarSize";
+import { notify } from "./utils/helpers";
+import * as dates from "./utils/dates";
+import { navigate } from "./utils/constants";
+import { inRange } from "./utils/eventLevels";
+import { isSelected } from "./utils/selection";
+import classNames from "classnames";
 
 function Agenda({
   selected,
@@ -19,37 +20,45 @@ function Agenda({
   length,
   date,
   events,
+  onSelectEvent,
+  onDoubleClickEvent,
+  include
 }) {
-  const headerRef = useRef(null)
-  const dateColRef = useRef(null)
-  const timeColRef = useRef(null)
-  const contentRef = useRef(null)
-  const tbodyRef = useRef(null)
+  const headerRef = useRef(null);
+  const dateColRef = useRef(null);
+  const timeColRef = useRef(null);
+  const contentRef = useRef(null);
+  const tbodyRef = useRef(null);
 
   useEffect(() => {
-    _adjustHeader()
-  })
+    _adjustHeader();
+  });
+
+  const handleDoubleClick = (...args) => {
+    notify(onDoubleClickEvent, args);
+  };
+
+  const handleSelect = (...args) => {
+    notify(onSelectEvent, args);
+  };
 
   const renderDay = (day, events, dayKey) => {
-    const { event: Event, date: AgendaDate } = components
+    const { event: Event, date: AgendaDate } = components;
 
-    events = events.filter(e =>
-      inRange(e, dates.startOf(day, 'day'), dates.endOf(day, 'day'), accessors)
-    )
+    events = events.filter((e) =>
+      inRange(e, dates.startOf(day, "day"), dates.endOf(day, "day"), accessors)
+    );
 
     return events.map((event, idx) => {
-      let title = accessors.title(event)
-      let end = accessors.end(event)
-      let start = accessors.start(event)
+      let title = accessors.title(event);
+      let end = accessors.end(event);
+      let start = accessors.start(event);
 
-      const userProps = getters.eventProp(
-        event,
-        start,
-        end,
-        isSelected(event, selected)
-      )
+      const _isSelected = isSelected(event, selected);
 
-      let dateLabel = idx === 0 && localizer.format(day, 'agendaDateFormat')
+      const userProps = getters.eventProp(event, start, end, _isSelected);
+
+      let dateLabel = idx === 0 && localizer.format(day, "agendaDateFormat");
       let first =
         idx === 0 ? (
           <td rowSpan={events.length} className="rbc-agenda-date-cell">
@@ -61,46 +70,54 @@ function Agenda({
           </td>
         ) : (
           false
-        )
+        );
 
       return (
         <tr
-          key={dayKey + '_' + idx}
-          className={userProps.className}
+          key={dayKey + "_" + idx}
+          tabIndex="0"
+          className={classNames("rbc-event", userProps.className, {
+            "rbc-selected": _isSelected,
+          })}
           style={userProps.style}
+          onDoubleClick={(e) => handleDoubleClick(event, e)}
+          onClick={(e) => handleSelect(event, e)}
         >
           {first}
           <td className="rbc-agenda-time-cell">{timeRangeLabel(day, event)}</td>
-          <td className="rbc-agenda-event-cell">
+          <td /* className="rbc-agenda-event-cell" */>
             {Event ? <Event event={event} title={title} /> : title}
           </td>
+          <td>{event.personne.nompers}</td>
+          <td>{/* {JSON.stringify(event.evene.pconso.pdessadr)} */}</td>
+          <td>{event.agent.nomagent}</td>
         </tr>
-      )
-    }, [])
-  }
+      );
+    }, []);
+  };
 
   const timeRangeLabel = (day, event) => {
-    let labelClass = '',
+    let labelClass = "",
       TimeComponent = components.time,
-      label = localizer.messages.allDay
+      label = localizer.messages.allDay;
 
-    let end = accessors.end(event)
-    let start = accessors.start(event)
+    let end = accessors.end(event);
+    let start = accessors.start(event);
 
     if (!accessors.allDay(event)) {
       if (dates.eq(start, end)) {
-        label = localizer.format(start, 'agendaTimeFormat')
-      } else if (dates.eq(start, end, 'day')) {
-        label = localizer.format({ start, end }, 'agendaTimeRangeFormat')
-      } else if (dates.eq(day, start, 'day')) {
-        label = localizer.format(start, 'agendaTimeFormat')
-      } else if (dates.eq(day, end, 'day')) {
-        label = localizer.format(end, 'agendaTimeFormat')
+        label = localizer.format(start, "agendaTimeFormat");
+      } else if (dates.eq(start, end, "day")) {
+        label = localizer.format({ start, end }, "agendaTimeRangeFormat");
+      } else if (dates.eq(day, start, "day")) {
+        label = localizer.format(start, "agendaTimeFormat");
+      } else if (dates.eq(day, end, "day")) {
+        label = localizer.format(end, "agendaTimeFormat");
       }
     }
 
-    if (dates.gt(day, start, 'day')) labelClass = 'rbc-continues-prior'
-    if (dates.lt(day, end, 'day')) labelClass += ' rbc-continues-after'
+    if (dates.gt(day, start, "day")) labelClass = "rbc-continues-prior";
+    if (dates.lt(day, end, "day")) labelClass += " rbc-continues-after";
 
     return (
       <span className={labelClass.trim()}>
@@ -110,46 +127,46 @@ function Agenda({
           label
         )}
       </span>
-    )
-  }
+    );
+  };
 
   const _adjustHeader = () => {
-    if (!tbodyRef.current) return
+    if (!tbodyRef.current) return;
 
-    let header = headerRef.current
-    let firstRow = tbodyRef.current.firstChild
+    let header = headerRef.current;
+    let firstRow = tbodyRef.current.firstChild;
 
-    if (!firstRow) return
+    if (!firstRow) return;
 
     let isOverflowing =
-      contentRef.current.scrollHeight > contentRef.current.clientHeight
+      contentRef.current.scrollHeight > contentRef.current.clientHeight;
 
-    let _widths = []
-    let widths = _widths
+    let _widths = [];
+    let widths = _widths;
 
-    _widths = [getWidth(firstRow.children[0]), getWidth(firstRow.children[1])]
+    _widths = [getWidth(firstRow.children[0]), getWidth(firstRow.children[1])];
 
     if (widths[0] !== _widths[0] || widths[1] !== _widths[1]) {
-      dateColRef.current.style.width = _widths[0] + 'px'
-      timeColRef.current.style.width = _widths[1] + 'px'
+      dateColRef.current.style.width = _widths[0] + "px";
+      timeColRef.current.style.width = _widths[1] + "px";
     }
 
     if (isOverflowing) {
-      addClass(header, 'rbc-header-overflowing')
-      header.style.marginRight = scrollbarSize() + 'px'
+      addClass(header, "rbc-header-overflowing");
+      header.style.marginRight = scrollbarSize() + "px";
     } else {
-      removeClass(header, 'rbc-header-overflowing')
+      removeClass(header, "rbc-header-overflowing");
     }
-  }
+  };
 
-  let { messages } = localizer
-  let end = dates.add(date, length, 'day')
+  let { messages } = localizer;
+  let end = dates.add(date, length, "day");
 
-  let range = dates.range(date, end, 'day')
+  let range = dates.range(date, end, "day");
 
-  events = events.filter(event => inRange(event, date, end, accessors))
+  events = events.filter((event) => inRange(event, date, end, accessors));
 
-  events.sort((a, b) => +accessors.start(a) - +accessors.start(b))
+  events.sort((a, b) => +accessors.start(a) - +accessors.start(b));
 
   return (
     <div className="rbc-agenda-view">
@@ -165,6 +182,9 @@ function Agenda({
                   {messages.time}
                 </th>
                 <th className="rbc-header">{messages.event}</th>
+                <th className="rbc-header">Personne</th>
+                <th className="rbc-header">Adresse</th>
+                <th className="rbc-header">Agent</th>
               </tr>
             </thead>
           </table>
@@ -180,7 +200,7 @@ function Agenda({
         <span className="rbc-agenda-empty">{messages.noEventsInRange}</span>
       )}
     </div>
-  )
+  );
 }
 
 Agenda.propTypes = {
@@ -194,33 +214,33 @@ Agenda.propTypes = {
   components: PropTypes.object.isRequired,
   getters: PropTypes.object.isRequired,
   localizer: PropTypes.object.isRequired,
-}
+};
 
 Agenda.defaultProps = {
   length: 30,
-}
+};
 
 Agenda.range = (start, { length = Agenda.defaultProps.length }) => {
-  let end = dates.add(start, length, 'day')
-  return { start, end }
-}
+  let end = dates.add(start, length, "day");
+  return { start, end };
+};
 
 Agenda.navigate = (date, action, { length = Agenda.defaultProps.length }) => {
   switch (action) {
     case navigate.PREVIOUS:
-      return dates.add(date, -length, 'day')
+      return dates.add(date, -length, "day");
 
     case navigate.NEXT:
-      return dates.add(date, length, 'day')
+      return dates.add(date, length, "day");
 
     default:
-      return date
+      return date;
   }
-}
+};
 
 Agenda.title = (start, { length = Agenda.defaultProps.length, localizer }) => {
-  let end = dates.add(start, length, 'day')
-  return localizer.format({ start, end }, 'agendaHeaderFormat')
-}
+  let end = dates.add(start, length, "day");
+  return localizer.format({ start, end }, "agendaHeaderFormat");
+};
 
-export default Agenda
+export default Agenda;

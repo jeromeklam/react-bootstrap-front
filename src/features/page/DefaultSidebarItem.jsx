@@ -14,6 +14,7 @@ export const DefaultSidebarItem = props => (
           e.preventDefault();
           e.stopPropagation();
         }
+        props.noForced();
         props.onNavigate(props.option.url);
       }}
       className={classnames(
@@ -24,7 +25,7 @@ export const DefaultSidebarItem = props => (
     >
       <Highlight position="right" theme="NAV" title={props.option.help || ''}>
         {props.option.icon}
-        <span className="sidebar-menu-label">{props.option.label}</span>
+        <span className="sidebar-menu-label no-selector">{props.option.label}</span>
       </Highlight>
     </a>
   </li>

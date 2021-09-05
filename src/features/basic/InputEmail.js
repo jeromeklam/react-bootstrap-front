@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { getRandomInt } from '../helpers';
 
-export const InputEmail = (props) => {
+export const InputEmail = props => {
   let myId = props.id;
   if (myId === '') {
     myId = props.name;
@@ -16,7 +16,7 @@ export const InputEmail = (props) => {
         <label
           htmlFor={myId}
           className={classnames(
-            !props.labelTop && `col-xs-w${props.labelSize} col-form-label`,
+            !props.labelTop && `col-xxs-w${props.labelSize} col-form-label`,
             props.size && `col-form-label-${props.size}`
           )}
         >
@@ -24,23 +24,39 @@ export const InputEmail = (props) => {
           {props.required && <span>&nbsp;*</span>}
         </label>
       )}
-      <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
-        <input
-          type="text"
-          className={classnames(
-            'border-secondary form-control',
-            props.size && `form-control-${props.size}`,
-            (props.error || props.warning) && 'is-invalid',
+      <div className={classnames(!props.labelTop && `col-xxs-w${props.inputSize}`)}>
+        <div className={classnames('input-group', (props.error || props.warning) && 'is-invalid')}>
+          <input
+            type="text"
+            className={classnames(
+              'border-secondary form-control',
+              props.size && `form-control-${props.size}`,
+              (props.error || props.warning) && 'is-invalid'
+            )}
+            id={myId}
+            name={props.name}
+            value={props.value || ''}
+            required={props.required}
+            disabled={props.disabled}
+            onChange={props.onChange}
+            autoComplete={props.autoComplete}
+            placeholder={props.placeholder}
+          />
+          {props.addHref && props.eMailIcon && props.eMailIcon !== '' && (
+            <div className="input-group-append">
+              <a
+                type="button"
+                href={props.value && `mailto:${props.value}`}
+                className={classnames(
+                  `btn btn-input btn-outline-${props.borderColor} bg-light`,
+                  props.size && `btn-${props.size}`
+                )}
+              >
+                {props.eMailIcon}
+              </a>
+            </div>
           )}
-          id={myId}
-          name={props.name}
-          value={props.value || ''}
-          required={props.required}
-          disabled={props.disabled}
-          onChange={props.onChange}
-          autoComplete={props.autoComplete}
-          placeholder={props.placeholder}
-        />
+        </div>
         {props.error && <div className="invalid-feedback">{props.error}</div>}
         {props.warning && <div className="invalid-feedback">{props.warning}</div>}
       </div>
@@ -49,6 +65,7 @@ export const InputEmail = (props) => {
 };
 
 InputEmail.propTypes = {
+  addHref: PropTypes.bool,
   id: PropTypes.string,
   name: PropTypes.string.isRequired,
   label: PropTypes.string,
@@ -60,14 +77,17 @@ InputEmail.propTypes = {
   size: PropTypes.string,
   labelSize: PropTypes.number,
   inputSize: PropTypes.number,
+  borderColor: PropTypes.string,
   error: PropTypes.element,
   warning: PropTypes.element,
   autoComplete: PropTypes.string,
   placeholder: PropTypes.string,
   pattern: PropTypes.string,
+  eMailIcon: PropTypes.element,
 };
 
 InputEmail.defaultProps = {
+  addHref: true,
   labelTop: true,
   value: '',
   label: '',
@@ -78,9 +98,11 @@ InputEmail.defaultProps = {
   size: null,
   labelSize: 6,
   inputSize: 30,
+  borderColor: 'secondary',
   error: false,
   warning: false,
   autoComplete: 'off',
   placeholder: '',
   pattern: '',
+  eMailIcon: null,
 };

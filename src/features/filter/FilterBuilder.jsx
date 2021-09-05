@@ -67,13 +67,12 @@ export default class FilterBuilder extends Component {
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
             }
-
             const prepend = (
               <select
                 id={`oper-${colFilterable}`}
                 name={`oper-${colFilterable}`}
                 value={colOper}
-                className="border-0 bg-light text-secondary rounded-left"
+                className="border-0 text-secondary rounded-left"
                 onChange={this.props.onFilterOperator}
               >
                 <option value={FILTER_OPER_EQUAL}>=</option>
@@ -128,7 +127,7 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <InputDate
-                        borderColor="primary"
+                        borderColor="secondary-light"
                         prepend={prepend}
                         id={colFilterable}
                         name={colFilterable}
@@ -143,10 +142,10 @@ export default class FilterBuilder extends Component {
               case 'boolean':
               case 'bool':
                 if (value === true || value === 1 || value === '1') {
-                  value = 1;
+                  value = '1';
                 } else {
                   if (value === false || value === 0 || value === '0') {
-                    value = 0;
+                    value = '0';
                   } else {
                     value = '';
                   }
@@ -161,9 +160,9 @@ export default class FilterBuilder extends Component {
                         className="border-0 bg-light text-secondary mr-3"
                         type="radio"
                         name={colFilterable}
-                        value={'' + value}
+                        value={`${value}`}
                         onChange={this.props.onChange}
-                        borderColor="primary"
+                        borderColor="secondary-light"
                         options={[
                           { label: 'Oui', value: '1' },
                           { label: 'Non', value: '0' },
@@ -175,9 +174,10 @@ export default class FilterBuilder extends Component {
                 );
               case 'component':
                 const clonedElementWithMoreProps = React.cloneElement(col.filterable.component, {
-                  onChange: e => this.props.onChange(e, FILTER_OPER_EQUAL),
+                  onChange: e => { console.log("JKJK", e); e.target.name = colFilterable; this.props.onChange(e, FILTER_OPER_EQUAL) },
                   id: colFilterable,
                   name: colFilterable,
+                  value: value
                 });
                 return (
                   <div key={col.name}>
@@ -200,7 +200,7 @@ export default class FilterBuilder extends Component {
                         id={colFilterable}
                         name={colFilterable}
                         value={value}
-                        className="form-control border-primary"
+                        className="form-control border-secondary-light"
                         onChange={e => this.props.onChange(e, FILTER_OPER_EQUAL)}
                       >
                         <option key="0" value="" />
@@ -221,13 +221,13 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border border-primary rounded-left">{prepend}</div>
+                        <div className="input-group-prepend border border-secondary-light rounded-left">{prepend}</div>
                         <input
                           type="text"
                           id={colFilterable}
                           name={colFilterable}
                           value={value}
-                          className="form-control border-primary rounded-right"
+                          className="form-control border-secondary-light rounded-right"
                           onChange={this.props.onChange}
                         />
                       </div>

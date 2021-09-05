@@ -1,4 +1,13 @@
 .default-list-header {
   border-bottom: 1px solid;
-  border-color: theme-color('secondary');
+  border-color: theme-color('secondary-light');
+
+  .input-list-sort {
+    .form-control {
+      border-color: theme-color('secondary');
+    }
+  }
+  .rbf-list-default-header-nav .nav-item {
+    padding-right: 1px;
+  }
 }

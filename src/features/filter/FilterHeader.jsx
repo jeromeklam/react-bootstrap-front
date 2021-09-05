@@ -12,6 +12,7 @@ import {
   FILTER_OPER_LOWER_OR_EQUAL,
   FILTER_OPER_GREATER,
   FILTER_OPER_GREATER_OR_EQUAL,
+  Filter,
 } from './';
 import { InputRadio } from '../basic';
 
@@ -21,7 +22,7 @@ export default function FilterHeader(props) {
   return (
     <div className="filter-filter-header">
       <div className="row">
-        <div className="col-xs-w16 col-first">
+        <div className="col-xxs-w16 col-first">
           <InputRadio
             className="ml-3 mr-1 text-secondary"
             id="filter-or"
@@ -34,16 +35,16 @@ export default function FilterHeader(props) {
               { label: 'et', value: FILTER_MODE_AND },
               { label: 'ou', value: FILTER_MODE_OR },
             ]}
-            borderColor="primary"
+            borderColor="secondary-light"
           />
         </div>
-        <div className="col-xs-w16">
+        <div className="col-xxs-w16 form-group">
           <label htmlFor="filter-oper" className="text-secondary">
             <span>Condition</span>
           </label>
           <select
             id="filter-oper"
-            className="form-control border-primary"
+            className="form-control border-secondary-light"
             onChange={props.onOperator}
             value={oper}
           >

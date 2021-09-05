@@ -21,6 +21,8 @@ export default class InputPhone extends Component {
     warning: PropTypes.element,
     placeholder: PropTypes.string,
     phoneIcon: PropTypes.element,
+    faxIcon: PropTypes.element,
+    fax: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -39,6 +41,8 @@ export default class InputPhone extends Component {
     warning: false,
     placeholder: '',
     phoneIcon: null,
+    faxIcon: null,
+    fax: false,
   }
 
   render() {
@@ -49,7 +53,7 @@ export default class InputPhone extends Component {
           <label
             htmlFor={myId}
             className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xxs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -57,7 +61,7 @@ export default class InputPhone extends Component {
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
+        <div className={classnames(!this.props.labelTop && `col-xxs-w${this.props.inputSize}`)}>
           <div className={classnames(
               'input-group', 
               (this.props.error || this.props.warning) && 'is-invalid'
@@ -77,17 +81,18 @@ export default class InputPhone extends Component {
               placeholder={this.props.placeholder}
               onChange={this.props.onChange}
             />
-            {(this.props.phoneIcon && this.props.phoneIcon !== '') &&
+            {((this.props.phoneIcon && this.props.phoneIcon !== '') || (this.props.faxIcon && this.props.faxIcon !== '')) &&
               <div className="input-group-append">
-                <button
+                <a
                   type="button"
+                  href={this.props.value && `tel:${this.props.value}`}
                   className={classnames(
                   `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
                   this.props.size && `btn-${this.props.size}`
                   )}
                 >
-                  {this.props.phoneIcon}
-                </button>
+                  {(this.props.fax && this.props.faxIcon) ? this.props.faxIcon : this.props.phoneIcon}
+                </a>
               </div>
             }
           </div>

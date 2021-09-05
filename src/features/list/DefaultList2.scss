@@ -1,0 +1,24 @@
+.rbf-list-default-list-right-separator {
+  width: 15px !important;
+}
+.rbf-list-default-list-right-menu {
+  width: 70px !important;
+}
+.rbf-list-default-list-right-content {
+  width: calc(100% - 85px) !important;
+}
+.list-inset {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  .default-list-list-header {
+    border-bottom: 1px solid;
+    border-color: theme-color('secondary');
+  }
+}
+.overflowY {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}

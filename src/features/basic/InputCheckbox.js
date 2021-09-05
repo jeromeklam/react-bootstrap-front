@@ -5,10 +5,10 @@ import classnames from 'classnames';
 const switchstyle = {
   position: 'relative',
   display: 'inline-block',
-  width: '60px',
-  height: '30px',
+  width: '56px',
+  height: '28px',
   marginBottom: '0px',
-  top: '3px',
+  top: '1px',
   transition: '0.4s',
   borderRadius: '30px',
   border: '1px solid',
@@ -22,19 +22,19 @@ const sliderstyle = {
   right: '0',
   bottom: '0',
   transition: '0.4s',
-  borderRadius: '30px',
+  borderRadius: '28px',
 };
 const slideronstyle = {
   ...sliderstyle,
-  transform: 'translateX(30px)',
+  transform: 'translateX(28px)',
 };
 
 const sliderbeforestyle = {
   content: '',
   position: 'absolute',
-  height: '24px',
-  width: '24px',
-  left: '3px',
+  height: '22px',
+  width: '22px',
+  left: '2px',
   bottom: '2px',
   transition: '0.4s',
   borderRadius: '50%',
@@ -53,12 +53,12 @@ const inputstyle = {
 export const InputCheckbox = props => (
   <div className={classnames('ui-input-checkbox form-group', !props.labelTop && 'row')}>
     {props.label !== '' && (
-      <label htmlFor={props.id} className={classnames(!props.labelTop && `col-xs-w${props.labelSize} col-form-label`)}>
+      <label htmlFor={props.id} className={classnames('no-selector', !props.labelTop && `col-xxs-w${props.labelSize} col-form-label`)}>
         {props.label}
         {props.required && <span>&nbsp;*</span>}
       </label>
     )}
-    <div className={classnames(!props.labelTop && `col-xs-w${props.inputSize}`)}>
+    <div className={classnames(!props.labelTop && `col-xxs-w${props.inputSize}`)}>
       <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
         <input
           style={inputstyle}
@@ -74,7 +74,7 @@ export const InputCheckbox = props => (
         <div style={sliderbeforestyle}>
           <span
             style={props.checked === true ? slideronstyle : sliderstyle}
-            className={classnames('ui-slide', props.checked === true ? 'bg-secondary' : 'bg-light')}
+            className={classnames('no-selector ui-slide', props.checked === true ? 'bg-secondary' : 'bg-gray-light')}
           />
         </div>
       </label>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import { PropTypes } from 'prop-types';
 import { Dropdown } from '../basic';
 
@@ -6,15 +7,17 @@ export default class DropdownWrapper extends Component {
   static propTypes = {
     align: PropTypes.string,
     children: PropTypes.element.isRequired,
+    className: PropTypes.string,
     myRef: PropTypes.object,
     tooltip: PropTypes.string,
     trigger: PropTypes.element.isRequired,
   };
   static defaultProps = {
-    align: "bottom-left",
+    align: 'bottom-left',
+    className: '',
     myRef: null,
-    tooltip: "",
-  }
+    tooltip: '',
+  };
 
   constructor(props) {
     super(props);
@@ -38,14 +41,17 @@ export default class DropdownWrapper extends Component {
   render() {
     return (
       <>
-        <div ref={this.state.ref} className="advanced-dropdown-wrapper" onClick={this.onClick} title={this.props.tooltip}>
+        <div
+          ref={this.state.ref}
+          className={classnames('advanced-dropdown-wrapper', this.props.className)}
+          onClick={this.onClick}
+          title={this.props.tooltip}
+        >
           {this.props.trigger}
         </div>
         {this.state.open && (
           <Dropdown align={this.props.align} myRef={this.state.ref} onClose={this.onClose}>
-            <div onClick={this.onClose}>
-              {this.props.children}
-            </div>
+            <div onClick={this.onClose}>{this.props.children}</div>
           </Dropdown>
         )}
       </>

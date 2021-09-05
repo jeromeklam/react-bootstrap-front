@@ -25,18 +25,28 @@ export const InputText = props => {
         name={props.name}
         value={props.value || ''}
         required={props.required}
-        disabled={props.disabled}
+        disabled={props.disabled || props.locked}
         onChange={props.onChange}
         pattern={props.pattern}
         autoComplete={props.autoComplete}
         placeholder={props.placeholder}
         maxLength={props.maxLength || ''}
       />
-      {props.append && props.append !== '' && (
-        <InputGroupAppend>
+      <InputGroupAppend>
+        {props.onLockOn !== null && props.onLockOff !== null && (
+          <button
+            type="button"
+            disabled={props.disabled}
+            className={classnames(`btn btn-input btn-outline-secondary bg-light`, props.size && `btn-${props.size}`)}
+            onClick={props.locked ? () => props.onLockOff(props.name) : () => props.onLockOn(props.name)}
+          >
+            {props.locked ? props.lockOnIcon : props.lockOffIcon}
+          </button>
+        )}
+        {props.append && props.append !== '' && (
           <InputGroupText className="border-secondary bg-light">{props.append}</InputGroupText>
-        </InputGroupAppend>
-      )}
+        )}
+      </InputGroupAppend>
     </InputGroup>
   );
 };
@@ -58,6 +68,11 @@ InputText.propTypes = {
   size: PropTypes.string,
   value: PropTypes.string,
   warning: PropTypes.element,
+  locked: PropTypes.bool,
+  lockOffIcon: PropTypes.element,
+  lockOnIcon: PropTypes.element,
+  onLockOn: PropTypes.func,
+  onLockOff: PropTypes.func,
 };
 
 InputText.defaultProps = {
@@ -76,4 +91,9 @@ InputText.defaultProps = {
   size: null,
   value: '',
   warning: false,
+  locked: false,
+  lockOffIcon: null,
+  lockOnIcon: null,
+  onLockOn: null,
+  onLockOff: null,
 };

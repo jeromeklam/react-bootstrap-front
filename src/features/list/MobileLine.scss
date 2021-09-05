@@ -1,4 +1,11 @@
 .rbf-list-mobile-line {
+  a {
+    color: theme-color('dark');
+    text-decoration-color: theme-color('dark');
+  }
+  .card-header.rbf-list-mobile-line-header {
+    height: 36px;
+  }
   .rbf-list-mobile-line-header:hover {
     cursor: pointer;
   }
@@ -12,12 +19,12 @@
   }
   .rbf-list-mobile-line-header-select {
     position: absolute;
-    left: 7px;
-    top: 2px;
+    left: 5px;
+    top: 5px;
   }
   .rbf-list-mobile-line-header-title {
     font-weight: bold;
-    margin-left: 25px;
+    margin-left: 30px;
   }
   .rbf-list-mobile-line-header-nav {
     position: absolute;
@@ -33,6 +40,9 @@
   }
   .card-header {
     position: relative;
+    border: none;
+    padding: 0.7rem 0.25rem;
+    border-radius: 0px;
   }
   .card-header span {
     color: black;
@@ -40,6 +50,10 @@
   }
   .card {
     /*box-shadow: 0 0.1rem 0.2rem theme-color('secondary') !important;*/
+    margin: 0px;
+    border: none;
+    border-bottom: 1px solid theme-color('secondary-light');
+    border-radius: 0px;
   }
   .card, .card-header {
     background-color: white;
@@ -52,13 +66,5 @@
   }
   .rbf-list-mobile-line-3dots {
     font-weight: bold;
-  }
-}
-
-@media (max-width: 768px) {
-  .rbf-list-mobile-line {
-    .card-header {
-      padding: 0.75rem 0.25rem;
-    }
   }
 }

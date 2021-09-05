@@ -10,10 +10,10 @@ const navLinkStyles = {
 export const MobilePublicHeader = props => (
   <MobileHeader>
     <div className="row">
-      <div className="col-xs-w20">
+      <div className="col-xxs-w20">
         <span className="header-title pl-2">{props.title}</span>
       </div>
-      <div className="col-xs-w16 text-right">
+      <div className="col-xxs-w16 text-right">
       </div>
     </div>
   </MobileHeader>

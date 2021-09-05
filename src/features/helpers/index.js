@@ -1,3 +1,4 @@
+import React from 'react';
 import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
 import { isNull } from 'lodash';
@@ -64,11 +65,24 @@ export const isMobileDevice = () => {
 
 export const hasUserMedia = () => {
   navigator.getUserMedia =
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia;
+    navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
   return !!navigator.getUserMedia;
+};
+
+export const isCamAvailable = () => {
+  let response = false;
+  navigator.getMedia =
+    navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+  navigator.getMedia(
+    { video: true },
+    function() {
+      response = true;
+    },
+    function() {
+      // webcam is not available
+    }
+  );
+  return response;
 };
 
 export const beep = (context, freq = 2800, duration = 80, vol = 50) => {
@@ -76,7 +90,7 @@ export const beep = (context, freq = 2800, duration = 80, vol = 50) => {
   const gain = context.createGain();
   oscillator.connect(gain);
   oscillator.frequency.value = freq;
-  oscillator.type = "square";
+  oscillator.type = 'square';
   gain.connect(context.destination);
   gain.gain.value = vol * 0.01;
   oscillator.start(context.currentTime);
@@ -96,7 +110,7 @@ export const ensureDatetimeTZ = date => {
 };
 
 export const getBreakpointAsSize = p_size => {
-  const size = p_size || 'xs';
+  const size = p_size || 'xxs';
   switch (size.toLowerCase()) {
     case 'xl':
       return 1600;
@@ -106,8 +120,10 @@ export const getBreakpointAsSize = p_size => {
       return 1024;
     case 'sm':
       return 768;
+    case 'xs':
+      return 540;
     default:
-      return 376;
+      return 360;
   }
 };
 
@@ -152,7 +168,10 @@ export const getSizeFromWidth = width => {
   if (isNaN(testW)) {
     testW = 0;
   }
-  let size = 'xs';
+  let size = 'xxs';
+  if (testW >= 540) {
+    size = 'xs';
+  }
   if (testW >= 768) {
     size = 'sm';
   }
@@ -193,7 +212,10 @@ export const roundMonetary = (value, language, money, maxDigits = null) => {
     money = 'EUR';
   }
   if (maxDigits === null) {
-    const numberFormat1 = new Intl.NumberFormat(language, { style: 'currency', currency: money });
+    const numberFormat1 = new Intl.NumberFormat(language, {
+      style: 'currency',
+      currency: money,
+    });
     const options1 = numberFormat1.resolvedOptions();
     maxDigits = options1.maximumFractionDigits;
   }
@@ -208,7 +230,10 @@ export const formatNumber = (value, language, money, maxDigits = null) => {
     money = 'EUR';
   }
   if (maxDigits === null) {
-    const numberFormat1 = new Intl.NumberFormat(language, { style: 'currency', currency: money });
+    const numberFormat1 = new Intl.NumberFormat(language, {
+      style: 'currency',
+      currency: money,
+    });
     const options1 = numberFormat1.resolvedOptions();
     maxDigits = options1.maximumFractionDigits;
   }
@@ -339,7 +364,16 @@ export const getFieldId = (name, id = null) => {
 export const getRefCoords = ref => {
   const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
   const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-  let coords = { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, w, h };
+  let coords = {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+    w,
+    h,
+  };
   if (ref && ref.current) {
     try {
       const bRect = ref.current.getBoundingClientRect();
@@ -620,3 +654,13 @@ function replaceCharacter(character) {
       return character;
   }
 }
+
+export const isChildEmpty = children => {
+  if (!React.Children.count(children)) {
+    return true;
+  }
+  if (Array.isArray(children)) {
+    return !children.some(child => child !== null && child !== false && child !== '');
+  }
+  return false;
+};

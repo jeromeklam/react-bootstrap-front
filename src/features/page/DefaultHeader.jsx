@@ -44,8 +44,8 @@ export class DefaultHeader extends Component {
   static defaultProps = {
     headerBackgroundSrc: null,
     headerBorderBottomSrc: null,
-    headerBackgroundTheme: "secondary",
-    headerTextTheme: "light",
+    headerBackgroundTheme: 'secondary',
+    headerTextTheme: 'light',
     onToggleUser: null,
     menuIcon: null,
     onLocale: null,
@@ -94,23 +94,27 @@ export class DefaultHeader extends Component {
       current = this.props.locales.find(elem => elem.locale === this.props.currentLocale);
     }
     return (
-      <div>
-        <div className={classnames("default-header bg-secondary pl-2 overflow-none", "bg-" + this.props.headerBackgroundTheme)}>
+      <div
+        className={classnames(
+          'default-header bg-secondary pl-2 overflow-none h-100',
+          'bg-' + this.props.headerBackgroundTheme
+        )}
+      >
+        <div>
           {this.props.headerBackgroundSrc && (
             <img className="default-header-background" src={this.props.headerBackgroundSrc} alt="background header" />
           )}
           <nav
             style={navStyles}
-            className={classnames(
-              'default-header-menu navbar navbar-expand-lg navbar-secondary border-bottom row',
-              !this.props.headerBackgroundSrc && 'bg-' + this.props.headerBackgroundTheme
-            )}
+            className={classnames('default-header-menu navbar navbar-expand-lg navbar-secondary border-bottom row')}
           >
-            <div className="col-xs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
+            <div className="col-xxs-w16" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
               &nbsp;&nbsp;
-              <div className={classnames("navbar-brand p-0", "text-" + this.props.headerTextTheme)}>{this.props.title || ''}</div>
+              <div className={classnames('navbar-brand p-0', 'text-' + this.props.headerTextTheme)}>
+                {this.props.title || ''}
+              </div>
             </div>
-            <div className="col-xs-w20 text-right pr-0" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
+            <div className="col-xxs-w20 text-right pr-0" style={{ height: `${this.props.desktopHeaderHeight}px` }}>
               <ul className="navbar-nav justify-content-end">
                 {this.props.badges &&
                   this.props.badges.map(oneBadge => (
@@ -121,107 +125,103 @@ export class DefaultHeader extends Component {
                 {this.props.badges && this.props.badges.length > 0 && <div className="pr-4" />}
                 {this.props.locales && (
                   <li className="nav-item">
-                    <div className="btn-group">
-                      <Highlight
-                        theme="NAV"
-                        title={this.props.t({
-                          id: 'rbf.page.header.langMenu.help',
-                          defaultMessage: 'Change current lang',
-                        })}
+                    <Highlight
+                      theme="NAV"
+                      title={this.props.t({
+                        id: 'rbf.page.header.langMenu.help',
+                        defaultMessage: 'Change current lang',
+                      })}
+                    >
+                      <button
+                        type="button"
+                        className={classnames('dropdown-toggle btn text-light btn-' + this.props.headerBackgroundTheme)}
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        onClick={this.onToggleFlag}
+                        ref={this.state.myRef}
                       >
-                        <button
-                          type="button"
-                          className="btn btn-light text-secondary dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                          onClick={this.onToggleFlag}
-                          ref={this.state.myRef}
-                        >
-                          <Flag code={current.code} height={24} />
-                        </button>
-                      </Highlight>
-                      {this.state.flagsOpen && (
-                        <Dropdown
-                          myRef={this.state.myRef}
-                          onClose={this.onCloseFlag}
-                          className="bg-light text-secondary"
-                        >
-                          <DropdownMenu>
-                            {Array.isArray(this.props.locales) &&
-                              this.props.locales.map(lang => {
-                                if (lang.locale !== this.props.currentLocale) {
-                                  return (
-                                    <DropdownMenuOption
-                                      key={`header-button-${lang.code}`}
-                                      onClick={() => {
-                                        this.onCloseFlag();
-                                        this.props.onLocale(lang.locale);
-                                      }}
-                                    >
-                                      <Flag code={lang.code} height={24} />
-                                    </DropdownMenuOption>
-                                  );
-                                }
-                                return null;
-                              })}
-                          </DropdownMenu>
-                        </Dropdown>
-                      )}
-                    </div>
+                        <Flag code={current.code} height={24} />
+                      </button>
+                    </Highlight>
+                    {this.state.flagsOpen && (
+                      <Dropdown
+                        myRef={this.state.myRef}
+                        onClose={this.onCloseFlag}
+                        className={classnames('text-light bg-' + this.props.headerBackgroundTheme)}
+                      >
+                        <DropdownMenu>
+                          {Array.isArray(this.props.locales) &&
+                            this.props.locales.map(lang => {
+                              if (lang.locale !== this.props.currentLocale) {
+                                return (
+                                  <DropdownMenuOption
+                                    key={`header-button-${lang.code}`}
+                                    onClick={() => {
+                                      this.onCloseFlag();
+                                      this.props.onLocale(lang.locale);
+                                    }}
+                                  >
+                                    <Flag code={lang.code} height={24} />
+                                  </DropdownMenuOption>
+                                );
+                              }
+                              return null;
+                            })}
+                        </DropdownMenu>
+                      </Dropdown>
+                    )}
                   </li>
                 )}
                 {this.props.realms && Array.isArray(this.props.realms) && this.props.realms.length > 0 && (
                   <li className="nav-item">
-                    <div className="btn-group">
-                      <Highlight
-                        theme="NAV"
-                        title={this.props.t({
-                          id: 'rbf.page.header.groupMenu.help',
-                          defaultMessage: 'Change current group',
-                        })}
+                    <Highlight
+                      theme="NAV"
+                      title={this.props.t({
+                        id: 'rbf.page.header.groupMenu.help',
+                        defaultMessage: 'Change current group',
+                      })}
+                    >
+                      <button
+                        type="button"
+                        className={classnames('btn text-light dropdown-toggle bg-' + this.props.headerBackgroundTheme)}
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        onClick={this.onToggleRealm}
+                        ref={this.state.myRef2}
                       >
-                        <button
-                          type="button"
-                          className="btn btn-light text-secondary dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                          onClick={this.onToggleRealm}
-                          ref={this.state.myRef2}
-                        >
-                          {this.props.realms.map(realm => {
-                            if (parseInt(realm.value, 10) === parseInt(this.props.currentRealm, 10)) {
-                              return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
-                            }
-                            return null;
-                          })}
-                        </button>
-                      </Highlight>
-                      {this.state.realmsOpen && (
-                        <Dropdown
-                          myRef={this.state.myRef2}
-                          onClose={this.onCloseRealm}
-                          className="bg-light text-secondary"
-                        >
-                          <DropdownMenu>
-                            {Array.isArray(this.props.realms) &&
-                              this.props.realms.map(realm => (
-                                <DropdownMenuOption
-                                  key={`header-selrealm-${realm.value}`}
-                                  className="text-nowrap"
-                                  onClick={() => {
-                                    this.onCloseRealm();
-                                    this.props.onRealmSelect(realm.value);
-                                  }}
-                                >
-                                  <span>{realm.label}</span>
-                                </DropdownMenuOption>
-                              ))}
-                          </DropdownMenu>
-                        </Dropdown>
-                      )}
-                    </div>
+                        {this.props.realms.map(realm => {
+                          if (parseInt(realm.value, 10) === parseInt(this.props.currentRealm, 10)) {
+                            return <span key={`header-realm-${realm.value}`}>{realm.label}</span>;
+                          }
+                          return null;
+                        })}
+                      </button>
+                    </Highlight>
+                    {this.state.realmsOpen && (
+                      <Dropdown
+                        myRef={this.state.myRef2}
+                        onClose={this.onCloseRealm}
+                        className="bg-light text-secondary"
+                      >
+                        <DropdownMenu>
+                          {Array.isArray(this.props.realms) &&
+                            this.props.realms.map(realm => (
+                              <DropdownMenuOption
+                                key={`header-selrealm-${realm.value}`}
+                                className="text-nowrap"
+                                onClick={() => {
+                                  this.onCloseRealm();
+                                  this.props.onRealmSelect(realm.value);
+                                }}
+                              >
+                                <span>{realm.label}</span>
+                              </DropdownMenuOption>
+                            ))}
+                        </DropdownMenu>
+                      </Dropdown>
+                    )}
                   </li>
                 )}
                 {Array.isArray(this.props.options) &&
@@ -274,7 +274,7 @@ export class DefaultHeader extends Component {
                       theme="NAV"
                       title={this.props.t({ id: 'rbf.page.header.userMenu.help', defaultMessage: 'User menu' })}
                     >
-                      <button className={classnames("btn", "btn-" + this.props.headerBackgroundTheme)} onClick={this.props.onToggleUser}>
+                      <button className="btn text-white" onClick={this.props.onToggleUser}>
                         <span>{this.props.menuUserOpen ? this.props.accountOpened : this.props.accountClosed}</span>
                       </button>
                     </Highlight>

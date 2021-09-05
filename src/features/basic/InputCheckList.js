@@ -246,7 +246,7 @@ export default class InputCheckList extends Component {
     return (
       <div className="input-check-list">
         <div className="row">
-          <div className="col-xs-w34">
+          <div className="col-xxs-w34">
             <div className="input-group">
               <input
                 label=""
@@ -280,7 +280,7 @@ export default class InputCheckList extends Component {
             </div>
           </div>
           {!multi && (
-            <div className="col-xs-w2">
+            <div className="col-xxs-w2">
               <button className="btn btn-primary" onClick={this.onAddLine}>
                 {this.props.addIcon}
               </button>
@@ -290,7 +290,7 @@ export default class InputCheckList extends Component {
         {this.state.open &&
           this.state.items.map((item, i) => (
             <div className="row" key={`item-${i}`}>
-              <div className="col-xs-w32">
+              <div className="col-xxs-w32">
                 <div className="input-group">
                   <div className="input-group-prepend border-secondary-light rounded-left">
                     <div
@@ -374,10 +374,10 @@ export default class InputCheckList extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-xs-w4" />
-              <div className="col-xs-w2" />
+              <div className="col-xxs-w4" />
+              <div className="col-xxs-w2" />
               {this.state.comm[i] && (
-                <div className="col-xs-w30">
+                <div className="col-xxs-w30">
                   <div className="border border-secondary-light form-group">
                     <textarea
                       name="comment"

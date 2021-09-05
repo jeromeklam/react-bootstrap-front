@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import { Highlight } from '../tour';
-import { DefaultSidebarItem, DefaultSidebarMenu } from './';
+import { HoverObserver } from '../advanced';
+import { DefaultSidebarOption } from './';
 
 const myStyles = {
   position: 'absolute',
@@ -9,8 +12,7 @@ const myStyles = {
   left: '0px',
   right: '0px',
   bottom: '0px',
-  overflowY: 'auto',
-  overflowX: 'hidden',
+  overflow: 'visible',
 };
 
 export default class DefaultSidebar extends Component {
@@ -26,93 +28,131 @@ export default class DefaultSidebar extends Component {
   static defaultProps = {
     onToggleSide: null,
     onOpenSide: null,
-  }
+  };
 
   constructor(props) {
     super(props);
     this.state = {
       menu: 0,
+      moreStyle: {},
+      forced: false,
     };
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.menuIsOpen = this.menuIsOpen.bind(this);
+    this.mouseLeave = this.mouseLeave.bind(this);
+    this.mouseEnter = this.mouseEnter.bind(this);
+    this.noForced = this.noForced.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleClickOutside, true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClickOutside, true);
   }
 
   toggleMenu(id) {
-    const { menu } = this.state;
+    let { menu } = this.state;
     if (menu > 0 && menu === id) {
-      this.setState({ menu: 0 });
-    } else {
-      this.setState({ menu: id });
-      if (!this.props.open && id !== 0) {
-        this.props.onOpenSide();
+      if (menu > 100) {
+        menu = Math.trunc(menu / 10);
+      } else {
+        menu = 0;
       }
+    } else {
+      menu = id;
+    }
+    if (!this.props.open && menu > 0) {
+      this.setState({ moreStyle: { width: '250px' }, forced: true, menu: menu });
+    } else {
+      this.setState({ menu: menu });
+    }
+  }
+
+  noForced() {
+    this.setState({ moreStyle: {}, forced: false });
+  }
+
+  handleClickOutside(event) {
+    const domNode = ReactDOM.findDOMNode(this);
+    if (!domNode || !domNode.contains(event.target)) {   
+      if (this.props.myRef && this.props.myRef.current &&this.props.myRef.current.contains(event.target)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      this.noForced();
+    }
+  }
+
+  menuIsOpen(position) {
+    const { menu } = this.state;
+    if (menu === position) {
+      return true;
+    } else {
+      if (menu > 100) {
+        let parent = Math.trunc(menu / 10);
+        if (parent === position) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  mouseLeave() {
+    this.setState({ moreStyle: {}, forced: false });
+  }
+
+  mouseEnter() {
+    if (!this.props.open) {
+      this.setState({ moreStyle: { width: '250px' }, forced: true });
+    } else {
+      this.setState({ moreStyle: {}, forced: false });
     }
   }
 
   render() {
-    if (!this.props.open && this.state.menu !== 0) {
+    if (!this.props.open && this.state.menu !== 0 && !this.state.forced) {
       this.toggleMenu(0);
     }
     return (
-      <div className="sidebar-wrapper custom-scrollbar" style={myStyles}>
+      <div className="sidebar-wrapper" style={myStyles}>
         {this.props.authenticated && this.props.onToggleSide && (
-          <div className='ml-1'>
-          <button className="btn btn-humburger" onClick={this.props.onToggleSide} id="menu-toggle">
-            <Highlight theme="NAV" title={this.props.t({ id: 'rbf.page.header.menuIcon', defaultMessage: '' })}>
-              {this.props.menuIcon}
-            </Highlight>
-          </button>
+          <div className="ml-1 sidebar-wrapper-menu-hum">
+            <button className="btn btn-humburger" onClick={this.props.onToggleSide} id="menu-toggle">
+              <Highlight theme="NAV" title={this.props.t({ id: 'rbf.page.header.menuIcon', defaultMessage: '' })}>
+                {this.props.menuIcon}
+              </Highlight>
+            </button>
           </div>
         )}
-        <ul className="sidebar-navigation">
-          {this.props.options.map(option => {
-            let label = '' + (option.url || option.position || '');
-            label = label.replace(/\//gi, '-');
-            if (
-              option.role === 'HOME' ||
-              option.role === 'ABOUT' ||
-              (option.role === 'NAV' && (this.props.authenticated || (this.props.authenticated && option.public)))
-            ) {
-              return (
-                <DefaultSidebarItem
-                  key={`option-${label}-${option.position}`}
-                  {...this.props}
-                  option={option}
-                  open={this.props.open}
-                />
-              );
-            } else if (
-              option.role === 'MENU' &&
-              (this.props.authenticated || (this.props.authenticated && option.public))
-            ) {
-              return (
-                <div key={`option-${label}-${option.position}`}>
-                  <DefaultSidebarMenu
-                    toggleMenu={this.toggleMenu}
+        <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+          <div className="sidebar-navigation-wrapper custom-scrollbar" style={{ ...this.state.moreStyle }}>
+            <ul
+              className={classnames(
+                'sidebar-navigation',
+                this.state.forced || this.props.open ? 'sidebar-navigation-open' : 'sidebar-navigation-closed'
+              )}
+            >
+              {this.props.options.map(option => {
+                return (
+                  <DefaultSidebarOption
                     {...this.props}
                     option={option}
-                    {...this.state}
-                    open={this.props.open}
+                    menu={this.state.menu}
+                    toggleMenu={this.toggleMenu}
+                    menuIsOpen={this.menuIsOpen}
+                    noForced={this.noForced}
+                    level={1}
+                    open={this.props.open || this.state.forced}
                   />
-                  {this.props.open &&
-                    this.state.menu === option.position &&
-                    option.options.map(option2 => {
-                      let label2 = '' + (option2.url || option2.position || '');
-                      label2 = label2.replace(/\//gi, '-');
-                      return (
-                        <DefaultSidebarItem
-                          className="menu-option"
-                          key={`option-${label2}-${option2.position}`}
-                          {...this.props}
-                          option={option2}
-                        />
-                      );
-                    })}
-                </div>
-              );
-            }
-            return null;
-          })}
-        </ul>
+                );
+              })}
+            </ul>
+          </div>
+        </HoverObserver>
       </div>
     );
   }

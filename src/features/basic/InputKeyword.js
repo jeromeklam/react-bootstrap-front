@@ -98,7 +98,7 @@ export default class InputKeyword extends Component {
   render() {
     let open = this.state.listDD && this.state.listDD.length > 0;
     return (
-      <Col size={{ xs: 18, md: 6, lg: 6 }} className="input-keyword">
+      <Col size={{ xxs: 18, xs: 18, md: 6, lg: 6 }} className="input-keyword">
         <div className="input-group" ref={this.state.myRef}>
           <input
             label=""

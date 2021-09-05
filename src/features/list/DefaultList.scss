@@ -1,11 +1,63 @@
-.rbf-list-default-list-right-separator {
-  width: 15px !important;
+.rbf-list-default-list-right-wrapper {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-left: 1px solid theme-color('secondary-light');
+
+  .rbf-list-default-list-right-header {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid theme-color('secondary-light');
+    background-color: theme-color('light');
+
+    .rbf-list-default-list-right-menu {
+      position: absolute;
+      right: 0px;
+      top: 4px;
+      margin-right: 5px;
+      line-height: 36px;
+    }
+  }
+  .rbf-list-default-list-right-content {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: calc(100% - 50px) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }
-.rbf-list-default-list-right-menu {
-  width: 70px !important;
+.container-xxs {
+  .d-xxs-hidden {
+    display: none !important;
+  }
+  .rbf-list-default-list-right-header {
+    height: 100px;
+  }
+  .rbf-list-default-list-right-content {
+    top: 100px;
+  }
 }
-.rbf-list-default-list-right-content {
-  width: calc(100% - 85px) !important;
+.container-xs {
+  .rbf-list-default-list-right-header {
+    height: 100px;
+  }
+  .rbf-list-default-list-right-content {
+    top: 100px;
+  }
+}
+.default-list-list {
+  z-index: 701;
+}
+.default-list-right {
+  z-index: 700;
 }
 .list-inset {
   position: absolute;

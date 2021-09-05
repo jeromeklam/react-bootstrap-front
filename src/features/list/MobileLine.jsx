@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { ActionButton, MobileLineCol, getCardTitle } from './';
 import { HoverObserver } from '../advanced';
-import { getObjectmemberValue } from '../helpers';
-import { Row } from '../grid';
+import { getObjectmemberValue, isMobileDevice } from '../helpers';
 import { TouchHandler } from '../advanced';
 
 const duration = 600;
@@ -28,6 +27,7 @@ export class MobileLine extends Component {
   static propTypes = {
     className: PropTypes.string,
     cols: PropTypes.element.isRequired,
+    currentFlipped: PropTypes.number,
     hideMenu: PropTypes.bool,
     id: PropTypes.string.isRequired,
     item: PropTypes.element.isRequired,
@@ -36,15 +36,18 @@ export class MobileLine extends Component {
     selectable: PropTypes.bool,
     onSelect: PropTypes.func,
     forSelectOne: PropTypes.bool,
+    setCurrentFlipped: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
+    currentFlipped: 0,
     hideMenu: false,
     mobile: true,
     selectable: true,
     onSelect: null,
     forSelectOne: false,
+    setCurrentFlipped: () => {},
   };
 
   constructor(props) {
@@ -60,18 +63,26 @@ export class MobileLine extends Component {
   }
 
   mouseLeave() {
-    this.setState({ flipped: false });
+    if (!isMobileDevice()) {
+      this.props.setCurrentFlipped(0);
+      this.setState({ flipped: false });
+    }
   }
 
   mouseEnter() {
-    this.setState({ flipped: true });
+    if (!isMobileDevice()) {
+      this.props.setCurrentFlipped(this.props.item.id);
+      this.setState({ flipped: true });
+    }
   }
 
   openMenu() {
+    this.props.setCurrentFlipped(this.props.item.id);
     this.setState({ flipped: true });
   }
 
   closeMenu() {
+    this.props.setCurrentFlipped(0);
     this.setState({ flipped: false });
   }
 
@@ -106,14 +117,29 @@ export class MobileLine extends Component {
           this.props.fClassName && this.props.fClassName(this.props.item)
         )}
       >
-        <div className="col-xs-w36">
+        <div className="col-xxs-w36">
           <div
-            className="card shadow-sm m-2"
+            className="card"
             onClick={ev => {
-              if (this.props.mobile) {
-                this.handleDoubleClick(ev);
+              if (this.props.forSelectOne) {
+                this.props.onSelect(this.props.item);
               } else {
-                this.props.onClick(this.props.item);
+                if (isMobileDevice()) {
+                  if (!this.props.mobile) {
+                    this.closeMenu();
+                    this.props.onClick(this.props.item);
+                  } else {
+                    if (this.props.item.id === this.props.currentFlipped) {
+                      this.closeMenu();
+                      this.handleDoubleClick(ev);
+                    } else {
+                      this.closeMenu();
+                      this.props.onClick(this.props.item);
+                    }
+                  }
+                } else {
+                  this.props.onClick(this.props.item);
+                }
               }
             }}
           >
@@ -121,9 +147,8 @@ export class MobileLine extends Component {
               <TouchHandler
                 className={classnames(
                   'card-header rbf-list-mobile-line-header',
-                  this.state.flipped || this.props.inlineOpenedId === this.props.id
-                    ? 'text-white bg-primary-light'
-                    : 'text-secondary bg-white'
+                  this.props.inlineOpenedId === this.props.id && 'bg-selected',
+                  this.props.item.id === this.props.currentFlipped ? 'text-white bg-primary-light' : 'text-secondary'
                 )}
                 swipRight={this.openMenu}
                 swipLeft={this.closeMenu}
@@ -151,54 +176,75 @@ export class MobileLine extends Component {
                 <span className="rbf-list-mobile-line-header-title">
                   {getCardTitle(this.props.cols, this.props.item)}
                 </span>
-                {this.props.mobile && (
-                  <CSSTransition in={this.state.flipped} timeout={duration}>
+                {(this.props.mobile || isMobileDevice()) && (
+                  <CSSTransition
+                    in={this.state.flipped && this.props.item.id === this.props.currentFlipped}
+                    timeout={duration}
+                  >
                     {state => (
-                      <ul
+                      <div
                         style={{ ...navstyle, ...navStyles[state] }}
-                        className="nav nav-pills rbf-list-mobile-line-header-nav"
+                        className="nav btn-group rbf-list-mobile-line-header-nav"
                       >
                         {this.props.inlineActions &&
-                          this.props.inlineActions.map(action => (
-                            <li className="nav-item" key={action.name}>
+                          this.props.inlineActions.map(action => {
+                            if (action.role === 'DETAIL' || action.role === 'SUMMARY') {
+                              return null;
+                            }
+                            return (
                               <ActionButton
+                                key={action.name}
                                 action={action}
                                 item={this.props.item}
                                 className={classnames('btn-inline', action.theme && `btn-${action.theme}`)}
                               />
-                            </li>
-                          ))}
-                        {!this.props.hideMenu && (
-                          <li className="nav-item" key="openclose">
-                            <button
-                              type="button"
-                              disabled={false}
-                              title=""
-                              className={classnames('btn btn-inline')}
-                              onClick={ev => {
-                                if (ev) {
-                                  ev.preventDefault();
-                                  ev.stopPropagation();
-                                }
-                                this.setState({ flipped: !this.state.flipped });
-                              }}
-                            >
-                              <span className="rbf-list-mobile-line-3dots">...</span>
-                            </button>
-                          </li>
+                            );
+                          })}
+                        {false && !this.props.hideMenu && (
+                          <button
+                            key="openclose"
+                            type="button"
+                            disabled={false}
+                            title=""
+                            className={classnames('btn btn-inline btn-light')}
+                            onClick={ev => {
+                              if (ev) {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                              }
+                              this.setState({ flipped: !this.state.flipped });
+                            }}
+                          >
+                            <span className="rbf-list-mobile-line-3dots text-secondary">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                role="img"
+                                style={{ verticalAlign: '-0.125em' }}
+                                width="1em"
+                                height="1em"
+                                preserveAspectRatio="xMidYMid meet"
+                                viewBox="0 0 1000 1000"
+                              >
+                                <path d="M654 501l346 346l-154 154l-346-346l-346 346L0 847l346-346L0 155L154 1l346 346L846 1l154 154z" />
+                              </svg>
+                            </span>
+                          </button>
                         )}
-                      </ul>
+                      </div>
                     )}
                   </CSSTransition>
                 )}
               </TouchHandler>
             </HoverObserver>
-            <div className="card-body p-2">
-              <Row>
+            <div className="card-body pl-2 pr-2 pt-0 pb-3">
+              <TouchHandler onTap={e => this.handleDoubleClick(e)} onDoubleTap={e => this.handleDoubleClick(e)}>
                 {this.props.cols.map((oneCol, i) => {
                   if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
-                    const line = { ...oneCol, id: this.props.id };
                     const content = getObjectmemberValue(this.props.item, oneCol.col);
+                    if (oneCol.card.hideEmpty && !content) {
+                      return null;
+                    }
+                    const line = { ...oneCol, id: this.props.id };
                     const first = i === 0;
                     const last = i === this.props.cols.length - 1;
                     return (
@@ -214,7 +260,7 @@ export class MobileLine extends Component {
                   }
                   return null;
                 })}
-              </Row>
+              </TouchHandler>
             </div>
           </div>
         </div>

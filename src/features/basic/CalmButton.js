@@ -79,7 +79,7 @@ export default class CalmButton extends Component {
           <>
             {this.state.executing && this.props.loader && (
               <div className="calm-button-loader pr-1 text-light">
-                <SmLoading9x9 width={24} height={24} />
+                <SmLoading9x9 width={20} height={20} />
               </div>
             )}
             {this.props.children || ''}

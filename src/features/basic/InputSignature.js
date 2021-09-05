@@ -6,29 +6,18 @@ import SignaturePad from "signature_pad";
 export default function InputSignature(props) {
   const [signURL, setSignURL] = useState(null);
   const [data, setData] = useState(null);
-  const [showC, setShowC] = useState(false);
+  const [showSignPad, setShowSignPad] = useState(false);
   const canvasEl = useRef(null);
   const wrapper = useRef(null);
   const [canvasHeight, setCanvasHeight] = useState("500");
-  const [canvasWidth, setCanvasWidth] = useState("600");
+  const [canvasWidth, setCanvasWidth] = useState("400");
+  const willSign = !["ABSEN", "REFUS"].includes(props.enum_esign);
   let signaturePad;
 
-  const handleShow = () => {
-    setShowC(true);
-  };
-
   useEffect(() => {
-    if (showC) {
-      setCanvasHeight(wrapper.current.offsetHeight);
-      setCanvasWidth(wrapper.current.offsetWidth);
-    }
-  }, [showC]);
-
-  useEffect(() => {
-    if (props.signature) {
-      setSignURL(props.signature);
-    }
-    if (showC) {
+    if (showSignPad) {
+      setCanvasHeight(wrapper.current.offsetHeight * 0.9);
+      setCanvasWidth(wrapper.current.offsetWidth * 0.9);
       signaturePad = new SignaturePad(canvasEl.current);
       if (data) {
         signaturePad.fromData(data);
@@ -36,25 +25,54 @@ export default function InputSignature(props) {
     }
   });
 
+  useEffect(() => {
+    if (signURL) {
+      handleChange(signURL);
+    }
+  }, [signURL]);
+
+  useEffect(() => {
+    if (props.value) {
+      setSignURL("data:image/png;base64," + props.value);
+    }
+  }, [props.value]);
+
+  useEffect(() => {
+    if (!willSign) {
+      setSignURL(null);
+      sendChangeValue(null);
+    }
+  }, [props.enum_esign]);
+
+  const handleChange = (data) => {
+    const str = data.split(",")[1];
+    sendChangeValue(str);
+  };
+
   const handleSave = () => {
     setSignURL(signaturePad.toDataURL());
     setData(signaturePad.toData());
-    setShowC(false);
-  };
-
-  const handleChange = (ev) => {
-    props.onChange(ev);
+    setShowSignPad(false);
   };
 
   const handleClear = () => {
     signaturePad.clear();
     setData(null);
     setSignURL(null);
-    setShowC(false);
+    setShowSignPad(false);
+    sendChangeValue(null);
   };
 
+  const sendChangeValue = (data) =>
+    props.onChange({
+      target: {
+        name: props.name,
+        value: data,
+      },
+    });
+
   const handleClose = () => {
-    setShowC(false);
+    setShowSignPad(false);
     signaturePad = false;
   };
 
@@ -73,19 +91,10 @@ export default function InputSignature(props) {
 
   return (
     <>
-      {!showC ? (
-        <button
-          type="button"
-          className="btn text-success btn-input btn-outline-secondary bg-light"
-          onClick={handleShow}
-        >
-          <span className="text-secondary">Signature</span>
-          <br />
-          <img onCHange={handleChange} src={signURL} className="img-canvas" />
-        </button>
-      ) : (
+      {showSignPad ? (
         <ResponsiveModalInner
           onClose={handleClose}
+          onChange={handleChange}
           buttons={buttons}
           height="100%"
           {...props}
@@ -98,6 +107,18 @@ export default function InputSignature(props) {
             ></canvas>
           </div>
         </ResponsiveModalInner>
+      ) : (
+        <>
+          {willSign && (
+            <button
+              type="button"
+              className="sign-btn btn text-success btn-input btn-outline-secondary bg-light"
+              onClick={() => setShowSignPad(true)}
+            >
+              <img src={signURL} className="img-canvas" />
+            </button>
+          )}
+        </>
       )}
     </>
   );

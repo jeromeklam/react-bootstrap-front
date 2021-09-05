@@ -253,12 +253,12 @@ export default class InputTextarea extends Component {
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row')}>
         {this.props.label !== '' && (
-          <label htmlFor={this.props.id} className={classnames(!this.props.labelTop && 'col-xs-w6 col-form-label')}>
+          <label htmlFor={this.props.id} className={classnames(!this.props.labelTop && 'col-xxs-w6 col-form-label')}>
             {this.props.label}
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className={classnames(!this.props.labelTop && 'col-xs-w30')}>
+        <div className={classnames(!this.props.labelTop && 'col-xxs-w30')}>
           <div
             className={classnames('input-group', (this.props.error || this.props.warning) && 'is-invalid')}
             style={myStyle}

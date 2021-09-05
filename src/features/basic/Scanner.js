@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Quagga from "@ericblade/quagga2";
 import { beep } from "../helpers";
 
-export default function Scanner({ onDetected }) {
+export default function Scanner({ onClose, onDetected }) {
   const config = {
     inputStream: {
       type: "LiveStream",
@@ -42,7 +42,9 @@ export default function Scanner({ onDetected }) {
   useEffect(() => {
     Quagga.init(config, (err) => {
       if (err) {
+        onClose()
         console.log(err, "error msg");
+        return
       }
       Quagga.start();
     });

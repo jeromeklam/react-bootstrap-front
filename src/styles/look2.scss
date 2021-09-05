@@ -155,19 +155,6 @@ svg.text-warning.inline-action:hover {
   }
 }
 
-.btn-inline {
-  &.btn {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-  svg {
-    height: 1rem !important;
-    width: 1rem !important;
-  }
-}
-
 .modal-body {
   padding: 1em;
 }
@@ -258,8 +245,6 @@ svg.text-warning.inline-action:hover {
 
 .inline-list {
   color: theme-color('dark');
-  padding-left: 10px;
-  padding-right: 10px;
 
   svg.inline-action:hover {
     cursor: pointer;
@@ -268,32 +253,26 @@ svg.text-warning.inline-action:hover {
       fill: theme-color('secondary-light') !important;
     }
   }
-  .row-title {
-    background-color: transparent;
-    color: theme-color('secondary');
-    border-bottom: 1px solid;
-    border-color: theme-color('secondary');
-  }
-  .row-title span {
-    font-weight: bold;
-  }
   .row-line {
     min-height: 30px;
     line-height: 30px;
     border-bottom: 1px solid;
     border-color: theme-color('secondary-light');
   }
-  .row-line.row-even {
-    background: transparent;
+  .row-title {
+    background-color: theme-color('secondary-light');
+
+    .col-title:after {
+      content: ' ';
+      position: absolute;
+      border-right: 1px solid theme-color('light');
+      top: 5px;
+      bottom: 5px;
+      right: 0px;
+    }
   }
-  .row-line.row-even:not(.row-title):hover {
-    background: theme-color('primary-light');
-  }
-  .row-line.row-odd {
-    background: transparent;
-  }
-  .row-line.row-odd:not(.row-title):hover {
-    background: theme-color('primary-light');
+  .row-title span {
+    font-weight: bold;
   }
   svg.inline-action:hover {
     cursor: pointer;
@@ -306,8 +285,22 @@ svg.text-warning.inline-action:hover {
   .btn-group {
     position: absolute;
     right: 10px;
-    margin-top: 3px;
   }
+}
+// generic odd / even
+.row-line.row-even {
+  background: transparent;
+}
+.row-line.row-even:not(.row-title):hover {
+  background: theme-color('primary-light');
+   color: theme-color('secondary') !important;
+}
+.row-line.row-odd {
+  background: transparent;
+}
+.row-line.row-odd:not(.row-title):hover {
+  background: theme-color('primary-light');
+   color: theme-color('secondary') !important;
 }
 
 .list-group-item {
@@ -361,13 +354,46 @@ svg.text-warning.inline-action:hover {
 }
 
 /* Couleur de fond spécifique des lignes des listes */
-.row-line-warning .col-highlighter{
-  background-color: theme-color('warning');
+.row-line-inactive .rbf-list-mobile-line-header-highlighter,
+.row-line-inactive .col-highlighter {
+  background-color: theme-color('inactive') !important;
 }
-
+.row-line-inactive-light .rbf-list-mobile-line-header-highlighter,
+.row-line-inactive-light .col-highlighter {
+  background-color: theme-color('gray') !important;
+}
 /* Couleur de fond spécifique des lignes des listes */
-.row-line-danger .col-highlighter{
-  background-color: theme-color('danger');
+.row-line-warning .rbf-list-mobile-line-header-highlighter,
+.row-line-warning .col-highlighter {
+  background-color: theme-color('warning') !important;
+}
+.row-line-warning-light .rbf-list-mobile-line-header-highlighter,
+.row-line-warning-light .col-highlighter {
+  background-color: theme-color('warning-light') !important;
+}
+.row-line-danger .rbf-list-mobile-line-header-highlighter,
+.row-line-danger .col-highlighter {
+  background-color: theme-color('danger') !important;
+}
+.row-line-danger-light .rbf-list-mobile-line-header-highlighter,
+.row-line-danger-light .col-highlighter {
+  background-color: theme-color('danger-light') !important;
+}
+.row-line-secondary .rbf-list-mobile-line-header-highlighter,
+.row-line-secondary .col-highlighter {
+  background-color: theme-color('secondary') !important;
+}
+.row-line-secondary-light .rbf-list-mobile-line-header-highlighter,
+.row-line-secondary-light .col-highlighter {
+  background-color: theme-color('secondary-light') !important;
+}
+.row-line-primary .rbf-list-mobile-line-header-highlighter,
+.row-line-primary .col-highlighter {
+  background-color: theme-color('primary') !important;
+}
+.row-line-primary-light .rbf-list-mobile-line-header-highlighter,
+.row-line-primary-light .col-highlighter {
+  background-color: theme-color('primary') !important;
 }
 
 /* On force la couleur des icones dans les colonnes des listes */
@@ -500,6 +526,9 @@ select:not([disabled]) {
     no-repeat 95% 50%;
   background-position-x: right;
 }
+select[type='text']:disabled {
+  background: theme-color('light') !important;
+}
 .btn-humburger {
   color: theme-color('secondary');
 }
@@ -543,8 +572,48 @@ input {
   }
 }
 
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem theme-color('light') !important;
+}
+
+input[type='text']:disabled {
+  background: theme-color('light');
+}
+
 .input-group-prepend {
-  select {
-    background-color: white !important;
+  svg {
+    width: 1rem !important;
+    height: 1rem !important;
   }
+  select {
+    padding: 0.2rem 0.2rem;
+  }
+  .input-group-text {
+    padding: 2px;
+  }
+  .btn {
+    padding: 2px;
+  }
+}
+.input-group-append {
+  svg {
+    width: 1rem !important;
+    height: 1rem !important;
+    display: list-item;
+    margin: auto;
+  }
+  .btn {
+    padding: 2px;
+    min-width: 28px;
+    display: flex;
+  }
+}
+
+.form-group {
+  overflow: hidden;
+}
+.form-group label {
+  margin-bottom: 0.1rem;
+  word-break: break-all;
+  white-space: nowrap;
 }

@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
-import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, LoadEmpty, DefaultRightHeader } from './';
+import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, DefaultRightHeader } from './';
 import { getSizeFromWidth, isInViewPort } from '../helpers';
+import { Row, Col } from '../grid';
 import { DefaultPanel } from '../filter';
-import { WidthObserver } from '../advanced';
+import { WidthObserver, TouchHandler } from '../advanced';
+import { ShortcutBar } from '../shortcut';
 import { ActionButton } from './';
 
 const duration = 600;
@@ -53,15 +55,6 @@ const transitionStyles = {
   exited: { right: '-400px' },
 };
 
-const titleLineStyle = {
-  left: '0px',
-  position: 'absolute',
-  right: '0px',
-  top: '50px',
-  zIndex: '700',
-  transition: `all ${duration}ms `,
-};
-
 const titleStyle = {
   height: '40px',
   lineHeight: '40px',
@@ -84,8 +77,7 @@ let listTransitionStyles = {
 };
 
 const inlineStyle = {
-  overflowY: 'scroll',
-  overflowX: 'hidden',
+  overflow: 'hidden',
   right: '-1200px',
   width: '1200px',
   bottom: '0px',
@@ -100,10 +92,7 @@ let inlineTransitionStyles = {
   entered: { right: '0px' },
   exiting: { right: '-1200px' },
   exited: { right: '-1200px' },
-};
-
-const rightInlineButtonsStyle = {
-  position: 'fixed',
+  form: { right: '0px', left: '0px', width: '100%' },
 };
 
 export default class DefaultList extends Component {
@@ -115,12 +104,14 @@ export default class DefaultList extends Component {
     titleMultiline: PropTypes.bool,
     loadMorePending: PropTypes.bool.isRequired,
     onSetFiltersAndSort: PropTypes.func.isRequired,
+    onUpdateShortcuts: PropTypes.func,
     inlineActions: PropTypes.element.isRequired,
     inlineOpenedId: PropTypes.number,
     inlineComponent: PropTypes.element,
     inlineOpenedItem: PropTypes.element,
     mode: PropTypes.string,
     closeIcon: PropTypes.element,
+    oddEven: PropTypes.bool,
   };
   static defaultProps = {
     currentInline: '',
@@ -128,19 +119,26 @@ export default class DefaultList extends Component {
     inlineOpenedId: 0,
     inlineComponent: null,
     inlineOpenedItem: null,
+    onUpdateShortcuts: () => {},
     mode: 'inline',
     closeIcon: null,
     titleMultiline: false,
+    oddEven: true,
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.inlineOpenedId !== state.inlineOpenedId || props.currentItem !== state.currentItem) {
+    if (
+      props.inlineOpenedId !== state.inlineOpenedId ||
+      props.currentItem !== state.currentItem ||
+      props.mode !== state.mode
+    ) {
       const contentSize = getSizeFromWidth(state.width);
       const splited = props.inlineOpenedId && parseInt(props.inlineOpenedId, 10) > 0;
       const listSize = splited ? getSizeFromWidth(state.width - 1200) : contentSize;
       const dataSize = splited ? getSizeFromWidth(1200) : 'none';
       return {
-        splited: splited,
+        splited: props.inlineComponent !== null,
+        mode: props.mode,
         contentSize: contentSize,
         listSize: listSize,
         dataSize: dataSize,
@@ -158,12 +156,15 @@ export default class DefaultList extends Component {
       dataSize: 'none',
       panelOpen: false,
       currentItem: props.currentItem,
-      splited: props.inlineOpenedId && parseInt(props.inlineOpenedId, 10) > 0,
+      splited: props.inlineComponent !== null,
+      mode: props.mode,
+      currentFlipped: 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
     this.handleObserver = this.handleObserver.bind(this);
     this.toggleSplit = this.toggleSplit.bind(this);
+    this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
   }
 
   componentDidMount() {
@@ -188,6 +189,10 @@ export default class DefaultList extends Component {
         }
       } catch (ex) {}
     }
+  }
+
+  setCurrentFlipped(id) {
+    this.setState({ currentFlipped: id });
   }
 
   toggleSplit() {
@@ -260,19 +265,38 @@ export default class DefaultList extends Component {
           col.size.xl = min;
         }
       } else {
-        col.size = { xs: col.size, sm: col.size, md: col.size, lg: col.size, xl: col.size };
+        col.size = { xxs: col.size, xs: col.size, sm: col.size, md: col.size, lg: col.size, xl: col.size };
+      }
+      if (col.card && !col.card.position) {
+        col.card.position = 99;
       }
     });
     dispCols = dispCols.filter(col => !col.hidden);
+    let mobileCols = dispCols.filter(col => col.card);
+    mobileCols.sort((a, b) => {
+      if ((a.card.position && b.card.position && a.card.position > b.card.position) || !a.card.position) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
     let locTitleStyle = titleStyle;
     let locListStyle = listStyle;
+    let counter = 1;
     return (
       <div style={fullDiv}>
         <WidthObserver>
           {({ mediaSize }) => {
             const globalSize = mediaSize;
-            //console.log('size', globalSize);
             switch (globalSize) {
+              case 'xs':
+                listTransitionStyles.entering.right = '360px';
+                listTransitionStyles.entered.right = '360px';
+                inlineTransitionStyles.exiting.right = '-360px';
+                inlineTransitionStyles.exited.right = '-360px';
+                inlineStyle.width = '360px';
+                inlineStyle.right = '-360px';
+                break;
               case 'sm':
                 listTransitionStyles.entering.right = '624px';
                 listTransitionStyles.entered.right = '624px';
@@ -328,137 +352,222 @@ export default class DefaultList extends Component {
                   <CSSTransition in={this.state.splited} timeout={duration}>
                     {state => (
                       <div className="list-inset">
-                        <div
-                          className="default-list-list list-inset"
-                          style={{ ...locListStyle, ...listTransitionStyles[state] }}
-                        >
-                          <WidthObserver>
-                            {({ mediaSize }) => {
-                              let lHeaderStyles = { height: '0px', display: 'none' };
-                              let lListStyles = { top: '0px', height: '100%' };
-                              if (mediaSize !== 'xs') {
-                                if (this.props.titleMultiline) {
-                                  lHeaderStyles = { height: '80px', display: 'block' };
-
-                                  lListStyles = { top: '80px', height: 'calc(100% - 80px)' };
-                                  locTitleStyle = {
-                                    ...titleStyle,
-                                    height: '80px',
-                                    lineHeight: '40px',
-                                  };
-                                } else {
-                                  lHeaderStyles = { height: '40px', display: 'block' };
-                                  lListStyles = { top: '40px', height: 'calc(100% - 40px)' };
-                                  locTitleStyle = {
-                                    ...titleStyle,
-                                    height: '40px',
-                                    lineHeight: '40px',
-                                  };
-                                }
-                              }
-                              return (
-                                <div className="list-inset">
-                                  <div
-                                    className="default-list-list-header overflow-hidden"
-                                    style={{ ...lHeaderStyles }}
-                                  >
-                                    <DefaultTitle
-                                      style={locTitleStyle}
-                                      {...this.props}
-                                      cols={dispCols}
-                                      className={'list-' + this.state.listSize}
-                                    />
-                                  </div>
-                                  {this.props.items.length > 0 ? (
-                                    <div
-                                      className="default-list-list-body custom-scrollbar overflowY"
-                                      style={{ ...lListStyles }}
-                                    >
-                                      {this.props.items.map(item => (
-                                        <div key={item.id}>
-                                          {mediaSize === 'xs' ? (
-                                            <MobileLine
-                                              {...this.props}
-                                              id={item.id}
-                                              item={item}
-                                              hideMenu={true}
-                                              mobile={false}
-                                            />
-                                          ) : (
-                                            <DefaultLine {...this.props} id={item.id} item={item} cols={dispCols} />
-                                          )}
-                                        </div>
-                                      ))}
-                                      <div ref={loadingRef => (this.loadingRef = loadingRef)} style={footerstyle}>
-                                        <DefaultFooter {...this.props} />
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <DefaultFooter {...this.props} />
-                                  )}
-                                </div>
-                              );
-                            }}
-                          </WidthObserver>
-                        </div>
-                        {this.props.mode === 'right' && (
+                        {this.state.mode !== 'form' && (
                           <div
-                            className="default-list-right custom-scrollbar"
-                            style={{ ...inlineStyle, ...inlineTransitionStyles[state] }}
+                            className="default-list-list list-inset"
+                            style={{
+                              ...locListStyle,
+                              ...listTransitionStyles[state],
+                            }}
                           >
                             <WidthObserver>
-                              <div className="row">
-                                <div className="rbf-list-default-list-right-separator text-center" />
-                                <div className="rbf-list-default-list-right-content p-0 text-secondary h-100">
-                                  <div className="row">
-                                    <div className="col-xs-w36">
-                                      <DefaultRightHeader {...this.props} />
-                                    </div>
-                                  </div>
-                                  <div className="row">
-                                    <div className="col-xs-w36">
-                                      <div className="custom-scrollbar p-0">{this.props.inlineComponent}</div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="rbf-list-default-list-right-menu text-center">
-                                  <nav className="text-center pt-2" style={rightInlineButtonsStyle}>
-                                    <button
-                                      type="button"
-                                      title="close"
-                                      className={classnames('btn btn-left', 'btn-secondary')}
-                                      onClick={evt => {
-                                        evt.stopPropagation();
-                                        this.props.onClick(null);
-                                      }}
+                              {({ mediaSize }) => {
+                                let lHeaderStyles = { height: '0px', display: 'none' };
+                                let lListStyles = { top: '0px', height: '100%' };
+                                if (mediaSize !== 'xxs' && mediaSize !== 'xs') {
+                                  if (this.props.titleMultiline) {
+                                    lHeaderStyles = { height: '72px', display: 'block' };
+                                    lListStyles = { top: '72px', height: 'calc(100% - 72px)' };
+                                    locTitleStyle = {
+                                      ...titleStyle,
+                                      height: '72px',
+                                      lineHeight: '36px',
+                                    };
+                                  } else {
+                                    lHeaderStyles = { height: '36px', display: 'block' };
+                                    lListStyles = { top: '36px', height: 'calc(100% - 36px)' };
+                                    locTitleStyle = {
+                                      ...titleStyle,
+                                      height: '36px',
+                                      lineHeight: '36px',
+                                    };
+                                  }
+                                }
+                                return (
+                                  <div className="list-inset">
+                                    <div
+                                      className="default-list-list-header overflow-hidden"
+                                      style={{ ...lHeaderStyles }}
                                     >
-                                      {this.props.closeIcon}
-                                    </button>
-                                    {this.props.inlineActions &&
-                                      this.props.inlineActions.map((action, i) => (
-                                        <div key={`action-${i}`}>
-                                          {(action.role === 'OTHER' || action.role === 'DETAIL') && (
-                                            <ActionButton
-                                              action={action}
-                                              item={this.props.currentItem}
-                                              className={classnames(
-                                                'btn btn-left',
-                                                action.name === this.props.currentInline
-                                                  ? 'btn-primary'
-                                                  : action.theme
-                                                  ? `btn-${action.theme}`
-                                                  : 'btn-secondary'
-                                              )}
-                                            />
-                                          )}
+                                      <DefaultTitle
+                                        style={locTitleStyle}
+                                        {...this.props}
+                                        cols={dispCols}
+                                        className={'list-' + this.state.listSize}
+                                      />
+                                    </div>
+                                    {this.props.items.length > 0 ? (
+                                      <div
+                                        className="default-list-list-body custom-scrollbar overflowY"
+                                        style={{ ...lListStyles }}
+                                      >
+                                        {this.props.items.map(item => (
+                                          <div key={item.id}>
+                                            {mediaSize === 'xxs' || mediaSize === 'xs' ? (
+                                              <MobileLine
+                                                {...this.props}
+                                                id={item.id}
+                                                item={item}
+                                                hideMenu={true}
+                                                mobile={false}
+                                                cols={mobileCols}
+                                                counter={this.props.oddEven ? counter++ : 0}
+                                                currentFlipped={this.state.currentFlipped}
+                                                setCurrentFlipped={this.setCurrentFlipped}
+                                              />
+                                            ) : (
+                                              <DefaultLine
+                                                {...this.props}
+                                                id={item.id}
+                                                item={item}
+                                                cols={dispCols}
+                                                counter={this.props.oddEven ? counter++ : 0}
+                                              />
+                                            )}
+                                          </div>
+                                        ))}
+                                        <div ref={loadingRef => (this.loadingRef = loadingRef)} style={footerstyle}>
+                                          <DefaultFooter {...this.props} />
                                         </div>
-                                      ))}
-                                  </nav>
-                                </div>
-                              </div>
+                                      </div>
+                                    ) : (
+                                      <DefaultFooter {...this.props} />
+                                    )}
+                                  </div>
+                                );
+                              }}
                             </WidthObserver>
                           </div>
                         )}
+                        <div
+                          className="default-list-right"
+                          style={{
+                            ...inlineStyle,
+                            ...inlineTransitionStyles[state],
+                          }}
+                        >
+                          <WidthObserver>
+                            {(this.state.splited || this.state.mode === 'right') && (
+                              <div className="rbf-list-default-list-right-wrapper">
+                                <div className="rbf-list-default-list-right-header">
+                                  <Row className="no-gutters h-100">
+                                    <Col size={{ xxs: 36, xs: 36, sm: 12, md: 18, lg: 12 }}>
+                                      <DefaultRightHeader {...this.props} />
+                                    </Col>
+                                    <Col size={{ xxs: 36, xs: 36, sm: 24, md: 18, lg: 24 }}>
+                                      <div className="rbf-list-default-list-right-menu text-center h-100">
+                                        {this.props.currentItem && this.props.rightMode === 'tabs' && (
+                                          <div className="text-center btn-group mr-2">
+                                            {this.props.inlineActions &&
+                                              this.props.inlineActions
+                                                .filter(action => action.role === 'DETAIL' || action.role === 'SUMMARY')
+                                                .map((action, i) => {
+                                                  return (
+                                                    <ActionButton
+                                                      key={`action-${i}`}
+                                                      action={action}
+                                                      item={this.props.currentItem}
+                                                      className={classnames(
+                                                        'btn',
+                                                        action.name === this.props.currentInline
+                                                          ? 'btn-primary'
+                                                          : action.role === 'MODIFY' || action.role === 'DELETE'
+                                                          ? `btn-${action.theme}`
+                                                          : 'btn-light btn-outline-secondary-light text-secondary'
+                                                      )}
+                                                    />
+                                                  );
+                                                })}
+                                          </div>
+                                        )}
+                                        {this.props.currentItem && this.props.rightMode === 'shortcuts' && (
+                                          <div className="text-center btn-group mr-2 d-xxs-hidden">
+                                            <ShortcutBar
+                                              shortcuts={this.props.shortcuts}
+                                              onToggle={this.props.onUpdateShortcuts}
+                                            />
+                                          </div>
+                                        )}
+                                        {this.props.onPrevious && this.props.onNext && this.props.currentItem && (
+                                          <div className="text-center btn-group mr-2">
+                                            <ActionButton
+                                              key={`action-previous`}
+                                              action={{
+                                                label: 'previous',
+                                                onClick: this.props.onPrevious,
+                                                disabled: false,
+                                                icon: this.props.previousIcon,
+                                              }}
+                                              item={this.props.currentItem}
+                                              className="btn btn-light btn-outline-secondary-light text-secondary"
+                                            />
+                                            <ActionButton
+                                              key={`action-next`}
+                                              action={{
+                                                label: 'next',
+                                                onClick: this.props.onNext,
+                                                disabled: false,
+                                                icon: this.props.nextIcon,
+                                              }}
+                                              item={this.props.currentItem}
+                                              className="btn btn-light btn-outline-secondary-light text-secondary"
+                                            />
+                                          </div>
+                                        )}
+                                        {this.props.currentItem && (
+                                          <div className="text-center btn-group">
+                                            {this.props.inlineActions &&
+                                              this.props.inlineActions
+                                                .filter(action => action.role !== 'DETAIL' && action.role !== 'SUMMARY')
+                                                .map((action, i) => {
+                                                  return (
+                                                    <ActionButton
+                                                      key={`action-${i}`}
+                                                      action={action}
+                                                      item={this.props.currentItem}
+                                                      className={classnames(
+                                                        'btn',
+                                                        action.name === this.props.currentInline
+                                                          ? 'btn-primary'
+                                                          : `btn-${action.theme}`
+                                                      )}
+                                                    />
+                                                  );
+                                                })}
+                                            <button
+                                              type="button"
+                                              title="close"
+                                              className={classnames('btn', 'btn-secondary')}
+                                              onClick={evt => {
+                                                evt.stopPropagation();
+                                                this.props.onClick(null);
+                                              }}
+                                            >
+                                              {this.props.closeIcon}
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="rbf-list-default-list-right-content custom-scrollbar p-0 text-secondary h-100">
+                                  <TouchHandler
+                                    className="h-100 w-100"
+                                    swipRight={this.props.onNext}
+                                    swipLeft={this.props.onPrevious}
+                                  >
+                                    <div className="row">
+                                      <div className="col-xxs-w36">
+                                        <div className="p-2">{this.props.inlineComponent}</div>
+                                      </div>
+                                    </div>
+                                  </TouchHandler>
+                                </div>
+                              </div>
+                            )}
+                          </WidthObserver>
+                        </div>
                       </div>
                     )}
                   </CSSTransition>

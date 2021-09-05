@@ -9,7 +9,7 @@ export const ResponsiveButton = props => (
     <Responsive displayIn={['Laptop', 'Tablet']}>
       <CalmButton
         type="button"
-        className={classnames('btn', `btn-${props.button.theme}`, `btn-outline-${props.button.theme}-light`)}
+        className={classnames('btn', `btn-${props.button.theme}`)}
         disabled={props.button.disabled || false}
         onClick={props.button.function}
         options={props.button.options}
@@ -17,13 +17,13 @@ export const ResponsiveButton = props => (
         optionsOpenMulti={props.button.optionsOpenMulti}
         loader={true}
       >
-        {props.button.name ? <span color="white">{props.button.name}</span> : props.button.icon}
+        {props.button.name ? <span className="no-selector" color="white">{props.button.name}</span> : props.button.icon}
       </CalmButton>
     </Responsive>
     <Responsive displayIn={['Mobile']}>
       <CalmButton
         type="button"
-        className={classnames('btn btn-mobile', `btn-${props.button.theme}`, `btn-outline-${props.button.theme}-light`)}
+        className={classnames('btn btn-mobile', `btn-${props.button.theme}`)}
         disabled={props.button.disabled || false}
         onClick={props.button.function}
         options={props.button.options}
@@ -31,7 +31,7 @@ export const ResponsiveButton = props => (
         optionsOpenMulti={props.button.optionsOpenMulti}
         loader={false}
       >
-        {props.button.icon ? props.button.icon : <span color="white">{props.button.name}</span>}
+        {props.button.icon ? props.button.icon : <span className="no-selector" color="white">{props.button.name}</span>}
       </CalmButton>
     </Responsive>
   </>

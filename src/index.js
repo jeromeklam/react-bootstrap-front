@@ -29,6 +29,7 @@ export { default as InputMask } from "./features/basic/InputMask";
 export { default as InputMonetary } from "./features/basic/InputMonetary";
 export { default as InputPassword } from "./features/basic/InputPassword";
 export { default as InputPicker } from "./features/basic/InputPicker";
+export { default as ButtonPicker } from "./features/basic/ButtonPicker";
 export * from "./features/basic/InputRadio";
 export * from "./features/basic/InputRandomText";
 export { default as InputSelect } from "./features/basic/InputSelect";

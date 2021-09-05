@@ -79,7 +79,7 @@ export default class MobilePage extends Component {
       menuDataOpen: false,
       menuUserOpen: false,
       menuOpened: false,
-      menuGeneral: false, 
+      menuGeneral: false,
     };
     this.onToggleData = this.onToggleData.bind(this);
     this.onToggleUser = this.onToggleUser.bind(this);
@@ -134,7 +134,12 @@ export default class MobilePage extends Component {
               <>
                 <div className="page-root-mobile-content" style={{ ...contentMobileStyles }}>
                   {this.state.menuOpened ? (
-                    <MobileMenu {...this.props} menuGeneral={this.state.menuGeneral} onChangeMenu={this.onChangeMenu} onCloseMenu={this.onCloseMenu} />
+                    <MobileMenu
+                      {...this.props}
+                      menuGeneral={this.state.menuGeneral}
+                      onChangeMenu={this.onChangeMenu}
+                      onCloseMenu={this.onCloseMenu}
+                    />
                   ) : (
                     this.props.children
                   )}

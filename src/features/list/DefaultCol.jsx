@@ -21,7 +21,18 @@ const colstyle = {
   overflow: 'hidden',
 };
 
-export const DefaultCol = (props) => {
+const getContent = (type, content) => {
+  switch (type) {
+    case 'mail':
+      return <a href={`mailto:${content}`}>{content}</a>
+    case 'phone':
+      return <a href={`tel:${content}`}>{content}</a>
+    default:
+      return <span>{content}</span>;
+  }
+};
+
+export const DefaultCol = props => {
   let { content } = props;
   let addClass = '';
   if (props.align !== '') {
@@ -56,8 +67,15 @@ export const DefaultCol = (props) => {
         break;
       }
       case 'datetime': {
+        if (content !== null && content !== '') {
         const event = new Date(content);
-        content = `${event.toLocaleDateString(props.language, optionsDate)} ${event.toLocaleTimeString(props.language, optionsTime)}`;
+            content = `${event.toLocaleDateString(props.language, optionsDate)} ${event.toLocaleTimeString(
+              props.language,
+              optionsTime
+            )}`;
+        } else {
+          content = '';
+        }
         break;
       }
       case 'monetary': {
@@ -105,7 +123,7 @@ export const DefaultCol = (props) => {
           addClass = 'text-center';
         }
         content = `data:image/jpeg;base64,${content}`;
-        content = <img src={content} className="rounded img-thumbnail" alt="" style={{height : "70px"}}/>
+        content = <img src={content} className="rounded img-thumbnail" alt="" style={{ height: '70px' }} />;
         break;
       }
       default:
@@ -120,7 +138,7 @@ export const DefaultCol = (props) => {
   }
   let cols = '';
   if (typeof props.size === 'object') {
-    Object.keys(props.size).forEach((key) => {
+    Object.keys(props.size).forEach(key => {
       if (!isNaN(props.size[key])) {
         cols += ` col-${key}-w${props.size[key]} `;
       } else {
@@ -129,46 +147,38 @@ export const DefaultCol = (props) => {
     });
   } else {
     if (!isNaN(props.size)) {
-      cols = `col-xs-w${props.size}`;
+      cols = `col-xxs-w${props.size}`;
     } else {
-      cols = `col-xs-${props.size}`;
+      cols = `col-xxs-${props.size}`;
     }
   }
   if (typeof props.first !== 'undefined') {
     if (typeof props.first === 'object') {
-      Object.keys(props.first).forEach((key) => {
+      Object.keys(props.first).forEach(key => {
         if (props.first[key]) {
           cols += ` col-${key}-first `;
         }
       });
     } else if (props.first) {
-      cols += ' col-xs-first ';
+      cols += ' col-xxs-first ';
     }
   }
   if (typeof props.last !== 'undefined') {
     if (typeof props.last === 'object') {
-      Object.keys(props.last).forEach((key) => {
+      Object.keys(props.last).forEach(key => {
         if (props.last[key]) {
           cols += ` col-${key}-last `;
         }
       });
     } else if (props.last) {
-      cols += ' col-xs-last ';
+      cols += ' col-xxs-last ';
     }
   }
   if (typeof props.fClassName === 'function') {
     cols += ' ' + props.fClassName(props.item);
   }
   return (
-    <div
-      style={colstyle}
-      className={classnames(
-        cols,
-        'col-vertical-align',
-        addClass,
-        props.className,
-      )}
-    >
+    <div style={colstyle} className={classnames(cols, 'col-vertical-align', addClass, props.className)}>
       {props.selectable ? (
         <div>
           <div
@@ -185,7 +195,7 @@ export const DefaultCol = (props) => {
           <span style={{ marginLeft: '20px' }}>{content}</span>
         </div>
       ) : (
-        <span>{content}</span>
+        getContent(props.type, content)
       )}
     </div>
   );

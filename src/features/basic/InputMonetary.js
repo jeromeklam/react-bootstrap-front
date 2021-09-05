@@ -63,19 +63,31 @@ export default function InputMonetary(props) {
             {props.locked ? props.lockOnIcon : props.lockOffIcon}
           </button>
         )}
-        {props.onMoneySwitch && (
+        {props.onMoneySwitch ? (
           <button
             type="button"
             disabled={props.disabled || props.locked}
             className={classnames('btn btn-input btn-outline-secondary bg-light', props.size && `btn-${props.size}`)}
             onClick={props.onMoneySwitch}
           >
-            {props.inputMoney} {props.swapIcon}
+            {props.moneyIcon ? props.moneyIcon : props.inputMoney} {props.swapIcon}
           </button>
+        ) : (
+          props.moneyIcon && (
+            <button
+              type="button"
+              disabled={true}
+              className={classnames('btn btn-input btn-outline-secondary bg-light', props.size && `btn-${props.size}`)}
+            >
+              {props.moneyIcon}
+            </button>
+          )
         )}
-        <InputGroupText className="border-secondary bg-light">
-          {props.onMoneySwitch ? props.rateValue : props.inputMoney}
-        </InputGroupText>
+        {!props.moneyIcon && (
+          <InputGroupText className="border-secondary bg-light">
+            {props.onMoneySwitch ? props.rateValue : props.inputMoney}
+          </InputGroupText>
+        )}
       </InputGroupAppend>
     </InputGroup>
   );
@@ -86,6 +98,7 @@ InputMonetary.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.element,
   id: PropTypes.string,
+  moneyIcon: PropTypes.element,
   inputMoney: PropTypes.string,
   inputSize: PropTypes.number,
   label: PropTypes.string,
@@ -116,7 +129,8 @@ InputMonetary.defaultProps = {
   disabled: false,
   error: false,
   id: '',
-  inputMoney: 'EUR',
+  moneyIcon: null,
+  inputMoney: '€',
   inputSize: 30,
   label: '',
   labelSize: 6,

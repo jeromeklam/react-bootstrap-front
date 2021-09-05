@@ -50,8 +50,10 @@ export default class MobileList extends Component {
     this.state = {
       prevY: 0,
       panelOpen: false,
+      currentFlipped: 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
+    this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
   }
 
   componentDidMount() {
@@ -72,6 +74,10 @@ export default class MobileList extends Component {
     }
   }
 
+  setCurrentFlipped(id) {
+    this.setState({ currentFlipped: id });
+  }
+
   togglePanel(filters = false, sort = false) {
     if (filters !== false && sort !== false) {
       this.props.onSetFiltersAndSort(filters, sort);
@@ -88,6 +94,22 @@ export default class MobileList extends Component {
   }
 
   render() {
+    let dispCols = this.props.cols;
+    dispCols.forEach(col => {
+      if (col.card && !col.card.position) {
+        col.card.position = 99;
+      }
+    });
+    dispCols = dispCols.filter(col => !col.hidden);
+    let mobileCols = dispCols.filter(col => col.card);
+    mobileCols.sort((a, b) => {
+      if ((a.card.position && b.card.position && a.card.position > b.card.position) || !a.card.position) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    let counter = 1;
     return (
       <div style={datastyle}>
         <MobileHeader {...this.props} onToggleFilter={this.togglePanel} />
@@ -108,7 +130,19 @@ export default class MobileList extends Component {
           <div className="">
             {this.props.items.map(item => {
               const title = item[this.props.mainCol];
-              return <MobileLine {...this.props} key={item.id} id={item.id} item={item} title={title} />;
+              return (
+                <MobileLine
+                  {...this.props}
+                  cols={mobileCols}
+                  counter={this.props.oddEven ? counter++ : 0}
+                  key={item.id}
+                  id={item.id}
+                  item={item}
+                  title={title}
+                  currentFlipped={this.state.currentFlipped}
+                  setCurrentFlipped={this.setCurrentFlipped}
+                />
+              );
             })}
             <div ref={loadingRef => (this.loadingRef = loadingRef)}>
               <MobileFooter {...this.props} />

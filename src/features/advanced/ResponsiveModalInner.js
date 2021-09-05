@@ -42,17 +42,18 @@ const modalStyle = {
 
 const closeStyle = {
   position: 'absolute',
-  right: '20px',
-  top: '5px',
+  right: '10px',
+  top: '2px',
   padding: '5px',
   fontSize: '2rem',
-  fontWeight: '200',
+  margin: '0px',
 };
 
 const titleStyle = {
   position: 'absolute',
   right: '50px',
-  top: '0px',
+  top: '17px',
+  fontWeight: 'bold',
 };
 
 const inlineStyle = {
@@ -69,6 +70,7 @@ export default class ResponsiveModalInner extends Component {
     title: PropTypes.string,
     height: PropTypes.string,
     loader: PropTypes.bool,
+    className: PropTypes.string,
     modalClassName: PropTypes.string,
     closeClassName: PropTypes.string,
     header: PropTypes.element,
@@ -82,6 +84,7 @@ export default class ResponsiveModalInner extends Component {
     title: '',
     height: '',
     loader: false,
+    classeName: 'm-5',
     modalClassName: 'bg-secondary text-light',
     closeClassName: 'text-light',
     header: null,
@@ -140,16 +143,13 @@ export default class ResponsiveModalInner extends Component {
     }
     return (
       <Portal className="backdrop-style" zIndex={zIndex++}>
-        <div className="modal-style modal-opacity bg-secondary-light" style={{ ...bStyles, zIndex: zIndex++ }} />
+        <div className="modal-style modal-opacity bg-light" style={{ ...bStyles, zIndex: zIndex++ }} />
         <div style={{ ...modalStyle, zIndex: zIndex++ }}>
           <Transition in={this.state.show} timeout={100}>
             {state => (
               <WidthObserver zoom={this.props.zoom}>
                 {({ mediaSize }) => (
-                  <div
-                    className={classnames('modal', state)}
-                    style={{ ...defaultStyle, ...transitionStyles[state] }}
-                  >
+                  <div className={classnames('modal', state)} style={{ ...defaultStyle, ...transitionStyles[state] }}>
                     <div
                       className={classnames(
                         'modal-dialog',
@@ -157,90 +157,101 @@ export default class ResponsiveModalInner extends Component {
                         state
                       )}
                     >
-                      <div className="modal-content modal-shadow">
-                        <div
-                          className={classnames('modal-header pb-2', this.props.modalClassName)}
-                          style={{ display: 'initial', minHeight: '58px' }}
-                        >
-                          <div className="row">
-                            <div className="col-xs-w36 p-0">
-                              {this.props.tabs && this.props.tabs.length > 0 && (
-                                <ul className="nav nav-tabs w-100">
-                                  {this.props.tabs &&
-                                    this.props.tabs.map(oneTab => (
-                                      <li key={oneTab.key} data-id={oneTab.key} className="nav-item">
-                                        <button
-                                          className={classnames(
-                                            'nav-link',
-                                            `${this.props.tab}` === `${oneTab.key}` && 'active'
-                                          )}
-                                          onClick={ev => {
-                                            ev.preventDefault();
-                                            ev.stopPropagation();
-                                            this.props.onNavTab(oneTab.key);
-                                          }}
-                                        >
-                                          <>
-                                            {sizeGreater(mediaSize, 'xs') ? oneTab.label : oneTab.shortcut}
-                                            {oneTab.removeable === true && (
-                                              <span
-                                                className="nav-link-inner-btn"
-                                                onClick={ev => {
-                                                  ev.preventDefault();
-                                                  ev.stopPropagation();
-                                                  this.props.onDelTab(oneTab.id);
-                                                }}
-                                              >
-                                                {this.props.delIcon}
-                                              </span>
-                                            )}
-                                          </>
-                                        </button>
-                                      </li>
-                                    ))}
-                                  {this.props.onAddTab && (
-                                    <li key="add-tab" className="nav-item">
+                      <div
+                        className={classnames(
+                          this.props.className,
+                          'modal-content modal-shadow',
+                          this.props.modalBackgroundColor
+                        )}
+                      >
+                        <div className={classnames('modal-header', this.props.modalClassName)}>
+                          {this.props.tabs && this.props.tabs.length > 0 && (
+                            <ul className="nav nav-tabs nav-full">
+                              {this.props.tabs &&
+                                this.props.tabs.map(oneTab => {
+                                  const myKey = oneTab.key ? oneTab.key : oneTab.name;
+                                  if (oneTab.noTab) {
+                                    return false;
+                                  }
+                                  return (
+                                    <li key={myKey} data-id={myKey} className="nav-item">
                                       <button
-                                        className={classnames('nav-link')}
+                                        className={classnames(
+                                          'nav-link',
+                                          `${this.props.tab}` === `${myKey}` && 'active'
+                                        )}
                                         onClick={ev => {
                                           ev.preventDefault();
                                           ev.stopPropagation();
-                                          this.props.onAddTab();
+                                          this.props.onNavTab(myKey);
                                         }}
                                       >
-                                        <span>{this.props.addIcon}</span>
+                                        <>
+                                          {sizeGreater(mediaSize, 'sm')
+                                            ? oneTab.label
+                                            : oneTab.icon
+                                            ? oneTab.icon
+                                            : oneTab.shortcut}
+                                          {oneTab.removeable === true && (
+                                            <span
+                                              className="nav-link-inner-btn"
+                                              onClick={ev => {
+                                                ev.preventDefault();
+                                                ev.stopPropagation();
+                                                this.props.onDelTab(oneTab.id);
+                                              }}
+                                            >
+                                              {this.props.delIcon}
+                                            </span>
+                                          )}
+                                        </>
                                       </button>
                                     </li>
-                                  )}
-                                </ul>
-                              )}
-                              <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
-                                {(sizeGreater(mediaSize, 'xs') ||
-                                  !this.props.tabs ||
-                                  (this.props.tabs && this.props.tabs.length <= 0)) &&
-                                  this.props.title}
-                              </h5>
-                              {this.props.loader ? (
-                                <div className="text-light modal-header-loader">
-                                  <SmLoading9x9 />
-                                </div>
-                              ) : (
-                                <button
-                                  type="button"
-                                  style={closeStyle}
-                                  className={classnames('close', this.props.closeClassName)}
-                                  onClick={ev => {
-                                    if (ev) {
+                                  );
+                                })}
+                              {this.props.onAddTab && (
+                                <li key="add-tab" className="nav-item">
+                                  <button
+                                    className={classnames('nav-link')}
+                                    onClick={ev => {
+                                      ev.preventDefault();
                                       ev.stopPropagation();
-                                    }
-                                    this.props.onClose(ev);
-                                  }}
-                                >
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
+                                      this.props.onAddTab();
+                                    }}
+                                  >
+                                    <span>{this.props.addIcon}</span>
+                                  </button>
+                                </li>
                               )}
+                            </ul>
+                          )}
+                          <h5 className="modal-title" id="exampleModalLabel" style={titleStyle}>
+                            {(sizeGreater(mediaSize, 'xs') ||
+                              !this.props.tabs ||
+                              (this.props.tabs && this.props.tabs.length <= 0)) &&
+                              this.props.title}
+                          </h5>
+                          {sizeGreater(mediaSize, 'xs') && this.props.loader ? (
+                            <div className="text-light modal-header-loader">
+                              <SmLoading9x9 width={20} height={20} />
                             </div>
-                          </div>
+                          ) : (
+                            sizeGreater(mediaSize, 'xs') && (
+                              <button
+                                type="button"
+                                style={closeStyle}
+                                className={classnames('close', this.props.closeClassName)}
+                                onClick={ev => {
+                                  if (ev) {
+                                    ev.stopPropagation();
+                                  }
+                                  this.props.onClose(ev);
+                                }}
+                              >
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            )
+                          )}
                           {this.props.header && <div className="pull-left w-100 pt-3">{this.props.header}</div>}
                         </div>
                         <div

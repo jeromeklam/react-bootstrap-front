@@ -1,10 +1,35 @@
+.sidebar-navigation-wrapper {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  background-color: theme-color('light');
+}
 .sidebar-navigation {
   padding: 0;
   margin: 0;
   list-style-type: none;
   position: relative;
-  /*overflow-y: auto;*/
   margin-bottom: 60px;
+  z-index: 77;
+}
+.sidebar-wrapper-menu-hum {
+  height: 50px;
+  border-bottom: 1px solid theme-color('secondary-light');
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 88;
+  width: calc(100% - 4px);
+  background-color: theme-color('light');
+
+  .btn-humburger {
+    margin-top: 6px;
+  }
 }
 
 .sidebar-navigation li {
@@ -30,7 +55,7 @@
 }
 
 .sidebar-navigation li a {
-  padding: 0px 15px 0px 15px;
+  padding: 0px 0px 0px 15px;
   display: block;
   width: 100%;
   -webkit-transition: color 0.2s ease-in;
@@ -51,7 +76,7 @@
   position: absolute;
 }
 .sidebar-navigation .menu-option {
-  background-color: white;
+  background-color: theme-color('light');
   font-size: 0.9rem;
 }
 .sidebar-navigation li.menu-option,
@@ -59,9 +84,15 @@
   height: 30px;
   line-height: 30px;
 }
-.sidebar-navigation li.menu-option a {
-  margin-left: 18px;
+
+.sidebar-navigation li.menu-option.option-level-2 a {
+  padding-left: 26px;
 }
+
+.sidebar-navigation li.menu-option.option-level-3 a {
+    padding-left: 50px;
+}
+
 .sidebar-navigation li.menu-option a span {
   margin-top: 0px;
   margin-left: 15px;
@@ -151,4 +182,7 @@ i.sidebar-arrow {
 .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+}
+.sidebar-navigation-closed .sidebar-menu-arrow{
+  display: none;
 }

@@ -207,7 +207,7 @@ export default class InputDatetime extends Component {
           <label
             htmlFor={this.props.id}
             className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xxs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -217,7 +217,7 @@ export default class InputDatetime extends Component {
         )}
         <div
           className={classnames(
-            !this.props.labelTop && `col-xs-w${this.props.inputSize}`,
+            !this.props.labelTop && `col-xxs-w${this.props.inputSize}`,
             this.props.error && 'is-invalid',
           )}
         >

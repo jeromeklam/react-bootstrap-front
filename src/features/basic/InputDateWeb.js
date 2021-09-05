@@ -158,7 +158,7 @@ export default class InputDateWeb extends Component {
           <label
             htmlFor={this.props.id}
             className={classnames(
-              !this.props.labelTop && `col-xs-w${this.props.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xxs-w${this.props.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -168,13 +168,20 @@ export default class InputDateWeb extends Component {
         )}
         <div
           className={classnames(
-            !this.props.labelTop && `col-xs-w${this.props.inputSize}`,
+            !this.props.labelTop && `col-xxs-w${this.props.inputSize}`,
             this.props.error && 'is-invalid'
           )}
         >
           <div className="input-group" ref={this.state.myRef}>
             {this.props.prepend && (
-              <div className="input-group-prepend border border-primary rounded-left">{this.props.prepend}</div>
+              <div
+                className={classnames(
+                  'input-group-prepend border rounded-left',
+                  `border-${this.props.borderColor}`
+                )}
+              >
+                {this.props.prepend}
+              </div>
             )}
             <IMaskInput
               mask={Date}
@@ -257,9 +264,7 @@ export default class InputDateWeb extends Component {
               >
                 {this.props.calIcon}
               </button>
-              {this.props.append && (
-                this.props.append
-              )}
+              {this.props.append && this.props.append}
               <button
                 type="button"
                 disabled={this.props.disabled || this.props.locked}

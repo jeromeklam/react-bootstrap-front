@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultSidebar, DefaultFooter } from './';
 import { WidthObserver } from '../advanced';
@@ -10,8 +11,8 @@ const DesktopHeaderHeight = 60;
 const DesktopFooterHeight = 60;
 const DesktopRightWidthMini = 60;
 const DesktopSideWidthMaxi = 250;
-const DesktopRightWidthMaxi = 500;
-const DesktopSideWidthMini = 64;
+const DesktopRightWidthMaxi = 400;
+const DesktopSideWidthMini = 52;
 
 const sideMenuDefaultStyles = {
   transition: `width ${duration}ms`,
@@ -74,6 +75,7 @@ const headerMenuDefaultStyles = {
   lineHeight: `${DesktopHeaderHeight}px`,
   transition: `top ${duration}ms`,
   animationIterationCount: '1',
+  overflow: 'hidden',
 };
 
 let contentDefaultStyles = {
@@ -250,7 +252,7 @@ export default class ResponsivePage extends Component {
                 <div>
                   {this.props.authenticated && (
                     <div
-                      className="bg-white"
+                      className="bg-light"
                       style={{
                         ...sideMenuDefaultStyles,
                         ...sideMenuStyles[state],
@@ -285,7 +287,7 @@ export default class ResponsivePage extends Component {
                   </CSSTransition>
                   <CSSTransition in={this.props.rightPanelOpened} timeout={duration}>
                     {state2 => (
-                      <div className="ui-page-right-panel" style={{ ...rightPanelStyles, ...rightPanel[state2] }}>
+                      <div className={classnames("ui-page-right-panel", this.props.authenticated && 'bg-light')} style={{ ...rightPanelStyles, ...rightPanel[state2] }}>
                         {this.props.rightPanel}
                       </div>
                     )}

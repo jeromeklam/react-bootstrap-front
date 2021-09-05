@@ -134,7 +134,7 @@ export default class InputSpin extends Component {
         {!this.props.inline && this.props.label !== '' && (
           <label
             className={classnames(
-              !this.props.labelTop && `col-xs-w${this.onDecrementprops.labelSize} col-form-label`,
+              !this.props.labelTop && `col-xxs-w${this.onDecrementprops.labelSize} col-form-label`,
               this.props.size && `col-form-label-${this.props.size}`
             )}
           >
@@ -142,11 +142,11 @@ export default class InputSpin extends Component {
             {this.props.required && <span>&nbsp;*</span>}
           </label>
         )}
-        <div className={classnames(!this.props.labelTop && `col-xs-w${this.props.inputSize}`)}>
+        <div className={classnames(!this.props.labelTop && `col-xxs-w${this.props.inputSize}`)}>
           <div className="row">
             <div
               className={classnames(
-                'col-xs-w36 input-group',
+                'col-xxs-w36 input-group',
                 this.props.size && `input-group-${this.props.size}`,
                 this.props.error && 'is-invalid'
               )}

@@ -1,21 +1,34 @@
 @import '../../styles/mixins';
 
-.ui-button-picker {
+.basic-button-picker {
   .btn-picker {
+    position: relative;
     display: block;
     text-align: left;
-    background-color: white;
-    border-color: theme-color('secondary'),
+    background-color: theme-color('secondary-light');
+    border-color: theme-color('secondary');
+
+    p {
+      margin-bottom: 0.2rem;
+    }
+
+    a,
+    a:visited,
+    a:focus {
+      float: right;
+      margin-right: 10px;
+      color: theme-color('secondary');
+    }
   }
   .btn-picker:hover {
-    background-color: theme-color('primary-light')
+    background-color: theme-color('primary-light');
   }
   .btn-clear {
     text-align: right;
   }
   .btn-group-vertical {
     position: absolute;
-    bottom: 12px;
-    right: 15px;
+    bottom: -2px;
+    right: -8px;
   }
 }

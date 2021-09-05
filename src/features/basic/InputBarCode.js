@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { ResponsiveModalCamera } from "../advanced";
+import { ResponsiveModalInner } from "../advanced";
 import { InputGroup, InputGroupAppend, Scanner } from ".";
 import { hasUserMedia } from "../helpers";
 
@@ -16,9 +16,7 @@ export default function InputBarCode(props) {
           setScanned(result.text);
         }
       },
-      function (error) {
-        alert("Scanning Failed " + error);
-      }
+      function (error) {}
     );
   };
 
@@ -41,7 +39,7 @@ export default function InputBarCode(props) {
   const onDetected = (result) => {
     setScanned(result);
   };
-
+  let buttons = [];
   return (
     <div>
       <div>
@@ -80,17 +78,22 @@ export default function InputBarCode(props) {
             </InputGroupAppend>
           </InputGroup>
         ) : (
-          <ResponsiveModalCamera onClose={handleCloseVideo} {...props}>
-            <div className="video-container">
+          <ResponsiveModalInner
+            onClose={handleCloseVideo}
+            modalClassName="bg-dark text-light"
+            modalBackgroundColor="bg-light"
+            {...props}
+          >
+            <div className="barcode-container">
               {!scanned ? (
                 <>
-                  <Scanner onDetected={onDetected} />
+                  <Scanner onClose={handleCloseVideo} onDetected={onDetected} />
                 </>
               ) : (
                 handleCloseVideo()
               )}
             </div>
-          </ResponsiveModalCamera>
+          </ResponsiveModalInner>
         )}
       </div>
     </div>

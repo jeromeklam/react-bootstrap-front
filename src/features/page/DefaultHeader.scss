@@ -4,13 +4,16 @@
       min-width: 52px;
       height: 52px;
     }
+    .btn-badge {
+        background-color: transparent !important;
+    }
   }
 }
 .default-header-background {
   position: absolute;
   right: 0px;
   top: 0px;
-  height: 60px;
+  left: 0px;
 }
 
 .default-header-border-bottom {
@@ -21,7 +24,7 @@
     width: 100%;
     left: 0;
     right: 0;
-    bottom: -2px;
+    bottom: 0px;
   .default-header-border-bottom-img {
 	position: absolute;
 	width: 100%;

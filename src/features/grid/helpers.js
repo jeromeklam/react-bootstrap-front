@@ -27,10 +27,10 @@ export const colSizeAsClassName = size => {
       mySizes += ' col-' + width + '-' + sizeExtension(mySize);
     });
     if (mySizes.trim() === '') {
-      return 'col-xs-none';
+      return 'col-xxs-none';
     }
     return mySizes.trim();
   } else {
-    return 'col-xs-' + sizeExtension(size);
+    return 'col-xxs-' + sizeExtension(size);
   }
 };

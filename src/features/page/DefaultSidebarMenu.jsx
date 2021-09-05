@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { Highlight } from '../tour';
 
 export const DefaultSidebarMenu = props => (
-  <li className="sidebar-menu">
+  <li className={classnames("sidebar-menu",  props.className)}>
     <div className="sidebar-navigation-menu sidebar-navigation-li bg-primary" />
     <a
       className={classnames(
@@ -18,9 +18,9 @@ export const DefaultSidebarMenu = props => (
     >
       <Highlight position="right" theme="NAV" title={props.option.help || ''}>
         {props.option.icon}
-        <span className="sidebar-menu-label text secondary">{props.option.label}</span>
+        <span className="sidebar-menu-label text secondary no-selector">{props.option.label}</span>
         <div className="sidebar-menu-arrow">
-          {props.menu === props.option.position ? props.menuOpened : props.menuClosed}
+          {props.menuIsOpen(props.option.position) ? props.menuOpened : props.menuClosed}
         </div>
       </Highlight>
     </a>

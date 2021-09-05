@@ -86,7 +86,7 @@ export default class ActionButton extends Component {
     if (action.fDisplay) {
       if (typeof action.fDisplay === 'function') {
         icon = action.fDisplay(item);
-      } 
+      }
     }
     let disabled = action.disabled || false;
     if (this.state.options && Array.isArray(this.state.options) && this.state.options.length === 0) {
@@ -108,16 +108,17 @@ export default class ActionButton extends Component {
                 }
                 this.state.triggerFct(item).then(result => {
                   this.updateOptions(result);
-                }); 
+                });
               }}
             >
               {icon}
             </button>
           </div>
           {this.state.options && (
-            <Dropdown align="bottom-right" myRef={this.state.myRef} onClose={this.onClose}>
+            <Dropdown align="bottom-right" className="btn-secondary" myRef={this.state.myRef} onClose={this.onClose}>
               <DropdownMenu>
-                {Array.isArray(this.state.options) && (this.state.options.length > 0) &&
+                {Array.isArray(this.state.options) &&
+                  this.state.options.length > 0 &&
                   this.state.options.map(elem => {
                     if (elem) {
                       return (
@@ -159,7 +160,7 @@ export default class ActionButton extends Component {
             </button>
           );
           return (
-            <DropdownWrapper trigger={trigger} align="bottom-right" myRef={this.state.myRef}>
+            <DropdownWrapper trigger={trigger} className="btn-secondary" align="bottom-right" myRef={this.state.myRef}>
               <DropdownMenu>
                 {this.state.options.map(elem => {
                   return (
@@ -236,7 +237,9 @@ export default class ActionButton extends Component {
         >
           {icon}
         </button>
-        <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm} />
+        {this.state.confirm && (
+          <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm} />
+        )}
       </>
     );
   }

@@ -1,5 +1,6 @@
 export * from './DefaultCol.jsx';
 export * from './DefaultFooter.jsx';
+export * from './DefaultLineCol';
 export { default as DefaultHeader } from './DefaultHeader.jsx';
 export { default as DefaultList } from './DefaultList.jsx';
 export { default as DefaultLine } from './DefaultLine.jsx';
@@ -7,6 +8,7 @@ export { default as ActionButton } from './ActionButton';
 export { default as DefaultRightHeader } from './DefaultRightHeader';
 export * from './MobileLoadMore.jsx';
 export * from './DefaultTitle.jsx';
+export * from './DefaultTitleCol';
 export * from './LoadComplete.jsx';
 export * from './LoadEmpty.jsx';
 export * from './LoadError.jsx';

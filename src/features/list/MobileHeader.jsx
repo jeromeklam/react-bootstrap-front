@@ -11,7 +11,9 @@ const mystyle = {
   left: '0px',
   right: '0px',
   height: '50px',
+  lineHeight: '50px',
   zIndex: '700',
+  overflow: 'hidden',
 };
 
 const counterStyle = {
@@ -90,29 +92,31 @@ export default class MobileHeader extends Component {
       }
     }
     return (
-      <div style={mystyle} className="ui-mobile-list row row-short bg-secondary text-light">
-        <div className="col-xs-w6 ui-mobile-list-icon">
+      <div
+        style={mystyle}
+        className="ui-mobile-list row row-short bg-light text-secondary border-bottom border-secondary-light"
+      >
+        <div className="col-xxs-w12 ui-mobile-list-icon">
           {this.props.icon ? (
             <div className="ui-mobile-list-icon-svg">{this.props.icon}</div>
           ) : (
             <h4 className="pl-2 pt-1">{this.props.title}</h4>
           )}
+          {this.props.counter && (
+            <Highlight
+              position="bottom"
+              theme="LIST"
+              style={{ float: 'right' }}
+              title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
+            >
+              <span className="default-list-header-counter" style={counterStyle}>
+                {this.props.counter}
+              </span>
+            </Highlight>
+          )}
         </div>
-        <div className="col-xs-w30 text-right">
+        <div className="col-xxs-w24 text-right">
           <ul className="nav justify-content-end">
-            {this.props.counter && (
-              <li className="nav-item pr-2 pt-2">
-                <Highlight
-                  position="bottom"
-                  theme="LIST"
-                  title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
-                >
-                  <span className="default-list-header-counter" style={counterStyle}>
-                    {this.props.counter}
-                  </span>
-                </Highlight>
-              </li>
-            )}
             {this.props.selectMenu && this.props.selectMenu.length > 0 && (
               <li className="nav-item">
                 <div className="dropdown">
@@ -122,7 +126,7 @@ export default class MobileHeader extends Component {
                     title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
                   >
                     <button
-                      className="btn btn-secondary btn-outline-secondary-light"
+                      className="btn btn-light text-secondary"
                       ref={this.state.myRef}
                       type="button"
                       onClick={this.onToggle}
@@ -167,11 +171,7 @@ export default class MobileHeader extends Component {
                   theme="LIST"
                   title={this.props.t({ id: 'rbf.list.header.filter.help', defaultMessage: 'Filter helper' })}
                 >
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-outline-secondary-light text-light"
-                    onClick={this.props.onToggleFilter}
-                  >
+                  <button type="button" className="btn btn-light text-secondary" onClick={this.props.onToggleFilter}>
                     {filterMenuIcon}
                   </button>
                 </Highlight>
@@ -182,7 +182,7 @@ export default class MobileHeader extends Component {
                 <Highlight position="bottom" theme="LIST" title={filterButtonTitle}>
                   <button
                     type="button"
-                    className="btn btn-secondary text-light btn-outline-secondary-light"
+                    className="btn btn-light text-secondary"
                     title={filterButtonTitle}
                     onClick={filterButtonAction}
                   >
