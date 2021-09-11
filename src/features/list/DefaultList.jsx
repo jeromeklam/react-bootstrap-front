@@ -518,7 +518,7 @@ export default class DefaultList extends Component {
                                           <div className="text-center btn-group">
                                             {this.props.inlineActions &&
                                               this.props.inlineActions
-                                                .filter(action => action.role !== 'DETAIL' && action.role !== 'SUMMARY')
+                                                .filter(action => action.role !== 'SUMMARY')
                                                 .map((action, i) => {
                                                   return (
                                                     <ActionButton

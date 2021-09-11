@@ -231,7 +231,7 @@ export default class DefaultHeader extends Component {
                   <div className="input-group">
                     <button
                       type="button"
-                      class="btn btn-light text-secondary"
+                      className="btn btn-light text-secondary"
                       ref={this.state.myModeRef}
                       onClick={() => this.onToggleModeMenu()}
                     >
@@ -299,8 +299,8 @@ export default class DefaultHeader extends Component {
                       disabled
                       placeholder={` ${sortToText(this.props.sort, this.props.cols)}`}
                     />
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-outline-secondary bg-light" onClick={this.onToggleSortMenu}>
+                    <div className="input-group-append">
+                      <button type="button" className="btn btn-outline-secondary bg-light" onClick={this.onToggleSortMenu}>
                         {this.props.sortNoneIcon}
                       </button>
                     </div>

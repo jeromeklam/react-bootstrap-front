@@ -96,7 +96,7 @@ export default class DesktopListLine extends Component {
             className={classnames(
               'default-list-wrapper row row-line',
               this.props.fClassName && this.props.fClassName(item),
-              this.props.inlineOpenedId === this.props.id ? 'bg-selected' : 'text-dark',
+              this.props.inlineOpenedId === item.id ? 'bg-selected' : 'text-dark',
               this.state.flipped && 'row-line-hover',
               rowOddEven
             )}
@@ -133,9 +133,6 @@ export default class DesktopListLine extends Component {
                         action.role === 'DELETE' ||
                         action.role === 'MODIFY')
                     ) {
-                      if (action.role === 'DETAIL' || action.role === 'SUMMARY') {
-                        return null;
-                      }
                       let actionClass = '';
                       switch (action.role) {
                         case 'PRINT':

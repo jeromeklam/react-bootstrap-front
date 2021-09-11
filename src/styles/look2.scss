@@ -289,18 +289,18 @@ svg.text-warning.inline-action:hover {
 }
 // generic odd / even
 .row-line.row-even {
-  background: transparent;
+  background: theme-color('light');
 }
 .row-line.row-even:not(.row-title):hover {
   background: theme-color('primary-light');
-   color: theme-color('secondary') !important;
+  color: theme-color('secondary') !important;
 }
 .row-line.row-odd {
   background: transparent;
 }
 .row-line.row-odd:not(.row-title):hover {
   background: theme-color('primary-light');
-   color: theme-color('secondary') !important;
+  color: theme-color('secondary') !important;
 }
 
 .list-group-item {

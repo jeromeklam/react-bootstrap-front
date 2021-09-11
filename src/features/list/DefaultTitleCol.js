@@ -89,7 +89,7 @@ export const DefaultTitleCol = props => {
         title={title}
         className={classnames(cols, 'col-title col-vertical-align', props.col.sortable && 'sortable', addClass, props.className)}
         onClick={() => {
-          props.onSort(props.col, way);
+          props.onSort(props.col, way, 1);
         }}
       >
         <span style={style}>{props.col.shortLabel ? props.col.shortLabel : props.col.label}</span>
