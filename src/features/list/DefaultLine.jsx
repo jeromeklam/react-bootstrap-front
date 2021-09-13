@@ -124,8 +124,8 @@ export default class DesktopListLine extends Component {
                 {this.props.inlineActions &&
                   this.props.inlineActions.map(action => {
                     let display = true;
-                    if (typeof action.fDisplay === 'function') {
-                      display = action.fDisplay(this.props.item);
+                    if (typeof action.fShow === 'function') {
+                      display = action.fShow(this.props.item);
                     }
                     if (
                       display &&

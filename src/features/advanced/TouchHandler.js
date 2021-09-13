@@ -37,13 +37,24 @@ export default class TouchHandler extends Component {
 
   componentDidMount() {
     if (this.state.ref) {
+      let supportsPassive = false;
+      try {
+        let opts = Object.defineProperty({}, 'passive', {
+          get: function() {
+            supportsPassive = true;
+          },
+        });
+        window.addEventListener('testPassive', null, opts);
+        window.removeEventListener('testPassive', null, opts);
+      } catch (e) {}
+      const passiveEvent = supportsPassive ? { capture: true, passive: true } : true;
       const el = this.state.ref.current;
       if (el) {
-        el.addEventListener('touchstart', this.handleTouchStart, false);
-        el.addEventListener('touchend', this.handleTouchEnd, false);
-        el.addEventListener('touchcancel', this.handleTouchCancel, false);
-        el.addEventListener('touchleave', this.handleTouchLeave, false);
-        el.addEventListener('touchmove', this.handleTouchMove, false);
+        el.addEventListener('touchstart', this.handleTouchStart, passiveEvent);
+        el.addEventListener('touchend', this.handleTouchEnd, passiveEvent);
+        el.addEventListener('touchcancel', this.handleTouchCancel, passiveEvent);
+        el.addEventListener('touchleave', this.handleTouchLeave, passiveEvent);
+        el.addEventListener('touchmove', this.handleTouchMove, passiveEvent);
       }
     }
   }
