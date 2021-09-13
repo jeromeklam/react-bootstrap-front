@@ -134,7 +134,7 @@ export const getCardTitle = (cols, item) => {
     const obj = {
       item: item,
       content: content,
-      ...cols[col]
+      ...cols[pos]
     }
     return getColContent(obj);
   }
