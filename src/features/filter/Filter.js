@@ -99,7 +99,10 @@ export default class Filter {
   }
 
   getFilterCrit() {
-    return this.data.filter_crits.default || null;
+    if (typeof this.data.filter_crits.default !== 'undefined') {
+      return this.data.filter_crits.default;
+    }
+    return null;
   }
 
   getFilterCrits() {
