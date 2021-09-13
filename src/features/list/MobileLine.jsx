@@ -45,7 +45,7 @@ export class MobileLine extends Component {
     hideMenu: false,
     mobile: true,
     selectable: true,
-    onSelect: null,
+    onSelect: () => {},
     forSelectOne: false,
     setCurrentFlipped: () => {},
   };
@@ -241,8 +241,14 @@ export class MobileLine extends Component {
                 {this.props.cols.map((oneCol, i) => {
                   if (!oneCol.hidden && oneCol.card && oneCol.card.role && oneCol.card.role === 'FIELD') {
                     const content = getObjectmemberValue(this.props.item, oneCol.col);
-                    if (oneCol.card.hideEmpty && !content) {
-                      return null;
+                    if (oneCol.card.hideEmpty) {
+                      if (!content) {
+                        return null;
+                      } else {
+                        if (!content.id || content.id === '' || content.id === 0) {
+                          return null;
+                        }
+                      }
                     }
                     const line = { ...oneCol, id: this.props.id };
                     const first = i === 0;

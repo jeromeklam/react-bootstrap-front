@@ -22,9 +22,6 @@ function HighlightButton(props) {
   let tour = null;
   if (state.started && state.highlights[state.current]) {
     const { ref, position } = state.highlights[state.current];
-    if (ref && !ref.current) {
-      console.log(state.highlights, state.current);
-    }
     const coords = getRefCoords(ref);
     const content = ref.current.querySelector('.tour-highlight-content');
     let htmlContent = content.innerHTML;

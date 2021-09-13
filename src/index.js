@@ -96,6 +96,7 @@ export * from "./features/page/ResponsivePageHeader.jsx";
  * Lists
  *******************************************************************************
  */
+export * from './features/inline-list/ResponsiveInlineHeader.jsx';
 export * from './features/inline-list/ResponsiveInlineList.jsx';
 export * from './features/inline-list/ColLink';
 export { default as InlineButton } from './features/inline-list/InlineButton';

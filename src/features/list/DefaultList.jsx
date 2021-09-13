@@ -271,8 +271,8 @@ export default class DefaultList extends Component {
         col.card.position = 99;
       }
     });
-    dispCols = dispCols.filter(col => !col.hidden);
     let mobileCols = dispCols.filter(col => col.card);
+    dispCols = dispCols.filter(col => !col.hidden);
     mobileCols.sort((a, b) => {
       if ((a.card.position && b.card.position && a.card.position > b.card.position) || !a.card.position) {
         return 1;

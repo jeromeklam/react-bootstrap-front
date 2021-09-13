@@ -9,7 +9,7 @@ export const ResponsiveInlineList = props => (
       if (mediaSize !== 'xxs' && mediaSize !== 'xs') {
         return <DefaultList {...props} t={props.t ? props.t : rbfIntl} />;
       } else {
-        return <MobileList {...props} t={props.t ? props.t : rbfIntl} />;
+        return <MobileList {...props} t={props.t ? props.t : rbfIntl} mobile={true} />;
       }
     }}
   </WidthObserver>

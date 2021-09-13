@@ -8,4 +8,4 @@ export * from './ResponsiveInlineList.jsx';
 export * from './ResponsiveInlineHeader.jsx';
 export * from './DefaultHeader.jsx';
 export * from './DefaultList.jsx';
-export * from './MobileList.jsx';
+export { default as MobileList } from './MobileList.jsx';

@@ -174,7 +174,7 @@ export default class FilterBuilder extends Component {
                 );
               case 'component':
                 const clonedElementWithMoreProps = React.cloneElement(col.filterable.component, {
-                  onChange: e => { console.log("JKJK", e); e.target.name = colFilterable; this.props.onChange(e, FILTER_OPER_EQUAL) },
+                  onChange: e => { e.target.name = colFilterable; this.props.onChange(e, FILTER_OPER_EQUAL) },
                   id: colFilterable,
                   name: colFilterable,
                   value: value

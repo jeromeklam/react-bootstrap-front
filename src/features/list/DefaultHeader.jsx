@@ -185,6 +185,7 @@ export default class DefaultHeader extends Component {
         }
       }
     }
+    const selectable = this.props.cols && this.props.cols.findIndex(oneCol => oneCol.selectable === true) >= 0;
     return (
       <div
         style={mystyle}
@@ -342,7 +343,7 @@ export default class DefaultHeader extends Component {
           </div>
           <div className="col-xxs-w8 text-right">
             <ul className="nav justify-content-end rbf-list-default-header-nav">
-              {this.props.selectMenu && this.props.selectMenu.length > 0 && (
+              {selectable && this.props.selectMenu && this.props.selectMenu.length > 0 && (
                 <li className="nav-item">
                   <div className="dropdown">
                     <Highlight

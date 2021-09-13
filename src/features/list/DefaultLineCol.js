@@ -67,8 +67,12 @@ export const DefaultLineCol = (props) => {
         break;
       }
       case 'datetime': {
-        const event = new Date(content);
-        content = `${event.toLocaleDateString(props.language, optionsDate)} ${event.toLocaleTimeString(props.language, optionsTime)}`;
+        if (content && content !== '') {
+          const event = new Date(content);
+          content = `${event.toLocaleDateString(props.language, optionsDate)} ${event.toLocaleTimeString(props.language, optionsTime)}`;
+        } else {
+          content = '';
+        }
         break;
       }
       case 'monetary': {
