@@ -30,6 +30,7 @@ export default class ActionButton extends Component {
     }
     this.state = {
       confirm: false,
+      confirmLabel: '',
       myRef: React.createRef(),
       options: myOptions,
       triggerFct: triggerFct,
@@ -46,8 +47,8 @@ export default class ActionButton extends Component {
     this.setState({ options: result });
   }
 
-  onConfirm() {
-    this.setState({ confirm: true });
+  onConfirm(message = '') {
+    this.setState({ confirm: true, confirmLabel: message });
   }
 
   onConfirmClose() {
@@ -226,8 +227,8 @@ export default class ActionButton extends Component {
             if (ev) {
               ev.stopPropagation();
             }
-            if (action.role === 'DELETE') {
-              this.onConfirm();
+            if (action.role === 'DELETE' || action.confirm) {
+              this.onConfirm(action.confirm || '');
             } else if (action.param === 'object') {
               action.onClick(item, this.state.myRef);
             } else {
@@ -238,7 +239,13 @@ export default class ActionButton extends Component {
           {icon}
         </button>
         {this.state.confirm && (
-          <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm} />
+          <ResponsiveConfirm show={this.state.confirm} onClose={this.onConfirmClose} onConfirm={this.onValidConfirm}>
+            {this.state.confirmLabel && this.state.confirmLabel !== '' ? (
+              <span>{this.state.confirmLabel}</span>
+            ) : (
+              <span>Confirmez-vous la suppression ?</span>
+            )}
+          </ResponsiveConfirm>
         )}
       </>
     );
