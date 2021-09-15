@@ -265,7 +265,7 @@ export default class ResponsiveModalInner extends Component {
                         {this.props.buttons && (
                           <div className={classnames('modal-footer', this.props.modalClassName)}>
                             {this.props.buttons.map((button, idx) => {
-                              if (sizeGreater(mediaSize, 'xs') || button.name !== '') {
+                              if (!button.hidden && button.name !== '') {
                                 return <ResponsiveButton key={`btn-resp${idx}`} button={button} />;
                               }
                               return null;

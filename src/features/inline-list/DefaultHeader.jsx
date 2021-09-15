@@ -8,13 +8,15 @@ export const DefaultHeader = props => (
       {props.cols.map((oneCol, i) => {
         return <DefaultTitleCol {...props} col={oneCol} idx={i} />;
       })}
-      <div className="actions-buttons">
-        <div className="btn-group btn-group-xs" role="group" aria-label="...">
-          <button type="button" className="btn btn-inline btn-primary" onClick={props.onAddOne}>
-            {props.addIcon}
-          </button>
+      {props.onAddOne && (
+        <div className="actions-buttons">
+          <div className="btn-group btn-group-xs" role="group" aria-label="...">
+            <button type="button" className="btn btn-inline btn-primary" onClick={props.onAddOne}>
+              {props.addIcon}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   </div>
 );

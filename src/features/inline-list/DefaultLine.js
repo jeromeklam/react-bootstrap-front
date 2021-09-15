@@ -18,11 +18,15 @@ export default class DefaultLine extends Component {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     item: PropTypes.object.isRequired,
     onSelect: PropTypes.func,
+    onGetOne: PropTypes.func,
+    onDelOne: PropTypes.func,
   };
   static defaultProps = {
     inlineActions: [],
     counter: 0,
     onSelect: null,
+    onGetOne: null,
+    onDelOne: null,
   };
 
   constructor(props) {
@@ -99,7 +103,7 @@ export default class DefaultLine extends Component {
               rowOddEven
             )}
           >
-            <div className="col-highlighter"></div>
+            <div className="col-highlighter" />
             {this.props.cols.map((oneCol, i) => {
               if (!oneCol.hidden) {
                 const line = { ...oneCol, id: this.props.id };
@@ -128,22 +132,26 @@ export default class DefaultLine extends Component {
                       </button>
                     );
                   })}
-                <button
-                  type="button"
-                  className="btn btn-inline btn-secondary"
-                  onClick={() => {
-                    this.props.onGetOne(this.props.id);
-                  }}
-                >
-                  {this.props.getIcon}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-inline btn-warning"
-                  onClick={() => this.onConfirm(this.props.id)}
-                >
-                  {this.props.delIcon}
-                </button>
+                {this.props.onGetOne && (
+                  <button
+                    type="button"
+                    className="btn btn-inline btn-secondary"
+                    onClick={() => {
+                      this.props.onGetOne(this.props.id);
+                    }}
+                  >
+                    {this.props.getIcon}
+                  </button>
+                )}
+                {this.props.onDelOne && (
+                  <button
+                    type="button"
+                    className="btn btn-inline btn-warning"
+                    onClick={() => this.onConfirm(this.props.id)}
+                  >
+                    {this.props.delIcon}
+                  </button>
+                )}
               </div>
             )}
           </div>
