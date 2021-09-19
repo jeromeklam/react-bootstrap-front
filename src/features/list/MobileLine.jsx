@@ -153,7 +153,7 @@ export class MobileLine extends Component {
                 swipRight={this.openMenu}
                 swipLeft={this.closeMenu}
               >
-                <div className="rbf-list-mobile-line-header-highlighter"></div>
+                <div className="rbf-list-mobile-line-header-highlighter" />
                 {selectable && (
                   <div className="rbf-list-mobile-line-header-select">
                     <div
@@ -191,14 +191,21 @@ export class MobileLine extends Component {
                             if (action.role === 'DETAIL' || action.role === 'SUMMARY') {
                               return null;
                             }
-                            return (
-                              <ActionButton
-                                key={action.name}
-                                action={action}
-                                item={this.props.item}
-                                className={classnames('btn-inline', action.theme && `btn-${action.theme}`)}
-                              />
-                            );
+                            if (action.component) {
+                              const clonedElementWithMoreProps = React.cloneElement(action.component, {
+                                item: this.props.item,
+                              });
+                              return clonedElementWithMoreProps;
+                            } else {
+                              return (
+                                <ActionButton
+                                  key={action.name}
+                                  action={action}
+                                  item={this.props.item}
+                                  className={classnames('btn-inline', action.theme && `btn-${action.theme}`)}
+                                />
+                              );
+                            }
                           })}
                         {false && !this.props.hideMenu && (
                           <button

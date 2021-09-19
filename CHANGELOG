@@ -1,3 +1,9 @@
+# 3.5.0 : ==/09/2021
+
+* basic:
+    * InputJson
+    * InlineActions on List can be components
+
 # 3.4.0 : 15/09/2021
 
 * Inline-List & List

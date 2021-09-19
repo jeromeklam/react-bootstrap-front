@@ -119,18 +119,25 @@ export default class DefaultLine extends Component {
                     if (action.hidden) {
                       return null;
                     }
-                    return (
-                      <button
-                        key={`action-${i}`}
-                        type="button"
-                        className={classnames('btn btn-inline btn-secondary', 'btn-' + action.theme || 'secondary')}
-                        onClick={() => {
-                          action.function(this.props.item);
-                        }}
-                      >
-                        {action.icon}
-                      </button>
-                    );
+                    if (action.component) {
+                      const clonedElementWithMoreProps = React.cloneElement(action.component, {
+                        item: this.props.item,
+                      });
+                      return clonedElementWithMoreProps;
+                    } else {
+                      return (
+                        <button
+                          key={`action-${i}`}
+                          type="button"
+                          className={classnames('btn btn-inline btn-secondary', 'btn-' + action.theme || 'secondary')}
+                          onClick={() => {
+                            action.onClick(this.props.item);
+                          }}
+                        >
+                          {action.icon}
+                        </button>
+                      );
+                    }
                   })}
                 {this.props.onGetOne && (
                   <button

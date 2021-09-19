@@ -9,6 +9,7 @@ export { default as InputDateWeb } from "./InputDateWeb";
 export { default as InputDatetime } from "./InputDatetime";
 export * from "./InputEmail";
 export * from "./InputHidden";
+export * from "./InputJson";
 export { default as InputMask } from "./InputMask";
 export { default as InputMonetary } from "./InputMonetary";
 export * from "./InputPassword";

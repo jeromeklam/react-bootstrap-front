@@ -64,6 +64,7 @@
     "react-datepicker": "^2.11.0",
     "react-draft-wysiwyg": "^1.14.4",
     "react-imask": "^6.0.3",
+    "react-json-view": "^1.21.3",
     "react-observe-size": "^0.3.0",
     "react-overlays": "^2.0.0-0",
     "react-portal-tooltip": "^2.4.7",

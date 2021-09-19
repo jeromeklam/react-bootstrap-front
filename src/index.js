@@ -21,6 +21,7 @@ export { default as InputDate } from "./features/basic/InputDate";
 export { default as InputDatetime } from "./features/basic/InputDatetime";
 export * from "./features/basic/InputEmail";
 export * from "./features/basic/InputHidden";
+export * from "./features/basic/InputJson";
 export { default as InputGroup } from "./features/basic/InputGroup";
 export { default as InputGroupAppend } from "./features/basic/InputGroupAppend";
 export { default as InputGroupPrepend } from "./features/basic/InputGroupPrepend";

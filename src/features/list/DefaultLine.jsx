@@ -143,14 +143,21 @@ export default class DesktopListLine extends Component {
                           actionClass = 'btn-' + action.theme;
                           break;
                       }
-                      return (
-                        <ActionButton
-                          key={action.name}
-                          action={action}
-                          item={item}
-                          className={classnames('btn-inline btn-action', actionClass)}
-                        />
-                      );
+                      if (action.component) {
+                        const clonedElementWithMoreProps = React.cloneElement(action.component, {
+                          item: this.props.item,
+                        });
+                        return clonedElementWithMoreProps;
+                      } else {
+                        return (
+                          <ActionButton
+                            key={action.name}
+                            action={action}
+                            item={item}
+                            className={classnames('btn-inline btn-action', actionClass)}
+                          />
+                        );
+                      }
                     }
                     return null;
                   })}
