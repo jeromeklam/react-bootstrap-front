@@ -84,7 +84,7 @@ export default class ResponsiveModalInner extends Component {
     title: '',
     height: '',
     loader: false,
-    classeName: 'm-5',
+    classeName: '',
     modalClassName: 'bg-secondary text-light',
     closeClassName: 'text-light',
     header: null,

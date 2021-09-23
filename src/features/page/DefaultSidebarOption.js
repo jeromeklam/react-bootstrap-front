@@ -14,7 +14,6 @@ export default function DefaultSidebarOption(props) {
   ) {
     return (
       <DefaultSidebarItem
-        key={`option-${label}-${props.option.position}`}
         {...props}
         option={props.option}
         open={props.open}
@@ -37,8 +36,8 @@ export default function DefaultSidebarOption(props) {
         />
         {props.open &&
           props.menuIsOpen(props.option.position) &&
-          props.option.options.map(option => {
-            return <SidebarOptionChildren {...props}  menuOption={true} option={option} level={props.level + 1}/>;
+          props.option.options.map((option, i) => {
+            return <SidebarOptionChildren key={'sidebar-option-child-' + (option.position || i)} {...props} menuOption={true} option={option} level={props.level + 1} />;
           })}
       </div>
     );

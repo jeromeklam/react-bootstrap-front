@@ -77,8 +77,8 @@ export default class DefaultSidebar extends Component {
 
   handleClickOutside(event) {
     const domNode = ReactDOM.findDOMNode(this);
-    if (!domNode || !domNode.contains(event.target)) {   
-      if (this.props.myRef && this.props.myRef.current &&this.props.myRef.current.contains(event.target)) {
+    if (!domNode || !domNode.contains(event.target)) {
+      if (this.props.myRef && this.props.myRef.current && this.props.myRef.current.contains(event.target)) {
         event.preventDefault();
         event.stopPropagation();
       }
@@ -136,9 +136,10 @@ export default class DefaultSidebar extends Component {
                 this.state.forced || this.props.open ? 'sidebar-navigation-open' : 'sidebar-navigation-closed'
               )}
             >
-              {this.props.options.map(option => {
+              {this.props.options.map((option, i) => {
                 return (
                   <DefaultSidebarOption
+                    key={'sidebar-option-' + (option.url || i) + '-' + (option.position || i)}
                     {...this.props}
                     option={option}
                     menu={this.state.menu}

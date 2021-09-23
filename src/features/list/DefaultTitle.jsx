@@ -8,7 +8,7 @@ import { rbfIntl } from '../intl';
 export const DefaultTitle = props => (
   <div style={props.style} className={classnames('default-list-title row text-secondary bg-secondary-light default-list-title-col', props.className)}>
     {props.cols.map((oneCol, i) => {
-      return <DefaultTitleCol {...props} col={oneCol} idx={i} />;
+      return <DefaultTitleCol key={'oneCol-' + i} {...props} col={oneCol} idx={i} />;
     })}
   </div>
 );
