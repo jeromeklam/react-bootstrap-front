@@ -1,9 +1,10 @@
 {
   "name": "react-bootstrap-front",
-  "version": "3.2.4",
+  "version": "3.5.0",
   "description": "React Bootstrap Components",
   "keywords": [
-    "Bootstrap 4"
+    "Bootstrap 4",
+    "ReactJS"
   ],
   "license": "MIT",
   "author": "Jérôme KLAM",
