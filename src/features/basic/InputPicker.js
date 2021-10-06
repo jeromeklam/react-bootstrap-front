@@ -114,7 +114,7 @@ export default class InputPicker extends Component {
               value={this.props.display || ''}
               disabled={this.props.disabled}
               className={classnames(
-                'border-secondary form-control',
+                'border-rbf form-control',
                 this.props.size && `form-control-${this.props.size}`
               )}
               onChange={this.props.onChange}
@@ -135,7 +135,7 @@ export default class InputPicker extends Component {
                   type="button"
                   disabled={this.props.disabled}
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size === 'sm' && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onAdd}
@@ -147,7 +147,7 @@ export default class InputPicker extends Component {
                 <button
                   type="button"
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size === 'sm' && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onZoom}
@@ -161,7 +161,7 @@ export default class InputPicker extends Component {
                   type="button"
                   disabled={this.props.disabled}
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size === 'sm' && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onMore}
@@ -175,7 +175,7 @@ export default class InputPicker extends Component {
                   type="button"
                   disabled={this.props.disabled}
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size === 'sm' && `btn-${this.props.size}`
                   )}
                   onClick={this.props.onClear}
@@ -186,7 +186,7 @@ export default class InputPicker extends Component {
             </div>
             {this.state.open && (
               <Dropdown
-                className="border rounded border-secondary bg-white text-secondary"
+                className="border rounded border-rbf bg-white text-secondary"
                 myRef={this.state.myRef}
                 onClose={this.props.onSelect}
                 maxHeight="250px"

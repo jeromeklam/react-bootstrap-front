@@ -53,8 +53,8 @@ export default class InputSelect extends Component {
     if (props.value || props.options) {
       if (props.value !== state.value || props.options !== state.options) {
         return {
-          value: props.value ? props.value : state.value,
-          options: props.options ? props.options :  state.options,
+          value: props.value || '',
+          options: props.options,
         };
       }
     }
@@ -122,13 +122,13 @@ export default class InputSelect extends Component {
       <InputGroup {...this.props} id={this.state.id}>
         {this.props.prepend && this.props.prepend !== '' && (
           <InputGroupPrepend>
-            <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
+            <InputGroupText className="border-rbf bg-light">{this.props.prepend}</InputGroupText>
           </InputGroupPrepend>
         )}
         <select
           type="text"
           className={classnames(
-            'border-secondary form-control',
+            'border-rbf form-control',
             (this.props.error || this.props.warning) && 'is-invalid',
             this.props.size && `form-control-${this.props.size}`
           )}
@@ -153,7 +153,7 @@ export default class InputSelect extends Component {
         </select>
         {this.props.append && this.props.append !== '' && (
           <InputGroupAppend>
-            <InputGroupText className="border-secondary bg-light">{this.props.append}</InputGroupText>
+            <InputGroupText className="border-rbf bg-light">{this.props.append}</InputGroupText>
           </InputGroupAppend>
         )}
       </InputGroup>

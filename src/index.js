@@ -38,6 +38,7 @@ export { default as InputSpin } from "./features/basic/InputSpin";
 export { default as InputStringarray } from "./features/basic/InputStringarray";
 export * from "./features/basic/InputText";
 export { default as InputTextarea } from "./features/basic/InputTextarea";
+export { default as InputTextareaLight } from "./features/basic/InputTextareaLight";
 export { default as InputCheckList } from "./features/basic/InputCheckList";
 export { default as InputCheckLists } from "./features/basic/InputCheckLists";
 export { default as InputKeywords } from "./features/basic/InputKeywords";

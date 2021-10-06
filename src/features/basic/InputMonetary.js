@@ -17,12 +17,12 @@ export default function InputMonetary(props) {
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
         <InputGroupPrepend>
-          <InputGroupText className="border-secondary bg-light">{props.prepend}</InputGroupText>
+          <InputGroupText className="border-rbf bg-light">{props.prepend}</InputGroupText>
         </InputGroupPrepend>
       )}
       <IMaskInput
         className={classnames(
-          'border-secondary form-control',
+          'border-rbf form-control',
           props.size && `form-control-${props.size}`,
           (props.error || props.warning) && 'is-invalid'
         )}
@@ -57,7 +57,7 @@ export default function InputMonetary(props) {
           <button
             type="button"
             disabled={props.disabled}
-            className={classnames(`btn btn-input btn-outline-secondary bg-light`, props.size && `btn-${props.size}`)}
+            className={classnames(`btn btn-input btn-outline-rbf bg-light`, props.size && `btn-${props.size}`)}
             onClick={props.locked ? () => props.onLockOff(props.name) : () => props.onLockOn(props.name)}
           >
             {props.locked ? props.lockOnIcon : props.lockOffIcon}
@@ -67,7 +67,7 @@ export default function InputMonetary(props) {
           <button
             type="button"
             disabled={props.disabled || props.locked}
-            className={classnames('btn btn-input btn-outline-secondary bg-light', props.size && `btn-${props.size}`)}
+            className={classnames('btn btn-input btn-outline-rbf bg-light', props.size && `btn-${props.size}`)}
             onClick={props.onMoneySwitch}
           >
             {props.moneyIcon ? props.moneyIcon : props.inputMoney} {props.swapIcon}
@@ -77,14 +77,14 @@ export default function InputMonetary(props) {
             <button
               type="button"
               disabled={true}
-              className={classnames('btn btn-input btn-outline-secondary bg-light', props.size && `btn-${props.size}`)}
+              className={classnames('btn btn-input btn-outline-rbf bg-light', props.size && `btn-${props.size}`)}
             >
               {props.moneyIcon}
             </button>
           )
         )}
         {!props.moneyIcon && (
-          <InputGroupText className="border-secondary bg-light">
+          <InputGroupText className="border-rbf bg-light">
             {props.onMoneySwitch ? props.rateValue : props.inputMoney}
           </InputGroupText>
         )}

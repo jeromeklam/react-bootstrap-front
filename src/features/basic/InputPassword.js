@@ -151,7 +151,7 @@ export default class InputPassword extends Component {
             <input
               type={type}
               className={classnames(
-                'border-secondary form-control',
+                'border-rbf form-control',
                 this.props.size && `form-control-${this.props.size}`,                
                 (this.props.securityIcon) && 'border-right-0'
               )}
@@ -168,7 +168,7 @@ export default class InputPassword extends Component {
               <div className="input-group-append" title={this.state.tooltip}>
                 <span className={classnames(
                   'input-group-text',
-                  'border-secondary border-left-0',
+                  'border-rbf border-left-0',
                   'bg-white', `text-${this.state.security}`)}
                 >
                   {this.props.securityIcon}
@@ -181,7 +181,7 @@ export default class InputPassword extends Component {
                   type="button"
                   className={classnames(
                     'btn btn-input',
-                    'btn-outline-secondary',
+                    'btn-outline-rbf',
                     'bg-white text-secondary',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}

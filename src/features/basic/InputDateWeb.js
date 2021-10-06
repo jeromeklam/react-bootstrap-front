@@ -230,7 +230,7 @@ export default class InputDateWeb extends Component {
               onInput={this.onChange}
               onComplete={this.onComplete}
               className={classnames(
-                `border-${this.props.borderColor} form-control`,
+                `border-rbf form-control`,
                 this.props.size && `form-control-${this.props.size}`,
                 (this.props.error || this.props.warning) && 'is-invalid'
               )}
@@ -241,7 +241,7 @@ export default class InputDateWeb extends Component {
                   type="button"
                   disabled={this.props.disabled}
                   className={classnames(
-                    `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                    `btn btn-input btn-outline-rbf bg-light`,
                     this.props.size && `btn-${this.props.size}`
                   )}
                   onClick={
@@ -257,7 +257,7 @@ export default class InputDateWeb extends Component {
                 type="button"
                 disabled={this.props.disabled || this.props.locked}
                 className={classnames(
-                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  `btn btn-input btn-outline-rbf bg-light`,
                   this.props.size && `btn-${this.props.size}`
                 )}
                 onClick={this.onToggle}
@@ -269,7 +269,7 @@ export default class InputDateWeb extends Component {
                 type="button"
                 disabled={this.props.disabled || this.props.locked}
                 className={classnames(
-                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  `btn btn-input btn-outline-rbf bg-light`,
                   this.props.size && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}

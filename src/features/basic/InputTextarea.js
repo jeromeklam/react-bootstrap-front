@@ -267,7 +267,7 @@ export default class InputTextarea extends Component {
               toolbarHidden={!toolbar}
               editorState={editorState}
               toolbarClassName="toolbarClassName"
-              wrapperClassName="form-control border-secondary h-auto"
+              wrapperClassName="form-control border-rbf h-auto"
               editorClassName="editorClassName overflow-hidden"
               onEditorStateChange={this.onEditorStateChange}
             />
@@ -277,7 +277,7 @@ export default class InputTextarea extends Component {
                   <button
                     type="button"
                     className={classnames(
-                      'btn btn-input btn-outline-secondary bg-light',
+                      'btn btn-input btn-outline-rbf bg-light',
                       this.props.size === 'sm' && `btn-${this.props.size}`
                     )}
                     onClick={this.onPresetText}
@@ -313,7 +313,7 @@ export default class InputTextarea extends Component {
               <button
                 type="button"
                 className={classnames(
-                  'btn btn-input btn-outline-secondary bg-light',
+                  'btn btn-input btn-outline-rbf bg-light',
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onToolbar}
@@ -323,7 +323,7 @@ export default class InputTextarea extends Component {
               <button
                 type="button"
                 className={classnames(
-                  'btn btn-input btn-outline-secondary bg-light',
+                  'btn btn-input btn-outline-rbf bg-light',
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}

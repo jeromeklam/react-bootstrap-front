@@ -29,7 +29,7 @@ export const InputEmail = props => {
           <input
             type="text"
             className={classnames(
-              'border-secondary form-control',
+              'border-rbf form-control',
               props.size && `form-control-${props.size}`,
               (props.error || props.warning) && 'is-invalid'
             )}
@@ -48,7 +48,7 @@ export const InputEmail = props => {
                 type="button"
                 href={props.value && `mailto:${props.value}`}
                 className={classnames(
-                  `btn btn-input btn-outline-${props.borderColor} bg-light`,
+                  `btn btn-input btn-outline-rbf bg-light text-secondary`,
                   props.size && `btn-${props.size}`
                 )}
               >

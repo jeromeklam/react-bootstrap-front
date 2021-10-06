@@ -10,13 +10,13 @@ export const InputText = props => {
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
         <InputGroupPrepend>
-          <InputGroupText className="border-secondary bg-light">{props.prepend}</InputGroupText>
+          <InputGroupText className="border-rbf bg-light">{props.prepend}</InputGroupText>
         </InputGroupPrepend>
       )}
       <input
         type="text"
         className={classnames(
-          'border-secondary form-control',
+          'border-rbf form-control',
           props.size && `form-control-${props.size}`,
           (props.error || props.warning) && 'is-invalid',
           props.className && props.className
@@ -37,14 +37,14 @@ export const InputText = props => {
           <button
             type="button"
             disabled={props.disabled}
-            className={classnames(`btn btn-input btn-outline-secondary bg-light`, props.size && `btn-${props.size}`)}
+            className={classnames(`btn btn-input btn-outline-rbf bg-light`, props.size && `btn-${props.size}`)}
             onClick={props.locked ? () => props.onLockOff(props.name) : () => props.onLockOn(props.name)}
           >
             {props.locked ? props.lockOnIcon : props.lockOffIcon}
           </button>
         )}
         {props.append && props.append !== '' && (
-          <InputGroupText className="border-secondary bg-light">{props.append}</InputGroupText>
+          <InputGroupText className="border-rbf bg-light">{props.append}</InputGroupText>
         )}
       </InputGroupAppend>
     </InputGroup>

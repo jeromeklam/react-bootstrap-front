@@ -89,14 +89,14 @@ export default class InputMask extends Component {
       <InputGroup {...this.props} id={this.state.myId}>
         {this.props.prepend && this.props.prepend !== '' && (
           <InputGroupPrepend>
-            <InputGroupText className="border-secondary bg-light">{this.props.prepend}</InputGroupText>
+            <InputGroupText className="border-rbf bg-light">{this.props.prepend}</InputGroupText>
           </InputGroupPrepend>
         )}
         <IMaskInput
           mask={this.props.mask}
           type="text"
           className={classnames(
-            'border-secondary form-control',
+            'border-rbf form-control',
             this.props.size && `form-control-${this.props.size}`,
             (this.props.error || this.props.warning) && 'is-invalid',
             this.props.className && this.props.className,
@@ -138,7 +138,7 @@ export default class InputMask extends Component {
         />
         {this.props.append && this.props.append !== '' && (
           <InputGroupAppend>
-            <InputGroupText className="border-secondary bg-light">{this.props.append}</InputGroupText>
+            <InputGroupText className="border-rbf bg-light">{this.props.append}</InputGroupText>
           </InputGroupAppend>
         )}
       </InputGroup>

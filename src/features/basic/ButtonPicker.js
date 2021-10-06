@@ -57,7 +57,7 @@ export default class ButtonPicker extends Component {
           </label>
         )}
         <div
-          className={classnames('btn btn-picker', !this.props.labelTop && `col-xs-w${this.props.buttonSize}`)}
+          className={classnames('btn btn-picker btn-outline-rbf', !this.props.labelTop && `col-xs-w${this.props.buttonSize}`)}
           onClick={this.props.onZoom}
         >
           {!this.props.disabled && (

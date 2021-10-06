@@ -70,7 +70,7 @@ export default class InputPhone extends Component {
             <input
               type="text"
               className={classnames(
-                'border-secondary form-control',
+                'border-rbf form-control',
                 this.props.size && `form-control-${this.props.size}`
               )}
               id={myId}
@@ -87,7 +87,7 @@ export default class InputPhone extends Component {
                   type="button"
                   href={this.props.value && `tel:${this.props.value}`}
                   className={classnames(
-                  `btn btn-input btn-outline-${this.props.borderColor} bg-light`,
+                  `btn btn-input btn-outline-rbf bg-light`,
                   this.props.size && `btn-${this.props.size}`
                   )}
                 >

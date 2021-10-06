@@ -283,7 +283,7 @@ export default class InputDatetime extends Component {
               onInput={this.onChange}
               onComplete={this.onComplete}
               className={classnames(
-                'border-secondary form-control',
+                'border-rbf form-control',
                 this.props.size && `form-control-${this.props.size}`,
                 (this.props.error || this.props.warning) && 'is-invalid',
               )}
@@ -293,7 +293,7 @@ export default class InputDatetime extends Component {
                 <button
                   type="button"
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size && `btn-${this.props.size}`,
                   )}
                   onClick={this.props.onLockToggle}
@@ -306,7 +306,7 @@ export default class InputDatetime extends Component {
                   type="button"
                   disabled={this.props.disabled}
                   className={classnames(
-                    'btn btn-input btn-outline-secondary bg-light',
+                    'btn btn-input btn-outline-rbf bg-light',
                     this.props.size && `btn-${this.props.size}`,
                   )}
                   onClick={this.onToggleTimer}
@@ -318,7 +318,7 @@ export default class InputDatetime extends Component {
                 type="button"
                 disabled={this.props.disabled}
                 className={classnames(
-                  'btn btn-input btn-outline-secondary bg-light',
+                  'btn btn-input btn-outline-rbf bg-light',
                   this.props.size && `btn-${this.props.size}`,
                 )}
                 onClick={this.onToggle}
@@ -329,7 +329,7 @@ export default class InputDatetime extends Component {
                 type="button"
                 disabled={this.props.disabled}
                 className={classnames(
-                  'btn btn-input btn-outline-secondary bg-light',
+                  'btn btn-input btn-outline-rbf bg-light',
                   this.props.size && `btn-${this.props.size}`,
                 )}
                 onClick={this.onClear}

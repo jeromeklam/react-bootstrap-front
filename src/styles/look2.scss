@@ -478,8 +478,23 @@ hr {
   padding-right: 15px;
 }
 
-.input-group .btn-outline-secondary {
+.btn-picker.btn-outline-rbf,
+.border-rbf,
+.btn-outline-rbf {
+  border-color: #ced4da !important;
+}
+.btn-picker.btn-outline-rbf:focus,
+.border-rbf:focus,
+.btn-outline-rbf:focus {
   border-color: theme-color('secondary') !important;
+  box-shadow: 0 0.125rem 0.25rem theme-color('secondary-light') !important;
+}
+.is-invalid {
+  .btn-picker.btn-outline-rbf,
+  .border-rbf,
+  .btn-outline-rbf {
+    border-color: theme-color('danger') !important;
+  }
 }
 
 .nav-tabs {

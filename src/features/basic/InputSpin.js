@@ -156,7 +156,7 @@ export default class InputSpin extends Component {
                 name={this.props.name}
                 value={value || ''}
                 className={classnames(
-                  'border-secondary form-control',
+                  'border-rbf form-control',
                   this.props.size && `form-control-${this.props.size}`
                 )}
                 onChange={this.props.onChange}
@@ -168,7 +168,7 @@ export default class InputSpin extends Component {
                   type="button"
                   className={classnames(
                     'btn btn-input',
-                    'btn-outline-secondary',
+                    'btn-outline-rbf',
                     'bg-light text-secondary pl-0 pr-0',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
@@ -181,7 +181,7 @@ export default class InputSpin extends Component {
                   type="button"
                   className={classnames(
                     'btn btn-input',
-                    'btn-outline-secondary',
+                    'btn-outline-rbf',
                     'bg-light text-secondary pl-0 pr-0',
                     this.props.size === 'sm' && `btn-${this.props.size}`,
                   )}
@@ -195,7 +195,7 @@ export default class InputSpin extends Component {
                     type="button"
                     className={classnames(
                       'btn btn-input',
-                      'btn-outline-secondary',
+                      'btn-outline-rbf',
                       'bg-light text-warning',
                       this.props.size === 'sm' && `btn-${this.props.size}`,
                     )}

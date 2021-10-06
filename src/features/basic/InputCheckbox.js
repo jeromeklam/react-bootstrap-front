@@ -59,7 +59,7 @@ export const InputCheckbox = props => (
       </label>
     )}
     <div className={classnames(!props.labelTop && `col-xxs-w${props.inputSize}`)}>
-      <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-secondary')}>
+      <label style={switchstyle} className={classnames('bg-white', props.disabled ? 'border-secondary-light' : 'border-rbf')}>
         <input
           style={inputstyle}
           type="checkbox"
