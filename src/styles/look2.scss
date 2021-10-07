@@ -26,6 +26,14 @@ body {
   }
 }
 
+.default-header-menu .navbar-brand {
+  font-weight: bold;
+}
+
+.form-inline-list {
+  border: 1px solid theme-color('secondary-light');
+}
+
 .form-group-sm {
   margin-bottom: 0rem;
 }
@@ -114,8 +122,8 @@ svg.text-warning.inline-action:hover {
 
 .btn-sm {
   &.btn {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     padding-left: 4px;
     padding-right: 4px;
   }

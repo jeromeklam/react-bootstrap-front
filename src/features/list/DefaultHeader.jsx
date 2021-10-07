@@ -291,6 +291,16 @@ export default class DefaultHeader extends Component {
                 style={sortStyle}
                 position="bottom"
                 theme="LIST"
+                title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
+              >
+                {this.props.quickSearch}
+              </Highlight>
+            </div>
+            <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
+              <Highlight
+                style={sortStyle}
+                position="bottom"
+                theme="LIST"
                 title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
               >
                 <form className="input-list-sort">
@@ -328,16 +338,6 @@ export default class DefaultHeader extends Component {
                     </Dropdown>
                   )}
                 </form>
-              </Highlight>
-            </div>
-            <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
-              <Highlight
-                style={sortStyle}
-                position="bottom"
-                theme="LIST"
-                title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
-              >
-                {this.props.quickSearch}
               </Highlight>
             </div>
           </div>

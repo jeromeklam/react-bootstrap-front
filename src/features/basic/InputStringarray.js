@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { InputText } from './';
+import { Row, Col } from '../grid';
 
 const InputLine = props => (
-  <div className="row">
-    <div className="col-xxs-w15">
+  <Row>
+    <Col size={{xxs: 15}}>
       <InputText
         name="value"
         value={props.value.value}
@@ -15,8 +16,8 @@ const InputLine = props => (
         disabled={!props.value.new}
         onChange={props.onChange}
       />
-    </div>
-    <div className="col-xxs-w15">
+    </Col>
+    <Col size={{xxs: 15}}>
       <InputText
         name="label"
         value={props.value.label}
@@ -25,13 +26,13 @@ const InputLine = props => (
         label=""
         onChange={props.onChange}
       />
-    </div>
-    <div className="col-xxs-w6">
-      <button className="btn bg-light btn-outline-secondary text-warning" onClick={props.onDelete}>
+    </Col>
+    <Col size={{xxs: 6}}>
+      <button className="btn btn-sm bg-light btn-outline-rbf text-warning" onClick={props.onDelete}>
         {props.minusIcon}
       </button>
-    </div>
-  </div>
+    </Col>
+  </Row>
 );
 InputLine.propTypes = {
   value: PropTypes.element.isRequired,
@@ -123,18 +124,18 @@ export default class InputStringarray extends Component {
           </label>
         )}
         {(this.props.titleValue || this.props.titleLabel) && (
-           <div className="row">
-             <div className="col-xxs-w15">
+           <Row>
+             <Col size={{xxs: 15}}>
                <label className={classnames(!this.props.labelTop && 'col-form-label')}>
                  {this.props.titleValue}
                </label>
-             </div>
-             <div className="col-xxs-w15">
+             </Col>
+             <Col size={{xxs: 15}}>
                <label className={classnames(!this.props.labelTop && 'col-form-label')}>
                  {this.props.titleLabel}
                </label>
-             </div>
-           </div>
+             </Col>
+           </Row>
         )}
         <div>
           {lines.map((line, i) => {
@@ -155,7 +156,7 @@ export default class InputStringarray extends Component {
             return null;
           })}
           {addNew && (
-            <button className="btn bg-light btn-outline-secondary" onClick={this.onAddNew}>
+            <button className="btn btn-sm bg-light btn-outline-rbf" onClick={this.onAddNew}>
               {this.props.plusIcon}
             </button>
           )}
