@@ -450,11 +450,11 @@ export default class DefaultList extends Component {
                             {(this.state.splited || this.state.mode === 'right') && (
                               <div className="rbf-list-default-list-right-wrapper">
                                 <div className="rbf-list-default-list-right-header">
-                                  <Row className="no-gutters h-100">
-                                    <Col size={{ xxs: 36, xs: 36, sm: 12, md: 18, lg: 12 }}>
+                                  <div className="no-gutters h-100">
+                                    <div className="float-left">
                                       <DefaultRightHeader {...this.props} />
-                                    </Col>
-                                    <Col size={{ xxs: 36, xs: 36, sm: 24, md: 18, lg: 24 }}>
+                                    </div>
+                                    <div className="float-right">
                                       <div className="rbf-list-default-list-right-menu text-center h-100">
                                         {this.props.currentItem && this.props.rightMode === 'tabs' && (
                                           <div className="text-center btn-group mr-2">
@@ -548,8 +548,8 @@ export default class DefaultList extends Component {
                                           </div>
                                         )}
                                       </div>
-                                    </Col>
-                                  </Row>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div className="rbf-list-default-list-right-content custom-scrollbar p-0 text-secondary h-100">
                                   <TouchHandler
