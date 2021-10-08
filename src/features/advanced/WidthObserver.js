@@ -24,7 +24,7 @@ export default function WidthObserver(props) {
         const mediaSize = detectWidth(width, props.prefix);
         return (
           <div className={classnames(`${props.prefix}-responsive`, `${props.prefix}-${mediaSize}`, props.className)} style={posModal}>
-            {typeof props.children === 'function' ? props.children({ mediaSize }) : props.children}
+            {typeof props.children === 'function' ? props.children({ mediaSize, width }) : props.children}
           </div>
         );
       }}

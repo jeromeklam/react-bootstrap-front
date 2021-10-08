@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, DefaultRightHeader } from './';
 import { getSizeFromWidth, isInViewPort } from '../helpers';
-import { Row, Col } from '../grid';
 import { DefaultPanel } from '../filter';
 import { WidthObserver, TouchHandler } from '../advanced';
 import { ShortcutBar } from '../shortcut';
@@ -161,7 +160,6 @@ export default class DefaultList extends Component {
       currentFlipped: 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
     this.handleObserver = this.handleObserver.bind(this);
     this.toggleSplit = this.toggleSplit.bind(this);
     this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
@@ -201,13 +199,6 @@ export default class DefaultList extends Component {
 
   handleObserver(entities, observer) {
     const y = entities[0].boundingClientRect.y;
-  }
-
-  updateDimensions(width, height) {
-    const contentSize = getSizeFromWidth(width);
-    const listSize = this.state.splited ? getSizeFromWidth(width - 1200) : contentSize;
-    const dataSize = this.state.splited ? getSizeFromWidth(1200) : 'none';
-    this.setState({ contentSize: contentSize, listSize: listSize, dataSize: dataSize });
   }
 
   togglePanel(filters = false, sort = false) {
@@ -286,52 +277,14 @@ export default class DefaultList extends Component {
     return (
       <div style={fullDiv}>
         <WidthObserver>
-          {({ mediaSize }) => {
-            const globalSize = mediaSize;
-            switch (globalSize) {
-              case 'xs':
-                listTransitionStyles.entering.right = '360px';
-                listTransitionStyles.entered.right = '360px';
-                inlineTransitionStyles.exiting.right = '-360px';
-                inlineTransitionStyles.exited.right = '-360px';
-                inlineStyle.width = '360px';
-                inlineStyle.right = '-360px';
-                break;
-              case 'sm':
-                listTransitionStyles.entering.right = '624px';
-                listTransitionStyles.entered.right = '624px';
-                inlineTransitionStyles.exiting.right = '-624px';
-                inlineTransitionStyles.exited.right = '-624px';
-                inlineStyle.width = '624px';
-                inlineStyle.right = '-624px';
-                break;
-              case 'md':
-                listTransitionStyles.entering.right = '800px';
-                listTransitionStyles.entered.right = '800px';
-                inlineTransitionStyles.exiting.right = '-800px';
-                inlineTransitionStyles.exited.right = '-800px';
-                inlineStyle.width = '800px';
-                inlineStyle.right = '-800px';
-                break;
-              case 'lg':
-                listTransitionStyles.entering.right = '1024px';
-                listTransitionStyles.entered.right = '1024px';
-                inlineTransitionStyles.exiting.right = '-1024px';
-                inlineTransitionStyles.exited.right = '-1024px';
-                inlineStyle.width = '1024px';
-                inlineStyle.right = '-1024px';
-                break;
-              case 'xl':
-                listTransitionStyles.entering.right = '1280px';
-                listTransitionStyles.entered.right = '1280px';
-                inlineTransitionStyles.exiting.right = '-1280px';
-                inlineTransitionStyles.exited.right = '-1280px';
-                inlineStyle.width = '1280px';
-                inlineStyle.right = '-1280px';
-                break;
-              default:
-                break;
-            }
+          {({ mediaSize, width }) => {
+            let calcW = parseInt(width, 10) - 350;
+            listTransitionStyles.entering.right = calcW + 'px';
+            listTransitionStyles.entered.right = calcW + 'px';
+            inlineTransitionStyles.exiting.right = '-' + calcW + 'px';
+            inlineTransitionStyles.exited.right = '-' + calcW + 'px';
+            inlineStyle.width = calcW + 'px';
+            inlineStyle.right = '-' + calcW + 'px';
             return (
               <div>
                 <DefaultHeader {...this.props} onToggleFilter={this.togglePanel} />

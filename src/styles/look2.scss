@@ -296,6 +296,8 @@ svg.text-warning.inline-action:hover {
   }
 }
 // generic odd / even
+.row-even .card-mobile-line,
+.row-even .card-mobile-line .card-header,
 .row-line.row-even {
   background: theme-color('light');
 }
@@ -303,6 +305,8 @@ svg.text-warning.inline-action:hover {
   background: theme-color('primary-light');
   color: theme-color('secondary') !important;
 }
+.row-odd .card-mobile-line,
+.row-odd .card-mobile-line .card-header,
 .row-line.row-odd {
   background: transparent;
 }

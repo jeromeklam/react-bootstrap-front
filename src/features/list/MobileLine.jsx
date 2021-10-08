@@ -27,6 +27,7 @@ export class MobileLine extends Component {
   static propTypes = {
     className: PropTypes.string,
     cols: PropTypes.element.isRequired,
+    counter: PropTypes.number,
     currentFlipped: PropTypes.number,
     hideMenu: PropTypes.bool,
     id: PropTypes.string.isRequired,
@@ -41,6 +42,7 @@ export class MobileLine extends Component {
 
   static defaultProps = {
     className: '',
+    counter: 0,
     currentFlipped: 0,
     hideMenu: false,
     mobile: true,
@@ -106,6 +108,10 @@ export class MobileLine extends Component {
   }
 
   render() {
+    let rowOddEven = 'row-no-odd-even';
+    if (this.props.counter) {
+      rowOddEven = this.props.counter % 2 === 0 ? 'row-even' : 'row-odd';
+    }
     const selectable =
       this.props.selectable && this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
     return (
@@ -113,13 +119,14 @@ export class MobileLine extends Component {
         id={`rbf-list-mobile-line${this.props.item.id}`}
         className={classnames(
           'row rbf-list-mobile-line',
+          rowOddEven,
           this.props.className,
           this.props.fClassName && this.props.fClassName(this.props.item)
         )}
       >
         <div className="col-xxs-w36">
           <div
-            className="card"
+            className="card card-mobile-line"
             onClick={ev => {
               if (this.props.forSelectOne) {
                 this.props.onSelect(this.props.item);
