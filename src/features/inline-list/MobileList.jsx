@@ -6,10 +6,12 @@ import { MobileLine } from '../list';
 class MobileList extends Component {
   static propTypes = {
     MobileList: PropTypes.bool,
+    oddEven: PropTypes.bool,
   };
 
   static defaultProps = {
     MobileList: false,
+    oddEven: true,
   };
 
   constructor(props) {

@@ -273,7 +273,6 @@ export default class DefaultList extends Component {
     });
     let locTitleStyle = titleStyle;
     let locListStyle = listStyle;
-    let counter = 1;
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -336,6 +335,7 @@ export default class DefaultList extends Component {
                                     };
                                   }
                                 }
+                                let counter = 1;
                                 return (
                                   <div className="list-inset">
                                     <div
@@ -355,7 +355,7 @@ export default class DefaultList extends Component {
                                         style={{ ...lListStyles }}
                                       >
                                         {this.props.items.map(item => (
-                                          <div key={item.id}>
+                                          <div key={`line-${item.id}`}>
                                             {mediaSize === 'xxs' || mediaSize === 'xs' ? (
                                               <MobileLine
                                                 {...this.props}
@@ -423,10 +423,10 @@ export default class DefaultList extends Component {
                                                       className={classnames(
                                                         'btn',
                                                         action.name === this.props.currentInline
-                                                          ? 'btn-primary'
-                                                          : action.role === 'MODIFY' || action.role === 'DELETE'
+                                                          ? 'text-primary btn-outline-primary-light border-primary active'
+                                                          : action.role !== 'OTHER'
                                                           ? `btn-${action.theme}`
-                                                          : 'btn-light btn-outline-secondary-light text-secondary'
+                                                          : 'btn-light btn-outline-secondary-light border-secondary text-secondary'
                                                       )}
                                                     />
                                                   );
@@ -481,8 +481,10 @@ export default class DefaultList extends Component {
                                                       className={classnames(
                                                         'btn',
                                                         action.name === this.props.currentInline
-                                                          ? 'btn-primary'
-                                                          : `btn-${action.theme}`
+                                                          ? 'text-primary btn-outline-primary-light border-primary active'
+                                                          : action.role !== 'OTHER'
+                                                          ? `btn-${action.theme}`
+                                                          : 'btn-light btn-outline-secondary-light border-secondary text-secondary'
                                                       )}
                                                     />
                                                   );

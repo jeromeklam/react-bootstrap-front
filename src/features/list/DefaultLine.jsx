@@ -134,14 +134,10 @@ export default class DesktopListLine extends Component {
                         action.role === 'MODIFY')
                     ) {
                       let actionClass = '';
-                      switch (action.role) {
-                        case 'PRINT':
-                        case 'MODIFY':
-                          actionClass = 'white btn-secondary';
-                          break;
-                        default:
-                          actionClass = 'btn-' + action.theme;
-                          break;
+                      if (action.role !== 'OTHER') {
+                        actionClass = 'btn-' + action.theme;
+                      } else {
+                        actionClass = 'btn-light btn-outline-sedonary-light border-secondary text-secondary';
                       }
                       if (action.component) {
                         const clonedElementWithMoreProps = React.cloneElement(action.component, {
