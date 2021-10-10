@@ -1,6 +1,7 @@
 @import '../../styles/mixins';
 
-.rbf-list-default-right-header {
+.rbf-list-default-right-header h4 {
   font-weight: bold;
   min-height: 50px;
+  color: theme-color('secondary');
 }

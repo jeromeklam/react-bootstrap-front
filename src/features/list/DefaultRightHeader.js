@@ -5,7 +5,7 @@ import { getCardTitle } from './';
 export default function DefaultRightHeader(props) {
   return (
     <div className="rbf-list-default-right-header">
-      <h4 className="pl-2 pt-2">{getCardTitle(props.cols, props.currentItem)}</h4>
+      <h4 className="pl-2 pt-3">{getCardTitle(props.cols, props.currentItem)}</h4>
     </div>
   );
 };

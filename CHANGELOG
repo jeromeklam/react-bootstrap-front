@@ -1,24 +1,26 @@
 # 3.6.0 : --/10/2021
 
 * List
-    * style
+    * Style en mode mobile
+    * Style des boutons d'action
+    * Gestion gébérale des lignes paires et impaires 
 
 # 3.5.2 : 07/10/2021
 
-* basic
+* Basic
     * Saisie en masse des tableau adaptée graphiquement
-* list
+* List
     * Affichage du bandeau haut en découpage "right"
 
 # 3.5.1 : 06/10/2021
 
-* basic
+* Basic
     * InputTextareaLight (Quill)
     * border-rbf et btn-outline-rbf
 
 # 3.5.0 : 03/10/2021
 
-* basic:
+* Basic:
     * InputJson
     * InlineActions on List can be components
 
