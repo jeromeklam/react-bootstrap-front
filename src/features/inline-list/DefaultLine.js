@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { getObjectmemberValue } from '../helpers';
 import { HoverObserver, ResponsiveConfirm } from '../advanced';
-import { DefaultCol } from '../list';
+import { DefaultCol, ActionButton } from '../list';
 
 const mystyle = {
   minHeight: '30px',
@@ -119,25 +119,34 @@ export default class DefaultLine extends Component {
                     if (action.hidden) {
                       return null;
                     }
-                    if (action.component) {
-                      const clonedElementWithMoreProps = React.cloneElement(action.component, {
-                        item: this.props.item,
-                      });
-                      return clonedElementWithMoreProps;
-                    } else {
-                      return (
-                        <button
-                          key={`action-${i}`}
-                          type="button"
-                          className={classnames('btn btn-inline btn-secondary', 'btn-' + action.theme || 'secondary')}
-                          onClick={() => {
-                            action.onClick(this.props.item);
-                          }}
-                        >
-                          {action.icon}
-                        </button>
-                      );
+                    let display = true;
+                    if (typeof action.fShow === 'function') {
+                      display = action.fShow(this.props.item);
                     }
+                    if (display) {
+                      if (action.component) {
+                        const clonedElementWithMoreProps = React.cloneElement(action.component, {
+                          item: this.props.item,
+                        });
+                        return clonedElementWithMoreProps;
+                      } else {
+                        let actionClass = '';
+                        if (action.role !== 'OTHER') {
+                          actionClass = 'btn-' + action.theme;
+                        } else {
+                          actionClass = 'btn-light btn-outline-sedonary-light border-secondary text-secondary';
+                        }
+                        return (
+                          <ActionButton
+                            key={action.name}
+                            action={action}
+                            item={this.props.item}
+                            className={classnames('btn-inline btn-action', actionClass)}
+                          />
+                        );
+                      }
+                    }
+                    return null;
                   })}
                 {this.props.onGetOne && (
                   <button

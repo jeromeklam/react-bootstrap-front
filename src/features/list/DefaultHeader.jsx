@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Highlight } from '../tour';
 import { Dropdown } from '../basic';
+import { Row, Col } from '../grid';
 import { SortPanel, sortToLocal, validSort } from '../sort';
 import { rbfIntl } from '../intl';
 
@@ -196,8 +197,8 @@ export default class DefaultHeader extends Component {
           'text' + this.props.headerTextTheme
         )}
       >
-        <div className="row">
-          <div className="col-xxs-w28">
+        <Row>
+          <Col size={{ xs: 10, md: 7, lg: 5 }}>
             <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
               <span style={iconstyle} className={classnames('no-selector', 'text-' + this.props.headerTextTheme)}>
                 {this.props.icon && this.props.icon}
@@ -208,8 +209,9 @@ export default class DefaultHeader extends Component {
                 {this.props.title}
               </span>
             </div>
+          </Col>
+          <Col size={{ xs: 10, sm: 2, md: 4, lg: 3 }} className="text-right">
             {this.props.counter && (
-              <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
                 <Highlight
                   position="bottom"
                   theme="LIST"
@@ -219,75 +221,11 @@ export default class DefaultHeader extends Component {
                     {this.props.counter}
                   </span>
                 </Highlight>
-              </div>
             )}
-            {this.props.onSelectView && (
-              <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
-                <Highlight
-                  style={sortStyle}
-                  position="bottom"
-                  theme="LIST"
-                  title={this.props.t({ id: 'rbf.list.header.mode.help', defaultMessage: 'Mode helper' })}
-                >
-                  <div className="input-group">
-                    <button
-                      type="button"
-                      className="btn btn-light text-secondary"
-                      ref={this.state.myModeRef}
-                      onClick={() => this.onToggleModeMenu()}
-                    >
-                      {
-                        {
-                          list: this.props.viewListIcon,
-                          form: this.props.viewFormIcon,
-                          split: this.props.viewSplitIcon,
-                        }[this.props.mode]
-                      }
-                      <svg viewBox="0 0 24 24" role="presentation" style={{ width: '1.35rem', height: '1.35rem;' }}>
-                        <path d="M7,10L12,15L17,10H7Z" style={{ fill: 'currentcolor' }} />
-                      </svg>
-                    </button>
-                    {this.state.modeMenu && (
-                      <Dropdown
-                        className="border rounded border-secondary bg-light text-secondary"
-                        myRef={this.state.myModeRef}
-                        onClose={() => {
-                          this.setState({ modeMenu: false });
-                        }}
-                      >
-                        <div className="p-2">
-                          <button
-                            className={classnames('dropdown-item', 'text-secondary')}
-                            onClick={() => this.onToggleModeMenu('list')}
-                          >
-                            {this.props.viewListIcon}{' '}
-                            <span>{this.props.t({ id: 'rbf.list.header.view.list', defaultMessage: 'liste' })}</span>
-                          </button>
-                          <button
-                            className={classnames('dropdown-item', 'text-secondary')}
-                            onClick={() => this.onToggleModeMenu('split')}
-                          >
-                            {this.props.viewSplitIcon}{' '}
-                            <span>{this.props.t({ id: 'rbf.list.header.view.split', defaultMessage: 'partagé' })}</span>
-                          </button>
-                          <button
-                            className={classnames('dropdown-item', 'text-secondary')}
-                            onClick={() => this.onToggleModeMenu('form')}
-                          >
-                            {this.props.viewFormIcon}{' '}
-                            <span>
-                              {this.props.t({ id: 'rbf.list.header.view.form', defaultMessage: 'formulaire' })}
-                            </span>
-                          </button>
-                        </div>
-                      </Dropdown>
-                    )}
-                  </div>
-                </Highlight>
-              </div>
-            )}
-            <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
+          </Col>
+          <Col size={{ xs: 0, md: 8, lg: 6 }}>
               <Highlight
+                className="w-100"
                 style={sortStyle}
                 position="bottom"
                 theme="LIST"
@@ -295,9 +233,10 @@ export default class DefaultHeader extends Component {
               >
                 {this.props.quickSearch}
               </Highlight>
-            </div>
-            <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
+          </Col>
+          <Col size={{ xs: 0, md: 8, lg: 6 }}>
               <Highlight
+                className="w-100"
                 style={sortStyle}
                 position="bottom"
                 theme="LIST"
@@ -339,9 +278,8 @@ export default class DefaultHeader extends Component {
                   )}
                 </form>
               </Highlight>
-            </div>
-          </div>
-          <div className="col-xxs-w8 text-right">
+          </Col>
+          <Col size={{ xs: 16, md: 9, lg: 16 }} className="text-right">
             <ul className="nav justify-content-end rbf-list-default-header-nav">
               {selectable && this.props.selectMenu && this.props.selectMenu.length > 0 && (
                 <li className="nav-item">
@@ -438,8 +376,8 @@ export default class DefaultHeader extends Component {
                   </li>
                 ))}
             </ul>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </div>
     );
   }
