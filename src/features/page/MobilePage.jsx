@@ -6,7 +6,7 @@ import { Container } from '../grid';
 
 const duration = 500;
 const MobileHeaderHeight = 60;
-const MobileFooterHeight = 80;
+const MobileFooterHeight = 70;
 
 const headerMobileStyles = {
   zIndex: '900',

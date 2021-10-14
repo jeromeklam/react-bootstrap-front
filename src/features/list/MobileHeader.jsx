@@ -94,7 +94,7 @@ export default class MobileHeader extends Component {
     return (
       <div
         style={mystyle}
-        className="ui-mobile-list row row-short bg-light text-secondary border-bottom border-secondary-light"
+        className="ui-mobile-list row bg-light text-secondary border-bottom border-secondary-light"
       >
         <div className="col-xxs-w12 ui-mobile-list-icon">
           {this.props.icon ? (
