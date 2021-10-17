@@ -52,7 +52,7 @@ export default class CalmButton extends Component {
     } else {
       this.timer = setTimeout(() => {
         this.setState({ executing: false });
-      }, 1000);
+      }, 2000);
       this.setState({ executing: true });
       this.props.onClick(event);
     }

@@ -1,3 +1,9 @@
+# 3.6.2 : 17/10/2021
+
+* Quill => Prosemirror
+* CalmButton: 2s
+* InlineList: fShow
+
 # 3.6.1 : 14/10/2021
 
 * List

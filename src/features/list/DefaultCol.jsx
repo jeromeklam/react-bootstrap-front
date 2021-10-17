@@ -35,13 +35,17 @@ const getContent = (type, content) => {
 export const DefaultCol = props => {
   let { content } = props;
   let addClass = '';
+  let display = true;
   if (props.align !== '') {
     addClass = 'text-' + props.align;
   }
   if (content === null) {
     content = '';
   }
-  if (props.type) {
+  if (typeof props.fShow === 'function') {
+    display = props.fShow(props.item, content);
+  }
+  if (display && props.type) {
     switch (props.type) {
       case 'text': {
         content = striptags(`${content}`);
@@ -130,17 +134,21 @@ export const DefaultCol = props => {
         break;
     }
   }
-  if (content === null || content === '') {
+  if (!display || content === null || content === '') {
     content = ' ';
   }
-  if (typeof props.fDisplay === 'function') {
+  if (display && typeof props.fDisplay === 'function') {
     content = props.fDisplay(props.item, content);
   }
   let cols = '';
   if (typeof props.size === 'object') {
     Object.keys(props.size).forEach(key => {
       if (!isNaN(props.size[key])) {
-        cols += ` col-${key}-w${props.size[key]} `;
+        if (props.size[key] === 0) {
+          cols += ` col-${key}-none `;
+        } else {
+          cols += ` col-${key}-w${props.size[key]} `;
+        }
       } else {
         cols += ` col-${key}-${props.size[key]} `;
       }

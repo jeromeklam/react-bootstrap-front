@@ -85,6 +85,12 @@ export default class DefaultLine extends Component {
     if (this.props.counter) {
       rowOddEven = this.props.counter % 2 === 0 ? 'row-even' : 'row-odd';
     }
+    let addGet = false;
+    let addDel = false;
+    if (Array.isArray(this.props.inlineActions)) {
+      addGet = this.props.inlineActions.findIndex(elem => elem.role === 'MODIFY') < 0;
+      addDel = this.props.inlineActions.findIndex(elem => elem.role === 'DELETE') < 0;
+    }
     return (
       <div className="inline-list-default-line">
         <HoverObserver
@@ -148,7 +154,7 @@ export default class DefaultLine extends Component {
                     }
                     return null;
                   })}
-                {this.props.onGetOne && (
+                {this.props.onGetOne && addGet && (
                   <button
                     type="button"
                     className="btn btn-inline btn-secondary"
@@ -159,7 +165,7 @@ export default class DefaultLine extends Component {
                     {this.props.getIcon}
                   </button>
                 )}
-                {this.props.onDelOne && (
+                {this.props.onDelOne && addDel && (
                   <button
                     type="button"
                     className="btn btn-inline btn-warning"

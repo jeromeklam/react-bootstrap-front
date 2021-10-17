@@ -1,6 +1,7 @@
 @import '../../styles/mixins';
 
 .col-title {
-  white-space: nowrap;
   overflow: hidden;
+  word-spacing: normal;
+  white-space: pre;
 }

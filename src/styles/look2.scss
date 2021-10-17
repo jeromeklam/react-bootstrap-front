@@ -644,3 +644,76 @@ input[type='text']:disabled {
   word-break: break-all;
   white-space: nowrap;
 }
+
+.prosemirror-toolbar {
+  /* TODO: remove !important once esbuild fixes CSS import order */
+  color: theme-color('secondary') !important;
+  flex-shrink: 0;
+
+  .prosemirror-toolbar-group {
+    border: 1px solid theme-color('secondary');
+    border-radius: 2px !important;
+  }
+
+  button:hover {
+    color: theme-color('primary') !important;
+  }
+
+  button[data-active="true"] {
+    background-color: theme-color('secondary-light') !important;
+    color: theme-color('secondary') !important;
+  }
+}
+
+.prosemirror-editor {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.prosemirror-demo {
+  height: 50vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.prosemirror-demo-editor,
+.prosemirror-demo-output {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
+  min-width: 400px;
+  padding: 8px;
+  gap: 4px;
+}
+
+.prosemirror-demo-editor {
+  flex: 4;
+  overflow-y: auto;
+}
+
+.prosemirror-demo-output {
+  flex: 3;
+}
+
+.prosemirror-demo-output .output {
+  flex: 1;
+  /*max-height: 50%;*/
+  overflow: hidden;
+}
+
+.prosemirror-demo-output pre {
+  font-family: monospace;
+  background: #000;
+  color: lawngreen;
+  padding: 8px;
+  border-radius: 2px;
+  white-space: pre-wrap;
+  margin: 0;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}

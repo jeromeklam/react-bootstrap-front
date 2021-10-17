@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const mystyle = {
+const myLocalStyle = {
   position: 'absolute',
   top: '50px',
   left: '0px',
@@ -18,7 +18,7 @@ const headerStyle = {
 }
 
 export const DefaultContent = props => {
-  let inlineStyle = mystyle;
+  let inlineStyle = {...myLocalStyle};
   if (!props.header) {
     inlineStyle.top = '0px';
   }

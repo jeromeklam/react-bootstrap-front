@@ -213,24 +213,27 @@ export default class DefaultList extends Component {
     dispCols.forEach(col => {
       if (typeof col.size === 'object') {
         let min = 'none';
-        if (col.size.xs) {
+        if (col.size.hasOwnProperty('xs')) {
           min = col.size.xs;
         } else {
-          if (col.size.sm) {
+          if (col.size.hasOwnProperty('sm')) {
             min = col.size.sm;
           } else {
-            if (col.size.md) {
+            if (col.size.hasOwnProperty('md')) {
               min = col.size.md;
             } else {
-              if (col.size.lg) {
+              if (col.size.hasOwnProperty('lg')) {
                 min = col.size.lg;
               } else {
-                if (col.size.xl) {
+                if (col.size.hasOwnProperty('xl')) {
                   min = col.size.xl;
                 }
               }
             }
           }
+        }
+        if (min === 0) {
+          min = 'none';
         }
         if (!col.size.xs) {
           col.size.xs = min;
