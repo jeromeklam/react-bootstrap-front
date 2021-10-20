@@ -38,6 +38,7 @@ export class MobileLine extends Component {
     onSelect: PropTypes.func,
     forSelectOne: PropTypes.bool,
     setCurrentFlipped: PropTypes.func,
+    selected: PropTypes.array,
   };
 
   static defaultProps = {
@@ -50,6 +51,7 @@ export class MobileLine extends Component {
     onSelect: () => {},
     forSelectOne: false,
     setCurrentFlipped: () => {},
+    selected: [],
   };
 
   constructor(props) {

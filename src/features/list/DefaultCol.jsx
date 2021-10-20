@@ -224,6 +224,7 @@ DefaultCol.propTypes = {
   item: PropTypes.element.isRequired,
   className: PropTypes.string,
   align: PropTypes.string,
+  selected: PropTypes.array,
 };
 
 DefaultCol.defaultProps = {
@@ -236,4 +237,5 @@ DefaultCol.defaultProps = {
   fDisplay: null,
   className: '',
   align: '',
+  selected: [],
 };

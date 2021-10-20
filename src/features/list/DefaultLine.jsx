@@ -27,7 +27,7 @@ export default class DesktopListLine extends Component {
     inlineOpenedId: PropTypes.number,
     inlineComponent: PropTypes.element,
     onSelect: PropTypes.func,
-    selected: PropTypes.element,
+    selected: PropTypes.array,
     mode: PropTypes.string,
     onClick: PropTypes.func,
   };
