@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {
   FILTER_OPER_LIKE,
+  FILTER_OPER_SOUND_LIKE,
   FILTER_OPER_NOT_LIKE,
   FILTER_OPER_EQUAL,
   FILTER_OPER_NOT_EQUAL,
@@ -75,6 +76,7 @@ export default class FilterBuilder extends Component {
                 <option value={FILTER_OPER_EQUAL}>=</option>
                 <option value={FILTER_OPER_NOT_EQUAL}>!=</option>
                 <option value={FILTER_OPER_LIKE}>*</option>
+                <option value={FILTER_OPER_SOUND_LIKE}>~</option>
                 <option value={FILTER_OPER_NOT_LIKE}>!*</option>
                 <option value={FILTER_OPER_EMPTY}>&Oslash;</option>
                 <option value={FILTER_OPER_NOT_EMPTY}>!&Oslash;</option>

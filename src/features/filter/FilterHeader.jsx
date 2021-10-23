@@ -3,6 +3,7 @@ import {
   FILTER_MODE_OR,
   FILTER_MODE_AND,
   FILTER_OPER_LIKE,
+  FILTER_OPER_SOUND_LIKE,
   FILTER_OPER_NOT_LIKE,
   FILTER_OPER_EQUAL,
   FILTER_OPER_NOT_EQUAL,
@@ -12,7 +13,6 @@ import {
   FILTER_OPER_LOWER_OR_EQUAL,
   FILTER_OPER_GREATER,
   FILTER_OPER_GREATER_OR_EQUAL,
-  Filter,
 } from './';
 import { InputRadio } from '../basic';
 
@@ -51,6 +51,7 @@ export default function FilterHeader(props) {
             <option value={FILTER_OPER_EQUAL}>Egal =</option>
             <option value={FILTER_OPER_NOT_EQUAL}>Différent !=</option>
             <option value={FILTER_OPER_LIKE}>Contient *</option>
+            <option value={FILTER_OPER_SOUND_LIKE}>Ressemble à ~</option>
             <option value={FILTER_OPER_NOT_LIKE}>Ne contient pas !*</option>
             <option value={FILTER_OPER_EMPTY}>Vide &Oslash;</option>
             <option value={FILTER_OPER_NOT_EMPTY}>Pas vide !&Oslash;</option>
