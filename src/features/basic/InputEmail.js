@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { getRandomInt } from '../helpers';
+import { getRandomInt, verifyEmail } from '../helpers';
 
 export const InputEmail = props => {
   let myId = props.id;
@@ -25,13 +25,13 @@ export const InputEmail = props => {
         </label>
       )}
       <div className={classnames(!props.labelTop && `col-xxs-w${props.inputSize}`)}>
-        <div className={classnames('input-group', (props.error || props.warning) && 'is-invalid')}>
+        <div className={classnames('input-group', (props.error || props.warning || !verifyEmail(props.value)) && 'is-invalid')}>
           <input
             type="text"
             className={classnames(
               'border-rbf form-control',
               props.size && `form-control-${props.size}`,
-              (props.error || props.warning) && 'is-invalid'
+              (props.error || props.warning || !verifyEmail(props.value)) && 'is-invalid'
             )}
             id={myId}
             name={props.name}

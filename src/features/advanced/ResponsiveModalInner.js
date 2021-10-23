@@ -76,6 +76,7 @@ export default class ResponsiveModalInner extends Component {
     header: PropTypes.element,
     scroll: PropTypes.bool,
     zoom: PropTypes.number,
+    help: PropTypes.element
   };
 
   static defaultProps = {
@@ -90,6 +91,7 @@ export default class ResponsiveModalInner extends Component {
     header: null,
     scroll: true,
     zoom: 0,
+    help: null,
   };
 
   constructor(props) {
@@ -97,7 +99,9 @@ export default class ResponsiveModalInner extends Component {
     this.state = {
       opacity: '0',
       show: false,
+      help: false,
     };
+    this.onToggleHelp = this.onToggleHelp.bind(this);
   }
 
   componentDidMount() {
@@ -107,6 +111,10 @@ export default class ResponsiveModalInner extends Component {
     } else {
       this.setState({ show: true });
     }
+  }
+
+  onToggleHelp() {
+    this.setState({help: !this.state.help});
   }
 
   render() {
@@ -261,9 +269,19 @@ export default class ResponsiveModalInner extends Component {
                           <TouchHandler swipRight={this.props.onNext} swipLeft={this.props.onPrevious}>
                             {this.props.children}
                           </TouchHandler>
+                          {this.props.help && 
+                            <div className="modal-help custom-scrollbar" style={{height: this.props.help ? '300px' : '0px'}}>
+                              <div dangerouslySetInnerHTML={{ __html: `${this.props.help}` }} />;
+                            </div>
+                          }
                         </div>
                         {this.props.buttons && (
                           <div className={classnames('modal-footer', this.props.modalClassName)}>
+                            {this.props.help &&
+                              <div className="modal-left-buttons">
+                                <button className="btn btn-secondary" onClick={this.onToggleHelp}>?</button>
+                              </div>
+                            }
                             {this.props.buttons.map((button, idx) => {
                               if (!button.hidden && button.name !== '') {
                                 return <ResponsiveButton key={`btn-resp${idx}`} button={button} />;

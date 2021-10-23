@@ -1,3 +1,16 @@
+# 3.7.0 : 23/10/2021
+
+* Basic/Email
+    * Red if not correct 
+* Advanced/Modal
+    * Help block on bottom
+* List
+    * Header objects optimization 
+    * Col full html
+    * mobile list with odd / even color
+* Filter
+    * addConditions & soundex
+
 # 3.6.3 : 20/10/2021
 
 * Correction d'un bug sur les listes en cas d'absence de la props selected

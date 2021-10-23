@@ -61,7 +61,7 @@ class MobileList extends Component {
               setCurrentFlipped={this.setCurrentFlipped}
             />
           ))}
-        {((!this.props.loading && !Array.isArray(this.props.items)) || this.props.items.length === 0) && (
+        {(!Array.isArray(this.props.items) || this.props.items.length === 0) && (
           <MobileLineText
             className="text-secondary"
             label={this.props.t({ id: 'rbf.inlinelist.empty', defaultMessage: 'Liste vide' })}

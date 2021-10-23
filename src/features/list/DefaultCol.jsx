@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import striptags from 'striptags';
+import { verifyEmail } from '../helpers';
 
 const optionsDate = {
   year: 'numeric',
@@ -14,9 +15,13 @@ const optionsTime = {
   minute: 'numeric',
 };
 
-const colstyle = {
+const colStyle = {
   wordBreak: 'break-all',
   whiteSpace: 'nowrap',
+  minHeight: '30px',
+  overflow: 'hidden',
+};
+const htmlStyle = {
   minHeight: '30px',
   overflow: 'hidden',
 };
@@ -24,7 +29,7 @@ const colstyle = {
 const getContent = (type, content) => {
   switch (type) {
     case 'mail':
-      return <a href={`mailto:${content}`}>{content}</a>
+      return <a className={classnames(!verifyEmail(content) && "text-danger")} href={`mailto:${content}`}>{content}</a>
     case 'phone':
       return <a href={`tel:${content}`}>{content}</a>
     default:
@@ -45,10 +50,19 @@ export const DefaultCol = props => {
   if (typeof props.fShow === 'function') {
     display = props.fShow(props.item, content);
   }
+  let myColStyle = {...colStyle};
   if (display && props.type) {
     switch (props.type) {
       case 'text': {
         content = striptags(`${content}`);
+        break;
+      }
+      case 'rawhtml': {
+        myColStyle = {...htmlStyle};
+        addClass = 'text-raw-html';
+        content = content.replace(/<p><\/p>/gi, '');
+        content = content.replace(/<p>&nbsp;<\/p>/gi, '');
+        content = <div dangerouslySetInnerHTML={{ __html: `${content}` }} />;
         break;
       }
       case 'html': {
@@ -186,7 +200,7 @@ export const DefaultCol = props => {
     cols += ' ' + props.fClassName(props.item);
   }
   return (
-    <div style={colstyle} className={classnames(cols, 'col-vertical-align', addClass, props.className)}>
+    <div style={myColStyle} className={classnames(cols, 'col-vertical-align', addClass, props.className)}>
       {props.selectable ? (
         <div>
           <div

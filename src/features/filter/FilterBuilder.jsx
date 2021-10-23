@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {
-  FILTER_MODE_OR,
-  FILTER_MODE_AND,
   FILTER_OPER_LIKE,
   FILTER_OPER_NOT_LIKE,
   FILTER_OPER_EQUAL,
@@ -43,7 +41,6 @@ export default class FilterBuilder extends Component {
   }
 
   render() {
-    const mode = this.props.filters.getMode();
     const oper = this.props.filters.getOperator();
     return (
       <div className={classnames('filter-filter-builder', this.props.className)}>
@@ -74,7 +71,7 @@ export default class FilterBuilder extends Component {
                 value={colOper}
                 className="border-0 text-secondary rounded-left"
                 onChange={this.props.onFilterOperator}
-              >
+              >            
                 <option value={FILTER_OPER_EQUAL}>=</option>
                 <option value={FILTER_OPER_NOT_EQUAL}>!=</option>
                 <option value={FILTER_OPER_LIKE}>*</option>

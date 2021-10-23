@@ -3,6 +3,26 @@ import striptags from 'striptags';
 import { AllHtmlEntities } from 'html-entities';
 import { isNull } from 'lodash';
 
+export const verifyEmail = (email) => {
+  if (email) {
+    const toTest = '' + email;
+    if (toTest.trim() !== '') {
+      const tabs = toTest.split('@');
+      if (tabs.length === 2) {
+        const domain = tabs[1].split('.');
+        if (domain.length === 2) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 export const isDescendant = (el, parentId) => {
   let isChild = false;
   if (el.id === parentId) {

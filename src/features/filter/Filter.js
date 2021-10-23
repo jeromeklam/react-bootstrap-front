@@ -6,6 +6,7 @@ import {
   FILTER_TYPE_GROUP,
   FILTER_TYPE_ELEM,
   FILTER_SEARCH_NONE,
+  FILTER_OPER_EQUAL,
 } from './';
 
 /**
@@ -288,4 +289,19 @@ export default class Filter {
       }
     });
   }
+
+  addConditions(conditions) {
+    if (Array.isArray(conditions)) {
+      conditions.forEach(cond => {
+        const fixed = cond.hasOwnProperty('fixed') ? cond.fixed : true;
+        const name  = cond.name || cond.field;
+        const oper  = cond.oper || FILTER_OPER_EQUAL;
+        const value = cond.hasOwnProperty('value') ? cond.value : null;
+        if (name) {
+          this.addFilter(name, value, oper, fixed);
+        }
+      });
+    }
+  }
+
 }

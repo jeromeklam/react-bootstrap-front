@@ -39,6 +39,7 @@ export class MobileLine extends Component {
     forSelectOne: PropTypes.bool,
     setCurrentFlipped: PropTypes.func,
     selected: PropTypes.array,
+    lineMode: PropTypes.string,
   };
 
   static defaultProps = {
@@ -52,6 +53,7 @@ export class MobileLine extends Component {
     forSelectOne: false,
     setCurrentFlipped: () => {},
     selected: [],
+    lineMode: 'simple',
   };
 
   constructor(props) {
@@ -111,7 +113,7 @@ export class MobileLine extends Component {
 
   render() {
     let rowOddEven = 'row-no-odd-even';
-    if (this.props.counter) {
+    if (this.props.counter && this.props.lineMode === 'odd-even') {
       rowOddEven = this.props.counter % 2 === 0 ? 'row-even' : 'row-odd';
     }
     const selectable =
@@ -156,7 +158,7 @@ export class MobileLine extends Component {
               <TouchHandler
                 className={classnames(
                   'card-header rbf-list-mobile-line-header',
-                  this.props.inlineOpenedId === this.props.id && 'bg-selected',
+                  this.props.inlineOpenedId === this.props.id ? 'bg-selected' : this.props.lineMode === 'simple' ? 'bg-light' : '',
                   this.props.item.id === this.props.currentFlipped ? 'text-white bg-primary-light' : 'text-secondary'
                 )}
                 swipRight={this.openMenu}
@@ -274,6 +276,7 @@ export class MobileLine extends Component {
                         key={`col-${oneCol.col}`}
                         first={first}
                         last={last}
+                        lineCounter={i}
                         content={content}
                         item={this.props.item}
                         {...line}

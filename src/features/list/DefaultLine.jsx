@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { HoverObserver } from '../advanced';
-import { getObjectmemberValue, isMobileDevice } from '../helpers';
-import { DefaultLineCol, ActionButton } from './';
+import { getObjectmemberValue } from '../helpers';
+import { DefaultCol, ActionButton } from './';
 
 const mystyle = {};
 
@@ -107,7 +107,7 @@ export default class DesktopListLine extends Component {
                 const line = { ...oneCol, id: this.props.id };
                 const content = getObjectmemberValue(item, oneCol.col);
                 return (
-                  <DefaultLineCol
+                  <DefaultCol
                     key={line.name}
                     selected={this.props.selected}
                     onSelect={this.props.onSelect}

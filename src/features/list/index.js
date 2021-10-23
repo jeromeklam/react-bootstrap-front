@@ -1,6 +1,5 @@
 export * from './DefaultCol.jsx';
 export * from './DefaultFooter.jsx';
-export * from './DefaultLineCol';
 export { default as DefaultHeader } from './DefaultHeader.jsx';
 export { default as DefaultList } from './DefaultList.jsx';
 export { default as DefaultLine } from './DefaultLine.jsx';

@@ -60,3 +60,14 @@
 .container-xs .modal-content .modal-footer {
     background-color: theme-color('secondary');
 }
+
+.modal-help {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: white;
+  border: 1px solid theme-color('secondary-light');
+  z-index: 99999;
+  padding: 10px;
+}

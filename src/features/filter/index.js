@@ -3,6 +3,7 @@ export const FILTER_MODE_OR = 'OR';
 export const FILTER_MODE_AND = 'AND';
 /* OPERATORS */
 export const FILTER_OPER_LIKE = 'contains';
+export const FILTER_OPER_SOUND_LIKE = 'soundex';
 export const FILTER_OPER_NOT_LIKE = 'ncontains';
 export const FILTER_OPER_EQUAL = 'eq';
 export const FILTER_OPER_NOT_EQUAL = 'neq';
