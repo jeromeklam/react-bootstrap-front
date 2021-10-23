@@ -210,29 +210,29 @@ export default class DefaultHeader extends Component {
               </span>
             </div>
             {this.props.counter && (
-                <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
-                  <Highlight
-                    position="bottom"
-                    theme="LIST"
-                    title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
-                  >
-                    <span className="default-list-header-counter no-selector" style={counterStyle}>
-                      {this.props.counter}
-                    </span>
-                  </Highlight>
-                </div>
+              <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
+                <Highlight
+                  position="bottom"
+                  theme="LIST"
+                  title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
+                >
+                  <span className="default-list-header-counter no-selector" style={counterStyle}>
+                    {this.props.counter}
+                  </span>
+                </Highlight>
+              </div>
             )}
           </Col>
           <Col size={{ xs: 0, md: 8, lg: 8 }}>
-              <Highlight
-                className="w-100"
-                style={sortStyle}
-                position="bottom"
-                theme="LIST"
-                title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
-              >
-                {this.props.quickSearch}
-              </Highlight>
+            <Highlight
+              className="w-100"
+              style={sortStyle}
+              position="bottom"
+              theme="LIST"
+              title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
+            >
+              {this.props.quickSearch}
+            </Highlight>
           </Col>
           <Col size={{ xs: 16, md: 9, lg: 14 }} className="text-right">
             <ul className="nav justify-content-end rbf-list-default-header-nav">
@@ -248,7 +248,7 @@ export default class DefaultHeader extends Component {
                     {sortToText(this.props.sort, this.props.cols)}
                   </span>
                   <button ref={this.state.mySortRef} type="button" className="btn btn-light text-secondary" onClick={this.onToggleSortMenu}>
-                    {this.props.sortNoneIcon}
+                    {this.props.sortIcon}
                   </button>
                   {this.state.sortMenu && (
                     <Dropdown
@@ -281,6 +281,9 @@ export default class DefaultHeader extends Component {
                       theme="LIST"
                       title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
                     >
+                      {this.props.selected && Array.isArray(this.props.selected) && (this.props.selected.length > 0) && (
+                        <span>{this.props.selected.length}</span>
+                      )}
                       <button
                         className="btn btn-light text-secondary"
                         ref={this.state.myRef}
