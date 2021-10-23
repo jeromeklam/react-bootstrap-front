@@ -140,6 +140,9 @@ export default class Filter {
   }
 
   addFilter(name, value, oper = false, fixed = false, def = false, enable = true) {
+    if (oper === false) {
+      oper = this.data.operator;
+    }
     let elem = this.data.filters.find(elt => elt.getFilterName() === name);
     if (elem) {
       elem.setFilterCrit(value, oper);
