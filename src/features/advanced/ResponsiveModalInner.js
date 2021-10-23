@@ -76,7 +76,8 @@ export default class ResponsiveModalInner extends Component {
     header: PropTypes.element,
     scroll: PropTypes.bool,
     zoom: PropTypes.number,
-    help: PropTypes.element
+    help: PropTypes.element,
+    rightPan: PropTypes.element,
   };
 
   static defaultProps = {
@@ -92,6 +93,7 @@ export default class ResponsiveModalInner extends Component {
     scroll: true,
     zoom: 0,
     help: null,
+    rightPan: null,
   };
 
   constructor(props) {
@@ -269,9 +271,14 @@ export default class ResponsiveModalInner extends Component {
                           <TouchHandler swipRight={this.props.onNext} swipLeft={this.props.onPrevious}>
                             {this.props.children}
                           </TouchHandler>
-                          {this.props.help && 
-                            <div className="modal-help custom-scrollbar" style={{height: this.props.help ? '300px' : '0px'}}>
-                              <div dangerouslySetInnerHTML={{ __html: `${this.props.help}` }} />;
+                          {this.state.help && 
+                            <div className="modal-help bg-light text-secondary custom-scrollbar" style={{height: this.state.help ? '300px' : '0px'}}>
+                              <div dangerouslySetInnerHTML={{ __html: `${this.props.help}` }} />
+                            </div>
+                          }
+                          {this.props.rightPan && 
+                            <div className="modal-right-panel" style={{width: this.props.rightPan ? '350px' : '0px'}}>
+                              {this.props.rightPan}
                             </div>
                           }
                         </div>

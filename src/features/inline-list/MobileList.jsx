@@ -55,7 +55,6 @@ class MobileList extends Component {
               item={item}
               title={item[this.props.mainCol]}
               selectable={false}
-              onSelect={this.props.onSelect}
               forSelectOne={true}
               currentFlipped={this.state.currentFlipped}
               setCurrentFlipped={this.setCurrentFlipped}

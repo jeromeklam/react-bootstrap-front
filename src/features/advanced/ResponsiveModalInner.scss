@@ -70,4 +70,15 @@
   border: 1px solid theme-color('secondary-light');
   z-index: 99999;
   padding: 10px;
+  overflow: hidden;
+}
+.modal-right-panel {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  background-color: white;
+  border: 1px solid theme-color('secondary-light');
+  z-index: 99990;
+  overflow: hidden;
 }

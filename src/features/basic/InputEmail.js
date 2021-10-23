@@ -38,6 +38,7 @@ export const InputEmail = props => {
             value={props.value || ''}
             required={props.required}
             disabled={props.disabled}
+            onBlur={props.onBlur}
             onChange={props.onChange}
             autoComplete={props.autoComplete}
             placeholder={props.placeholder}
@@ -71,6 +72,7 @@ InputEmail.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   labelTop: PropTypes.bool,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   required: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -92,6 +94,7 @@ InputEmail.defaultProps = {
   value: '',
   label: '',
   id: '',
+  onBlur: () => {},
   onChange: () => {},
   disabled: false,
   required: false,

@@ -26,6 +26,7 @@ export const InputText = props => {
         value={props.value || ''}
         required={props.required}
         disabled={props.disabled || props.locked}
+        onBlur={props.onBlur}
         onChange={props.onChange}
         pattern={props.pattern}
         autoComplete={props.autoComplete}
@@ -60,6 +61,7 @@ InputText.propTypes = {
   id: PropTypes.string,
   maxLength: PropTypes.number,
   name: PropTypes.string.isRequired,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   pattern: PropTypes.string,
   placeholder: PropTypes.string,
@@ -83,6 +85,7 @@ InputText.defaultProps = {
   error: false,
   id: '',
   maxLength: 9999,
+  onBlur: () => {},
   onChange: () => {},
   pattern: null,
   placeholder: '',
