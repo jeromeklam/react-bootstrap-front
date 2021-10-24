@@ -15,12 +15,16 @@ import {
   FILTER_OPER_GREATER,
   FILTER_OPER_GREATER_OR_EQUAL,
   FILTER_OPER_GREATER_OR_EQUAL_OR_NULL,
+  FILTER_OPER_BETWEEN,
+  FILTER_OPER_IN,
+  FILTER_OPER_NOT_IN,
 } from './';
-import { InputRadio, InputDate } from '../basic';
+import { InputRadio, InputDate, InputMonetary } from '../basic';
 import { InputAutocomplete, FilterHeader } from './';
 
-const getOptionsForType = (type) => {
+const getOptionsForType = (type, update = false) => {
   let options = [
+    {value: '', label: ''},
     {value: FILTER_OPER_EQUAL, label: '='},
     {value: FILTER_OPER_NOT_EQUAL, label: '!='},
     {value: FILTER_OPER_EMPTY, label: 'ø'},
@@ -43,6 +47,11 @@ const getOptionsForType = (type) => {
       {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: '<=ø'},
     );
   };
+  if (update && (type === 'date' || type === 'datetime' || type === 'monetary')) {
+    options.push(
+      {value: FILTER_OPER_BETWEEN, label: '<.>'}
+    );
+  }
   return options;
 }
 
@@ -51,6 +60,7 @@ export default class FilterBuilder extends Component {
     cols: PropTypes.element.isRequired,
     filters: PropTypes.element.isRequired,
     onFilterOperator: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func,
     calIcon: PropTypes.element.isRequired,
     className: PropTypes.string,
     clearIcon: PropTypes.element.isRequired,
@@ -58,6 +68,7 @@ export default class FilterBuilder extends Component {
   };
   static defaultProps = {
     className: '',
+    onUpdate: null,
     withHeader: true,
   };
 
@@ -87,7 +98,7 @@ export default class FilterBuilder extends Component {
             }
             const elem = filter.findFirst(colFilterable);
             let value = '';
-            let colOper = oper;
+            let colOper = '';
             if (elem) {
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
@@ -97,10 +108,10 @@ export default class FilterBuilder extends Component {
                 id={`oper-${colFilterable}`}
                 name={`oper-${colFilterable}`}
                 value={colOper}
-                className="border-0 text-secondary rounded-left"
+                className="border-0 text-secondary rounded-left bg-light"
                 onChange={this.props.onFilterOperator}
               >            
-                {getOptionsForType(col.filterable.type).map(elem => 
+                {getOptionsForType(col.filterable.type, this.props.onUpdate ? true : false).map(elem => 
                   <option key={elem.value} value={elem.value}>{elem.label}</option>
                 )}
               </select>
@@ -108,7 +119,7 @@ export default class FilterBuilder extends Component {
             const prependPicker = (
               <button
                 type="button"
-                className="border-0 bg-light text-secondary rounded-left"
+                className="border-0 bg-light text-secondary rounded-left bg-light"
                 id={`oper-${colFilterable}`}
                 value={FILTER_OPER_EQUAL}
                 disabled
@@ -138,7 +149,7 @@ export default class FilterBuilder extends Component {
               case 'date':
                 return (
                   <div key={col.label}>
-                    <div className="form-group">
+                    <div className={classnames("form-group", colOper === FILTER_OPER_BETWEEN && "form-group-no-bottom")}>
                       <label htmlFor={colFilterable} className="">
                         {col.label}
                       </label>
@@ -153,8 +164,56 @@ export default class FilterBuilder extends Component {
                         delIcon={this.props.clearIcon}
                       />
                     </div>
+                    {colOper === FILTER_OPER_BETWEEN && this.props.onUpdate &&
+                      <div className="form-group">
+                        <InputDate
+                          borderColor="secondary-light"
+                          prepend={<label class="input-group-text ml-2">{'et'}</label>}
+                          id={colFilterable}
+                          name={colFilterable}
+                          value={elem.getFilterCrit('between')}
+                          onChange={this.props.onUpdate}
+                          calIcon={this.props.calIcon}
+                          delIcon={this.props.clearIcon}
+                        />
+                      </div>
+                    }
                   </div>
                 );
+                case 'monetary':
+                  return (
+                    <div key={col.label}>
+                      <div className={classnames("form-group", colOper === FILTER_OPER_BETWEEN && "form-group-no-bottom")}>
+                        <label htmlFor={colFilterable} className="">
+                          {col.label}
+                        </label>
+                        <InputMonetary
+                          borderColor="secondary-light"
+                          prepend={prepend}
+                          id={colFilterable}
+                          name={colFilterable}
+                          value={value}
+                          onChange={this.props.onChange}
+                          calIcon={this.props.calIcon}
+                          delIcon={this.props.clearIcon}
+                        />
+                      </div>
+                      {colOper === FILTER_OPER_BETWEEN && this.props.onUpdate &&
+                        <div className="form-group">
+                          <InputMonetary
+                            borderColor="secondary-light"
+                            prepend={<label class="input-group-text ml-2">{'et'}</label>}
+                            id={colFilterable}
+                            name={colFilterable}
+                            value={elem.getFilterCrit('between')}
+                            onChange={this.props.onUpdate}
+                            calIcon={this.props.calIcon}
+                            delIcon={this.props.clearIcon}
+                          />
+                        </div>
+                      }
+                    </div>
+                  );
               case 'boolean':
               case 'bool':
                 if (value === true || value === 1 || value === '1') {
@@ -237,7 +296,7 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border border-secondary-light rounded-left">{prepend}</div>
+                        <div className="input-group-prepend border-secondary-light rounded-left">{prepend}</div>
                         <input
                           type="text"
                           id={colFilterable}

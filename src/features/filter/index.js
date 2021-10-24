@@ -17,6 +17,7 @@ export const FILTER_OPER_GREATER_OR_EQUAL = 'gte';
 export const FILTER_OPER_GREATER_OR_EQUAL_OR_NULL = 'gten';
 export const FILTER_OPER_IN = 'in';
 export const FILTER_OPER_NOT_IN = 'nin';
+export const FILTER_OPER_BETWEEN = 'between';
 /* TYPES */
 export const FILTER_TYPE_GROUP = 'GROUP';
 export const FILTER_TYPE_ELEM = 'ELEM';

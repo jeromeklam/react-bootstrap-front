@@ -7,6 +7,7 @@ import {
   FILTER_TYPE_ELEM,
   FILTER_SEARCH_NONE,
   FILTER_OPER_EQUAL,
+  FILTER_OPER_BETWEEN,
 } from './';
 
 /**
@@ -24,7 +25,7 @@ export default class Filter {
       filter_fixed: false,
       filter_default: false,
       filter_enable: true,
-      filter_crits: [],
+      filter_crits: {},
       search: FILTER_SEARCH_NONE,
     };
     this.init();
@@ -92,16 +93,32 @@ export default class Filter {
     return this.data.filter_name;
   }
 
-  setFilterCrit(value, oper = false) {
+  setFilterCrit(value, oper = false, action = 'default') {
     if (oper !== false) {
       this.data.operator = oper;
     }
-    this.data.filter_crits.default = value;
+    switch (action) {
+      case 'between':
+        this.data.filter_crits.between = value;
+        break;
+      default:
+        this.data.filter_crits.default = value;
+        break;
+    }
   }
 
-  getFilterCrit() {
-    if (typeof this.data.filter_crits.default !== 'undefined') {
-      return this.data.filter_crits.default;
+  getFilterCrit(action = 'default') {
+    switch (action) {
+      case 'between':
+        if (typeof this.data.filter_crits.between !== 'undefined') {
+          return this.data.filter_crits.between;
+        }
+        break;
+      default:
+        if (typeof this.data.filter_crits.default !== 'undefined') {
+          return this.data.filter_crits.default;
+        }
+        break;
     }
     return null;
   }
@@ -140,19 +157,26 @@ export default class Filter {
   }
 
   addFilter(name, value, oper = false, fixed = false, def = false, enable = true) {
-    if (oper === false) {
-      oper = this.data.operator;
-    }
     let elem = this.data.filters.find(elt => elt.getFilterName() === name);
     if (elem) {
       elem.setFilterCrit(value, oper);
     } else {
+      if (oper === false) {
+        oper = this.data.operator;
+      }
       let elt2 = new Filter();
       elt2.setFilterName(name, fixed, def, enable);
       elt2.setFilterCrit(value, oper);
       this.data.filters.push(elt2);
     }
     this.checkFilters();
+  }
+
+  updateFilter(name, value, action = "default") {
+    let elem = this.data.filters.find(elt => elt.getFilterName() === name);
+    if (elem) {
+      elem.setFilterCrit(value, false, action);
+    }
   }
 
   updateFilterOperator(name, oper = false) {
@@ -181,19 +205,19 @@ export default class Filter {
       params.filter = {};
       this.data.filters.forEach(elt => {
         let crits2 = [];
-        const crits3 = elt.getFilterCrits();
-        Object.keys(crits3).forEach(key => {
-          if (crits3[key] === null || crits3[key] === '') {
-            if (elt.getOperator() === 'empty' || elt.getOperator() === 'nempty') {
-              crits2[elt.getOperator()] = crits3[key];
-            }
-          } else {
-            crits2[elt.getOperator()] = crits3[key];
-          }
-        });
-        if (crits2 === []) {
-          if (elt.getOperator() === 'empty' || elt.getOperator() === 'nempty') {
-            crits2[elt.getOperator()] = null;
+        if (elt.getOperator() === 'empty' || elt.getOperator() === 'nempty') {
+          crits2[elt.getOperator()] = null;
+        } else {
+          switch (elt.getOperator()) {
+            case FILTER_OPER_BETWEEN:
+              const b1 = elt.getFilterCrit('default');
+              const b2 = elt.getFilterCrit('between');
+              crits2[elt.getOperator()] = [b1, b2];
+              break;
+            default:
+              const v1 = elt.getFilterCrit('default');
+              crits2[elt.getOperator()] = v1;
+              break;
           }
         }
         if (elt.isEnable()) {
@@ -293,14 +317,14 @@ export default class Filter {
     });
   }
 
-  addConditions(conditions) {
+  addConditions(conditions, all = true) {
     if (Array.isArray(conditions)) {
       conditions.forEach(cond => {
         const fixed = cond.hasOwnProperty('fixed') ? cond.fixed : true;
         const name  = cond.name || cond.field;
         const oper  = cond.oper || FILTER_OPER_EQUAL;
         const value = cond.hasOwnProperty('value') ? cond.value : null;
-        if (name) {
+        if (name && (all || fixed)) {
           this.addFilter(name, value, oper, fixed);
         }
       });
