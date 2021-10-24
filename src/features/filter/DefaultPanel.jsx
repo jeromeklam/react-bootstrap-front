@@ -120,12 +120,19 @@ export default class DefaultPanel extends Component {
     this.onSortEnd = this.onSortEnd.bind(this);
     this.onSortChange = this.onSortChange.bind(this);
     this.onValid = this.onValid.bind(this);
+    this.onFilterUpdate = this.onFilterUpdate.bind(this);
   }
 
   onFilterChange(event, oper = false) {
     let { filter } = this.state;
     filter.addFilter(event.target.name, event.target.value, oper);
     filter.setSearch(FILTER_SEARCH_SIMPLE);
+    this.setState({ filter, local: true });
+  }
+
+  onFilterUpdate(event) {
+    let { filter } = this.state;
+    filter.updateFilter(event.target.name, event.target.value, 'between');
     this.setState({ filter, local: true });
   }
 
@@ -265,6 +272,7 @@ export default class DefaultPanel extends Component {
                   {...this.props}
                   filters={this.state.filter}
                   onChange={this.onFilterChange}
+                  onUpdate={this.onFilterUpdate}
                   onMode={this.onFilterMode}
                   onOperator={this.onOperator}
                   onFilterOperator={this.onFilterOperator}

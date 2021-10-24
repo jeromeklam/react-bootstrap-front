@@ -1,0 +1,20 @@
+.filter-filter-builder {
+  .input-group-prepend {
+    label, select {
+      min-width: 50px;
+      height: 100%;
+      background-color: theme-color('light') !important;
+    }
+    .input-group-text {
+      padding: 0px;
+    }
+  }
+  .form-group {
+    margin-bottom: 0.1rem;
+    padding-bottom: 0.5rem;
+  }
+  .form-group-no-bottom {
+    margin-bottom: 0rem;
+    padding-bottom: 0.1rem;
+  }
+}
