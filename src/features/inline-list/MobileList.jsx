@@ -7,11 +7,15 @@ class MobileList extends Component {
   static propTypes = {
     MobileList: PropTypes.bool,
     oddEven: PropTypes.bool,
+    loading: PropTypes.bool,
+    loader: PropTypes.element,
   };
 
   static defaultProps = {
     MobileList: false,
     oddEven: true,
+    loading: false,
+    loader: null,
   };
 
   constructor(props) {
@@ -60,12 +64,13 @@ class MobileList extends Component {
               setCurrentFlipped={this.setCurrentFlipped}
             />
           ))}
-        {(!Array.isArray(this.props.items) || this.props.items.length === 0) && (
+        {(!Array.isArray(this.props.items) || this.props.items.length === 0) && !this.props.loading && (
           <MobileLineText
             className="text-secondary"
             label={this.props.t({ id: 'rbf.inlinelist.empty', defaultMessage: 'Liste vide' })}
           />
         )}
+        {this.props.loading && this.props.loader}
         {!this.props.loading &&
           Array.isArray(this.props.items) &&
           this.props.onMore &&

@@ -19,6 +19,33 @@ import {
 import { InputRadio, InputDate } from '../basic';
 import { InputAutocomplete, FilterHeader } from './';
 
+const getOptionsForType = (type) => {
+  let options = [
+    {value: FILTER_OPER_EQUAL, label: '='},
+    {value: FILTER_OPER_NOT_EQUAL, label: '!='},
+    {value: FILTER_OPER_EMPTY, label: 'ø'},
+    {value: FILTER_OPER_NOT_EMPTY, label: '!ø'},
+  ];
+  if (type !== 'date' && type !== 'datetime' && type !== 'picker' && type !== 'select') {
+    options.push(
+      {value: FILTER_OPER_LIKE, label: '*'},
+      {value: FILTER_OPER_NOT_LIKE, label: '!*'},
+      {value: FILTER_OPER_SOUND_LIKE, label: '~'}
+    );
+  }
+  if (type !== 'picker' && type !== 'select') {
+    options.push(
+      {value: FILTER_OPER_GREATER, label: '>'},
+      {value: FILTER_OPER_GREATER_OR_EQUAL, label: '>='},
+      {value: FILTER_OPER_GREATER_OR_EQUAL_OR_NULL, label: '>=ø'},
+      {value: FILTER_OPER_LOWER, label: '<'},
+      {value: FILTER_OPER_LOWER_OR_EQUAL, label: '<='},
+      {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: '<=ø'},
+    );
+  };
+  return options;
+}
+
 export default class FilterBuilder extends Component {
   static propTypes = {
     cols: PropTypes.element.isRequired,
@@ -73,19 +100,9 @@ export default class FilterBuilder extends Component {
                 className="border-0 text-secondary rounded-left"
                 onChange={this.props.onFilterOperator}
               >            
-                <option value={FILTER_OPER_EQUAL}>=</option>
-                <option value={FILTER_OPER_NOT_EQUAL}>!=</option>
-                <option value={FILTER_OPER_LIKE}>*</option>
-                <option value={FILTER_OPER_SOUND_LIKE}>~</option>
-                <option value={FILTER_OPER_NOT_LIKE}>!*</option>
-                <option value={FILTER_OPER_EMPTY}>&Oslash;</option>
-                <option value={FILTER_OPER_NOT_EMPTY}>!&Oslash;</option>
-                <option value={FILTER_OPER_GREATER}>&gt;</option>
-                <option value={FILTER_OPER_GREATER_OR_EQUAL}>&gt;=</option>
-                <option value={FILTER_OPER_GREATER_OR_EQUAL_OR_NULL}>&gt;=&Oslash;</option>
-                <option value={FILTER_OPER_LOWER}>&lt;</option>
-                <option value={FILTER_OPER_LOWER_OR_EQUAL}>&lt;=</option>
-                <option value={FILTER_OPER_LOWER_OR_EQUAL_OR_NULL}>&lt;=&Oslash;</option>
+                {getOptionsForType(col.filterable.type).map(elem => 
+                  <option key={elem.value} value={elem.value}>{elem.label}</option>
+                )}
               </select>
             );
             const prependPicker = (

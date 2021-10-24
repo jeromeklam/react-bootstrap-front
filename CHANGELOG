@@ -5,6 +5,8 @@
 * Advanced/Modal
     * Help block on bottom
     * RightPanel
+* InlineList
+    * Loader 
 * List
     * Header objects optimization 
     * Col full html
