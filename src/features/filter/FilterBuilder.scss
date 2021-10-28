@@ -1,12 +1,15 @@
 .filter-filter-builder {
   .input-group-prepend {
-    label, select {
-      min-width: 50px;
+    label, select, span {
       height: 100%;
       background-color: theme-color('light') !important;
+      width: 100%;
     }
     .input-group-text {
-      padding: 0px;
+      min-width: 50px;
+      select{
+        padding: 0px;
+      }
     }
   }
   .form-group {

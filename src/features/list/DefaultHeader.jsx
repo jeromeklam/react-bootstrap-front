@@ -213,7 +213,7 @@ export default class DefaultHeader extends Component {
               <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
                 <Highlight
                   position="bottom"
-                  theme="LIST"
+                  theme="NAV"
                   title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
                 >
                   <span className="default-list-header-counter no-selector" style={counterStyle}>
@@ -228,7 +228,7 @@ export default class DefaultHeader extends Component {
               className="w-100"
               style={sortStyle}
               position="bottom"
-              theme="LIST"
+              theme="NAV"
               title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
             >
               {this.props.quickSearch}
@@ -241,7 +241,7 @@ export default class DefaultHeader extends Component {
                   className="w-100"
                   style={sortStyle}
                   position="bottom"
-                  theme="LIST"
+                  theme="NAV"
                   title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
                 >
                   <span>
@@ -278,7 +278,7 @@ export default class DefaultHeader extends Component {
                   <div className="dropdown">
                     <Highlight
                       position="bottom"
-                      theme="LIST"
+                      theme="NAV"
                       title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
                     >
                       {this.props.selected && Array.isArray(this.props.selected) && (this.props.selected.length > 0) && (
@@ -327,7 +327,7 @@ export default class DefaultHeader extends Component {
                 <li className="nav-item">
                   <Highlight
                     position="bottom"
-                    theme="LIST"
+                    theme="NAV"
                     title={this.props.t({ id: 'rbf.list.header.filter.help', defaultMessage: 'Filter helper' })}
                   >
                     <button
@@ -342,7 +342,7 @@ export default class DefaultHeader extends Component {
               )}
               {showFilterButton && (
                 <li className="nav-item">
-                  <Highlight position="bottom" theme="LIST" title={filterButtonTitle}>
+                  <Highlight position="bottom" theme="NAV" title={filterButtonTitle}>
                     <button
                       type="button"
                       className="btn btn-light text-secondary"

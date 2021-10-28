@@ -124,6 +124,7 @@ export default class DefaultPanel extends Component {
   }
 
   onFilterChange(event, oper = false) {
+    console.log("JK", event.target.name, event.target.value, oper);
     let { filter } = this.state;
     filter.addFilter(event.target.name, event.target.value, oper);
     filter.setSearch(FILTER_SEARCH_SIMPLE);

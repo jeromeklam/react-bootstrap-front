@@ -18,8 +18,10 @@ import {
   FILTER_OPER_BETWEEN,
   FILTER_OPER_IN,
   FILTER_OPER_NOT_IN,
+  FILTER_OPER_START_WITH,
+  FILTER_OPER_END_WITH,
 } from './';
-import { InputRadio, InputDate, InputMonetary } from '../basic';
+import { InputRadio, InputDate, InputMonetary, InputGroupPrepend, InputGroupText } from '../basic';
 import { InputAutocomplete, FilterHeader } from './';
 
 const getOptionsForType = (type, update = false) => {
@@ -34,6 +36,8 @@ const getOptionsForType = (type, update = false) => {
     options.push(
       {value: FILTER_OPER_LIKE, label: '*'},
       {value: FILTER_OPER_NOT_LIKE, label: '!*'},
+      {value: FILTER_OPER_START_WITH, label: '^*'},
+      {value: FILTER_OPER_END_WITH, label: '*$'},
       {value: FILTER_OPER_SOUND_LIKE, label: '~'}
     );
   }
@@ -168,7 +172,7 @@ export default class FilterBuilder extends Component {
                       <div className="form-group">
                         <InputDate
                           borderColor="secondary-light"
-                          prepend={<label class="input-group-text ml-2">{'et'}</label>}
+                          prepend={' et'}
                           id={colFilterable}
                           name={colFilterable}
                           value={elem.getFilterCrit('between')}
@@ -202,7 +206,7 @@ export default class FilterBuilder extends Component {
                         <div className="form-group">
                           <InputMonetary
                             borderColor="secondary-light"
-                            prepend={<label class="input-group-text ml-2">{'et'}</label>}
+                            prepend={' et'}
                             id={colFilterable}
                             name={colFilterable}
                             value={elem.getFilterCrit('between')}
@@ -296,7 +300,9 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                        <div className="input-group-prepend border-secondary-light rounded-left">{prepend}</div>
+                      <InputGroupPrepend>
+                        <InputGroupText className="border-rbf bg-light">{prepend}</InputGroupText>
+                      </InputGroupPrepend>
                         <input
                           type="text"
                           id={colFilterable}
@@ -305,6 +311,27 @@ export default class FilterBuilder extends Component {
                           className="form-control border-secondary-light rounded-right"
                           onChange={this.props.onChange}
                         />
+                        {value &&
+                          <div className="input-group-append border-secondary-light rounded-right">
+                            <button
+                              type="button"
+                              className={classnames(
+                                'btn btn-input btn-outline-rbf bg-light'
+                              )}
+                              onClick={() => {
+                                const ev = {
+                                  target: {
+                                    name: colFilterable,
+                                    value: '',
+                                  }
+                                }
+                                this.props.onChange(ev);
+                              }}
+                            >
+                              {this.props.clearIcon}
+                            </button>
+                          </div>
+                        }
                       </div>
                     </div>
                   </div>

@@ -6,7 +6,7 @@ import IMask from 'imask';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import { displayDate, ensureDatetimeTZ } from '../helpers';
-import { Dropdown } from './';
+import { Dropdown, InputGroupPrepend, InputGroupText } from './';
 
 registerLocale('fr', fr);
 
@@ -174,14 +174,11 @@ export default class InputDateWeb extends Component {
         >
           <div className="input-group" ref={this.state.myRef}>
             {this.props.prepend && (
-              <div
-                className={classnames(
-                  'input-group-prepend border rounded-left',
-                  `border-${this.props.borderColor}`
-                )}
-              >
-                {this.props.prepend}
-              </div>
+              <InputGroupPrepend>
+                <InputGroupText className="border-rbf bg-light">
+                  {this.props.prepend}
+                </InputGroupText>
+              </InputGroupPrepend>
             )}
             <IMaskInput
               mask={Date}

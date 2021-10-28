@@ -5,7 +5,7 @@ import { Highlight } from '../../../src/features/tour';
 it('render with className and name', () => {
   // First render
   const component = renderer.create(
-    <Highlight id="test" theme="TEST">
+    <Highlight id="test" theme="NAV">
       My Button
     </Highlight>
   );

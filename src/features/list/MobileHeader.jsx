@@ -105,7 +105,7 @@ export default class MobileHeader extends Component {
           {this.props.counter && (
             <Highlight
               position="bottom"
-              theme="LIST"
+              theme="NAV"
               style={{ float: 'right' }}
               title={this.props.t({ id: 'rbf.list.header.counter.help', defaultMessage: 'Pagination' })}
             >
@@ -122,7 +122,7 @@ export default class MobileHeader extends Component {
                 <div className="dropdown">
                   <Highlight
                     position="bottom"
-                    theme="LIST"
+                    theme="NAV"
                     title={this.props.t({ id: 'rbf.list.header.select.help', defaultMessage: 'Search helper' })}
                   >
                     <button
@@ -168,7 +168,7 @@ export default class MobileHeader extends Component {
               <li className="nav-item">
                 <Highlight
                   position="bottom"
-                  theme="LIST"
+                  theme="NAV"
                   title={this.props.t({ id: 'rbf.list.header.filter.help', defaultMessage: 'Filter helper' })}
                 >
                   <button type="button" className="btn btn-light text-secondary" onClick={this.props.onToggleFilter}>
@@ -179,7 +179,7 @@ export default class MobileHeader extends Component {
             )}
             {showFilterButton && (
               <li className="nav-item">
-                <Highlight position="bottom" theme="LIST" title={filterButtonTitle}>
+                <Highlight position="bottom" theme="NAV" title={filterButtonTitle}>
                   <button
                     type="button"
                     className="btn btn-light text-secondary"
