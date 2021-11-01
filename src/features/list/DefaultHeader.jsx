@@ -198,7 +198,7 @@ export default class DefaultHeader extends Component {
         )}
       >
         <Row>
-          <Col size={{ xs: 10, md: 7, lg: 14 }}>
+          <Col size={{ xs: 10, sm: 16, md: 10, lg: 14 }}>
             <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
               <span style={iconstyle} className={classnames('no-selector', 'text-' + this.props.headerTextTheme)}>
                 {this.props.icon && this.props.icon}
@@ -223,7 +223,7 @@ export default class DefaultHeader extends Component {
               </div>
             )}
           </Col>
-          <Col size={{ xs: 0, md: 8, lg: 8 }}>
+          <Col size={{ xs: 0, md: 12, lg: 8 }}>
             <Highlight
               className="w-100"
               style={sortStyle}
@@ -234,7 +234,7 @@ export default class DefaultHeader extends Component {
               {this.props.quickSearch}
             </Highlight>
           </Col>
-          <Col size={{ xs: 16, md: 9, lg: 14 }} className="text-right">
+          <Col size={{ xs: 16, sm: 20, md: 14, lg: 14 }} className="text-right">
             <ul className="nav justify-content-end rbf-list-default-header-nav">
               <li className="nav-item">
                 <Highlight

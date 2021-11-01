@@ -65,6 +65,10 @@ export default class FilterBuilder extends Component {
     filters: PropTypes.element.isRequired,
     onFilterOperator: PropTypes.func.isRequired,
     onUpdate: PropTypes.func,
+    onAdd: PropTypes.func,
+    onRemove: PropTypes.func,
+    addIcon: PropTypes.element.isRequired,
+    delIcon: PropTypes.element.isRequired,
     calIcon: PropTypes.element.isRequired,
     className: PropTypes.string,
     clearIcon: PropTypes.element.isRequired,
@@ -73,6 +77,8 @@ export default class FilterBuilder extends Component {
   static defaultProps = {
     className: '',
     onUpdate: null,
+    onAdd: null,
+    onRemove: null,
     withHeader: true,
   };
 
@@ -84,7 +90,6 @@ export default class FilterBuilder extends Component {
   }
 
   render() {
-    const oper = this.props.filters.getOperator();
     return (
       <div className={classnames('filter-filter-builder', this.props.className)}>
         {this.props.withHeader && (
@@ -101,11 +106,17 @@ export default class FilterBuilder extends Component {
               colFilterable = col.filterable.col;
             }
             const elem = filter.findFirst(colFilterable);
+            const allConds = getOptionsForType(col.filterable.type, this.props.onUpdate ? true : false);
             let value = '';
             let colOper = '';
+            let allValues = {};
             if (elem) {
               value = elem.getFilterCrit();
               colOper = elem.getOperator();
+              allValues = elem.getFilterCrits();
+              if (allConds.findIndex(colL => colL.value === colOper) < 0) {
+                colOper = FILTER_OPER_EQUAL;
+              }
             }
             const prepend = (
               <select
@@ -115,7 +126,7 @@ export default class FilterBuilder extends Component {
                 className="border-0 text-secondary rounded-left bg-light"
                 onChange={this.props.onFilterOperator}
               >            
-                {getOptionsForType(col.filterable.type, this.props.onUpdate ? true : false).map(elem => 
+                {allConds.map(elem => 
                   <option key={elem.value} value={elem.value}>{elem.label}</option>
                 )}
               </select>
@@ -275,21 +286,93 @@ export default class FilterBuilder extends Component {
                       <label htmlFor={colFilterable} className="">
                         {col.label}
                       </label>
-                      <select
-                        id={colFilterable}
-                        name={colFilterable}
-                        value={value}
-                        className="form-control border-secondary-light"
-                        onChange={e => this.props.onChange(e, FILTER_OPER_EQUAL)}
-                      >
-                        <option key="0" value="" />
-                        {col.filterable.options.map(elt => (
-                          <option key={elt.value} value={elt.value}>
-                            {elt.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div className="input-group">
+                        <InputGroupPrepend>
+                          <InputGroupText className="border-rbf bg-light">{prepend}</InputGroupText>
+                        </InputGroupPrepend>
+                        <select
+                          id={colFilterable}
+                          name={colFilterable}
+                          value={value}
+                          className="form-control border-secondary-light"
+                          onChange={this.props.onChange}
+                        >
+                          <option key="0" value="" />
+                          {col.filterable.options.map(elt => (
+                            <option key={elt.value} value={elt.value}>
+                              {elt.label}
+                            </option>
+                          ))}
+                        </select>
+                        {value &&
+                          <div className="input-group-append border-secondary-light rounded-right">
+                            <button
+                              type="button"
+                              className={classnames(
+                                'btn btn-input btn-outline-rbf bg-light'
+                              )}
+                              onClick={() => {
+                                const ev = {
+                                  target: {
+                                    name: colFilterable,
+                                    value: '',
+                                  }
+                                }
+                                this.props.onAdd(ev);
+                              }}
+                            >
+                              {this.props.addIcon}
+                            </button>
+                          </div>
+                        }
+                      </div>
                     </div>
+                    {Object.keys(allValues).map(key => {
+                      if (key !== 'default') {
+                        return (
+                          <div className="form-group">
+                            <div className="input-group">
+                              <InputGroupPrepend>
+                                <InputGroupText className="border-rbf bg-light">{' ou'}</InputGroupText>
+                              </InputGroupPrepend>
+                              <select
+                                id={colFilterable + '@@' + key}
+                                name={colFilterable + '@@' + key}
+                                value={allValues[key]}
+                                className="form-control border-secondary-light"
+                                onChange={this.props.onUpdate}
+                              >
+                                <option key="0" value="" />
+                                {col.filterable.options.map(elt => (
+                                  <option key={elt.value} value={elt.value}>
+                                    {elt.label}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="input-group-append border-secondary-light rounded-right">
+                                  <button
+                                    type="button"
+                                    className={classnames(
+                                      'btn btn-input btn-outline-rbf bg-light'
+                                    )}
+                                    onClick={() => {
+                                      const ev = {
+                                        target: {
+                                          name: colFilterable + '@@' + key,
+                                          value: '',
+                                        }
+                                      }
+                                      this.props.onRemove(ev);
+                                    }}
+                                  >
+                                    {this.props.clearIcon}
+                                  </button>
+                                </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                    })}
                   </div>
                 );
               default:
@@ -300,9 +383,9 @@ export default class FilterBuilder extends Component {
                         {col.label}
                       </label>
                       <div className="input-group">
-                      <InputGroupPrepend>
-                        <InputGroupText className="border-rbf bg-light">{prepend}</InputGroupText>
-                      </InputGroupPrepend>
+                        <InputGroupPrepend>
+                          <InputGroupText className="border-rbf bg-light">{prepend}</InputGroupText>
+                        </InputGroupPrepend>
                         <input
                           type="text"
                           id={colFilterable}
@@ -330,10 +413,68 @@ export default class FilterBuilder extends Component {
                             >
                               {this.props.clearIcon}
                             </button>
+                            <button
+                              type="button"
+                              className={classnames(
+                                'btn btn-input btn-outline-rbf bg-light'
+                              )}
+                              onClick={() => {
+                                const ev = {
+                                  target: {
+                                    name: colFilterable,
+                                    value: '',
+                                  }
+                                }
+                                this.props.onAdd(ev);
+                              }}
+                            >
+                              {this.props.addIcon}
+                            </button>
                           </div>
                         }
                       </div>
                     </div>
+                    {Object.keys(allValues).map(key => {
+                      if (key !== 'default') {
+                        return (
+                          <div className="form-group">
+                            <div className="input-group">
+                              <InputGroupPrepend>
+                                <InputGroupText className="border-rbf bg-light">{' ou'}</InputGroupText>
+                              </InputGroupPrepend>
+                              <input
+                                type="text"
+                                id={colFilterable + '@@' + key}
+                                name={colFilterable + '@@' + key}
+                                value={allValues[key] || ''}
+                                className="form-control border-secondary-light rounded-right"
+                                onChange={this.props.onUpdate}
+                              />
+                                <div className="input-group-append border-secondary-light rounded-right">
+                                  <button
+                                    type="button"
+                                    className={classnames(
+                                      'btn btn-input btn-outline-rbf bg-light'
+                                    )}
+                                    onClick={() => {
+                                      const ev = {
+                                        target: {
+                                          name: colFilterable + '@@' + key,
+                                          value: '',
+                                        }
+                                      }
+                                      this.props.onRemove(ev);
+                                    }}
+                                  >
+                                    {this.props.clearIcon}
+                                  </button>
+                                </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                      return null;
+                    })}
                   </div>
                 );
             }

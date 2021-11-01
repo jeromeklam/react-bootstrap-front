@@ -1,6 +1,18 @@
+# 3.7.2 : 01/11/2021
+
+* Filtres
+    * Possibilité de gérer plusieurs valeurs (en OU) pour un même champ de recherche 
+* Listes
+    * Chargement progressif lors du scroll  
+
 # 3.7.1 : 28/10/2021
 
 * Aide
+
+# 3.7.1 : 30/10/2021
+
+* InlineList
+    * Correction d'un programme d'affichage en mobile sur le mode décallé des couleurs
 
 # 3.7.0 : 24/10/2021
 

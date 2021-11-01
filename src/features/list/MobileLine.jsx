@@ -116,6 +116,7 @@ export class MobileLine extends Component {
     if (this.props.counter && this.props.lineMode === 'odd-even') {
       rowOddEven = this.props.counter % 2 === 0 ? 'row-even' : 'row-odd';
     }
+    let lineI = 0;
     const selectable =
       this.props.selectable && this.props.cols && this.props.cols.find(oneCol => oneCol.selectable === true);
     return (
@@ -269,14 +270,15 @@ export class MobileLine extends Component {
                       }
                     }
                     const line = { ...oneCol, id: this.props.id };
-                    const first = i === 0;
-                    const last = i === this.props.cols.length - 1;
+                    const first = lineI === 0;
+                    const last = lineI === this.props.cols.length - 1;
+                    lineI++;
                     return (
                       <MobileLineCol
                         key={`col-${oneCol.col}`}
                         first={first}
                         last={last}
-                        lineCounter={i}
+                        lineCounter={lineI}
                         content={content}
                         item={this.props.item}
                         {...line}

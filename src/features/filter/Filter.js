@@ -93,16 +93,26 @@ export default class Filter {
     return this.data.filter_name;
   }
 
+  removeFilterCrit(action) {
+    let newCrits = this.data.filter_crits;
+    delete newCrits[action];
+    this.data.filter_crits = newCrits;
+  }
+
   setFilterCrit(value, oper = false, action = 'default') {
     if (oper !== false) {
       this.data.operator = oper;
     }
-    switch (action) {
+    let locAction = action || 'default';
+    if (locAction === false || locAction === '') {
+      locAction = 'default';
+    }
+    switch (locAction) {
       case 'between':
         this.data.filter_crits.between = value;
         break;
       default:
-        this.data.filter_crits.default = value;
+        this.data.filter_crits[action] = value;
         break;
     }
   }
@@ -179,6 +189,13 @@ export default class Filter {
     }
   }
 
+  removeFilter(name, action = 'default') {
+    let elem = this.data.filters.find(elt => elt.getFilterName() === name);
+    if (elem) {
+      elem.removeFilterCrit(action);
+    }
+  }
+
   updateFilterOperator(name, oper = false) {
     let elem = this.data.filters.find(elt => elt.getFilterName() === name);
     if (elem) {
@@ -215,8 +232,17 @@ export default class Filter {
               crits2[elt.getOperator()] = [b1, b2];
               break;
             default:
-              const v1 = elt.getFilterCrit('default');
-              crits2[elt.getOperator()] = v1;
+              crits2[elt.getOperator()] = '';
+              const crits = elt.getFilterCrits();
+              const keys = Object.keys(crits);
+              let first = true;
+              keys.forEach(oneKey => {
+                if (!first) {
+                  crits2[elt.getOperator()] += ',';
+                }
+                crits2[elt.getOperator()] += crits[oneKey];
+                first = false;
+              })
               break;
           }
         }

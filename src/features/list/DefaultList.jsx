@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { InView } from 'react-intersection-observer';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, DefaultRightHeader } from './';
 import { getSizeFromWidth, isInViewPort } from '../helpers';
@@ -160,21 +161,9 @@ export default class DefaultList extends Component {
       currentFlipped: 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
-    this.handleObserver = this.handleObserver.bind(this);
     this.toggleSplit = this.toggleSplit.bind(this);
     this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
-  }
-
-  componentDidMount() {
-    const options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0,
-    };
-    this.observer = new IntersectionObserver(this.handleObserver, options);
-    if (this.loadingRef) {
-      this.observer.observe(this.loadingRef);
-    }
+    this.onInView = this.onInView.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -189,16 +178,18 @@ export default class DefaultList extends Component {
     }
   }
 
+  onInView(inView, entry) {
+    if (inView && this.props.onLoadMore) {
+      this.props.onLoadMore();
+    }
+  }
+
   setCurrentFlipped(id) {
     this.setState({ currentFlipped: id });
   }
 
   toggleSplit() {
     this.setState({ splited: !this.state.splited });
-  }
-
-  handleObserver(entities, observer) {
-    const y = entities[0].boundingClientRect.y;
   }
 
   togglePanel(filters = false, sort = false) {
@@ -357,7 +348,7 @@ export default class DefaultList extends Component {
                                         className="default-list-list-body custom-scrollbar overflowY"
                                         style={{ ...lListStyles }}
                                       >
-                                        {this.props.items.map(item => (
+                                        {this.props.items.map((item, idx) => (
                                           <div key={`line-${item.id}`}>
                                             {mediaSize === 'xxs' || mediaSize === 'xs' ? (
                                               <MobileLine
@@ -371,6 +362,16 @@ export default class DefaultList extends Component {
                                                 currentFlipped={this.state.currentFlipped}
                                                 setCurrentFlipped={this.setCurrentFlipped}
                                               />
+                                            ) : idx === (this.props.items.length - 20) ? (
+                                              <InView as="div" onChange={this.onInView}>
+                                                <DefaultLine
+                                                  {...this.props}
+                                                  id={item.id}
+                                                  item={item}
+                                                  cols={dispCols}
+                                                  counter={this.props.oddEven ? counter++ : 0}
+                                                />
+                                              </InView>
                                             ) : (
                                               <DefaultLine
                                                 {...this.props}
@@ -382,9 +383,7 @@ export default class DefaultList extends Component {
                                             )}
                                           </div>
                                         ))}
-                                        <div ref={loadingRef => (this.loadingRef = loadingRef)} style={footerstyle}>
-                                          <DefaultFooter {...this.props} />
-                                        </div>
+                                        <DefaultFooter {...this.props} />
                                       </div>
                                     ) : (
                                       <DefaultFooter {...this.props} />

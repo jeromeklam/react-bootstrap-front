@@ -54,6 +54,7 @@ export default class MobileList extends Component {
     };
     this.togglePanel = this.togglePanel.bind(this);
     this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
+    this.handleObserver = this.handleObserver.bind(this);
   }
 
   componentDidMount() {

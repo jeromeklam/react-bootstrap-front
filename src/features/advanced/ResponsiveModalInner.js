@@ -268,7 +268,7 @@ export default class ResponsiveModalInner extends Component {
                           className={classnames('modal-body', this.props.scroll && 'custom-scrollbar')}
                           style={iStyles}
                         >
-                          <TouchHandler swipRight={this.props.onNext} swipLeft={this.props.onPrevious}>
+                          <TouchHandler className="h-100 w-100" swipRight={this.props.onNext} swipLeft={this.props.onPrevious}>
                             {this.props.children}
                           </TouchHandler>
                           {this.state.help && 

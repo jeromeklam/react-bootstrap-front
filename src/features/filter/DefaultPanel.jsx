@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { randomString } from '../helpers';
 import { Filter, FilterBuilder, FILTER_SEARCH_SIMPLE } from '../filter';
 import { SortableList } from '../sort';
 
@@ -121,10 +122,11 @@ export default class DefaultPanel extends Component {
     this.onSortChange = this.onSortChange.bind(this);
     this.onValid = this.onValid.bind(this);
     this.onFilterUpdate = this.onFilterUpdate.bind(this);
+    this.onFilterAdd = this.onFilterAdd.bind(this);
+    this.onFilterRemove = this.onFilterRemove.bind(this);
   }
 
   onFilterChange(event, oper = false) {
-    console.log("JK", event.target.name, event.target.value, oper);
     let { filter } = this.state;
     filter.addFilter(event.target.name, event.target.value, oper);
     filter.setSearch(FILTER_SEARCH_SIMPLE);
@@ -133,7 +135,28 @@ export default class DefaultPanel extends Component {
 
   onFilterUpdate(event) {
     let { filter } = this.state;
-    filter.updateFilter(event.target.name, event.target.value, 'between');
+    const origName = event.target.name;
+    const parts = origName.split('@@');
+    const fieldName = parts[0];
+    const fieldMore = parts[1] || 'between';
+    filter.updateFilter(fieldName, event.target.value, fieldMore);
+    this.setState({ filter, local: true });
+  }
+
+  onFilterAdd(event) {
+    const newAddon = randomString(8);
+    let { filter } = this.state;
+    filter.updateFilter(event.target.name, event.target.value, newAddon);
+    this.setState({ filter, local: true });
+  }
+
+  onFilterRemove(event) {
+    let { filter } = this.state;
+    const origName = event.target.name;
+    const parts = origName.split('@@');
+    const fieldName = parts[0];
+    const fieldMore = parts[1] || 'between';
+    filter.removeFilter(fieldName, fieldMore);
     this.setState({ filter, local: true });
   }
 
@@ -274,6 +297,8 @@ export default class DefaultPanel extends Component {
                   filters={this.state.filter}
                   onChange={this.onFilterChange}
                   onUpdate={this.onFilterUpdate}
+                  onAdd={this.onFilterAdd}
+                  onRemove={this.onFilterRemove}
                   onMode={this.onFilterMode}
                   onOperator={this.onOperator}
                   onFilterOperator={this.onFilterOperator}
