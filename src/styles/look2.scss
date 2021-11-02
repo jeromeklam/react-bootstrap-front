@@ -407,6 +407,10 @@ svg.text-warning.inline-action:hover {
 .row-line-primary-light .col-highlighter {
   background-color: theme-color('primary') !important;
 }
+.row-line-dark .rbf-list-mobile-line-header-highlighter,
+.row-line-dark .col-highlighter {
+  background-color: theme-color('dark') !important;
+}
 
 /* On force la couleur des icones dans les colonnes des listes */
 .text-secondary svg.col-icon {
