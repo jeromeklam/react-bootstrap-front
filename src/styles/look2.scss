@@ -209,18 +209,21 @@ svg.text-warning.inline-action:hover {
 .modal-xl {
   .modal-body {
     min-height: 550px;
+    max-height: 650px;
   }
 }
 
 .modal-lg {
   .modal-body {
     min-height: 450px;
+    max-height: 550px;
   }
 }
 
 .modal-md {
   .modal-body {
     min-height: 350px;
+    max-height: 450px;
   }
 }
 

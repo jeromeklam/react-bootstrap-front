@@ -10,12 +10,12 @@ export const ResponsiveButton = props => (
       <CalmButton
         type="button"
         className={classnames('btn', `btn-${props.button.theme}`)}
-        disabled={props.button.disabled || false}
         onClick={props.button.function}
         options={props.button.options}
         optionsAlign={props.button.optionsAlign}
         optionsOpenMulti={props.button.optionsOpenMulti}
-        loader={true}
+        loader={false}
+        disabled={props.button.disabled || props.disabled || false}
       >
         {props.button.name ? <span className="no-selector" color="white">{props.button.name}</span> : props.button.icon}
       </CalmButton>
@@ -24,12 +24,12 @@ export const ResponsiveButton = props => (
       <CalmButton
         type="button"
         className={classnames('btn btn-mobile', `btn-${props.button.theme}`)}
-        disabled={props.button.disabled || false}
         onClick={props.button.function}
         options={props.button.options}
         optionsAlign={props.button.optionsAlign}
         optionsOpenMulti={props.button.optionsOpenMulti}
         loader={false}
+        disabled={props.button.disabled || props.disabled || false}
       >
         {props.button.icon ? props.button.icon : <span className="no-selector" color="white">{props.button.name}</span>}
       </CalmButton>

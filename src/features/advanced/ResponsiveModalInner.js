@@ -284,14 +284,21 @@ export default class ResponsiveModalInner extends Component {
                         </div>
                         {this.props.buttons && (
                           <div className={classnames('modal-footer', this.props.modalClassName)}>
-                            {this.props.help &&
+                            {(this.props.help || this.props.saving ) &&
                               <div className="modal-left-buttons">
-                                <button className="btn btn-secondary" onClick={this.onToggleHelp}>?</button>
+                                {this.props.help &&
+                                  <button className="btn btn-secondary" onClick={this.onToggleHelp}>?</button>
+                                }
+                                {this.props.saving &&
+                                  <div className="calm-button-loader pr-1 text-light">
+                                    <SmLoading9x9 width={20} height={20} />
+                                  </div>
+                                }
                               </div>
                             }
                             {this.props.buttons.map((button, idx) => {
                               if (!button.hidden && button.name !== '') {
-                                return <ResponsiveButton key={`btn-resp${idx}`} button={button} />;
+                                return <ResponsiveButton key={`btn-resp${idx}`} button={button} disabled={this.props.saving}/>;
                               }
                               return null;
                             })}
