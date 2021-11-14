@@ -516,7 +516,7 @@ export default class DefaultList extends Component {
                                   >
                                     <div className="row">
                                       <div className="col-xxs-w36">
-                                        <div className="p-2">{this.props.inlineComponent}</div>
+                                        {this.props.inlineComponent}
                                       </div>
                                     </div>
                                   </TouchHandler>

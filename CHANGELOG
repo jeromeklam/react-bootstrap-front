@@ -1,3 +1,9 @@
+# 3.7.5 : 14/11/2021
+
+* Modales
+    * Plus de tailles en largeur xxl, xlg, xmd, xsm, xxs
+    * Gestion de l'opacité en cas d'empilement de modales   
+
 # 3.7.4 : 12/11/2021
 
 * CalmButton

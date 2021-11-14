@@ -4,16 +4,18 @@ import classnames from 'classnames';
 import { EditorState, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
-import { DropdownWrapper, ResponsiveConfirm } from '../advanced';
-import { DropdownMenu, DropdownMenuOption, Dropdown } from '../basic';
 import { htmlToString } from '../helpers';
+import { InputColorPicker } from './';
+import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const myStyle = {
   height: 'auto',
 };
+
 const appenStyle = {
   maxHeight: '40px',
 };
+
 const toHtml = {
   styleToHTML: style => {
     const parts = style.split('-');
@@ -171,10 +173,9 @@ export default class InputTextarea extends Component {
     this.state = {
       editorState: EditorState.createWithContent(value),
       toolbar: false,
-      myRef: React.createRef(),
-      presetText: false,
     };
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.onToolbar = this.onToolbar.bind(this);
     this.onClear = this.onClear.bind(this);
     this.onPresetText = this.onPresetText.bind(this);
@@ -186,6 +187,9 @@ export default class InputTextarea extends Component {
     this.setState({
       editorState,
     });
+  }
+
+  onChange(ev, editorState) {
     const content = editorState.getCurrentContent();
     const event = {
       target: {
@@ -221,16 +225,7 @@ export default class InputTextarea extends Component {
     const editorState = this.state.editorState;
     let content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
-    //const contentStateWithEntity = content.createEntity('MY_ENTITY_TYPE','IMMUTABLE');
-    //const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     content = Modifier.insertText(content, selection, htmlToString(contentMore));
-    /**content = Modifier.insertText(
-      content,
-      selection,
-      contentMore,
-      null,
-      entityKey,
-    );*/
     let newState = EditorState.push(editorState, content);
     this.setState({ editorState: newState });
     const newContent = newState.getCurrentContent();
@@ -250,6 +245,19 @@ export default class InputTextarea extends Component {
   render() {
     //<div className={classnames('input-group', (props.error || props.warning) && 'is-invalid')}>
     const { editorState, toolbar } = this.state;
+    const editorToolbar = {
+      options: ['inline','fontSize','colorPicker'],
+      inline: {
+        inDropdown: false,
+        options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+      },
+      fontSize: {
+        options: [7, 8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+      },
+      colorPicker: {
+        component: InputColorPicker
+      }
+    };
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row')}>
         {this.props.label !== '' && (
@@ -265,51 +273,13 @@ export default class InputTextarea extends Component {
           >
             <Editor
               toolbarHidden={!toolbar}
+              toolbar={editorToolbar}
               editorState={editorState}
-              toolbarClassName="toolbarClassName"
               wrapperClassName="form-control border-rbf h-auto"
-              editorClassName="editorClassName overflow-hidden"
               onEditorStateChange={this.onEditorStateChange}
+              onBlur={this.onChange}
             />
             <div className="input-group-append" style={appenStyle}>
-              {this.props.presetTextIcon && (
-                <>
-                  <button
-                    type="button"
-                    className={classnames(
-                      'btn btn-input btn-outline-rbf bg-light',
-                      this.props.size === 'sm' && `btn-${this.props.size}`
-                    )}
-                    onClick={this.onPresetText}
-                    ref={this.state.myRef}
-                  >
-                    {this.props.presetTextIcon}
-                  </button>
-                  {this.props.presetTexts && this.props.presetTexts.length > 0 && this.state.presetText && (
-                    <Dropdown
-                      align="bottom-right"
-                      myRef={this.state.myRef}
-                      maxHeight="250px"
-                      onClose={this.onPresetTextClose}
-                    >
-                      <DropdownMenu>
-                        {Array.isArray(this.props.presetTexts) &&
-                          this.props.presetTexts.map(text => {
-                            return (
-                              <DropdownMenuOption
-                                key={`text-${text.id}`}
-                                label={text.text_code}
-                                onClick={() => {
-                                  this.onAddPresetText(text.text_content);
-                                }}
-                              />
-                            );
-                          })}
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                </>
-              )}
               <button
                 type="button"
                 className={classnames(

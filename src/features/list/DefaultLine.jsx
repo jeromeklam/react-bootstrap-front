@@ -49,10 +49,12 @@ export default class DesktopListLine extends Component {
     super(props);
     this.state = {
       flipped: false,
+      clicked: false,
     };
     this.mouseLeave = this.mouseLeave.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   mouseLeave() {
@@ -78,6 +80,17 @@ export default class DesktopListLine extends Component {
     return false;
   }
 
+  handleClick(ev) {
+    if (ev) {
+      ev.preventDefault();
+    }
+    if (!this.state.clicked) {
+      this.setState({clicked: true});
+      setTimeout(() => { this.setState({clicked: false}); }, 500);
+      this.props.onClick(this.props.item);
+    }
+  }
+
   render() {
     const { item } = this.props;
     let rowOddEven = 'row-no-odd-even';
@@ -88,9 +101,11 @@ export default class DesktopListLine extends Component {
       <div className={this.props.className}>
         <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
           <div
-            onDoubleClick={this.handleDoubleClick}
+            onDoubleClick={ev => {
+              this.handleDoubleClick(ev);
+            }}
             onClick={ev => {
-              this.props.onClick(item);
+              this.handleClick(ev);
             }}
             style={mystyle}
             className={classnames(

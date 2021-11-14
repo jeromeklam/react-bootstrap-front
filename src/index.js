@@ -37,8 +37,6 @@ export { default as InputSelect } from "./features/basic/InputSelect";
 export { default as InputSpin } from "./features/basic/InputSpin";
 export { default as InputStringarray } from "./features/basic/InputStringarray";
 export * from "./features/basic/InputText";
-export { default as InputTextarea } from "./features/basic/InputTextarea";
-export { default as InputTextareaHtml } from "./features/basic/InputTextareaHtml";
 export { default as InputCheckList } from "./features/basic/InputCheckList";
 export { default as InputCheckLists } from "./features/basic/InputCheckLists";
 export { default as InputKeywords } from "./features/basic/InputKeywords";
@@ -72,6 +70,13 @@ export { default as SvgPrevious } from "./features/advanced/SvgPrevious";
 export { default as SvgNext } from "./features/advanced/SvgNext";
 export { default as SvgToday } from "./features/advanced/SvgToday";
 export { default as WidthObserver } from "./features/advanced/WidthObserver";
+
+/**
+ *******************************************************************************
+ * Draft
+ *******************************************************************************
+ */
+ export * from "./features/draft/index.js";
 
 /**
  *******************************************************************************

@@ -60,12 +60,14 @@ export class MobileLine extends Component {
     super(props);
     this.state = {
       flipped: false,
+      clicked: false,
     };
     this.mouseLeave = this.mouseLeave.bind(this);
     this.mouseEnter = this.mouseEnter.bind(this);
     this.openMenu = this.openMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   mouseLeave() {
@@ -92,6 +94,40 @@ export class MobileLine extends Component {
     this.setState({ flipped: false });
   }
 
+  handleClick(ev) {
+    if (ev) {
+      ev.preventDefault();
+    }
+    if (!this.state.clicked) {
+      this.setState({clicked: true});
+      setTimeout(() => { this.setState({clicked: false}); }, 500);
+      if (this.props.forSelectOne) {
+        this.props.onSelect(this.props.item);
+      } else {
+        if (isMobileDevice()) {
+          if (!this.props.mobile) {
+            this.closeMenu();
+            this.props.onClick(this.props.item);
+          } else {
+            if (this.props.item.id === this.props.currentFlipped) {
+              this.closeMenu();
+              this.handleDoubleClick(ev);
+            } else {
+              this.closeMenu();
+              this.props.onClick(this.props.item);
+            }
+          }
+        } else {
+          this.props.onClick(this.props.item);
+        }
+      }
+    } else {
+      if (ev) {
+        ev.stopPropagation();
+      }
+    }
+  }
+
   handleDoubleClick(ev) {
     if (ev) {
       ev.preventDefault();
@@ -99,16 +135,11 @@ export class MobileLine extends Component {
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
     }
-    if (this.props.forSelectOne) {
-      this.props.onSelect(this.props.item);
-    } else {
-      this.props.inlineActions.forEach(action => {
-        if (action.role === 'MODIFY') {
-          action.onClick(this.props.id);
-        }
-      });
-    }
-    return false;
+    this.props.inlineActions.forEach(action => {
+      if (action.role === 'MODIFY') {
+        action.onClick(this.props.id);
+      }
+    });
   }
 
   render() {
@@ -132,27 +163,11 @@ export class MobileLine extends Component {
         <div className="col-xxs-w36">
           <div
             className="card card-mobile-line"
+            onDoubleClick={ev => {
+              this.handleDoubleClick(ev);
+            }}
             onClick={ev => {
-              if (this.props.forSelectOne) {
-                this.props.onSelect(this.props.item);
-              } else {
-                if (isMobileDevice()) {
-                  if (!this.props.mobile) {
-                    this.closeMenu();
-                    this.props.onClick(this.props.item);
-                  } else {
-                    if (this.props.item.id === this.props.currentFlipped) {
-                      this.closeMenu();
-                      this.handleDoubleClick(ev);
-                    } else {
-                      this.closeMenu();
-                      this.props.onClick(this.props.item);
-                    }
-                  }
-                } else {
-                  this.props.onClick(this.props.item);
-                }
-              }
+              this.handleClick(ev);
             }}
           >
             <HoverObserver onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
@@ -173,13 +188,6 @@ export class MobileLine extends Component {
                         'select-line border border-secondary mr-2 white',
                         this.props.selected.find(elem => elem === this.props.id) && 'selected'
                       )}
-                      onClick={ev => {
-                        if (ev) {
-                          ev.preventDefault();
-                          ev.stopPropagation();
-                        }
-                        this.props.onSelect(this.props.id);
-                      }}
                     >
                       <div className="select-line-inner bg-secondary" />
                     </div>

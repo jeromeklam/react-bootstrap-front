@@ -21,8 +21,6 @@ export { default as InputSelect } from "./InputSelect";
 export { default as InputSpin } from "./InputSpin";
 export { default as InputStringarray } from "./InputStringarray";
 export * from "./InputText";
-export { default as InputTextarea } from "./InputTextarea";
-export { default as InputTextareaHtml } from "./InputTextareaHtml";
 export * from "./ResponsiveButton";
 export { default as InputCheckList } from "./InputCheckList";
 export { default as CalmButton } from "./CalmButton";

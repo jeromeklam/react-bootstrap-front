@@ -206,24 +206,70 @@ svg.text-warning.inline-action:hover {
   }
 }
 
-.modal-xl {
-  .modal-body {
-    min-height: 550px;
-    max-height: 650px;
+.modal-dialog { 
+  &.modal-w-xxl {
+    width: 1800px;
+    max-width: 1800px;
+    .modal-body {
+      min-height: 550px;
+      max-height: 650px;
+    }
   }
-}
-
-.modal-lg {
-  .modal-body {
-    min-height: 450px;
-    max-height: 550px;
+  &.modal-w-xl {
+    width: 1600px;
+    max-width: 1600px;
+    .modal-body {
+      min-height: 550px;
+      max-height: 650px;
+    }
   }
-}
-
-.modal-md {
-  .modal-body {
-    min-height: 350px;
-    max-height: 450px;
+  &.modal-w-xlg {
+    width: 1400px;
+    max-width: 1400px;
+    .modal-body {
+      min-height: 450px;
+      max-height: 550px;
+    }
+  }
+  &.modal-w-lg {
+    width: 1200px;
+    max-width: 1200px;
+    .modal-body {
+      min-height: 450px;
+      max-height: 550px;
+    }
+  }
+  &.modal-w-xmd {
+    width: 1100px;
+    max-width: 1100px;
+    .modal-body {
+      min-height: 350px;
+      max-height: 450px;
+    }
+  }
+  &.modal-w-md {
+    width: 1000px;
+    max-width: 1000px;
+    .modal-body {
+      min-height: 350px;
+      max-height: 450px;
+    }
+  }
+  &.modal-w-xsm {
+    width: 900px;
+    max-width: 900px;
+  }
+  &.modal-w-sm {
+    width: 800px;
+    max-width: 800px;
+  }
+  &.modal-w-xs {
+    width: 600px;
+    max-width: 600px;
+  }
+  &.modal-w-xxs {
+    width: 500px;
+    max-width: 500px;
   }
 }
 

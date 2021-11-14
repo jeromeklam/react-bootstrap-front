@@ -107,11 +107,32 @@ export default class ResponsiveModalInner extends Component {
   }
 
   componentDidMount() {
-    const list = document.getElementsByClassName('modal-opacity');
-    if (list.length <= 1) {
-      this.setState({ opacity: '0.8', show: true });
-    } else {
-      this.setState({ show: true });
+    const backDrops = Array.from(document.getElementsByClassName('modal-opacity'));
+    const elems = backDrops.map(elem => {return {id: elem.id, zIndex: parseFloat(window.getComputedStyle(elem).zIndex)}});
+    elems.forEach(elem => {
+      const el = document.getElementById(elem.id);
+      if (el) {
+        el.style.opacity = 0;
+      }
+    });
+    this.setState({ opacity: '0.8', show: true });
+  }
+
+  componentWillUnmount() {
+    const backDrops = Array.from(document.getElementsByClassName('modal-opacity'));
+    if (Array.isArray(backDrops)) {
+      const elems = backDrops.map(elem => {return {id: elem.id, zIndex: parseFloat(window.getComputedStyle(elem).zIndex)}});
+      elems.pop(); // will be removed...
+      if (elems.length > 0) {
+        elems.sort((a, b) => { return a>b ? 1 : a<b ? -1 : 0 });
+        const last = elems.pop();
+        if (last) {
+          const el = document.getElementById(last.id);
+          if (el) {
+            el.style.opacity = 0.8;
+          }
+        }
+      }
     }
   }
 
@@ -122,7 +143,6 @@ export default class ResponsiveModalInner extends Component {
   render() {
     const bStyles = { ...backStyle, opacity: this.state.opacity };
     let iStyles = { overflowX: 'hidden', overflowY: 'auto' };
-    let scrollStyles = { ...inlineStyle };
     if (this.props.height && this.props.height !== '') {
       iStyles.height = this.props.height;
       iStyles.minHeight = this.props.height;
@@ -132,28 +152,24 @@ export default class ResponsiveModalInner extends Component {
         case 'xl':
           iStyles.height = '510px';
           iStyles.minHeight = '510px';
-          scrollStyles.maxHeight = '510px';
           break;
         case 'lg':
           iStyles.height = '480px';
           iStyles.minHeight = '480px';
-          scrollStyles.maxHeight = '480px';
           break;
         case 'md':
           iStyles.height = '450px';
           iStyles.minHeight = '450px';
-          scrollStyles.maxHeight = '450px';
           break;
         default:
           iStyles.height = '350px';
           iStyles.minHeight = '350px';
-          scrollStyles.maxHeight = '350px';
           break;
       }
     }
     return (
       <Portal className="backdrop-style" zIndex={zIndex++}>
-        <div className="modal-style modal-opacity bg-light" style={{ ...bStyles, zIndex: zIndex++ }} />
+        <div id={`mdap-opacity-${zIndex}`} className="modal-style modal-opacity bg-light" style={{ ...bStyles, zIndex: zIndex++ }} />
         <div style={{ ...modalStyle, zIndex: zIndex++ }}>
           <Transition in={this.state.show} timeout={100}>
             {state => (
@@ -163,7 +179,7 @@ export default class ResponsiveModalInner extends Component {
                     <div
                       className={classnames(
                         'modal-dialog',
-                        sizeGreater(this.props.size, mediaSize) ? 'modal-fullscreen' : `modal-${this.props.size}`,
+                        sizeGreater(this.props.size, mediaSize) ? 'modal-fullscreen' : `modal-w-${this.props.size}`,
                         state
                       )}
                     >

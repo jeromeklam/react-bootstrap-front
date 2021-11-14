@@ -132,16 +132,26 @@ export const ensureDatetimeTZ = date => {
 export const getBreakpointAsSize = p_size => {
   const size = p_size || 'xxs';
   switch (size.toLowerCase()) {
+    case 'xxl':
+      return 1800;
     case 'xl':
       return 1600;
+    case 'xlg':
+      return 1400;
     case 'lg':
       return 1200;
+    case 'xmd':
+      return 1100;
     case 'md':
-      return 1024;
+      return 1000;
+    case 'xsm':
+      return 900;
     case 'sm':
-      return 768;
+      return 800;
     case 'xs':
-      return 540;
+      return 600;
+    case 'xxs':
+      return 500;
     default:
       return 360;
   }
