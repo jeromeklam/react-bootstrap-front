@@ -5,7 +5,7 @@ import { EditorState, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { htmlToString } from '../helpers';
-import { ColorPicker, Inline } from './';
+import { ColorPicker, Inline, FontSize } from './';
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const myStyle = {
@@ -253,6 +253,7 @@ export default class InputTextarea extends Component {
         options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
       },
       fontSize: {
+        component: FontSize,
         options: [7, 8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
       },
       colorPicker: {

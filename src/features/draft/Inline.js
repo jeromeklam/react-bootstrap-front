@@ -19,7 +19,7 @@ export default class Inline extends Component {
   render() {
     const { config, currentState, onChange, translations } = this.props;
     return (
-      <div className={classnames('rdw-inline-wrapper btn-group', config.className)} aria-label="rdw-inline-control">
+      <div className={classnames('rbf-inline-wrapper btn-group pl-2', config.className)} aria-label="rdw-inline-control">
         {
           config.options
             .map((style, index) =>
