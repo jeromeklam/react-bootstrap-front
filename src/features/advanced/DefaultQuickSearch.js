@@ -8,10 +8,14 @@ export default class DefaultQuickSearch extends Component {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
     icon: PropTypes.element.isRequired,
+    plus: PropTypes.element,
+    reset: PropTypes.element,
   };
 
   static defaultProps = {
     label: '',
+    plus: null,
+    reset: null,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -38,11 +42,11 @@ export default class DefaultQuickSearch extends Component {
     this.setState({ search: event.target.value });
   }
 
-  onSubmit(event) {
+  onSubmit(event, mode) {
     if (event) {
       event.preventDefault();
     }
-    this.props.onSubmit(this.state.search);
+    this.props.onSubmit(this.state.search, mode);
   }
 
   render() {
@@ -58,9 +62,19 @@ export default class DefaultQuickSearch extends Component {
             onChange={this.onChange}
           />
           <div className="input-group-append">
-            <button type="button" className="btn btn-outline-secondary bg-light" onClick={this.onSubmit}>
+            <button type="button" title="Recherche simple" className="btn btn-outline-secondary bg-light" onClick={(ev) => this.onSubmit(ev, "simple")}>
               {this.props.icon}
             </button>
+            {this.props.plus &&
+              <button type="button" title="Recherche mois stricte" className="btn btn-outline-secondary bg-light" onClick={(ev) => this.onSubmit(ev, "plus")}>
+                {this.props.plus}
+              </button>
+            }
+            {this.props.reset &&
+              <button type="button" title="Initialiser la recherche" className="btn btn-outline-secondary bg-light" onClick={(ev) => this.onSubmit(ev, "reset")}>
+                {this.props.reset}
+              </button>
+            }
           </div>
         </div>
       </form>

@@ -99,13 +99,13 @@ export default class CalmButton extends Component {
                 {this.props.options.map(option => {
                   return (
                     <DropdownMenuOption
-                      key={`text-${option.id}`}
+                      key={`text-${option.value}`}
                       label={option.label}
                       onClick={ev => {
                         if (ev) {
                           ev.preventDefault();
                         }
-                        option.onClick();
+                        this.props.onClick(option.value);
                         this.onOptionsMenuClose();
                       }}
                     />

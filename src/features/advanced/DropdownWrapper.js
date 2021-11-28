@@ -39,16 +39,13 @@ export default class DropdownWrapper extends Component {
   }
 
   render() {
+    const clonedTrigger = React.cloneElement(
+      this.props.trigger,
+      {ref: this.state.ref, onClick: this.onClick, title: this.props.tooltip}
+    )
     return (
       <>
-        <div
-          ref={this.state.ref}
-          className={classnames('advanced-dropdown-wrapper', this.props.className)}
-          onClick={this.onClick}
-          title={this.props.tooltip}
-        >
-          {this.props.trigger}
-        </div>
+        {clonedTrigger}
         {this.state.open && (
           <Dropdown align={this.props.align} myRef={this.state.ref} onClose={this.onClose}>
             <div onClick={this.onClose}>{this.props.children}</div>
