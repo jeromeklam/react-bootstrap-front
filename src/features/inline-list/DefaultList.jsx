@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultHeader, DefaultLine, DefaultLineAction } from './';
+import { DefaultHeader, DefaultLine, DefaultLineAction, DefaultLineBreak } from './';
 import { rbfIntl } from '../intl';
 
 export const DefaultList = props => {
-  let counter = 1;
+  let counter  = 1;
+  let previous = null;
   return (
     <div className="ui-inline-list-default-list">
       <div className="inline-list">
@@ -12,15 +13,38 @@ export const DefaultList = props => {
         {props.lines && (
           <div className="ui-inline-list-default-list-content">
             {Array.isArray(props.items) &&
-              props.items.map(item => (
-                <DefaultLine
-                  {...props}
-                  key={item.id}
-                  id={item.id}
-                  item={item}
-                  counter={props.oddEven ? counter++ : 0}
-                />
-              ))}
+              props.items.map(item => {
+                let myBreak = false;
+                if (props.breakpoint) {
+                  myBreak = props.breakpoint(previous, item);
+                }
+                previous = item;
+                if (myBreak !== false) {
+                  return (
+                    <>
+                      <DefaultLineBreak label={myBreak} counter={props.oddEven ? counter++ : 0}/>
+                      <DefaultLine
+                      {...props}
+                      key={item.id}
+                      id={item.id}
+                      item={item}
+                      counter={props.oddEven ? counter++ : 0}
+                    />
+                    </>
+                  );
+                } else {
+                  return (
+                    <DefaultLine
+                      {...props}
+                      key={item.id}
+                      id={item.id}
+                      item={item}
+                      counter={props.oddEven ? counter++ : 0}
+                    />
+                  )
+                }
+              })
+            }
           </div>
         )}
         {props.lines &&
@@ -47,6 +71,7 @@ export const DefaultList = props => {
 };
 
 DefaultList.propTypes = {
+  breakpoint: PropTypes.func,
   title: PropTypes.bool,
   lines: PropTypes.bool,
   oddEven: PropTypes.bool,
@@ -54,6 +79,7 @@ DefaultList.propTypes = {
   t: PropTypes.func,
 };
 DefaultList.defaultProps = {
+  breakpoint: false,
   title: true,
   lines: true,
   oddEven: true,

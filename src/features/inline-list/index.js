@@ -2,6 +2,7 @@ export * from './ColLink';
 export { default as DefaultLine } from './DefaultLine';
 export * from './InlineEmpty';
 export { default as MobileLineAction } from './MobileLineAction';
+export { default as DefaultLineBreak } from './DefaultLineBreak';
 export { default as DefaultLineAction } from './DefaultLineAction';
 export { default as MobileLineText } from './MobileLineText';
 export * from './ResponsiveInlineList.jsx';
