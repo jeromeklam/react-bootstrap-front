@@ -194,7 +194,7 @@ export default class DefaultHeader extends Component {
           'default-list-header text-secondary overflow-hidden',
           this.props.className,
           'bg-' + this.props.headerBackgroundTheme,
-          'text' + this.props.headerTextTheme
+          'text-' + this.props.headerTextTheme
         )}
       >
         <Row>

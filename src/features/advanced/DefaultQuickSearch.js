@@ -71,7 +71,7 @@ export default class DefaultQuickSearch extends Component {
               </button>
             }
             {this.props.reset &&
-              <button type="button" title="Initialiser la recherche" className="btn btn-outline-secondary bg-light" onClick={(ev) => this.onSubmit(ev, "reset")}>
+              <button type="button" title="Initialiser la recherche" className="btn btn-outline-secondary bg-light text-warning" onClick={(ev) => this.onSubmit(ev, "reset")}>
                 {this.props.reset}
               </button>
             }

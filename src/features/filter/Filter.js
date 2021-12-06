@@ -192,7 +192,11 @@ export default class Filter {
   removeFilter(name, action = 'default') {
     let elem = this.data.filters.find(elt => elt.getFilterName() === name);
     if (elem) {
-      elem.removeFilterCrit(action);
+      if (action === 'default') {
+        this.data.filters = this.data.filters.filter(elt => elt.getFilterName() !== name)
+      } else {
+        elem.removeFilterCrit(action);
+      }
     }
   }
 

@@ -40,7 +40,7 @@ export default function FilterHeader(props) {
             borderColor="secondary-light"
           />
         </div>
-        <div className="col-xxs-w16 form-group">
+        <div className="col-xxs-none form-group">
           <label htmlFor="filter-oper" className="text-secondary">
             <span>Condition</span>
           </label>

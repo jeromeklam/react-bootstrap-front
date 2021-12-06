@@ -73,6 +73,7 @@ export default class DefaultPanel extends Component {
     validPanelIcon: PropTypes.element.isRequired,
     cancelPanelIcon: PropTypes.element.isRequired,
     onToggleFilter: PropTypes.func.isRequired,
+    clearIcon: PropTypes.element.isRequired,
     sortNoneIcon: PropTypes.element,
     sortUpIcon: PropTypes.element,
     sortDownIcon: PropTypes.element,
@@ -178,7 +179,11 @@ export default class DefaultPanel extends Component {
     let { filter } = this.state;
     const col = event.target.name;
     const oper = event.target.value;
-    filter.updateFilterOperator(col.replace('oper-', ''), oper);
+    if (oper !== '') {
+      filter.updateFilterOperator(col.replace('oper-', ''), oper);
+    } else {
+      filter.removeFilter(col.replace('oper-', ''));
+    }
     this.setState({ filter, local: true });
   }
 
@@ -253,6 +258,11 @@ export default class DefaultPanel extends Component {
                 {this.props.cancelPanelIcon}
               </button>
             )}
+            {this.props.onClearFilter &&
+              <button className="btn btn-warning text-light" onClick={this.props.onClearFilter}>
+                {this.props.clearIcon}
+              </button>
+            }
             <button className="btn btn-primary text-light" onClick={this.onValid}>
               {this.props.validPanelIcon}
             </button>

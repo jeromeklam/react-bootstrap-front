@@ -149,7 +149,7 @@ export default class ActionButton extends Component {
       );
     } else {
       if (this.state.options && Array.isArray(this.state.options)) {
-        if (this.state.options.length > 1) {
+        if (this.state.options.length >= 1) {
           const trigger = (
             <button
               type="button"

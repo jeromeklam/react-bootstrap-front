@@ -1,4 +1,25 @@
 .rbf-responsive-content-header {
-    background-color: theme-color('light');
-    border-bottom: 1px solid theme-color('secondary-light');
+  background-color: theme-color('light');
+  border-bottom: 1px solid theme-color('secondary-light');
+  
+  .default-page-header {
+    line-height: 50px;
+  }
+
+  .header-icon {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 10px;
+    display: inline-flex;
+    height: 26px;
+    vertical-align: middle;
+  }
+
+  .header-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 10px;
+  }
 }

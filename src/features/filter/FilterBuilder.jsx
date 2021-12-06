@@ -27,33 +27,33 @@ import { InputAutocomplete, FilterHeader } from './';
 const getOptionsForType = (type, update = false) => {
   let options = [
     {value: '', label: ''},
-    {value: FILTER_OPER_EQUAL, label: '='},
-    {value: FILTER_OPER_NOT_EQUAL, label: '!='},
-    {value: FILTER_OPER_EMPTY, label: 'ø'},
-    {value: FILTER_OPER_NOT_EMPTY, label: '!ø'},
+    {value: FILTER_OPER_EQUAL, label: 'Est égal à'},
+    {value: FILTER_OPER_NOT_EQUAL, label: 'Est différenrt de'},
+    {value: FILTER_OPER_EMPTY, label: 'Est vide'},
+    {value: FILTER_OPER_NOT_EMPTY, label: 'N\'est pas vide'},
   ];
   if (type !== 'date' && type !== 'datetime' && type !== 'picker' && type !== 'select') {
     options.push(
-      {value: FILTER_OPER_LIKE, label: '*'},
-      {value: FILTER_OPER_NOT_LIKE, label: '!*'},
-      {value: FILTER_OPER_START_WITH, label: '^*'},
-      {value: FILTER_OPER_END_WITH, label: '*$'},
-      {value: FILTER_OPER_SOUND_LIKE, label: '~'}
+      {value: FILTER_OPER_LIKE, label: 'Contient'},
+      {value: FILTER_OPER_NOT_LIKE, label: 'Ne contient pas'},
+      {value: FILTER_OPER_START_WITH, label: 'Commence par'},
+      {value: FILTER_OPER_END_WITH, label: 'Termine par'},
+      {value: FILTER_OPER_SOUND_LIKE, label: 'Ressemble à'}
     );
   }
   if (type !== 'picker' && type !== 'select') {
     options.push(
-      {value: FILTER_OPER_GREATER, label: '>'},
-      {value: FILTER_OPER_GREATER_OR_EQUAL, label: '>='},
-      {value: FILTER_OPER_GREATER_OR_EQUAL_OR_NULL, label: '>=ø'},
-      {value: FILTER_OPER_LOWER, label: '<'},
-      {value: FILTER_OPER_LOWER_OR_EQUAL, label: '<='},
-      {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: '<=ø'},
+      {value: FILTER_OPER_GREATER, label: 'Supérieur à'},
+      {value: FILTER_OPER_GREATER_OR_EQUAL, label: 'Supérieur ou égal à'},
+      {value: FILTER_OPER_GREATER_OR_EQUAL_OR_NULL, label: 'Vide ou supérieur et égal à'},
+      {value: FILTER_OPER_LOWER, label: 'Inférieur à'},
+      {value: FILTER_OPER_LOWER_OR_EQUAL, label: 'Inférieur ou égal à'},
+      {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: 'Vide ou inférieur et égal à'},
     );
   };
-  if (update && (type === 'date' || type === 'datetime' || type === 'monetary')) {
+  if (update && (type === 'date' || type === 'datetime' || type === 'monetary' || type === 'number')) {
     options.push(
-      {value: FILTER_OPER_BETWEEN, label: '<.>'}
+      {value: FILTER_OPER_BETWEEN, label: 'Compris entre'}
     );
   }
   return options;
@@ -71,7 +71,6 @@ export default class FilterBuilder extends Component {
     delIcon: PropTypes.element.isRequired,
     calIcon: PropTypes.element.isRequired,
     className: PropTypes.string,
-    clearIcon: PropTypes.element.isRequired,
     withHeader: PropTypes.bool,
   };
   static defaultProps = {
@@ -118,6 +117,9 @@ export default class FilterBuilder extends Component {
                 colOper = FILTER_OPER_EQUAL;
               }
             }
+            if (value === null) {
+              value = '';
+            }
             const prepend = (
               <select
                 id={`oper-${colFilterable}`}
@@ -155,7 +157,7 @@ export default class FilterBuilder extends Component {
                       display={col.filterable.display}
                       value={value}
                       size={this.props.size}
-                      clearIcon={this.props.clearIcon}
+                      clearIcon={this.props.delIcon}
                       onSearch={col.filterable.onSearch}
                       onSelect={this.props.onChange}
                     />
@@ -176,7 +178,7 @@ export default class FilterBuilder extends Component {
                         value={value}
                         onChange={this.props.onChange}
                         calIcon={this.props.calIcon}
-                        delIcon={this.props.clearIcon}
+                        delIcon={this.props.delIcon}
                       />
                     </div>
                     {colOper === FILTER_OPER_BETWEEN && this.props.onUpdate &&
@@ -189,7 +191,7 @@ export default class FilterBuilder extends Component {
                           value={elem.getFilterCrit('between')}
                           onChange={this.props.onUpdate}
                           calIcon={this.props.calIcon}
-                          delIcon={this.props.clearIcon}
+                          delIcon={this.props.delIcon}
                         />
                       </div>
                     }
@@ -210,7 +212,7 @@ export default class FilterBuilder extends Component {
                           value={value}
                           onChange={this.props.onChange}
                           calIcon={this.props.calIcon}
-                          delIcon={this.props.clearIcon}
+                          delIcon={this.props.delIcon}
                         />
                       </div>
                       {colOper === FILTER_OPER_BETWEEN && this.props.onUpdate &&
@@ -223,7 +225,7 @@ export default class FilterBuilder extends Component {
                             value={elem.getFilterCrit('between')}
                             onChange={this.props.onUpdate}
                             calIcon={this.props.calIcon}
-                            delIcon={this.props.clearIcon}
+                            delIcon={this.props.delIcon}
                           />
                         </div>
                       }
@@ -365,7 +367,7 @@ export default class FilterBuilder extends Component {
                                       this.props.onRemove(ev);
                                     }}
                                   >
-                                    {this.props.clearIcon}
+                                    {this.props.delIcon}
                                   </button>
                                 </div>
                             </div>
@@ -411,7 +413,7 @@ export default class FilterBuilder extends Component {
                                 this.props.onChange(ev);
                               }}
                             >
-                              {this.props.clearIcon}
+                              {this.props.delIcon}
                             </button>
                             <button
                               type="button"
@@ -466,7 +468,7 @@ export default class FilterBuilder extends Component {
                                       this.props.onRemove(ev);
                                     }}
                                   >
-                                    {this.props.clearIcon}
+                                    {this.props.delIcon}
                                   </button>
                                 </div>
                             </div>
