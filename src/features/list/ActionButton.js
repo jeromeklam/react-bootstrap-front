@@ -124,7 +124,7 @@ export default class ActionButton extends Component {
                     if (elem) {
                       return (
                         <DropdownMenuOption
-                          key={`elem-${action.label}`}
+                          key={`elem-${elem.label}`}
                           label={elem.label}
                           onClick={ev => {
                             if (ev) {
@@ -166,7 +166,7 @@ export default class ActionButton extends Component {
                 {this.state.options.map(elem => {
                   return (
                     <DropdownMenuOption
-                      key={`elem-${action.label}`}
+                      key={`elem-${elem.label}`}
                       label={elem.label}
                       onClick={ev => {
                         if (ev) {

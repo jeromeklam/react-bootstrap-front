@@ -213,6 +213,7 @@ export default class FilterBuilder extends Component {
                           onChange={this.props.onChange}
                           calIcon={this.props.calIcon}
                           delIcon={this.props.delIcon}
+                          allowNull={true}
                         />
                       </div>
                       {colOper === FILTER_OPER_BETWEEN && this.props.onUpdate &&

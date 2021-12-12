@@ -74,7 +74,11 @@ export default class DesktopListLine extends Component {
     }
     this.props.inlineActions.forEach(action => {
       if (action.role === 'MODIFY') {
-        action.onClick(this.props.id);
+        if (action.param === 'object') {
+          action.onClick(this.props.item);
+        } else {
+          action.onClick(this.props.id);
+        }
       }
     });
     return false;

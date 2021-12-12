@@ -12,7 +12,7 @@ export default function InputMonetary(props) {
     const rnd = getRandomInt(10000, 99999);
     myId = `${myId}-${rnd}`;
   }
-  const value = props.value || 0;
+  const value = props.value || (props.allowNull ? '' : 0);
   return (
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
@@ -94,6 +94,7 @@ export default function InputMonetary(props) {
 }
 
 InputMonetary.propTypes = {
+  allowNull: PropTypes.bool,
   autoComplete: PropTypes.string,
   disabled: PropTypes.bool,
   error: PropTypes.element,
@@ -125,6 +126,7 @@ InputMonetary.propTypes = {
 };
 
 InputMonetary.defaultProps = {
+  allowNull: false,
   autoComplete: 'off',
   disabled: false,
   error: false,
