@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import { EditorState, Modifier } from 'draft-js';
+import { EditorState, Modifier, CompositeDecorator } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { htmlToString } from '../helpers';
@@ -51,6 +51,9 @@ const toHtml = {
   entityToHTML: (entity, originalText) => {
     if (entity.type === 'LINK') {
       return <a href={entity.data.url}>{originalText}</a>;
+    }
+    if (entity.type === 'MAILMERGE') {
+      return <span data-mailmerge="{originalText}">{originalText}</span>;
     }
     return originalText;
   },
@@ -105,6 +108,9 @@ const fromHtml = {
     if (nodeName === 'a') {
       return createEntity('LINK', 'MUTABLE', { url: node.href });
     }
+    if (nodeName === 'span' && node.dataset && node.dataset.mailmerge) {
+      return createEntity('MAILMERGE', 'IMMUTABLE', { mailmerge: node.dataset.mailmerge });
+    }
   },
   textToEntity: (text, createEntity) => {
     const result = [];
@@ -127,6 +133,29 @@ const fromHtml = {
       };
     }
   },
+};
+
+function findMailmergeEntities(contentBlock, callback, contentState) {
+  console.log(callback);
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      const found = entityKey !== null && contentState.getEntity(entityKey).getType() === 'MAILMERGE';
+      console.log('JK', found);
+      return found;
+    },
+    callback
+  );
+}
+
+const Mailmerge = (props) => {
+  console.log('Component', props);
+  const {mailmerge} = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <a href={mailmerge}>
+      {props.children}
+    </a>
+  );
 };
 
 export default class InputTextarea extends Component {
@@ -169,9 +198,15 @@ export default class InputTextarea extends Component {
     } else {
       content = '<p/>';
     }
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findMailmergeEntities,
+        component: Mailmerge,
+      },
+    ]);
     const value = convertFromHTML(fromHtml)(content);
     this.state = {
-      editorState: EditorState.createWithContent(value),
+      editorState: EditorState.createWithContent(value, decorator),
       toolbar: false,
     };
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
