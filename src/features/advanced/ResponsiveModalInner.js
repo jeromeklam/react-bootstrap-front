@@ -298,7 +298,7 @@ export default class ResponsiveModalInner extends Component {
                             </div>
                           }
                         </div>
-                        {this.props.buttons && (
+                        {(this.props.buttons || this.props.help || this.props.saving) && (
                           <div className={classnames('modal-footer', this.props.modalClassName)}>
                             {(this.props.help || this.props.saving ) &&
                               <div className="modal-left-buttons">

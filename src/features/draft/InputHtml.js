@@ -141,7 +141,6 @@ function findMailmergeEntities(contentBlock, callback, contentState) {
     (character) => {
       const entityKey = character.getEntity();
       const found = entityKey !== null && contentState.getEntity(entityKey).getType() === 'MAILMERGE';
-      console.log('JK', found);
       return found;
     },
     callback
@@ -149,7 +148,6 @@ function findMailmergeEntities(contentBlock, callback, contentState) {
 }
 
 const Mailmerge = (props) => {
-  console.log('Component', props);
   const {mailmerge} = props.contentState.getEntity(props.entityKey).getData();
   return (
     <a href={mailmerge}>

@@ -8,7 +8,6 @@ import { getFieldId } from '../helpers';
 export const InputJson = props => {
   let myId = getFieldId(props.name, props.id);
   const data = JSON.parse(props.value) || {};
-  console.log(data, props.value);
   return (
     <InputGroup {...props} id={myId}>
       {props.prepend && props.prepend !== '' && (
