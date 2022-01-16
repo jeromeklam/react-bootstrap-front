@@ -113,7 +113,7 @@ export default class MobilePage extends Component {
     return (
       <div id="page-root" className="full-page">
         <Container size="xs" className="display-mobile">
-          <CSSTransition in={this.state.menuUserOpen} timeout={duration}>
+          <CSSTransition in={this.state.menuUserOpen && this.props.authenticated} timeout={duration}>
             {state => (
               <div>
                 <div className="bg-white" style={{ ...userMenuDefaultStyles, ...userMenuStyles[state] }}>
