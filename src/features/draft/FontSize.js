@@ -23,9 +23,13 @@ export default class FontSize extends Component {
     event.stopPropagation();
   };
 
-  onChange = (color) => {
+  onChange = (size) => {
     const { onChange } = this.props;
-    onChange('color', color.hex);
+    let mySize = size.hex;
+    if (!isNaN(mySize)) {
+      mySize += 'px';
+    }
+    onChange('size', mySize);
   }
 
   render() {
@@ -34,7 +38,7 @@ export default class FontSize extends Component {
         type="button"
         className={classnames(this.props.className, 'btn btn-light')}
       >
-        Size
+        {this.props.config.icon ? this.props.config.icon : 'Size' }
       </button>
     );
     const {
@@ -52,7 +56,7 @@ export default class FontSize extends Component {
     currentFontSize = currentFontSize ||
     (options && options.indexOf(defaultFontSize) >= 0 && defaultFontSize);
     return (
-      <DropdownWrapper trigger={trigger} className="rbf-inline-wrapper btn-group pl-2" align="bottom-right" myRef={this.state.myRef}>
+      <DropdownWrapper trigger={trigger} className="ui-inline-wrapper btn-group pl-2" align="bottom-right" myRef={this.state.myRef}>
         <DropdownMenu>
          {options.map((size, index) =>
            (<DropdownMenuOption

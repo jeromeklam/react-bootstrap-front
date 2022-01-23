@@ -3,10 +3,21 @@
 }
 
 .rdw-editor-toolbar {
-  padding: 5px;
-  border: 1px solid theme-color('secondary-light');
+  padding: 0px;
+  border: 0px solid theme-color('secondary-light') !important;
+
+  .advanced-dropdown-wrapper {
+    margin-left: 5px;
+  }
+
+  button {
+    height: 100%;
+  }
 }
 
 .rbf-mailmerge {
   color: #105a1c;
+}
+.DraftEditor-root {
+  overflow: hidden;
 }

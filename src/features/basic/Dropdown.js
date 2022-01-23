@@ -53,8 +53,8 @@ export default class Dropdown extends Component {
 
   handleClickOutside(event) {
     const domNode = ReactDOM.findDOMNode(this);
-    if (!domNode || !domNode.contains(event.target)) {   
-      if (this.props.myRef && this.props.myRef.current &&this.props.myRef.current.contains(event.target)) {
+    if (!domNode || !domNode.contains(event.target)) {  
+      if (this.props.myRef && this.props.myRef.current && this.props.myRef.current.contains(event.target)) {
         event.preventDefault();
         event.stopPropagation();
       }

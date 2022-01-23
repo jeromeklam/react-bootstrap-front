@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { camelCase } from 'lodash';
 import { EditorState, Modifier, CompositeDecorator } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { htmlToString } from '../helpers';
-import { ColorPicker, Inline, FontSize } from './';
+import { ColorPicker, Inline, FontSize, FontFamily, Image, MailMerge as MailMergeOption } from './';
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const myStyle = {
@@ -44,16 +45,47 @@ const toHtml = {
     }
   },
   blockToHTML: block => {
-    if (block.type === 'PARAGRAPH') {
-      return <p />;
+    let styles = {};
+    if (block.data && Object.keys(block.data).length > 0) {
+      Object.keys(block.data).forEach(key => {
+        styles[camelCase(key)] = block.data[key];
+      });
     }
+    if (block.type === 'PARAGRAPH') {
+      return <p style={styles} />;
+    }
+    if (block.type === 'atomic') {
+      return {
+        start: "",
+        end: "",
+      }
+    }
+    if (Object.keys(styles).length > 0) {
+      return <p style={styles} />;
+    }
+    return null;
   },
   entityToHTML: (entity, originalText) => {
-    if (entity.type === 'LINK') {
-      return <a href={entity.data.url}>{originalText}</a>;
-    }
-    if (entity.type === 'MAILMERGE') {
-      return <span data-mailmerge="{originalText}">{originalText}</span>;
+    switch (entity.type) {
+      case 'LINK':
+        return <a href={entity.data.url}>{originalText}</a>;
+      case 'MAILMERGE':
+        return <span data-mailmerge="{originalText}">{originalText}</span>;
+      case 'IMAGE':
+        let otherDatas = {};
+        if (entity.data.height) {
+          otherDatas[height] = entity.data.height;
+        }
+        if (entity.data.width) {
+          otherDatas[width] = entity.data.width;
+        }
+        if (entity.data.alt) {
+          otherDatas[alt] = entity.data.alt;
+        }
+        return <img src={entity.data.src} {...otherDatas} />;
+      default:
+        console.log(entity, originalText);
+        break;
     }
     return originalText;
   },
@@ -87,6 +119,7 @@ const fromHtml = {
             break;
           default:
             // nothing
+            console.log(nodeName, node, currentStyle);
             break;
         }
         if (node instanceof HTMLElement) {
@@ -105,38 +138,38 @@ const fromHtml = {
     return currentStyle;
   },
   htmlToEntity: (nodeName, node, createEntity) => {
+    let entity = null;
     if (nodeName === 'a') {
-      return createEntity('LINK', 'MUTABLE', { url: node.href });
+      entity = createEntity('LINK', 'MUTABLE', { url: node.href });
     }
     if (nodeName === 'span' && node.dataset && node.dataset.mailmerge) {
-      return createEntity('MAILMERGE', 'IMMUTABLE', { mailmerge: node.dataset.mailmerge });
+      entity = createEntity('MAILMERGE', 'IMMUTABLE', { mailmerge: node.dataset.mailmerge });
     }
+    if (nodeName === 'img') {
+      entity = createEntity('IMAGE', 'MUTABLE', { src: node.src });
+    }
+    console.log(nodeName, entity);
+    return entity;
   },
   textToEntity: (text, createEntity) => {
     const result = [];
-    text.replace(/\@(\w+)/g, (match, name, offset) => {
-      const entityKey = createEntity('AT-MENTION', 'IMMUTABLE', { name });
-      result.push({
-        entity: entityKey,
-        offset,
-        length: match.length,
-        result: match,
-      });
-    });
     return result;
   },
   htmlToBlock: (nodeName, node) => {
+    if (nodeName === "hr" || nodeName === "img") {
+      return "atomic";
+    }
     if (nodeName === 'blockquote') {
       return {
         type: 'blockquote',
         data: {},
       };
     }
+    return null;
   },
 };
 
 function findMailmergeEntities(contentBlock, callback, contentState) {
-  console.log(callback);
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
@@ -156,7 +189,21 @@ const Mailmerge = (props) => {
   );
 };
 
-export default class InputTextarea extends Component {
+const MailmergeOptions = (props) => {
+  if (props.presetTexts && Array.isArray(props.presetTexts) && props.presetTexts.length > 0) {
+    return (
+      [<MailMergeOption 
+        icon={props.presetTextIcon} 
+        options={props.presetTexts} 
+        onChangeText={(text) => this.onAddPresetText(text)}
+      />]
+    );
+  }
+  return [];
+}
+
+
+export default class InputHtml extends Component {
   static propTypes = {
     id: PropTypes.string,
     name: PropTypes.string.isRequired,
@@ -169,8 +216,14 @@ export default class InputTextarea extends Component {
     disabled: PropTypes.bool,
     clearIcon: PropTypes.element,
     toolbarIcon: PropTypes.element,
+    sizeIcon: PropTypes.element,
+    fontIcon: PropTypes.element,
+    colorIcon: PropTypes.element,
+    imageIcon: PropTypes.element,
     presetTextIcon: PropTypes.element,
+    presetTexts: PropTypes.array,
     onPresetText: PropTypes.func,
+    t: PropTypes.func,
   };
 
   static defaultProps = {
@@ -184,8 +237,14 @@ export default class InputTextarea extends Component {
     required: false,
     clearIcon: null,
     toolbarIcon: null,
+    sizeIcon: null,
+    fontIcon: null,
+    colorIcon: null,
+    imageIcon: null,
     presetTextIcon: null,
+    presetTexts: [],
     onPresetText: null,
+    t: () => {},
   };
 
   constructor(props) {
@@ -202,6 +261,7 @@ export default class InputTextarea extends Component {
         component: Mailmerge,
       },
     ]);
+    console.log("FK inputHtml", this.props);
     const value = convertFromHTML(fromHtml)(content);
     this.state = {
       editorState: EditorState.createWithContent(value, decorator),
@@ -211,9 +271,7 @@ export default class InputTextarea extends Component {
     this.onChange = this.onChange.bind(this);
     this.onToolbar = this.onToolbar.bind(this);
     this.onClear = this.onClear.bind(this);
-    this.onPresetText = this.onPresetText.bind(this);
     this.onAddPresetText = this.onAddPresetText.bind(this);
-    this.onPresetTextClose = this.onPresetTextClose.bind(this);
   }
 
   onEditorStateChange(editorState) {
@@ -249,11 +307,6 @@ export default class InputTextarea extends Component {
     this.props.onChange(event);
   }
 
-  onPresetText() {
-    this.props.onPresetText();
-    this.setState({ presetText: true });
-  }
-
   onAddPresetText(contentMore) {
     const editorState = this.state.editorState;
     let content = editorState.getCurrentContent();
@@ -271,27 +324,54 @@ export default class InputTextarea extends Component {
     this.props.onChange(event);
   }
 
-  onPresetTextClose() {
-    this.setState({ presetText: false });
-  }
-
   render() {
     //<div className={classnames('input-group', (props.error || props.warning) && 'is-invalid')}>
     const { editorState, toolbar } = this.state;
+    const { t } = this.props;
     const editorToolbar = {
-      options: ['inline','fontSize','colorPicker'],
+      options: ['inline','fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'image'],
       inline: {
         inDropdown: false,
         component: Inline,
-        options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+        options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace', 'superscript', 'subscript'],
+        bold: { title: t({ id: 'ui.textarea.draft.toolbar.bold', defaultMessage: 'Bold' }) }, 
+        italic: { title: t({ id: 'ui.textarea.draft.toolbar.italic', defaultMessage: 'Italic' }) }, 
+        underline: { title: t({ id: 'ui.textarea.draft.toolbar.underline', defaultMessage: 'Underline' }) }, 
+        strikethrough: { title: t({ id: 'ui.textarea.draft.toolbar.strikethrough', defaultMessage: 'Underline' }) },
+        monospace: { title: t({ id: 'ui.textarea.draft.toolbar.monospace', defaultMessage: 'monospace' }) },
+        superscript: { title: t({ id: 'ui.textarea.draft.toolbar.superscript', defaultMessage: 'Superscript' }) }, 
+        subscript: { title: t({ id: 'ui.textarea.draft.toolbar.subscript', defaultMessage: 'Subscript' }) },
       },
       fontSize: {
         component: FontSize,
         options: [7, 8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+        icon: this.props.sizeIcon,
+      },
+      fontFamily: {
+        component: FontFamily,
+        options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+      },
+      list: {
+        inDropdown: false,
+        component: Inline,
+        options: ['unordered', 'ordered'],
+      },
+      textAlign: {
+        inDropdown: false,
+        component: Inline,
+        options: ['left', 'center', 'right'],
       },
       colorPicker: {
-        component: ColorPicker
-      }
+        component: ColorPicker,
+        icon: this.props.colorIcon,
+      },
+      image: {
+        component: Image,
+        inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+        alt: { present: false, mandatory: false },
+        previewImage: true,
+        icon: this.props.imageIcon,
+      },
     };
     return (
       <div className={classnames('form-group', !this.props.labelTop && 'row')}>
@@ -309,8 +389,9 @@ export default class InputTextarea extends Component {
             <Editor
               toolbarHidden={!toolbar}
               toolbar={editorToolbar}
+              toolbarCustomButtons={MailmergeOptions(this.props)}
               editorState={editorState}
-              wrapperClassName="form-control border-rbf h-auto"
+              wrapperClassName="form-control border-ui h-auto"
               onEditorStateChange={this.onEditorStateChange}
               onBlur={this.onChange}
             />
@@ -318,7 +399,7 @@ export default class InputTextarea extends Component {
               <button
                 type="button"
                 className={classnames(
-                  'btn btn-input btn-outline-rbf bg-light',
+                  'btn btn-input btn-outline-ui bg-light',
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onToolbar}
@@ -328,7 +409,7 @@ export default class InputTextarea extends Component {
               <button
                 type="button"
                 className={classnames(
-                  'btn btn-input btn-outline-rbf bg-light',
+                  'btn btn-input btn-outline-ui bg-light',
                   this.props.size === 'sm' && `btn-${this.props.size}`
                 )}
                 onClick={this.onClear}

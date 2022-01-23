@@ -35,12 +35,12 @@ export default class ColorPicker extends Component {
         type="button"
         className={classnames(this.props.className, 'btn btn-light')}
       >
-        Color
+        {this.props.config.icon ? this.props.config.icon : 'Color' }
       </button>
     );
     const { color } = this.props.currentState;
     return (
-      <DropdownWrapper trigger={trigger} className="rbf-inline-wrapper btn-group pl-2" align="bottom-right" myRef={this.state.myRef}>
+      <DropdownWrapper autoClose={false} trigger={trigger} className="ui-inline-wrapper btn-group pl-2" align="bottom-right" myRef={this.state.myRef}>
         <DropdownMenu>
           <ChromePicker color={color} onChangeComplete={this.onChange} />
         </DropdownMenu>
