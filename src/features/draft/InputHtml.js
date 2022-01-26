@@ -38,7 +38,12 @@ const toHtml = {
       case 'color':
         return <span style={{ color: parts[1] }} />;
       case 'fontsize':
-        return <span style={{ fontSize: parts[1] }} />;
+        return <span style={{ fontSize: parts[1] + 'px' }} />;
+      case 'text':
+        if (parts[1] === 'align') {
+          return <span style={{ textAlign: parts[2] }} />;
+        }
+        return '';
       default:
         // nothing
         break;
@@ -60,6 +65,9 @@ const toHtml = {
         end: "",
       }
     }
+    if (block.type === 'unstyled' && block.text.trim() === '') {
+      return <br />;
+    }
     if (Object.keys(styles).length > 0) {
       return <p style={styles} />;
     }
@@ -73,18 +81,18 @@ const toHtml = {
         return <span data-mailmerge="{originalText}">{originalText}</span>;
       case 'IMAGE':
         let otherDatas = {};
+        let alt = '';
         if (entity.data.height) {
-          otherDatas[height] = entity.data.height;
+          otherDatas['height'] = entity.data.height;
         }
         if (entity.data.width) {
-          otherDatas[width] = entity.data.width;
+          otherDatas['width'] = entity.data.width;
         }
         if (entity.data.alt) {
-          otherDatas[alt] = entity.data.alt;
+          alt = entity.data.alt;
         }
-        return <img src={entity.data.src} {...otherDatas} />;
+        return <img src={entity.data.src} {...otherDatas} alt={alt} />;
       default:
-        console.log(entity, originalText);
         break;
     }
     return originalText;
@@ -119,7 +127,6 @@ const fromHtml = {
             break;
           default:
             // nothing
-            console.log(nodeName, node, currentStyle);
             break;
         }
         if (node instanceof HTMLElement) {
@@ -131,6 +138,10 @@ const fromHtml = {
           const fontSize = node.style.fontSize;
           if (fontSize && fontSize !== '') {
             style.add(`fontsize-${fontSize.replace(/px$/g, '')}`);
+          }
+          const textAlign = node.style.textAlign;
+          if (textAlign && textAlign !== '') {
+            style.add(`textalign-${textAlign}`);
           }
         }
       })
@@ -148,7 +159,6 @@ const fromHtml = {
     if (nodeName === 'img') {
       entity = createEntity('IMAGE', 'MUTABLE', { src: node.src });
     }
-    console.log(nodeName, entity);
     return entity;
   },
   textToEntity: (text, createEntity) => {
@@ -164,6 +174,24 @@ const fromHtml = {
         type: 'blockquote',
         data: {},
       };
+    }
+    if (nodeName === 'br') {
+      return {
+        type: 'PARAGRAPH',
+        data: {},
+      };
+    }
+    if (nodeName === 'p' && node instanceof HTMLElement) {
+      let styles = {};
+      if (node.style.textAlign) {
+        styles['text-align'] = node.style.textAlign;
+      }
+      if (Object.keys(styles).length > 0) {
+        return {
+          type: 'PARAGRAPH',
+          data: styles,
+        };
+      }
     }
     return null;
   },
@@ -261,7 +289,6 @@ export default class InputHtml extends Component {
         component: Mailmerge,
       },
     ]);
-    console.log("FK inputHtml", this.props);
     const value = convertFromHTML(fromHtml)(content);
     this.state = {
       editorState: EditorState.createWithContent(value, decorator),

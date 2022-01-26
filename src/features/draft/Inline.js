@@ -18,6 +18,7 @@ export default class Inline extends Component {
   }
   render() {
     const { config, currentState, onChange, translations } = this.props;
+    const textalign = currentState.textAlignment || '';
     return (
       <div className={classnames('ui-inline-wrapper btn-group', config.className)} aria-label="rdw-inline-control">
         {
@@ -26,7 +27,7 @@ export default class Inline extends Component {
               (<button
                 key={index}
                 onClick={() => onChange(style)}
-                className={classnames("btn btn-light", config[style].className, (currentState[style] === true ||
+                className={classnames("btn btn-light", config[style].className, (textalign === true ||
                     (style === 'MONOSPACE' && currentState.CODE)) && "active")}
                 title={config[style].title || translations[`components.controls.inline.${style}`]}
               >
