@@ -21,16 +21,15 @@ export const DefaultList = props => {
                 previous = item;
                 if (myBreak !== false) {
                   return (
-                    <>
+                    <div key={item.id}>
                       <DefaultLineBreak label={myBreak} counter={props.oddEven ? counter++ : 0}/>
                       <DefaultLine
-                      {...props}
-                      key={item.id}
-                      id={item.id}
-                      item={item}
-                      counter={props.oddEven ? counter++ : 0}
-                    />
-                    </>
+                        {...props}
+                        id={item.id}
+                        item={item}
+                        counter={props.oddEven ? counter++ : 0}
+                      />
+                    </div>
                   );
                 } else {
                   return (

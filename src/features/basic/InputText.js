@@ -23,7 +23,7 @@ export const InputText = props => {
         )}
         id={myId}
         name={props.name}
-        value={props.value || ''}
+        value={props.value === null ? '' : props.value}
         required={props.required}
         disabled={props.disabled || props.locked}
         onBlur={props.onBlur}

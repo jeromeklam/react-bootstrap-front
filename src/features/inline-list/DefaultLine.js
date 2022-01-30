@@ -114,7 +114,7 @@ export default class DefaultLine extends Component {
               if (!oneCol.hidden) {
                 const line = { ...oneCol, id: this.props.id };
                 const content = getObjectmemberValue(this.props.item, oneCol.col);
-                return <DefaultCol {...line} content={content} item={this.props.item} selectable={false} />;
+                return <DefaultCol key={`col-${oneCol.name}`} {...line} content={content} item={this.props.item} selectable={false} />;
               }
               return null;
             })}

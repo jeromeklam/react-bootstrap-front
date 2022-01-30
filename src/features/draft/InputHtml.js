@@ -7,7 +7,6 @@ import { Editor } from 'react-draft-wysiwyg';
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { htmlToString } from '../helpers';
 import { ColorPicker, Inline, FontSize, FontFamily, Image, MailMerge as MailMergeOption } from './';
-import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const myStyle = {
   height: 'auto',

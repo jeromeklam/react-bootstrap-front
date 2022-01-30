@@ -6,7 +6,7 @@ export const DefaultHeader = props => (
   <div className="inline-list-default-header bg-secondary-light">
     <div className="row row-title row-line no-gutters text-secondary" key="inline-list-default-header">
       {props.cols.map((oneCol, i) => {
-        return <DefaultTitleCol {...props} col={oneCol} idx={i} />;
+        return <DefaultTitleCol key={`herd-${oneCol.name}`} {...props} col={oneCol} idx={i} />;
       })}
       {props.onAddOne && (
         <div className="actions-buttons">

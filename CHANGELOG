@@ -1,3 +1,7 @@
+# 3.9.6 : 30/01/2022
+
+* fix : InputText avec un contenu à 0 
+
 # 3.9.5 : 27/01/2022
 
 * fix : InputHtml css order
