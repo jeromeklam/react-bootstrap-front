@@ -41,7 +41,7 @@ const getOptionsForType = (type, update = false) => {
       {value: FILTER_OPER_SOUND_LIKE, label: 'Ressemble à'}
     );
   }
-  if (type !== 'picker' && type !== 'select') {
+  if (type !== 'picker' && type !== 'select' && type !== 'date' && type !== 'datetime') {
     options.push(
       {value: FILTER_OPER_GREATER, label: 'Supérieur à'},
       {value: FILTER_OPER_GREATER_OR_EQUAL, label: 'Supérieur ou égal à'},
@@ -49,6 +49,16 @@ const getOptionsForType = (type, update = false) => {
       {value: FILTER_OPER_LOWER, label: 'Inférieur à'},
       {value: FILTER_OPER_LOWER_OR_EQUAL, label: 'Inférieur ou égal à'},
       {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: 'Vide ou inférieur et égal à'},
+    );
+  };
+  if (type === 'date' || type === 'datetime') {
+    options.push(
+      {value: FILTER_OPER_GREATER, label: 'Postérieur à'},
+      {value: FILTER_OPER_GREATER_OR_EQUAL, label: 'Postérieur ou égal à'},
+      {value: FILTER_OPER_GREATER_OR_EQUAL_OR_NULL, label: 'Vide ou postérieur et égal à'},
+      {value: FILTER_OPER_LOWER, label: 'Antérieur à'},
+      {value: FILTER_OPER_LOWER_OR_EQUAL, label: 'Antérieur ou égal à'},
+      {value: FILTER_OPER_LOWER_OR_EQUAL_OR_NULL, label: 'Vide ou antérieur et égal à'},
     );
   };
   if (update && (type === 'date' || type === 'datetime' || type === 'monetary' || type === 'number')) {

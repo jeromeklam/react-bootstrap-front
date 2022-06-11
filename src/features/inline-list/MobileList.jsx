@@ -48,6 +48,18 @@ class MobileList extends Component {
     let counter = 1;
     return (
       <div className="text-left">
+        {!this.props.loading && this.props.onAddOne && (
+          <MobileLineAction
+            className="btn btn-primary text-white font-weight-bold mb-1"
+            label={this.props.t({ id: 'rbf.inline-list.list.add', defaultMessage: 'Ajouter' })}
+            onClick={ev => {
+              if (ev) {
+                ev.stopPropagation();
+              }
+              this.props.onAddOne();
+            }}
+          />
+        )}
         {Array.isArray(this.props.items) &&
           this.props.items.map(item => (
             <MobileLine

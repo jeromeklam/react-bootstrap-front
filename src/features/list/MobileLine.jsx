@@ -196,6 +196,30 @@ export class MobileLine extends Component {
                 <span className="rbf-list-mobile-line-header-title">
                   {getCardTitle(this.props.cols, this.props.item)}
                 </span>
+                {(this.props.mobile || isMobileDevice()) && (!this.state.flipped || this.props.item.id != this.props.currentFlipped) && (
+                  <div className="nav btn-group rbf-list-mobile-line-header-nav" style={{right: '0px'}}>
+                    <button
+                      key="openclose"
+                      type="button"
+                      disabled={false}
+                      title=""
+                      className={classnames('btn btn-inline btn-light')}
+                      onClick={ev => {
+                        if (ev) {
+                          ev.preventDefault();
+                          ev.stopPropagation();
+                        }
+                        this.openMenu(ev);
+                      }}
+                    >
+                      <span className="rbf-list-mobile-line-3dots text-secondary">
+                      <svg width="16px" height="16px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots">
+                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                      </svg>
+                      </span>
+                    </button>
+                  </div>
+                )}
                 {(this.props.mobile || isMobileDevice()) && (
                   <CSSTransition
                     in={this.state.flipped && this.props.item.id === this.props.currentFlipped}
@@ -208,8 +232,13 @@ export class MobileLine extends Component {
                       >
                         {this.props.inlineActions &&
                           this.props.inlineActions.map(action => {
-                            if (action.role === 'DETAIL' || action.role === 'SUMMARY') {
+                            if (action.role === 'DETAIL' || action.role === 'SUMMARY' || action.role === 'OTHER') {
                               return null;
+                            }
+                            if (typeof action.fShow === 'function') {
+                              if (!action.fShow(this.props.item)) {
+                                return null;
+                              }
                             }
                             if (action.component) {
                               const clonedElementWithMoreProps = React.cloneElement(action.component, {
@@ -227,36 +256,6 @@ export class MobileLine extends Component {
                               );
                             }
                           })}
-                        {false && !this.props.hideMenu && (
-                          <button
-                            key="openclose"
-                            type="button"
-                            disabled={false}
-                            title=""
-                            className={classnames('btn btn-inline btn-light')}
-                            onClick={ev => {
-                              if (ev) {
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                              }
-                              this.setState({ flipped: !this.state.flipped });
-                            }}
-                          >
-                            <span className="rbf-list-mobile-line-3dots text-secondary">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                role="img"
-                                style={{ verticalAlign: '-0.125em' }}
-                                width="1em"
-                                height="1em"
-                                preserveAspectRatio="xMidYMid meet"
-                                viewBox="0 0 1000 1000"
-                              >
-                                <path d="M654 501l346 346l-154 154l-346-346l-346 346L0 847l346-346L0 155L154 1l346 346L846 1l154 154z" />
-                              </svg>
-                            </span>
-                          </button>
-                        )}
                       </div>
                     )}
                   </CSSTransition>

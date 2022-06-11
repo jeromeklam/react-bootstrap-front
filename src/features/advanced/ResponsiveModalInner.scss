@@ -65,6 +65,9 @@
 .container-xxs .modal-content .modal-footer,
 .container-xs .modal-content .modal-footer {
     background-color: theme-color('secondary');
+    height: 60px;
+    min-height: 60px;
+    padding-bottom: 10px;
 }
 
 .modal-help {
