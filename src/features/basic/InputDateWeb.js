@@ -121,7 +121,8 @@ export default class InputDateWeb extends Component {
     let dd = '';
     try {
       const [day, month, year] = val.split('/');
-      dd = ensureDatetimeTZ(new Date(Number(year), Number(month) - 1, Number(day)));
+      dd = ensureDatetimeTZ(new Date(Number(year), Number(month) - 1, Number(day)), false);
+      console.log(dd);
     } catch (ex) {
       dd = '';
     }
@@ -138,7 +139,7 @@ export default class InputDateWeb extends Component {
     const event = {
       target: {
         name: this.props.name,
-        value: ensureDatetimeTZ(date),
+        value: ensureDatetimeTZ(date, false),
       },
     };
     this.props.onChange(event);

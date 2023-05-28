@@ -117,12 +117,24 @@ export const beep = (context, freq = 2800, duration = 80, vol = 50) => {
   oscillator.stop(context.currentTime + duration * 0.001);
 };
 
-export const ensureDatetimeTZ = date => {
+export const ensureDatetimeTZ = (date, hour = true) => {
   if (date instanceof Date) {
+    if (!hour) {
+      const getYear = date.toLocaleString("default", { year: "numeric" });
+      const getMonth = date.toLocaleString("default", { month: "2-digit" });
+      const getDay = date.toLocaleString("default", { day: "2-digit" });
+      return getYear + '-' + getMonth + '-' + getDay; 
+    }
     return date.toISOString();
   } else {
     try {
       const nDate = new Date(date);
+      if (!hour) {
+        const getYear1 = nDate.toLocaleString("default", { year: "numeric" });
+        const getMonth1 = nDate.toLocaleString("default", { month: "2-digit" });
+        const getDay1 = nDate.toLocaleString("default", { day: "2-digit" });
+        return getYear1 + '-' + getMonth1 + '-' + getDay1; 
+      }
       return nDate.toISOString();
     } catch (ex) {}
   }
