@@ -10,7 +10,7 @@ export const verifyEmail = (email) => {
       const tabs = toTest.split('@');
       if (tabs.length === 2) {
         const domain = tabs[1].split('.');
-        if (domain.length === 2) {
+        if (domain.length >= 2) {
           return true;
         } else {
           return false;

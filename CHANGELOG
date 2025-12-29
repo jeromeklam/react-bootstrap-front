@@ -1,3 +1,7 @@
+# 3.10.2 : 24/12/2025
+
+* Allow email with domain with more than 1 ., ex test@gmail.co.ok
+
 # 3.10.1 : 28/05/2023
 
 * InpitDate return simple Date

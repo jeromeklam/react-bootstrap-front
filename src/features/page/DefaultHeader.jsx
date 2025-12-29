@@ -96,7 +96,7 @@ export class DefaultHeader extends Component {
     return (
       <div
         className={classnames(
-          'default-header bg-secondary pl-2 overflow-none h-100',
+          'default-header pl-2 overflow-none h-100',
           'bg-' + this.props.headerBackgroundTheme
         )}
       >
