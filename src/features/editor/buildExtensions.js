@@ -42,14 +42,17 @@ export function buildExtensions(props) {
       types: ['heading', 'paragraph'],
       alignments: ['left', 'center', 'right', 'justify'],
     }),
-    /* HTMLAttributes vide, volontairement : forcer target="_blank" ici
-       réécrirait tous les liens de la base au premier enregistrement. Le choix
-       de la cible se fait dans la boîte de dialogue, lien par lien. */
+    /* target et rel explicitement à null, et non un objet vide : les options
+       sont FUSIONNÉES avec les défauts de l'extension, qui posent
+       target="_blank" rel="noopener noreferrer nofollow" sur tout lien. Un
+       objet vide laisserait donc ces défauts réécrire l'intégralité des liens
+       de la base au premier enregistrement. La cible se choisit dans la boîte
+       de dialogue, lien par lien. */
     Link.configure({
       openOnClick: false,
       autolink: true,
       linkOnPaste: true,
-      HTMLAttributes: {},
+      HTMLAttributes: { target: null, rel: null, class: null },
     }),
     Image.configure({
       inline: false,

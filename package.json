@@ -159,14 +159,13 @@
     "testEnvironment": "jsdom",
     "testURL": "http://localhost",
     "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.(js|jsx|ts|tsx|cjs|mjs)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|ts|tsx|cjs|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$",
-      "node_modules/(?!imask)"
+      "[/\\\\]node_modules[/\\\\](?!(@tiptap|prosemirror-|linkifyjs|orderedmap|rope-sequence|w3c-keyname|crelt|markdown-it|entities|uc\\.micro|punycode\\.js|mdurl|imask)).+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
@@ -175,6 +174,8 @@
     "moduleFileExtensions": [
       "web.js",
       "js",
+      "cjs",
+      "mjs",
       "web.ts",
       "ts",
       "web.tsx",

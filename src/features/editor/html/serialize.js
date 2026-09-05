@@ -18,7 +18,33 @@ const DEFAULTS = {
   emptyDocumentAsEmptyString: true,
   /** Ferme les balises orphelines en XML (`<img />`) si le moteur PHP l'exige */
   selfClosing: false,
+  /** Ramène les couleurs en notation hexadécimale */
+  hexColors: true,
 };
+
+/**
+ * Le navigateur normalise toute couleur lue dans un style en `rgb(r, g, b)`.
+ * Sans cette conversion, ouvrir puis enregistrer un contenu réécrirait chaque
+ * couleur de la base en `rgb()` — un changement inutile, et moins bien
+ * supporté que l'hexadécimal par les clients de messagerie anciens.
+ *
+ * Les couleurs à transparence partielle sont laissées telles quelles :
+ * l'hexadécimal sur huit chiffres n'est pas lisible par ces mêmes clients.
+ */
+function toHexColors(html) {
+  return html.replace(/rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(?:1|1\.0+)\s*)?\)/gi, function(
+    match,
+    r,
+    g,
+    b,
+  ) {
+    const channel = value => {
+      const hex = Number(value).toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+    return '#' + channel(r) + channel(g) + channel(b);
+  });
+}
 
 /** Balises qui portent du sens sans contenir de texte. */
 const MEANINGFUL_EMPTY_TAGS = /<\s*(img|hr|br|iframe|video|audio)\b/i;
@@ -78,6 +104,9 @@ export function serializeHtml(html, options) {
     return '';
   }
   out = applyEmptyParagraph(out, opts.emptyParagraph);
+  if (opts.hexColors) {
+    out = toHexColors(out);
+  }
   if (opts.selfClosing) {
     out = applySelfClosing(out);
   }

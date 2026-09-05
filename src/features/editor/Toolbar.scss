@@ -1,0 +1,130 @@
+.rbf-editor-toolbar {
+  padding: 2px;
+  border-bottom: 1px solid theme-color('secondary-light');
+  background-color: $gray-100;
+
+  .rbf-editor-group {
+    margin-right: 4px;
+    margin-bottom: 2px;
+  }
+
+  .rbf-editor-button {
+    line-height: 1;
+    min-width: 1.9rem;
+    border: 1px solid transparent;
+
+    &:hover {
+      background-color: $white;
+      border-color: theme-color('secondary-light');
+    }
+
+    &.active {
+      background-color: theme-color('secondary-light');
+      border-color: theme-color('secondary');
+    }
+
+    &:disabled {
+      opacity: 0.35;
+    }
+  }
+}
+
+.rbf-editor-dropdown {
+  max-height: 20rem;
+  overflow-y: auto;
+
+  &.rbf-editor-dropdown-wide {
+    min-width: 18rem;
+  }
+}
+
+/* Palette volontairement courte : dans un courriel, une charte tient en une
+   poignée de couleurs. */
+.rbf-editor-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1.25rem);
+  gap: 3px;
+  padding: 0.4rem 0.6rem;
+}
+
+.rbf-editor-swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+
+  &:hover {
+    outline: 2px solid theme-color('primary');
+  }
+}
+
+.rbf-editor-mergemenu {
+  min-width: 18rem;
+
+  .rbf-editor-mergemenu-search {
+    padding: 0.4rem 0.6rem;
+    position: sticky;
+    top: 0;
+    background: $white;
+    z-index: 1;
+  }
+
+  .rbf-editor-mergemenu-list {
+    max-height: 16rem;
+    overflow-y: auto;
+  }
+
+  .rbf-editor-mergemenu-item {
+    white-space: normal;
+
+    .rbf-editor-mergemenu-label {
+      font-weight: 500;
+    }
+
+    small {
+      font-family: $font-family-monospace;
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.rbf-editor-dialog {
+  padding: 0.5rem;
+  border-bottom: 1px solid theme-color('secondary-light');
+  background-color: $gray-100;
+
+  .rbf-editor-dialog-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.1rem;
+    color: theme-color('secondary');
+  }
+
+  .nav-tabs-sm .nav-link {
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+
+.rbf-editor-source {
+  .rbf-editor-source-text {
+    font-size: 0.75rem;
+    resize: none;
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+.rbf-editor-source-warning {
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+
+  .btn-link {
+    padding: 0 0.35rem;
+    font-size: 0.75rem;
+    vertical-align: baseline;
+  }
+}
