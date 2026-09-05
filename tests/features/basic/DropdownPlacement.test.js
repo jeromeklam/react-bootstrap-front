@@ -57,20 +57,39 @@ function anchorAt(rect) {
   return { current: node };
 }
 
-/** Taille simulée du menu, lue par le composant pour décider d'un retournement. */
+/**
+ * Taille simulée du menu.
+ *
+ * `height` est la hauteur NATURELLE du contenu. On reproduit fidèlement le
+ * navigateur : `offsetHeight` est écrêtée par le `max-height` déjà posé sur
+ * l'élément, seul `scrollHeight` du conteneur interne rend la hauteur réelle.
+ * C'est toute la difficulté — se fier à offsetHeight rend le débordement
+ * invisible, et le menu ne se retourne jamais.
+ */
 function sizeDropdown(width, height) {
   const node = document.querySelector('.rbf-dropdown');
-  if (node) {
-    node.getBoundingClientRect = () => ({
-      left: 0,
-      top: 0,
-      width,
-      height,
-      right: width,
-      bottom: height,
-    });
-    Object.defineProperty(node, 'offsetWidth', { configurable: true, value: width });
-    Object.defineProperty(node, 'offsetHeight', { configurable: true, value: height });
+  if (!node) {
+    return null;
+  }
+  const scroller = node.querySelector('.custom-scrollbar');
+  const clamped = () => {
+    const max = parseFloat(node.style.maxHeight);
+    return isNaN(max) ? height : Math.min(height, max);
+  };
+  node.getBoundingClientRect = () => ({
+    left: 0,
+    top: 0,
+    width,
+    height: clamped(),
+    right: width,
+    bottom: clamped(),
+  });
+  Object.defineProperty(node, 'offsetWidth', { configurable: true, get: () => width });
+  Object.defineProperty(node, 'offsetHeight', { configurable: true, get: clamped });
+  Object.defineProperty(node, 'scrollHeight', { configurable: true, get: () => height });
+  if (scroller) {
+    Object.defineProperty(scroller, 'scrollHeight', { configurable: true, get: () => height });
+    Object.defineProperty(scroller, 'offsetHeight', { configurable: true, get: clamped });
   }
   return node;
 }
@@ -122,6 +141,47 @@ describe('Dropdown — placement', () => {
     /* 700 + 30 + 300 = 1030 > 800 : le menu doit passer au-dessus de l'ancre,
        donc se terminer à 700 et commencer à 400. */
     expect(px(node.style.top)).toBe(400);
+  });
+
+  it('se retourne même quand max-height a déjà écrasé sa hauteur rendue', () => {
+    /* Cas réel : l'ancre est en bas de page, il ne reste que 30 px dessous.
+       Le menu reçoit donc un max-height de 22 px au premier calcul, et sa
+       hauteur RENDUE devient 22 — mesurer offsetHeight ferait croire qu'il
+       tient, et il resterait écrasé sous le bas de la page. */
+    const anchor = anchorAt({ left: 700, top: 740, width: 60, height: 30 });
+    renderDropdown({ myRef: anchor, align: 'bottom-right' });
+    sizeDropdown(220, 300);
+    window.dispatchEvent(new Event('resize'));
+    const node = document.querySelector('.rbf-dropdown');
+    expect(px(node.style.top)).toBe(740 - 300);
+    expect(px(node.style.maxHeight)).toBeGreaterThanOrEqual(300);
+  });
+
+  it('colle le bas du menu retourné contre l\'ancre', () => {
+    /* Retournement avec écrêtage : 170 px sous l'ancre, 600 au-dessus, menu de
+       700. Il passe au-dessus, y est réduit à 592, et son BAS doit rester au
+       contact du déclencheur — partir de la hauteur naturelle laisserait un
+       trou de 108 px entre le menu et le bouton. */
+    const anchor = anchorAt({ left: 700, top: 600, width: 60, height: 30 });
+    renderDropdown({ myRef: anchor, align: 'bottom-right' });
+    sizeDropdown(220, 700);
+    window.dispatchEvent(new Event('resize'));
+    const node = document.querySelector('.rbf-dropdown');
+    const available = 600 - 8;
+    expect(px(node.style.top)).toBe(600 - available);
+    expect(px(node.style.top) + available).toBe(600);
+  });
+
+  it('reste en dessous quand la place y est plus grande, même sans y tenir', () => {
+    /* 570 px sous l'ancre contre 200 au-dessus : se retourner réduirait la
+       place. Le menu reste en dessous et défile. */
+    const anchor = anchorAt({ left: 700, top: 200, width: 60, height: 30 });
+    renderDropdown({ myRef: anchor, align: 'bottom-right' });
+    sizeDropdown(220, 700);
+    window.dispatchEvent(new Event('resize'));
+    const node = document.querySelector('.rbf-dropdown');
+    expect(px(node.style.top)).toBe(230);
+    expect(px(node.style.maxHeight)).toBe(800 - 230 - 8);
   });
 
   it('ne sort pas par le haut si le menu est plus haut que la fenêtre', () => {

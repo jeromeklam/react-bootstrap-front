@@ -41,6 +41,7 @@ export default class Dropdown extends Component {
   constructor(props) {
     super(props);
     this.nodeRef = React.createRef();
+    this.scrollRef = React.createRef();
     /* Première position calculée sur la seule ancre : la taille du menu n'est
        pas encore connue. Elle est affinée dès le montage, ce qui évite
        d'afficher le menu au mauvais endroit le temps d'une image. */
@@ -67,14 +68,22 @@ export default class Dropdown extends Component {
   }
 
   /**
-   * Taille réelle du menu, une fois rendu. Nulle au premier calcul.
+   * Taille du menu, une fois rendu. Nulle au premier calcul.
+   *
+   * La hauteur lue est celle du CONTENU (`scrollHeight` du conteneur
+   * défilant), pas celle de l'élément : ce dernier porte déjà le `max-height`
+   * calculé au tour précédent, si bien que sa hauteur rendue ne dépasse jamais
+   * l'espace disponible. S'y fier rendrait tout débordement invisible et le
+   * menu ne se retournerait jamais — il resterait écrasé sous le bas de page.
    */
   getMenuSize() {
     const node = this.nodeRef.current;
     if (!node) {
       return null;
     }
-    return { width: node.offsetWidth, height: node.offsetHeight };
+    const scroller = this.scrollRef.current;
+    const height = scroller ? scroller.scrollHeight : node.scrollHeight;
+    return { width: node.offsetWidth, height: height };
   }
 
   getPlacement(menuSize) {
@@ -157,6 +166,7 @@ export default class Dropdown extends Component {
       <Portal>
         <div ref={this.nodeRef} className={classnames('rbf-dropdown', this.props.className)} style={divStyle}>
           <div
+            ref={this.scrollRef}
             className="custom-scrollbar"
             style={{ maxHeight: maxHeight, overflowX: 'hidden', overflowY: 'auto' }}
           >

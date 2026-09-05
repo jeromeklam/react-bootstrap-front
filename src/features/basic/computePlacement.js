@@ -28,12 +28,17 @@ export function computePlacement(anchor, menu, align, viewport, margin = DROPDOW
   const spaceAbove = anchor.top;
 
   /* Le menu s'ouvre vers le bas, sauf s'il n'y tient pas et qu'il y a
-     davantage de place au-dessus. */
+     davantage de place au-dessus.
+     `menuHeight` doit être la hauteur NATURELLE du contenu : la hauteur rendue
+     est déjà écrêtée par le max-height posé au calcul précédent, et s'y fier
+     rendrait tout débordement invisible. */
   const flip = menuHeight > 0 && spaceBelow < menuHeight + margin && spaceAbove > spaceBelow;
   const available = Math.max(0, (flip ? spaceAbove : spaceBelow) - margin);
-
-  let top = flip ? anchor.top - menuHeight : anchorBottom;
   const effectiveHeight = menuHeight > 0 ? Math.min(menuHeight, available) : 0;
+
+  /* Retourné, c'est le BAS du menu qui se cale sur le déclencheur : partir de
+     la hauteur naturelle laisserait un trou dès que le menu est écrêté. */
+  let top = flip ? anchor.top - effectiveHeight : anchorBottom;
   top = Math.min(top, viewport.height - margin - effectiveHeight);
   top = Math.max(margin, top);
 
