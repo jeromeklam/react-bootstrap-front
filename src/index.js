@@ -73,7 +73,15 @@ export { default as WidthObserver } from "./features/advanced/WidthObserver";
 
 /**
  *******************************************************************************
+ * Editor (TipTap)
+ *******************************************************************************
+ */
+export * from "./features/editor/index.js";
+
+/**
+ *******************************************************************************
  * Draft
+ * @deprecated remplacé par features/editor, supprimé en 4.0.0
  *******************************************************************************
  */
  export * from "./features/draft/index.js";
