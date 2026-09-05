@@ -22,8 +22,18 @@ export default class DropdownWrapper extends Component {
     tooltip: '',
   };
 
-  static getDerivedStateFromProps(state, props) {
-    if (state.origOpen !== props.open && state.open !== props.open) {
+  /**
+   * React appelle cette méthode avec (props, state) : les deux paramètres
+   * étaient nommés à l'envers, ce qui rendait la prop `open` inopérante — elle
+   * se comparait à elle-même. Aucun appelant ne la passe aujourd'hui, le
+   * comportement observable est donc inchangé.
+   *
+   * `open` est une valeur initiale, pas un contrôle : on ne la reprend que
+   * lorsqu'elle change réellement côté appelant, sinon le menu se refermerait
+   * à chaque rendu du parent.
+   */
+  static getDerivedStateFromProps(props, state) {
+    if (props.open !== state.origOpen) {
       return { open: props.open, origOpen: props.open };
     }
     return null;
