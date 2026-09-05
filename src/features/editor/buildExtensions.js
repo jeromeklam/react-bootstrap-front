@@ -60,7 +60,13 @@ export function buildExtensions(props) {
     }),
     LegacyImageAttrs,
     Placeholder.configure({ placeholder: options.placeholder || '' }),
-    MergeVariable.configure({ knownCodes: collectMergeCodes(options.mergeVars) }),
+    /* knownCodes n'est renseigné qu'en mode strict : tant que le catalogue est
+       tenu à la main côté application, il est forcément incomplet, et signaler
+       en rouge une variable parfaitement valide serait pire qu'inutile. À
+       basculer le jour où le catalogue vient de l'API et fait autorité. */
+    MergeVariable.configure({
+      knownCodes: options.strictMergeVars ? collectMergeCodes(options.mergeVars) : null,
+    }),
     CleanPaste.configure({
       enabled: options.cleanOnPaste !== false,
       profile: options.pasteProfile || 'paste',

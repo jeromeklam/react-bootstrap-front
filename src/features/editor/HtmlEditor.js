@@ -55,6 +55,9 @@ export default class HtmlEditor extends Component {
     cleanOnPaste: PropTypes.bool,
     /** Variables de fusion, groupées. */
     mergeVars: PropTypes.array,
+    /** Signale en rouge une variable absente du catalogue. À n'activer que
+        lorsque le catalogue fait autorité, sinon fausses alertes garanties. */
+    strictMergeVars: PropTypes.bool,
     /** @deprecated ancienne forme plate, normalisée vers mergeVars. */
     presetTexts: PropTypes.array,
     /** (File) => Promise<url> ; absente, l'insertion d'image se fait par adresse. */
@@ -91,6 +94,7 @@ export default class HtmlEditor extends Component {
     maxHeight: '30rem',
     cleanOnPaste: true,
     mergeVars: [],
+    strictMergeVars: false,
     presetTexts: [],
     onUploadImage: null,
     maxImageSize: 524288,
@@ -216,6 +220,7 @@ export default class HtmlEditor extends Component {
     return {
       placeholder: this.props.placeholder,
       mergeVars: this.getMergeVars(),
+      strictMergeVars: this.props.strictMergeVars,
       cleanOnPaste: this.props.cleanOnPaste,
     };
   }

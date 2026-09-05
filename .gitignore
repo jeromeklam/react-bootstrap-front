@@ -4,3 +4,8 @@ node_modules
 .settings
 dist/
 .npmrc
+# Aperçu : fichiers régénérables par `node demo/build.js`
+demo/app.css
+demo/icons.js
+demo/react.development.js
+demo/react-dom.development.js

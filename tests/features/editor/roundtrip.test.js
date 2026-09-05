@@ -197,10 +197,22 @@ describe('collage', () => {
 describe('variables de fusion — décoration', () => {
   it('décore les variables connues et signale les inconnues', () => {
     const mergeVars = [{ key: 'client', group: 'Donateur', items: [{ code: '[[:client.cli_fullname:]]', label: 'Nom' }] }];
-    const editor = makeEditor('<p>[[:client.cli_fullname:]] et [[:client.inconnu:]]</p>', { mergeVars });
+    const editor = makeEditor('<p>[[:client.cli_fullname:]] et [[:client.inconnu:]]</p>', {
+      mergeVars,
+      strictMergeVars: true,
+    });
     const html = editor.view.dom.innerHTML;
     expect(html).toContain('rbf-mergevar');
     expect(html).toContain('rbf-mergevar-unknown');
+    editor.destroy();
+  });
+
+  it('ne signale rien comme inconnu hors mode strict', () => {
+    const mergeVars = [{ key: 'client', group: 'Donateur', items: [{ code: '[[:client.cli_fullname:]]', label: 'Nom' }] }];
+    const editor = makeEditor('<p>[[:client.inconnu:]]</p>', { mergeVars });
+    const html = editor.view.dom.innerHTML;
+    expect(html).toContain('rbf-mergevar');
+    expect(html).not.toContain('rbf-mergevar-unknown');
     editor.destroy();
   });
 });

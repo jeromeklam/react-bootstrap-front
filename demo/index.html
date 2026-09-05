@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Champ HTML — aperçu</title>
+    <link rel="stylesheet" href="./app.css" />
+    <style>
+      body {
+        padding: 1.5rem 2rem;
+        background: #f4f6f8;
+      }
+      .demo-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .demo-card {
+        background: #fff;
+        border: 1px solid #dfe3e8;
+        border-radius: 4px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+      .demo-title {
+        font-size: 1.1rem;
+        color: #235b8b;
+        margin: 0 0 0.25rem;
+      }
+      .demo-hint {
+        color: #6b7680;
+        margin-bottom: 1rem;
+      }
+      .demo-out {
+        font-family: monospace;
+        font-size: 0.72rem;
+        background: #263238;
+        color: #cfd8dc;
+        padding: 0.75rem;
+        border-radius: 3px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: 12rem;
+        overflow: auto;
+      }
+      .demo-paste {
+        border: 1px dashed #b0bec5;
+        padding: 0.5rem 0.75rem;
+        border-radius: 3px;
+        font-size: 0.8rem;
+        background: #fffde7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-wrap">
+      <h1 class="demo-title">Champ HTML — aperçu</h1>
+      <p class="demo-hint">
+        Page autonome : le bundle réellement publié, les styles réellement compilés par l'application,
+        et les mêmes icônes Material Design que l'admin. Aucun serveur, aucune authentification.
+      </p>
+      <div id="root"></div>
+    </div>
+
+    <script src="./react.development.js"></script>
+    <script src="./react-dom.development.js"></script>
+    <script src="./icons.js"></script>
+    <script src="../dist/react-bootstrap-front.js"></script>
+    <script>
+      (function() {
+        var e = React.createElement;
+        var RBF = window['react-bootstrap-front'];
+        var HtmlEditor = RBF.HtmlEditor;
+
+        /* Icône MDI en SVG inline : évite de dépendre de @mdi/react ici. */
+        function icon(name, className) {
+          return e(
+            'svg',
+            { viewBox: '0 0 24 24', width: 18, height: 18, className: className || '' },
+            e('path', { d: window.DEMO_ICON_PATHS[name], fill: 'currentColor' })
+          );
+        }
+
+        var icons = {};
+        Object.keys(window.DEMO_ICON_PATHS).forEach(function(key) {
+          icons[key] = icon(key);
+        });
+
+        /* Contenu tel que l'ancien éditeur draft-js l'a écrit en base. */
+        var LEGACY =
+          '<p>[[:head_group.notification_main_header:]]</p>' +
+          '<br/>' +
+          '<p><strong>Chèr(e) [[:client.cli_fullname:]],</strong></p>' +
+          '<p><span style="font-size:14px">Nous espérons que vous avez passé de bonnes fêtes de fin d’année.</span></p>' +
+          '<p>Nous souhaitions vous informer d’une nouveauté : désormais les personnes qui, comme vous, font un don mensuel pour la forêt deviennent des <strong>Gardiens(nes) de la Forêt</strong> !</p>' +
+          '<p><span style="color:#c00000">Merci</span> pour <cite>votre soutien</cite>.</p>' +
+          '<p><a href="https://kalaweit.org">Notre site</a></p>';
+
+        var MERGE_VARS = [
+          {
+            key: 'head_group',
+            group: 'En-têtes et pieds de page',
+            items: [
+              { code: '[[:head_group.notification_main_header:]]', label: 'En-tête principal' },
+              { code: '[[:head_group.notification_main_footer:]]', label: 'Pied de page principal' }
+            ]
+          },
+          {
+            key: 'client',
+            group: 'Donateur',
+            items: [{ code: '[[:client.cli_fullname:]]', label: 'Nom complet' }]
+          }
+        ];
+
+        var WORD_PASTE =
+          '<p class=MsoNormal style=\'margin-bottom:0cm\'><span style=\'font-size:11.0pt;' +
+          'font-family:"Calibri",sans-serif;mso-fareast-font-family:"Times New Roman";' +
+          'color:windowtext\'>Texte collé depuis Word<o:p></o:p></span></p>';
+
+        function Demo() {
+          var state = React.useState(LEGACY);
+          var value = state[0];
+          var setValue = state[1];
+
+          return e(
+            'div',
+            null,
+            e(
+              'div',
+              { className: 'demo-card' },
+              e('h2', { className: 'demo-title' }, 'Contenu d’un courriel'),
+              e(
+                'p',
+                { className: 'demo-hint' },
+                'Le contenu de départ est celui qu’écrivait l’ancien éditeur : taille de police, couleur, ',
+                e('code', null, '<cite>'),
+                ', paragraphe vide en ',
+                e('code', null, '<br>'),
+                ' et variables de fusion.'
+              ),
+              e(HtmlEditor, {
+                name: 'emaill_body',
+                label: 'Contenu',
+                required: true,
+                value: value,
+                onChange: function(ev) {
+                  setValue(ev.target.value);
+                },
+                icons: icons,
+                toolbarIcon: icon('toolbar', 'text-secondary'),
+                clearIcon: icon('clear', 'text-warning'),
+                mergeVars: MERGE_VARS,
+                toolbarPreset: 'full',
+                placeholder: 'Saisissez le contenu…'
+              })
+            ),
+            e(
+              'div',
+              { className: 'demo-card' },
+              e('h2', { className: 'demo-title' }, 'HTML enregistré'),
+              e(
+                'p',
+                { className: 'demo-hint' },
+                'Exactement ce qui partirait en base. Il se met à jour à la frappe.'
+              ),
+              e('div', { className: 'demo-out' }, value)
+            ),
+            e(
+              'div',
+              { className: 'demo-card' },
+              e('h2', { className: 'demo-title' }, 'À essayer'),
+              e(
+                'ul',
+                null,
+                e('li', null, 'Coller du contenu depuis Word, Outlook ou Google Docs : le bruit est retiré à l’entrée.'),
+                e(
+                  'li',
+                  null,
+                  'Le balai : retire couleurs, polices et tailles en gardant le gras. La gomme : tout enlever. Ctrl+Z annule d’un coup.'
+                ),
+                e('li', null, 'Le bouton ', e('code', null, '</>'), ' bascule vers le HTML brut, éditable.'),
+                e('li', null, 'Le bouton variable insère un ', e('code', null, '[[:…:]]'), ' ; ils sont surlignés dans le texte.'),
+                e(
+                  'li',
+                  { className: 'demo-paste' },
+                  'Collage Word à copier pour tester : ',
+                  e('code', null, WORD_PASTE)
+                )
+              )
+            )
+          );
+        }
+
+        ReactDOM.render(e(Demo), document.getElementById('root'));
+      })();
+    </script>
+  </body>
+</html>
