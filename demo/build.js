@@ -83,10 +83,26 @@ fs.writeFileSync(path.join(DEMO, 'icons.js'), 'window.DEMO_ICON_PATHS = ' + JSON
   fs.copyFileSync(path.join(APP, 'node_modules', rel), path.join(DEMO, path.basename(rel)));
 });
 
+const CSS = path.join(DEMO, 'app.css');
 execFileSync(
   'npx',
-  ['sass', '--no-source-map', '--load-path=node_modules', 'src/styles/index.scss', path.join(DEMO, 'app.css')],
+  ['sass', '--no-source-map', '--load-path=node_modules', 'src/styles/index.scss', CSS],
   { cwd: APP, stdio: 'inherit' },
 );
+
+/* sass laisse tels quels les @import de fichiers .css (react-datepicker, grille…),
+   que seul webpack résout dans l'application. Ouverte en file://, la page ne les
+   trouverait pas : le calendrier s'affichait sans style. On les inline. */
+const inlined = fs.readFileSync(CSS, 'utf8').replace(/@import\s+(?:url\()?["']([^"')]+)["']\)?\s*;/g, (line, target) => {
+  const file = target.startsWith('~')
+    ? path.join(APP, 'node_modules', target.slice(1))
+    : path.resolve(APP, 'src/styles', target);
+  if (!fs.existsSync(file)) {
+    console.warn('feuille importée introuvable, laissée telle quelle : ' + target);
+    return line;
+  }
+  return '/* ' + target + ' */\n' + fs.readFileSync(file, 'utf8');
+});
+fs.writeFileSync(CSS, inlined);
 
 console.log('Aperçus prêts : ouvrez ' + path.join(DEMO, 'index.html') + ' ou ' + path.join(DEMO, 'recherche.html'));
