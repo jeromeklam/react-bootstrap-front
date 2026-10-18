@@ -26,15 +26,19 @@ export const SearchFormSection = props => {
         return field;
       })
       .filter(Boolean);
-    content = (
-      <Row>
-        {resolved.map(field => (
-          <Col key={field.name} size={{ xxs: 36, md: widthFor(field) }} className="rbf-search-form-field">
-            <SearchFormField field={field} value={values[field.name]} onChange={onChange} icons={icons} showLabel={showLabels} size={size} disabled={disabled} t={t} />
-          </Col>
-        ))}
-      </Row>
-    );
+    /* field.newLine : le champ commence une nouvelle ligne (div.w-100 de Bootstrap). */
+    const cells = [];
+    resolved.forEach((field, index) => {
+      if (field.newLine && index > 0) {
+        cells.push(<div key={`${field.name}-break`} className="w-100" />);
+      }
+      cells.push(
+        <Col key={field.name} size={{ xxs: 36, md: widthFor(field) }} className="rbf-search-form-field">
+          <SearchFormField field={field} value={values[field.name]} onChange={onChange} icons={icons} showLabel={showLabels} size={size} disabled={disabled} t={t} />
+        </Col>
+      );
+    });
+    content = <Row>{cells}</Row>;
   }
   return (
     <div className={classnames('rbf-search-form-section px-3 py-3', !first && 'border-top', className)} role="group" aria-labelledby={labelId}>

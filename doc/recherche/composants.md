@@ -343,6 +343,9 @@ inconnu est écarté avec un avertissement) + `values` + `onChange` + `icons`. R
 champ occupe `Col size={{ xxs: 36, md: widthFor(field) }}` ; `role="group"
 aria-labelledby`.
 
+Un champ à `newLine: true` commence une nouvelle ligne de la section (un `div.w-100`
+Bootstrap est inséré devant lui) : sa largeur reste la sienne, sans l'étirer.
+
 `SearchFormField` : `field`, `value`, `onChange` (`{ target: { name, value } }`),
 `icons`, `showLabel`, `size`, `disabled`. Le composant vient de `widgetFor(field)` :
 `field.widget`, sinon par type (`text` → `InputText` avec le libellé en placeholder,
@@ -522,6 +525,7 @@ Props additives, comportement par défaut inchangé.
   phrase: { eq: 'par {value}' },  // fragments de phrase par opérateur
   facet: { order: 10, kind: 'options', searchable: true, countLabel: n => `${n} moyens` },
   section: 'moyen', widget: 'pills',
+  newLine: false,                 // true : commence une nouvelle ligne dans sa section, largeur inchangée
   picker: undefined,              // type picker : { onSearch, display }
   hidden: false,                  // jamais proposé dans « + Ajouter un critère » ni le formulaire, mais affiché en pastille
   subjectFor: undefined,          // values => 'Particuliers' | null

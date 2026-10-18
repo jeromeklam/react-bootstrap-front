@@ -48,6 +48,16 @@ test('section : champs résolus, inconnu écarté avec avertissement, largeurs',
   expect(fields.at(1).prop('value')).toBe('once');
   expect(warn).toHaveBeenCalled();
   warn.mockRestore();
+  const stacked = shallow(
+    <SearchFormSection
+      label="Paiement"
+      catalog={donorCatalog().map(f => (f.name === 'donations.don_mnt_input' || f.name === 'don_kind' ? { ...f, newLine: true } : f))}
+      fields={['donations.don_real_ts', 'donations.don_mnt_input', 'don_kind']}
+      onChange={() => {}}
+    />
+  );
+  expect(stacked.find('.w-100').length).toBe(2);
+  expect(stacked.find(SearchFormField).length).toBe(3);
   const custom = shallow(<SearchFormSection label="Libre"><b>libre</b></SearchFormSection>);
   expect(custom.find(SearchFormField).length).toBe(0);
   expect(custom.find('b').text()).toBe('libre');
