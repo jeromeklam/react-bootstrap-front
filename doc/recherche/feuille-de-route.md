@@ -89,10 +89,16 @@ nouvelles sont vertes.
 
 ### Administration Kalaweit
 
-En cours sur la branche locale `recherche` d'admin (18/10/2026) : `icons/Sparkle.js`,
-`client/searchCatalog.js`, `client/SearchPage.js` branchée sur `client/search`,
-`SimpleSearch.js` conservé. Test réel et validation à faire ; `package.json` ne
-référencera `^3.12.0` qu'après la publication npm.
+Sur la branche locale `recherche` d'admin (18/10/2026) : la fiche des **donateurs**
+(`client/searchCatalog.js`, `client/SearchPage.js` sur `client/search`) est testée
+dans l'application et **validée** (commit `2bc3b3b` d'admin) ; les corrections
+qu'elle a révélées côté lib sont dans les commits qui suivent la 3.12.0 (barre en
+langage naturel alignée, `newLine`, colonne de libellés fixe, `withDefaults`,
+phrase dans l'ordre des sections). Les fiches des **dons** (`donation/search`) et
+des **reçus** (`receipt/search`) suivent le même modèle, avec un sac d'icônes
+partagé `ui/searchIcons.js` ; en attente de test réel. Les trois `SimpleSearch.js`
+sont conservés ; `package.json` ne référencera `^3.12.0` qu'après la publication
+npm, qui devra inclure ces corrections (donc une 3.12.0 republiée ou une 3.12.1).
 
 - `src/features/icons/Sparkle.js` (`mdiCreation`) ; un sac d'icônes `ui/searchIcons.js`
   (étincelle, calendrier, croix, coche, plus, corbeille, chevron).
