@@ -338,12 +338,13 @@ Rendu : un `Container` de la bibliothèque (grille à requêtes de conteneur), u
 `SearchFormSection` : `label` (req.), `hint`, `id`, `first` (pas de bordure haute),
 et soit `children`, soit `catalog` + `fields` (noms résolus dans le catalogue, un
 inconnu est écarté avec un avertissement) + `values` + `onChange` + `icons`. Rendu
-`Row` → libellé `Col` en petites capitales `.rbf-search-form-section-label`,
-contenu `Col` où chaque champ occupe sa largeur. La grille de la bibliothèque est par
-palier de conteneur **sans cumul** : chaque colonne porte les six tailles (`LABEL_SIZE`
-36 / 36 / 8 / 6 / 6 / 5 et `CONTENT_SIZE` 36 / 36 / 28 / 30 / 30 / 31 de `xxs` à `xl`,
-`fieldSize(width)` = 36 sous `sm`, la largeur du champ au-delà) ; libellé et champs
-s'empilent sous 768 px de conteneur. `role="group" aria-labelledby`.
+un squelette en **flex pur** (`SearchForm.scss`) : colonne de libellés à largeur fixe
+(10 rem, `.rbf-search-form-section-label-col`, empilée sous 576 px de fenêtre) en
+petites capitales, puis `.rbf-search-form-section-content` qui prend le reste. Les
+champs, eux, sont sur la grille de la bibliothèque (`Row` / `Col`), qui est par palier
+de conteneur **sans cumul** : chaque colonne porte ses six tailles (`fieldSize(width)`
+= 36 sous `sm`, la largeur du champ au-delà). Le libellé ne dépend donc d'aucune
+détection de largeur. `role="group" aria-labelledby`.
 
 Un champ à `newLine: true` commence une nouvelle ligne de la section (un `div.w-100`
 Bootstrap est inséré devant lui) : sa largeur reste la sienne, sans l'étirer.

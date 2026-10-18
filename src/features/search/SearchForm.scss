@@ -10,4 +10,31 @@
   .rbf-search-form-section-label {
     letter-spacing: 0.04em;
   }
+
+  /* Squelette d'une section : libellé à largeur fixe, champs sur le reste. En flex
+     pur, sans la grille à paliers de conteneur : le libellé ne dépend d'aucune
+     détection de largeur. Les deux portent le demi-gouttière de la grille pour
+     que la Row des champs s'y inscrive. */
+  .rbf-search-form-section-label-col,
+  .rbf-search-form-section-content {
+    padding-left: $grid-gutter-width / 2;
+    padding-right: $grid-gutter-width / 2;
+  }
+
+  .rbf-search-form-section-label-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .rbf-search-form-section-content {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 576px) {
+    .rbf-search-form-section-label-col {
+      flex: 0 0 10rem;
+      max-width: 10rem;
+    }
+  }
 }

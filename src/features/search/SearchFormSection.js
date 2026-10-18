@@ -8,9 +8,9 @@ import { warnOnce } from './i18n';
 import SearchFormField, { widthFor } from './SearchFormField';
 
 /* La grille de la bibliothèque est par palier de conteneur, sans cumul : chaque
-   palier reçoit sa taille. Sous sm (768 px), libellé et champs s'empilent. */
-export const LABEL_SIZE = { xxs: 36, xs: 36, sm: 8, md: 6, lg: 6, xl: 5 };
-export const CONTENT_SIZE = { xxs: 36, xs: 36, sm: 28, md: 30, lg: 30, xl: 31 };
+   palier reçoit sa taille ; sous sm (768 px) les champs s'empilent. Le squelette
+   libellé / contenu, lui, est en flex pur (SearchForm.scss) : une colonne de
+   libellés à largeur fixe, quel que soit le palier détecté. */
 export const fieldSize = width => ({ xxs: 36, xs: 36, sm: width, md: width, lg: width, xl: width });
 
 /**
@@ -47,18 +47,18 @@ export const SearchFormSection = props => {
     content = <Row>{cells}</Row>;
   }
   return (
-    <div className={classnames('rbf-search-form-section px-3 py-3', !first && 'border-top', className)} role="group" aria-labelledby={labelId}>
-      <Row>
-        <Col size={LABEL_SIZE}>
+    <div className={classnames('rbf-search-form-section px-2 py-3', !first && 'border-top', className)} role="group" aria-labelledby={labelId}>
+      <div className="rbf-search-form-section-row d-flex flex-wrap">
+        <div className="rbf-search-form-section-label-col">
           <div id={labelId} className="rbf-search-form-section-label small text-uppercase font-weight-bold text-secondary pt-2">
             {label}
           </div>
-        </Col>
-        <Col size={CONTENT_SIZE}>
+        </div>
+        <div className="rbf-search-form-section-content">
           {content}
           {hint && <small className="form-text text-muted">{hint}</small>}
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

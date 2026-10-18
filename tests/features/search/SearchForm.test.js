@@ -59,11 +59,14 @@ test('section : champs résolus, inconnu écarté avec avertissement, largeurs',
   );
   expect(stacked.find('.w-100').length).toBe(2);
   expect(stacked.find(SearchFormField).length).toBe(3);
-  /* Grille par palier, sans cumul : chaque colonne porte les six tailles. */
+  /* Squelette en flex pur ; les champs sur la grille, chaque colonne avec ses six tailles. */
+  expect(stacked.find('.rbf-search-form-section-label-col').length).toBe(1);
+  expect(stacked.find('.rbf-search-form-section-content').length).toBe(1);
   const sizes = stacked.find(Col).map(c => Object.keys(c.prop('size')).join(','));
+  expect(sizes.length).toBe(3);
   expect(sizes.every(keys => keys === 'xxs,xs,sm,md,lg,xl')).toBe(true);
-  expect(stacked.find(Col).at(0).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 8, md: 6, lg: 6, xl: 5 });
-  expect(stacked.find(Col).at(2).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 15, md: 15, lg: 15, xl: 15 });
+  expect(stacked.find(Col).at(0).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 15, md: 15, lg: 15, xl: 15 });
+  expect(stacked.find(Col).at(2).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 'auto', md: 'auto', lg: 'auto', xl: 'auto' });
   const custom = shallow(<SearchFormSection label="Libre"><b>libre</b></SearchFormSection>);
   expect(custom.find(SearchFormField).length).toBe(0);
   expect(custom.find('b').text()).toBe('libre');
