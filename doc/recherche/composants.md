@@ -31,11 +31,12 @@ Mettre cette table à jour à chaque validation.
 ## Conventions communes
 
 - Composants de classe React 16, comme le reste de la bibliothèque.
-- Libellés via la prop `t`, par défaut `rbfIntl` ; nouvelles clés `rbf.search.*` et
-  `rbf.filter.oper.*` dans `src/features/intl/fr.js`. Le petit module
+- Libellés via la prop `t`, par défaut `rbfIntl` ; nouvelles clés `rbf.search.*`,
+  `rbf.range.*` et `rbf.filter.oper.*` dans `src/features/intl/fr.js`. Le petit module
   `search/i18n.js` fournit `tr(t, id, defaultMessage, values)`, qui appelle `t` puis
   remplace les `{token}` restants, pour fonctionner aussi bien avec `rbfIntl` (qui
-  ignore `values`) qu'avec `intl.formatMessage`.
+  ignore `values`) qu'avec `intl.formatMessage`, et `warnOnce(message)` (un
+  avertissement par message, les catalogues se reconstruisant à chaque rendu).
 - Icônes injectées : props explicites sur les primitives (`calIcon`, `delIcon`,
   `removeIcon`…), un sac `icons` sur les composites (précédent : `HtmlEditor`).
 - Les champs émettent `{ target: { name, value } }`, comme `InputDateWeb.onClear` ou
@@ -191,17 +192,27 @@ inchangée pour un filtre sans groupe.
 
 ### `catalog.js`
 
-- `normalizeCatalog(fields)` : complète les défauts (`defaultOperator`, `multiple`,
-  `format` par type), normalise les types (`'test'` → `'text'` avec un
-  `console.warn` unique, `'boolean'` → `'bool'`), dédoublonne par `name` (le dernier
-  gagne, avec avertissement).
-- `catalogFromCols(cols, overrides = {})` : garde les colonnes `filterable`,
-  `name = filterable.col || col.col`, `type = filterable.type`, `options`, `picker`
-  (`display`, `onSearch`), `label` ; fusionne `overrides[name]` ; ajoute
-  `overrides.extra` (champs virtuels).
-- `findField(catalog, name)`, `fieldsForRows`, `fieldsForFacets` (triés par
-  `facet.order`), `fieldsForSection(catalog, section)`.
-- `catalogToJson(catalog)` : sans fonctions, pour le futur endpoint LLM.
+- `normalizeType(type)` : `text`, `number`, `monetary`, `date`, `datetime`, `bool`,
+  `select`, `picker` ; alias tolérés avec un avertissement unique (`'test'` →
+  `'text'`, `'boolean'` → `'bool'`, `int` / `float` → `number`, `money` →
+  `monetary`…) ; inconnu → `text`.
+- `normalizeField(field)` : complète `label`, `type`, `defaultOperator` (par type),
+  `multiple` (vrai pour `select`), `multiOperator` (`'eq'`), `options`, `hidden`,
+  `virtual`, `fields`.
+- `normalizeCatalog(fields)` : `normalizeField` sur chaque entrée, ignore les
+  entrées sans `name`, dédoublonne par `name` (le dernier contenu gagne, à la place du
+  premier), un avertissement par problème.
+- `catalogFromCols(cols, overrides = {})` : garde les colonnes `filterable` qui ont
+  un libellé (ou dont `overrides[name]` en donne un), `name = filterable.col ||
+  col.col`, `type = filterable.type`, `options`, `picker` (`onSearch`, `display`, qui
+  force le type `picker`) ; fusionne `overrides[name]` ; ajoute `overrides.extra`
+  (champs virtuels).
+- `findField(catalog, name)` ; `fieldOwning(catalog, name)` : le champ virtuel qui
+  liste ce nom dans `fields`, sinon le champ lui-même ; `fieldsForRows` (non
+  cachés), `fieldsForFacets` (ceux à `facet`, triés par `facet.order` puis libellé),
+  `fieldsForSection(catalog, section)`.
+- `catalogToJson(catalog)` : nom, libellé, type, opérateurs, options, section,
+  virtuel et ses champs ; aucune fonction.
 
 ### `operators.js`
 
@@ -216,9 +227,14 @@ La matrice de `FilterBuilder.getOptionsForType` ré-exprimée en données, éten
 | `bool` | `eq`, `empty`, `nempty` |
 | `picker` | `eq`, `neq`, `empty`, `nempty` |
 
-Fonctions : `getOperatorsForType(type, t)`, `getFieldOperators(field, t)`,
-`operatorLabel(oper, type, t)` (sélecteurs), `operatorPhrase(oper, type, t)`
-(phrase en clair), `needsValue(oper)` (faux pour `empty` / `nempty`), `isRange(oper)`.
+Fonctions : `getOperatorsForType(type, t, { multiOperator })`,
+`getFieldOperators(field, t)`, `operatorLabel(oper, type, t)` (sélecteurs : « est »,
+« commence par », « entre », « à partir du » pour les dates…, clés
+`rbf.filter.oper.<oper>` et `rbf.filter.oper.<oper>.date`), `operatorPhrase(oper,
+type, t)` (phrase en clair : « est entre », « est avant le »…, clés
+`rbf.filter.phrase.<oper>[.date]`, défauts dans le code), `needsValue(oper)` (faux
+pour `empty` / `nempty`), `isRange(oper)`, `defaultOperatorForType(type)`,
+`DEFAULT_OPERATOR_BY_TYPE`, `OPERATORS_BY_TYPE`.
 
 ### `criteria.js`
 
@@ -525,6 +541,6 @@ Dans `src/features/intl/fr.js`, à la suite des 37 clés existantes :
 `rbf.search.chip.add`, `rbf.search.clearAll`, `rbf.search.drawer.title`,
 `rbf.search.drawer.intro`, `rbf.search.drawer.modeAll`, `rbf.search.drawer.modeAny`,
 `rbf.search.drawer.apply`, `rbf.search.row.noValue`, `rbf.search.row.valuePlaceholder`,
-`rbf.search.range.from`, `rbf.search.range.to`, `rbf.search.form.submit`,
+`rbf.range.from` / `.to` / `.min` / `.max` (plages), `rbf.search.form.submit`,
 `rbf.search.form.noneChecked`, et `rbf.filter.oper.<opérateur>` (avec les variantes
 `.date` pour « Postérieur à » / « Antérieur à »).

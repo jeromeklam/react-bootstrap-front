@@ -171,6 +171,7 @@ export * from "./features/filter/index.js";
 export { default as FilterPanel } from "./features/filter/DefaultPanel.jsx";
 export { default as FilterBuilder } from "./features/filter/FilterBuilder.jsx";
 export { default as FilterHeader } from "./features/filter/FilterHeader.jsx";
+export * from "./features/search/index.js";
 export * from "./features/helpers/index.js";
 
 /**
