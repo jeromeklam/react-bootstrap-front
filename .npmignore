@@ -3,3 +3,6 @@ tests
 tmp
 .babelrc
 .settings
+# Aperçu local et outil de synchronisation : inutiles aux applications
+demo
+sync-to.sh
