@@ -1,3 +1,15 @@
+# 3.12.0 : 18/10/2026
+
+* Recherche, étape 1 : la fiche de recherche (voir doc/recherche/)
+    * `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` : une fiche pilotée par un catalogue de champs
+    * `SearchSummary` et `filterToSentence` : la phrase « en clair » d'un filtre, valeurs en gras
+    * `InputNaturalSearch` : la barre en langage naturel, « en construction » tant qu'aucun service n'est branché
+    * `catalogFromCols`, `operators`, `valuesToFilter` / `filterToValues` : le catalogue dérivé des colonnes d'une liste, les opérateurs par type, l'aller-retour valeurs ↔ `Filter`
+* Nouvelles briques : `Chip`, `InputSegmented`, `InputPillGroup`, `InputDateRange`, `InputAmountRange`
+* Modèle `Filter` : `clone()` profond par défaut, `removeAll`, `replaceFilter`, `setFilterValues`, `setFilterRange`, `getFilters` / `getValues` / `hasFilter`, `toPlain` / `fromPlain` ; la requête envoyée à l'API ne change pas
+* `Col` transmet ses props supplémentaires (`id`, `aria-*`) au `div`
+* Aperçu autonome `demo/recherche.html`
+
 # 3.11.0 : 18/10/2026
 
 * New HTML editor `HtmlEditor` (TipTap 2), same props as `InputHtml`

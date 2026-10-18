@@ -47,7 +47,8 @@ graphiques sont commités après validation sur l'aperçu.
 | 1 | `4320792` | `search/i18n.js` (`tr`, `warnOnce`), `operators.js` (matrice, libellés, tournures), `catalog.js` (`catalogFromCols`, `fieldOwning`…), clés `rbf.filter.oper.*`, `search/style.scss` branché | relecture |
 | 1 | `70fbbfa` | `criteria.js` (`valuesToFilter` / `filterToValues`), `filterToSentence.js`, `SearchSummary`, fixtures avec les deux phrases des maquettes, carte « En clair » de l'aperçu | **18/10/2026** sur l'aperçu |
 | 1 | `cd06e31` | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
-| 1 | ce commit | `SearchForm`, `SearchFormSection`, `SearchFormField` (`widgetFor`, `widthFor`), `SearchFormFooter`, `SearchForm.scss`, fiche complète en tête de l'aperçu | **18/10/2026** sur l'aperçu |
+| 1 | `0f49015` | `SearchForm`, `SearchFormSection`, `SearchFormField` (`widgetFor`, `widthFor`), `SearchFormFooter`, `SearchForm.scss`, fiche complète en tête de l'aperçu | **18/10/2026** sur l'aperçu |
+| 1 | ce commit | Version 3.12.0 : `CHANGELOG`, `package.json`, `package-lock.json`, build et tests de garde. **Reste à publier sur npm** avant qu'admin ne la référence. Les pages `doc/basic/` des nouvelles briques ne sont pas créées : `composants.md` fait foi. | — |
 
 Remarque du 18/10/2026 à la validation des premières briques : « globalement pas mal,
 quelques petits soucis de centrage ». À reprendre composant par composant lors du test
