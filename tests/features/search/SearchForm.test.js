@@ -38,6 +38,9 @@ test('une section par entrée, champs du catalogue, pied avec la phrase', () => 
   expect(w.find('h4').text()).toBe('Rechercher des donateurs');
   expect(w.find(SearchFormFooter).length).toBe(1);
   expect(w.find(SearchFormFooter).prop('summary').type).toBe(SearchSummary);
+  expect(w.find(SearchFormFooter).prop('summary').props.withDefaults).toBe(true);
+  const quiet = shallow(<SearchForm catalog={donorCatalog()} sections={SECTIONS} onSubmit={() => {}} icons={icons} withDefaults={false} />);
+  expect(quiet.find(SearchFormFooter).prop('summary').props.withDefaults).toBe(false);
   expect(w.find(InputNaturalSearch).length).toBe(0);
 });
 

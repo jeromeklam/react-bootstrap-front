@@ -315,6 +315,7 @@ petites capitales ; en `inline`, les fragments `bold` dans `<strong>`.
 | `mode` | `'AND'` \| `'OR'` | `'AND'` | |
 | `submitLabel`, `clearLabel` | string | « Rechercher », « Tout effacer » | |
 | `subject`, `emptyText` | string | | Pour la phrase du pied |
+| `withDefaults` | bool | `true` | `false` : les critères par défaut de `base` (ex. l'association courante) ne sont pas redits dans la phrase |
 | `naturalLanguage` | `{ onNaturalLanguage?, comingSoon?, comingSoonMessage?, onComingSoon?, onError?, onResult?, placeholder, hint, sparkleIcon? }` | | La carte du haut ; absente si non fournie |
 | `advancedLink` | `{ label?, onClick }` | | Lien « Critères avancés » en haut à droite (étape 3) |
 | `icons` | `{ calendar, clear, check, sparkle }` | | |

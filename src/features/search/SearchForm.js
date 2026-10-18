@@ -37,6 +37,7 @@ export default class SearchForm extends Component {
     clearLabel: PropTypes.string,
     subject: PropTypes.string,
     emptyText: PropTypes.string,
+    withDefaults: PropTypes.bool,
     naturalLanguage: PropTypes.object,
     advancedLink: PropTypes.object,
     icons: PropTypes.object,
@@ -60,6 +61,7 @@ export default class SearchForm extends Component {
     clearLabel: null,
     subject: null,
     emptyText: null,
+    withDefaults: true,
     naturalLanguage: null,
     advancedLink: null,
     icons: {},
@@ -182,7 +184,7 @@ export default class SearchForm extends Component {
   }
 
   render() {
-    const { catalog, sections, submitLabel, clearLabel, subject, emptyText, advancedLink, icons, title, showLabels, size, disabled, className, t } = this.props;
+    const { catalog, sections, submitLabel, clearLabel, subject, emptyText, withDefaults, advancedLink, icons, title, showLabels, size, disabled, className, t } = this.props;
     const values = this.values();
     const filter = this.filter();
     return (
@@ -223,7 +225,7 @@ export default class SearchForm extends Component {
               </SearchFormSection>
             ))}
             <SearchFormFooter
-              summary={<SearchSummary variant="inline" filter={filter} catalog={catalog} subject={subject} emptyText={emptyText} t={t} />}
+              summary={<SearchSummary variant="inline" filter={filter} catalog={catalog} subject={subject} emptyText={emptyText} withDefaults={withDefaults} t={t} />}
               onClear={this.onClear}
               submitLabel={submitLabel}
               clearLabel={clearLabel}
