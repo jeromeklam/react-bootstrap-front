@@ -1,0 +1,523 @@
+# Recherche : contrat des composants
+
+Signatures et fichiers des briques décrites dans [etude.md](etude.md). Les props
+sont données au format des pages `doc/basic/*.md`. Les types sont ceux de
+`prop-types` ; « req. » = obligatoire.
+
+## Statut et validation
+
+Les maquettes donnent l'idée du résultat, pas un rendu à reproduire à l'identique. On
+garde leurs idées de présentation ; les couleurs et les objets graphiques sont ceux de
+l'admin actuelle, **au plus simple**. **Chaque composant graphique ci-dessous est une
+proposition** : il est montré dans l'aperçu `demo/recherche.html` (ou une capture) et
+validé par Jérôme avant d'être commité. Les modules purs et les méthodes du modèle
+`Filter` n'ont pas de rendu : ils suivent la relecture de code habituelle.
+
+| Composant graphique | Étape | Statut |
+|---|---|---|
+| `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | proposé, à valider |
+| `InputDateRange`, `InputAmountRange` | 1 | proposé, à valider |
+| `SearchSummary` | 1 | proposé, à valider |
+| `InputNaturalSearch` (variante `card`) | 1 | proposé, à valider |
+| `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
+| `Chip` (variantes `active`, `facet`, `add`), `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
+| Emplacement `toolbar` de l'en-tête, `InputNaturalSearch` (variante `bar`) | 2 | proposé, à valider |
+| `Drawer`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | proposé, à valider |
+| `InputNumberRange` | 3 | optionnel, à valider |
+
+Mettre cette table à jour à chaque validation.
+
+## Conventions communes
+
+- Composants de classe React 16, comme le reste de la bibliothèque.
+- Libellés via la prop `t`, par défaut `rbfIntl` ; nouvelles clés `rbf.search.*` et
+  `rbf.filter.oper.*` dans `src/features/intl/fr.js`. Le petit module
+  `search/i18n.js` fournit `tr(t, id, defaultMessage, values)`, qui appelle `t` puis
+  remplace les `{token}` restants, pour fonctionner aussi bien avec `rbfIntl` (qui
+  ignore `values`) qu'avec `intl.formatMessage`.
+- Icônes injectées : props explicites sur les primitives (`calIcon`, `delIcon`,
+  `removeIcon`…), un sac `icons` sur les composites (précédent : `HtmlEditor`).
+- Les champs émettent `{ target: { name, value } }`, comme `InputDateWeb.onClear` ou
+  `InputMonetary.onAccept`.
+- Sélecteurs de champ et d'opérateur : `<select>` natifs, jamais `InputSelect` (qui
+  déclenche `onChange` au montage).
+- Aucune dépendance npm nouvelle. Les transitions utilisent `react-transition-group`,
+  déjà embarqué.
+- Au plus simple : classes Bootstrap 4 et couleurs de la map `$theme-colors` d'admin,
+  motifs déjà présents dans la bibliothèque. Un fichier SCSS par composant seulement
+  s'il reste quelque chose que Bootstrap ne fait pas.
+
+## Primitives
+
+### `Drawer` — `src/features/advanced/Drawer.js`
+
+Tiroir latéral dans un `Portal`.
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `open` | bool, req. | | Ouvert ou fermé |
+| `onClose` | func, req. | | Croix, Échap, clic sur le fond |
+| `side` | `'right'` \| `'left'` | `'right'` | |
+| `width` | number \| string | `560` | |
+| `top` | number | `0` | Décalage sous l'en-tête de l'application (60 sur bureau, 40 sur mobile). La bibliothèque ne devine pas la hauteur de l'en-tête. |
+| `backdrop` | bool | `true` | Fond assombri |
+| `closeOnBackdrop`, `closeOnEscape` | bool | `true` | |
+| `title` | node | | |
+| `closeIcon` | element | | |
+| `footer` | node | | Barre de pied |
+| `children` | node | | Corps, défilant |
+| `className` | string | | |
+
+Rendu : `.rbf-drawer-backdrop` + `.rbf-drawer` (`position: fixed; top; bottom: 0;
+width`), `CSSTransition` 300 ms en translation ; en-tête `.rbf-drawer-header`, corps
+`.rbf-drawer-body.custom-scrollbar`, pied `.rbf-drawer-footer`. `role="dialog"
+aria-modal="true" aria-labelledby`. Le focus passe au panneau à l'ouverture et revient
+à l'élément d'origine à la fermeture. Pas de blocage du défilement : `look2.scss` pose
+déjà `overflow: hidden` sur `html, body`. Pleine largeur sous 768 px.
+
+Test de montage : `tests/features/advanced/Drawer.test.js`, après
+`jest.unmock('react-dom')`.
+
+### `Chip` — `src/features/basic/Chip.js`
+
+Pastille. `React.forwardRef` : elle peut servir d'ancre `myRef` à `Dropdown`.
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `label` | node, req. | | |
+| `variant` | `'default'` \| `'active'` \| `'facet'` \| `'add'` \| `'toggle'` | `'default'` | |
+| `theme` | string | `'primary'` | Clé de `$theme-colors` |
+| `active` | bool | `false` | `toggle` sélectionnée, `facet` avec valeur |
+| `count` | number | | Badge de compteur (facette) |
+| `onClick` | func | | |
+| `onRemove` | func | | Affiche le bouton × |
+| `removeIcon`, `caretIcon`, `checkIcon` | element | | |
+| `disabled` | bool | `false` | |
+| `size` | `'sm'` | | |
+| `title`, `className` | string | | |
+
+Rendu : `button.btn.btn-sm.rbf-chip` avec les classes Bootstrap `btn-outline-{theme}`
+(inactive) ou `btn-{theme}` (active), arrondie ; libellé, éventuel `badge` de
+compteur, éventuel `button.rbf-chip-remove[aria-label]`. `facet` →
+`aria-haspopup="dialog" aria-expanded` ; `toggle` → `aria-pressed`. Le SCSS propre se
+limite au bouton ×, à la bordure pointillée de `add` et au rayon.
+
+### `InputSegmented` — `src/features/basic/InputSegmented.js`
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `name` | string, req. | | |
+| `value` | string | | |
+| `options` | `[{ value, label, icon? }]`, req. | | |
+| `onChange` | func | | `{ target: { name, value } }` |
+| `theme` | string | `'primary'` | |
+| `size` | `'sm'` | `'sm'` | |
+| `allowEmpty` | bool | `false` | Re-cliquer désélectionne |
+| `disabled` | bool | | |
+| `label`, `labelTop`, `help` | | | Comme `InputGroup` |
+
+Rendu : `InputGroup` + `div.btn-group[role=radiogroup]` de `button.btn[aria-checked]` ;
+flèches ← → au clavier. `btn-outline-{theme}` inactif, `btn-{theme} active` actif :
+le motif de `DefaultList`, aucun SCSS.
+
+### `InputDateRange`, `InputAmountRange` (et `InputNumberRange`, optionnel) — `src/features/basic/`
+
+Déclinaisons d'un `InputRange` interne. `InputNumberRange` n'est écrit que si un champ
+`number` a besoin de « entre » dans le tiroir (étape 3).
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `name` | string, req. | | |
+| `value` | `[from, to]` | `[null, null]` | La forme du `between` du modèle |
+| `onChange` | func | | `{ target: { name, value: [from, to] } }` |
+| `fromLabel`, `toLabel` | string | « du » / « au », « de » / « à » via `t` | Préfixes `InputGroupText` |
+| `label`, `labelTop`, `size`, `disabled`, `error` | | | |
+| `calIcon`, `delIcon` | element, req. (dates) | | Transmis à `InputDate` : natif sur mobile, masque + calendrier ailleurs |
+| `unit` | string | `'€'` (montants) | |
+| `allowNull` | bool | `true` (montants) | |
+
+Rendu : `.rbf-input-range`, deux champs en ligne, empilés sous 512 px.
+
+### `InputPillGroup` — `src/features/basic/InputPillGroup.js`
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `name` | string, req. | | |
+| `value` | array | `[]` | |
+| `options` | `[{ value, label, count? }]`, req. | | |
+| `onChange` | func | | `{ target: { name, value: array } }` |
+| `multiple` | bool | `true` | |
+| `hint` | node | | « Aucune cochée = toutes » |
+| `checkIcon` | element | | |
+| `theme`, `size`, `disabled`, `label`, `labelTop` | | | |
+
+Rendu : `.rbf-pill-group[role=group]` de `Chip variant="toggle"`.
+
+### Correction de `Col` — `src/features/grid/Col.js`
+
+L7 lit `const { size, otherProps } = props` : `otherProps` n'existe jamais, aucune
+prop supplémentaire n'atteint le `div`. Remplacer par
+`const { size, textAlign, className, children, ...otherProps } = props`. Sans effet
+pour les appelants actuels ; nécessaire à `SearchFormSection` (`aria-labelledby`).
+
+## Modèle `Filter` : méthodes ajoutées — `src/features/filter/Filter.js`
+
+Rappel des signatures dont les composites dépendent ; le pourquoi est dans
+[etude.md](etude.md), section 7. Toutes additives, sortie de `asJsonApiObject()`
+inchangée pour un filtre sans groupe.
+
+| Méthode | Signature | Étape |
+|---|---|---|
+| `clone` | `clone(deep = true) → Filter` | 1 |
+| `removeAll` | `removeAll({ keepFixed = true, keepDefault = true } = {})` | 1 |
+| `replaceFilter` | `replaceFilter(name, values, oper = 'eq', { fixed, default, enable } = {})` | 1 |
+| `setFilterValues` | `setFilterValues(name, values = [], oper = 'eq')` — tableau vide = retrait | 1 |
+| `setFilterRange` | `setFilterRange(name, from, to)` — `between`, `gte`, `ltwe` ou retrait | 1 |
+| `getFilters` | `getFilters({ enabledOnly = true, fixed = false, default: true } = {}) → Filter[]` (ELEM) | 1 |
+| `getValues` | sur un ELEM : `getValues() → [default, between?, ...extras]` | 1 |
+| `hasFilter` | `hasFilter(name) → bool` | 1 |
+| `toPlain` / `fromPlain` | `toPlain() → PlainFilter`, `static fromPlain(obj) → Filter` ; `PlainFilter = { mode, operator, filters: [{ name, operator, values, fixed, default, enable, group }] }` | 1 |
+| `addFilter` | septième paramètre `group = ''` | 2 |
+| `removeGroup` | `removeGroup(group)` | 2 |
+
+## Modules purs — `src/features/search/`
+
+### `catalog.js`
+
+- `normalizeCatalog(fields)` : complète les défauts (`defaultOperator`, `multiple`,
+  `format` par type), normalise les types (`'test'` → `'text'` avec un
+  `console.warn` unique, `'boolean'` → `'bool'`), dédoublonne par `name` (le dernier
+  gagne, avec avertissement).
+- `catalogFromCols(cols, overrides = {})` : garde les colonnes `filterable`,
+  `name = filterable.col || col.col`, `type = filterable.type`, `options`, `picker`
+  (`display`, `onSearch`), `label` ; fusionne `overrides[name]` ; ajoute
+  `overrides.extra` (champs virtuels).
+- `findField(catalog, name)`, `fieldsForRows`, `fieldsForFacets` (triés par
+  `facet.order`), `fieldsForSection(catalog, section)`.
+- `catalogToJson(catalog)` : sans fonctions, pour le futur endpoint LLM.
+
+### `operators.js`
+
+La matrice de `FilterBuilder.getOptionsForType` ré-exprimée en données, étendue :
+
+| Type | Opérateurs proposés |
+|---|---|
+| `text` | `contains`, `ncontains`, `containsb`, `containse`, `soundex`, `eq`, `neq`, `empty`, `nempty` |
+| `number`, `monetary` | `eq`, `neq`, `gt`, `gte`, `ltw`, `ltwe`, `between`, `empty`, `nempty` (`gten` / `ltwen` seulement si listés dans `field.operators`) |
+| `date`, `datetime` | `eq`, `neq`, `gt`, `gte`, `ltw`, `ltwe`, `between`, `empty`, `nempty` — libellés « Postérieur à » / « Antérieur à » |
+| `select` | `eq`, `neq`, `empty`, `nempty` (+ `in` / `nin` si `multiOperator: 'in'`) |
+| `bool` | `eq`, `empty`, `nempty` |
+| `picker` | `eq`, `neq`, `empty`, `nempty` |
+
+Fonctions : `getOperatorsForType(type, t)`, `getFieldOperators(field, t)`,
+`operatorLabel(oper, type, t)` (sélecteurs), `operatorPhrase(oper, type, t)`
+(phrase en clair), `needsValue(oper)` (faux pour `empty` / `nempty`), `isRange(oper)`.
+
+### `criteria.js`
+
+- `filterToCriteria(filter, catalog)` → `[{ id, name, operator, values }]`, champs
+  virtuels compris (`fromFilter`).
+- `criteriaToFilter(rows, mode, catalog, base)` : `base.clone()` profond,
+  `removeAll()`, `setMode(mode)`, puis pour chaque ligne `setFilterValues`,
+  `setFilterRange`, `addFilter(name, null, 'empty')` ou `field.toFilter`. Les lignes
+  sans valeur (hors `empty` / `nempty`) sont ignorées ; un champ en double est refusé.
+- `valuesToFilter(values, catalog, base)` et `filterToValues(filter, catalog)` :
+  l'aller-retour du formulaire (A).
+
+### `filterToSentence.js`
+
+- `filterToFragments(filter, catalog, t)` → `[{ name, label, operator, valueText,
+  text, bold }]` pour chaque ELEM activé non fixe (regroupés par champ virtuel).
+- `filterToSentence(filter, catalog, t, { subject })` → chaîne.
+- Règles : `valueText` par `format` ou par type (`displayDate`, `displayMonetary`,
+  libellé d'option, Oui / Non) ; plusieurs valeurs « A, B ou C » ; `between` →
+  « entre le A et le B » ou « entre A et B € » ; `empty` → « sans {label} »,
+  `nempty` → « avec {label} » ; gabarit « dont {phrase.label ?? label}
+  {operatorPhrase} {valueText} », remplaçable par `phrase[oper]`. Sujet =
+  `subject`, ou la réponse d'un `subjectFor`. Connecteur du mode avant le dernier
+  fragment.
+- Fixtures : les deux phrases des maquettes, mot pour mot.
+
+## Composites — `src/features/search/`
+
+### `SearchSummary`
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `filter` | `Filter`, req. | | |
+| `catalog` | array, req. | | |
+| `variant` | `'box'` \| `'inline'` | `'box'` | Encart (C) ou ligne du pied (A) |
+| `title` | string | « En clair » | |
+| `subject` | string | | |
+| `emptyText` | string | « Aucun critère » | |
+| `theme` | string | `'light'` | Fond clair, comme les encarts existants d'admin |
+
+Rendu : `.rbf-search-summary.bg-{theme}.border.border-secondary-light`, titre en
+petites capitales ; en `inline`, les fragments `bold` dans `<strong>`.
+
+### `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` (écran A)
+
+`SearchForm` :
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `catalog` | array, req. | | |
+| `sections` | `[{ name, label, fields?: [names], render?: ctx => node, hint? }]`, req. | | |
+| `values` / `defaultValues` | object | | Contrôlé ou non |
+| `onChange` | func | | `(values)` |
+| `onSubmit` | func, req. | | `(filter)` |
+| `onClear` | func | | |
+| `base` | `Filter` | | Critères fixes et par défaut à conserver (`defaultFilters()`) |
+| `mode` | `'AND'` \| `'OR'` | `'AND'` | |
+| `submitLabel` | string | « Rechercher » | |
+| `subject` | string | | Pour la phrase |
+| `naturalLanguage` | `{ onNaturalLanguage?, comingSoon?, placeholder, hint, sparkleIcon }` | | Carte du haut ; absente si non fournie |
+| `advancedLink` | `{ label, onClick }` | | Lien « Critères avancés » (étape 3) |
+| `icons` | `{ calendar, clear, check }` | | |
+| `title` | node | | |
+
+Comportement : `filter = valuesToFilter(values, catalog, base)` à chaque rendu ; le
+pied affiche `SearchSummary variant="inline"` ; « Tout effacer » vide `values` ;
+soumettre appelle `onSubmit(filter)`. À la réception d'un résultat LLM, les valeurs
+sont fusionnées et l'indication « remplis depuis votre phrase » apparaît ; rien n'est
+soumis.
+
+`SearchFormSection` : `label` (req.), `hint`, `id`, et soit `children`, soit
+`catalog` + `fields` + `values` + `onChange`. Rendu `Row` → libellé
+`Col size={{ xxs: 36, sm: 6 }}` en capitales `.rbf-search-section-label`, contenu
+`Col size={{ xxs: 36, sm: 30 }}`, `aria-labelledby`.
+
+`SearchFormField` : `field`, `value`, `onChange`, `icons`. Choix du composant par
+`field.widget` : `text` → `InputText`, `pills` → `InputPillGroup`, `segmented` →
+`InputSegmented`, `date-range` → `InputDateRange`, `amount-range` →
+`InputAmountRange`, `select` → select natif, `picker` → `InputAutocomplete`, `bool`
+→ `InputSegmented` ; `field.render` l'emporte.
+
+`SearchFormFooter` : `summary`, `onClear`, `onSubmit`, `submitLabel`, `disabled`.
+Barre collante (`position: sticky; bottom: 0`), qui fonctionne dans le conteneur
+défilant de `DefaultContent`.
+
+### `InputNaturalSearch` (écrans A et B)
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `name` | string | `'natural'` | |
+| `value` / `defaultValue` | string | | |
+| `placeholder` | string | | |
+| `sparkleIcon` | element, req. | | |
+| `kbdHint` | string \| false | « Entrée » | Indication clavier à droite |
+| `variant` | `'bar'` \| `'card'` | `'bar'` | En-tête de liste ou carte de la fiche |
+| `submitLabel` | string | « Remplir les critères » | Variante `card` |
+| `hint` | node | | Sous le champ, variante `card` |
+| `onNaturalLanguage` | func | | `(phrase, { catalog, filter, locale }) => Promise<Result>` |
+| `comingSoon` | bool | `!onNaturalLanguage` | |
+| `comingSoonMessage` | string | « Recherche en langage naturel : en construction pour l'instant » | |
+| `onComingSoon` | func | | Pour compter les essais, si l'application le souhaite |
+| `pending` | bool | | Contrôlable, sinon interne |
+| `onResult`, `onError` | func | | |
+| `onQuickSearch` | func | | `(texte, mode)` : repli sur la recherche rapide actuelle. Tant que `comingSoon`, **Entrée appelle `onQuickSearch`** et le bouton étincelle montre la notice |
+| `size` | string | | |
+
+Rendu : `form.rbf-natural-search > .input-group` : étincelle en préfixe, champ,
+`kbd.rbf-kbd` ou `SmLoading3Dots` en attente ; notice `.rbf-natural-search-notice[role=status]`
+qui disparaît après quelques secondes. La variante `card` ajoute le bouton
+`btn-primary` et la ligne d'indication.
+
+Résultat attendu, figé dès l'étape 1 :
+
+```ts
+type NaturalLanguageResult = {
+  filter?: Filter;        // ou
+  plain?: PlainFilter;    // la forme de Filter.fromPlain, noms du catalogue (virtuels compris)
+  values?: object;        // ou directement des valeurs de SearchForm
+  mode?: 'AND' | 'OR';
+  warnings?: string[];    // morceaux de phrase non compris
+  explanation?: string;   // une ligne, affichée sous l'indication
+};
+```
+
+### `FacetPopover` (écran B)
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `field` | objet du catalogue, req. | | `facet.kind` `'options'` (défaut) ou `'range'` |
+| `value` | array \| `[from, to]` | | |
+| `onApply` | func, req. | | `(value)` |
+| `onClose` | func, req. | | |
+| `myRef` | ref, req. | | La pastille ancre |
+| `align` | string | `'bottom-left'` | |
+| `maxHeight` | number | `360` | |
+| `searchable` | bool | automatique au-delà de 7 options | Champ « Filtrer... » |
+| `showCounts` | bool | `false` | |
+| `icons` | `{ check, calendar, clear }` | | |
+
+Rendu : le `Dropdown` existant, utilisé directement avec un état d'ouverture propre
+(pas `DropdownWrapper`, dont `autoClose` ferme à tout clic ; s'il est préféré, passer
+`autoClose={false}`). Contenu `.rbf-facet-popover[role=dialog]` : champ de filtre
+(focus à l'ouverture), liste `.custom-scrollbar` de `custom-control custom-checkbox`
+Bootstrap (libellés cliquables, contrairement à `SvgCheckbox`), pied avec le compteur
+(`field.facet.countLabel(n)` ou « {n} valeurs ») et le bouton « Appliquer ». Entrée
+dans le champ = Appliquer, Échap = fermer sans appliquer. Variante `range` :
+`InputDateRange` ou `InputAmountRange` + Appliquer. Sur mobile `calc(100vw - 16px)`.
+
+### `SearchChipBar` (écran B)
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `filter` | `Filter`, req. | | Lu, jamais modifié |
+| `catalog` | array, req. | | |
+| `onChange` | func, req. | | `(nouveauFilter)` |
+| `facets` | `[names]` | champs à `facet`, triés | |
+| `onAddCriterion` | func | | Affiche « + Critère » (étape 3 : ouvre le tiroir) |
+| `onClearAll` | func | | |
+| `showDefaults` | bool | `false` | Montrer aussi les critères par défaut |
+| `icons` | `{ close, caret, add, check, calendar, clear }` | | |
+| `className` | string | | |
+
+Comportement : `filter.getFilters({ fixed: false })` → une pastille `active` par
+critère (le champ virtuel propriétaire d'abord, puis le champ réel) ; × →
+`f = filter.clone(); f.removeFilter(name)` (ou `virtual.toFilter('', f)`) →
+`onChange(f)` ; facette appliquée → `f.setFilterValues(...)` ou `f.setFilterRange(...)` ;
+« Tout effacer » → `f.removeAll()` ; le groupe de recherche rapide (`group: 'quick'`)
+apparaît comme une seule pastille « Recherche : … ». Rendu `.rbf-chip-bar` en
+`flex-wrap` ; défilement horizontal sur une ligne sous `container-xs`.
+
+### `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` (écran C)
+
+`SearchCriteriaRow` : `catalog` (req.), `criterion: { id, name, operator, values }`
+(req.), `usedNames` (champs déjà pris, grisés), `onChange(criterion)`,
+`onRemove(id)`, `icons: { remove, calendar, clear }`, `autoFocus`. Quatre cellules :
+select de champ, select d'opérateur (`getFieldOperators`), zone de valeur, bouton ×.
+Zone de valeur selon l'opérateur et le type : `empty` / `nempty` → « pas de valeur à
+saisir » en gris ; `between` → plage du type ; `text` → `<input>` « Valeur » ;
+`number` → `<input type=number>` ; `date` → `InputDate` ; `datetime` → `InputDatetime` ;
+`monetary` → `InputMonetary allowNull` ; `select` → select, ou `InputPillGroup` si
+`field.multiple` et opérateur `eq` / `neq` / `in` / `nin` ; `bool` → `InputSegmented`
+Oui / Non ; `picker` → `InputAutocomplete` existant ; champ virtuel → son `widget`,
+opérateur « est » figé.
+
+`SearchCriteriaBuilder` : `catalog`, `rows`, `mode`, `onRowsChange`, `onModeChange`,
+`maxRows`, `icons`. Phrase d'introduction + `InputSegmented` [tous les critères | au
+moins un], lignes, `Chip variant="add"` « + Ajouter un critère » (désactivée quand
+tous les champs sont pris).
+
+`SearchDrawer` :
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `open`, `onClose` | req. | | |
+| `filter` | `Filter`, req. | | |
+| `catalog` | array, req. | | |
+| `onApply` | func, req. | | `(filter)` |
+| `onClearAll` | func | | |
+| `title` | string | « Critères avancés » | |
+| `width`, `top` | | `560`, `0` | Transmis à `Drawer` |
+| `showSummary`, `modeToggle` | bool | `true` | |
+| `icons` | `{ close, add, remove, calendar, clear }` | | |
+
+Comportement : à l'ouverture (transition `open` faux → vrai, et seulement là, pour
+éviter l'écueil de `DefaultPanel`), `rows = filterToCriteria(filter, catalog)` et
+`mode = filter.getMode()`. L'encart EN CLAIR est recalculé en direct sur un
+`criteriaToFilter` jetable. « Appliquer » → `onApply(criteriaToFilter(rows, mode,
+catalog, filter))`. « Tout effacer » vide les lignes.
+
+## Emplacement d'en-tête de liste
+
+Props additives, comportement par défaut inchangé.
+
+- `list/DefaultHeader.jsx` : `toolbar` (node) et `toolbarHeight` (number, 44). Si
+  `toolbar` est fourni, la barre absolue passe de 50 à `50 + toolbarHeight` px et une
+  seconde rangée `.rbf-list-header-toolbar` est rendue sous la `Row` actuelle.
+  `globalActions[].text` (string) affiché après l'icône.
+- `list/DefaultList.jsx` : `listStyle.top` et `height` calculés avec la même hauteur,
+  comme le fait déjà `titleMultiline` (L314-327).
+- `list/MobileHeader.jsx`, `MobileList.jsx` : même emplacement, seconde rangée fixe,
+  `datastyle.top` ajusté.
+- `ResponsiveList` transmet déjà toutes les props.
+
+## Contrat du catalogue
+
+```js
+{
+  name: 'donations.payment_type.ptyp_id',   // nom du Filter = filterable.col || col.col
+  label: 'Moyen de paiement',
+  type: 'select',
+  defaultOperator: 'eq',          // text → contains, select → eq, date / monetary → between, bool → eq
+  operators: undefined,           // sous-ensemble facultatif de la matrice du type
+  options: paymentTypeAsOptions(props.paymentType.items),
+  multiple: true,
+  multiOperator: 'eq',            // 'eq' = valeurs jointes par virgule (ce que l'API lit déjà) ; 'in' sinon
+  format: undefined,              // valeur → texte ; défaut par type
+  phrase: { eq: 'par {value}' },  // fragments de phrase par opérateur
+  facet: { order: 10, kind: 'options', searchable: true, countLabel: n => `${n} moyens` },
+  section: 'moyen', widget: 'pills',
+  picker: undefined,              // type picker : { onSearch, display }
+  hidden: false,                  // jamais proposé dans « + Ajouter un critère » ni le formulaire, mais affiché en pastille
+  subjectFor: undefined,          // values => 'Particuliers' | null
+}
+```
+
+Champ virtuel, défini par l'application (exemple complet, côté admin dans
+`client/searchCatalog.js`) :
+
+```js
+{
+  name: 'don_kind', virtual: true, label: 'Don', section: 'paiement', widget: 'segmented',
+  options: [{ value: '', label: 'Tous' }, { value: 'regular', label: 'Régulier' }, { value: 'once', label: 'Ponctuel' }],
+  fields: ['donations.sponsorship.spo_id'],
+  toFilter: (v, f) => {
+    f.removeFilter('donations.sponsorship.spo_id');
+    if (v === 'regular') f.addFilter('donations.sponsorship.spo_id', null, FILTER_OPER_NOT_EMPTY);
+    if (v === 'once') f.addFilter('donations.sponsorship.spo_id', null, FILTER_OPER_EMPTY);
+  },
+  fromFilter: f => {
+    const e = f.findFirst('donations.sponsorship.spo_id');
+    return !e ? '' : e.getOperator() === FILTER_OPER_NOT_EMPTY ? 'regular' : 'once';
+  },
+  toText: v => (v === 'regular' ? 'donateurs réguliers' : v === 'once' ? 'donateurs ponctuels' : ''),
+}
+```
+
+Les catégories (« Aucune cochée = toutes ») n'ont pas besoin de champ virtuel :
+`client_category.clic_id`, `widget: 'pills'`, tableau vide = aucun critère, sinon
+`setFilterValues(name, values, 'eq')`.
+
+Usage par écran : formulaire = `sections[].fields` ; facettes = `fieldsForFacets` ;
+lignes = `fieldsForRows` ; phrase = tout.
+
+## Exports à ajouter dans `src/index.js`
+
+```js
+export { default as Drawer } from './features/advanced/Drawer';
+export { default as Chip } from './features/basic/Chip';
+export { default as InputSegmented } from './features/basic/InputSegmented';
+export { default as InputDateRange } from './features/basic/InputDateRange';
+export { default as InputAmountRange } from './features/basic/InputAmountRange';
+export { default as InputNumberRange } from './features/basic/InputNumberRange';
+export { default as InputPillGroup } from './features/basic/InputPillGroup';
+export * from './features/search/index.js';
+```
+
+`search/index.js` ré-exporte `SearchForm`, `SearchFormSection`, `SearchFormField`,
+`SearchFormFooter`, `SearchSummary`, `InputNaturalSearch`, `FacetPopover`,
+`SearchChipBar`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer`, et les
+fonctions `catalogFromCols`, `normalizeCatalog`, `catalogToJson`,
+`getOperatorsForType`, `getFieldOperators`, `filterToSentence`, `filterToFragments`,
+`filterToCriteria`, `criteriaToFilter`, `valuesToFilter`, `filterToValues`.
+
+Chaque feature ajoute ses imports dans son `style.scss` ; `search/style.scss` est
+ajouté à `src/styles/index.scss`.
+
+## Clés de traduction
+
+Dans `src/features/intl/fr.js`, à la suite des 37 clés existantes :
+`rbf.search.summary.title`, `rbf.search.summary.empty`, `rbf.search.natural.kbd`,
+`rbf.search.natural.comingSoon`, `rbf.search.natural.submit`,
+`rbf.search.natural.filledHint`, `rbf.search.facet.filter`,
+`rbf.search.facet.count`, `rbf.search.facet.apply`, `rbf.search.chip.remove`,
+`rbf.search.chip.add`, `rbf.search.clearAll`, `rbf.search.drawer.title`,
+`rbf.search.drawer.intro`, `rbf.search.drawer.modeAll`, `rbf.search.drawer.modeAny`,
+`rbf.search.drawer.apply`, `rbf.search.row.noValue`, `rbf.search.row.valuePlaceholder`,
+`rbf.search.range.from`, `rbf.search.range.to`, `rbf.search.form.submit`,
+`rbf.search.form.noneChecked`, et `rbf.filter.oper.<opérateur>` (avec les variantes
+`.date` pour « Postérieur à » / « Antérieur à »).
