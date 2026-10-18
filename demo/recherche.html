@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Recherche — aperçu des composants</title>
+    <link rel="stylesheet" href="./app.css" />
+    <style>
+      body {
+        padding: 1.5rem 2rem;
+        background: #f4f6f8;
+      }
+      .demo-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .demo-card {
+        background: #fff;
+        border: 1px solid #dfe3e8;
+        border-radius: 4px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+      .demo-title {
+        font-size: 1.1rem;
+        color: #235b8b;
+        margin: 0 0 0.25rem;
+      }
+      .demo-hint {
+        color: #6b7680;
+        margin-bottom: 1rem;
+      }
+      .demo-out {
+        font-family: monospace;
+        font-size: 0.72rem;
+        background: #263238;
+        color: #cfd8dc;
+        padding: 0.75rem;
+        border-radius: 3px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: 12rem;
+        overflow: auto;
+      }
+      .demo-step {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7680;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-wrap">
+      <h1 class="demo-title">Recherche — aperçu des composants</h1>
+      <p class="demo-hint">
+        Page autonome : le bundle réellement construit (<code>dist/</code>), les styles réellement compilés par
+        l’administration Kalaweit, et ses icônes Material Design. Chaque composant est montré ici pour
+        validation avant d’être commité (voir <code>doc/recherche/feuille-de-route.md</code>).
+      </p>
+      <div id="root"></div>
+    </div>
+
+    <script>
+      /* Les scripts sont chargés avec un horodatage : le navigateur ne doit pas
+         resservir un ancien bundle depuis son cache après une reconstruction.
+         Toute erreur s'affiche dans la page, pour être lue sans la console. */
+      (function() {
+        var root = document.getElementById('root');
+        function fail(message) {
+          root.innerHTML =
+            '<div class="demo-card" style="border-color:#ff4136"><h2 class="demo-title" style="color:#ff4136">La page ne s’est pas montée</h2>' +
+            '<pre class="demo-out">' + String(message).replace(/</g, '&lt;') + '</pre>' +
+            '<p class="demo-hint">À recopier tel quel pour le diagnostic. Rechargez la page après <code>node demo/build.js ../admin</code>.</p></div>';
+        }
+        window.addEventListener('error', function(ev) {
+          fail((ev.message || ev.error) + (ev.filename ? '\n' + ev.filename + ':' + ev.lineno : ''));
+        });
+        var stamp = '?v=' + Date.now();
+        var files = ['./react.development.js', './react-dom.development.js', './icons.js', '../dist/react-bootstrap-front.js'];
+        function next(i) {
+          if (i >= files.length) {
+            try {
+              window.runDemo();
+            } catch (err) {
+              fail(err && err.stack ? err.stack : err);
+            }
+            return;
+          }
+          var script = document.createElement('script');
+          script.src = files[i] + stamp;
+          script.onload = function() { next(i + 1); };
+          script.onerror = function() { fail('Script introuvable : ' + files[i]); };
+          document.body.appendChild(script);
+        }
+        next(0);
+      })();
+    </script>
+    <script>
+      window.runDemo = function() {
+        var e = React.createElement;
+        var RBF = window['react-bootstrap-front'];
+        if (!RBF) {
+          throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
+        }
+        ['Chip', 'InputSegmented', 'InputPillGroup'].forEach(function(name) {
+          if (!RBF[name]) {
+            throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
+          }
+        });
+
+        /* Icône MDI en SVG inline : évite de dépendre de @mdi/react ici. */
+        function icon(name, size) {
+          return e(
+            'svg',
+            { viewBox: '0 0 24 24', width: size || 16, height: size || 16 },
+            e('path', { d: window.DEMO_ICON_PATHS[name], fill: 'currentColor' })
+          );
+        }
+
+        var CATEGORIES = [
+          { value: 1, label: 'Administration' },
+          { value: 2, label: 'Association / Fondation' },
+          { value: 3, label: 'Autre' },
+          { value: 4, label: 'Entreprise' },
+          { value: 5, label: 'Legs' },
+          { value: 6, label: 'Particulier' },
+          { value: 7, label: 'Revenus financiers' },
+          { value: 8, label: 'Zoo' }
+        ];
+        var MOYENS = ['Alvarum', 'Autre', 'CB', 'Charities Aid Fnd', 'Chèque', 'Espèces', 'Facebook', 'Fnd Roi Baudouin',
+          'HelloAsso', 'Kunbis', 'Maecenata Stiftung', 'Nature', 'Paypal', 'Prélèvement', 'RaiseNow', 'Stripe']
+          .map(function(label, i) { return { value: i + 1, label: label }; });
+        var DON = [
+          { value: '', label: 'Tous' },
+          { value: 'regular', label: 'Régulier' },
+          { value: 'once', label: 'Ponctuel' }
+        ];
+
+        function card(step, title, hint, children) {
+          return e(
+            'div',
+            { className: 'demo-card' },
+            e('div', { className: 'demo-step' }, step),
+            e('h2', { className: 'demo-title' }, title),
+            e('p', { className: 'demo-hint' }, hint),
+            children
+          );
+        }
+
+        function Demo() {
+          var cat = React.useState([6]);
+          var moy = React.useState([5]);
+          var kind = React.useState('');
+          var kind2 = React.useState('once');
+
+          var state = { categories: cat[0], moyens: moy[0], don: kind[0], don_vide_possible: kind2[0] };
+
+          return e(
+            'div',
+            null,
+            card(
+              'Étape 1 · InputPillGroup',
+              'Pastilles à bascule',
+              'Plusieurs choix. Une pastille choisie passe en plein avec la coche ; aucune choisie = toutes.',
+              e('div', null,
+                e(RBF.InputPillGroup, {
+                  name: 'clic_id', label: 'Catégorie', hint: 'Aucune cochée = toutes',
+                  value: cat[0], options: CATEGORIES, checkIcon: icon('check', 14),
+                  onChange: function(ev) { cat[1](ev.target.value); }
+                }),
+                e(RBF.InputPillGroup, {
+                  name: 'ptyp_id', label: 'Moyen',
+                  value: moy[0], options: MOYENS, checkIcon: icon('check', 14),
+                  onChange: function(ev) { moy[1](ev.target.value); }
+                })
+              )
+            ),
+            card(
+              'Étape 1 · InputSegmented',
+              'Groupe segmenté',
+              'Un seul choix. Le motif btn-group + active des listes, sans style propre.',
+              e('div', null,
+                e(RBF.InputSegmented, {
+                  name: 'don_kind', label: 'Don', value: kind[0], options: DON,
+                  onChange: function(ev) { kind[1](ev.target.value); }
+                }),
+                e(RBF.InputSegmented, {
+                  name: 'don_kind2', label: 'Avec allowEmpty : re-cliquer désélectionne', value: kind2[0], options: DON.slice(1),
+                  allowEmpty: true, help: 'Taille normale, thème primary',
+                  size: null, theme: 'primary',
+                  onChange: function(ev) { kind2[1](ev.target.value); }
+                })
+              )
+            ),
+            card(
+              'Étapes 2 et 3 · Chip',
+              'Les autres variantes de pastille (pour avis, pas encore utilisées)',
+              'Critère actif avec ×, facette avec chevron et compteur, ajout en pointillés, pastille simple.',
+              e('div', null,
+                e(RBF.Chip, { variant: 'active', label: 'Don : Régulier', className: 'mr-2 mb-2', removeIcon: icon('close', 14), onRemove: function() { alert('Retirer « Don : Régulier »'); } }),
+                e(RBF.Chip, { variant: 'active', label: 'Programme : Dulan', className: 'mr-2 mb-2', removeIcon: icon('close', 14), onRemove: function() { alert('Retirer « Programme : Dulan »'); } }),
+                e(RBF.Chip, { variant: 'facet', label: 'Moyen de paiement', count: 2, className: 'mr-2 mb-2', caretIcon: icon('caret', 14), onClick: function() { alert('Ouvrir la facette'); } }),
+                e(RBF.Chip, { variant: 'facet', label: 'Catégorie', className: 'mr-2 mb-2', caretIcon: icon('caret', 14) }),
+                e(RBF.Chip, { variant: 'facet', label: 'Période', className: 'mr-2 mb-2', caretIcon: icon('caret', 14) }),
+                e(RBF.Chip, { variant: 'add', label: e('span', null, icon('plus', 14), ' Critère'), className: 'mr-2 mb-2' }),
+                e(RBF.Chip, { variant: 'default', label: 'Simple', className: 'mr-2 mb-2' }),
+                e('div', { className: 'mt-2' },
+                  e('a', { href: '#', className: 'btn btn-link btn-sm', onClick: function(ev) { ev.preventDefault(); cat[1]([]); moy[1]([]); kind[1](''); } }, 'Tout effacer')
+                )
+              )
+            ),
+            card(
+              '',
+              'Valeurs émises',
+              'Ce que les composants envoient à l’application ; se met à jour au clic.',
+              e('div', { className: 'demo-out' }, JSON.stringify(state, null, 2))
+            )
+          );
+        }
+
+        ReactDOM.render(e(Demo), document.getElementById('root'));
+      };
+    </script>
+  </body>
+</html>

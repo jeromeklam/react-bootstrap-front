@@ -31,12 +31,30 @@ l'étape 1 parce que la fiche de recherche en a besoin la première. Les étapes
 n'ajoutent que leurs composants. Tout est additif : `FilterPanel`, `FilterBuilder` et
 `FilterHeader` ne bougent pas.
 
-## Décisions à prendre avant l'étape 1
+## Avancement
 
-| Question | Recommandation |
+Branche locale `recherche` de la bibliothèque. Un commit par brique ; les composants
+graphiques sont commités après validation sur l'aperçu.
+
+| Étape | Commit | Contenu | Validation |
+|---|---|---|---|
+| — | `fe22917` | Étude, contrat des composants, feuille de route | — |
+| 1 | `d4e3cb4` | Modèle `Filter` : tests dorés, `clone` profond, `removeAll`, `replaceFilter`, `setFilterValues`, `setFilterRange`, `getFilters` / `getValues` / `hasFilter`, `toPlain` / `fromPlain`, correction `locAction` | relecture |
+| 1 | `c4073bd` | `Col`, `Chip`, `InputSegmented`, `InputPillGroup`, tests, contrat mis à jour | **18/10/2026** sur l'aperçu |
+| 1 | ce commit | Aperçu `demo/recherche.html`, anti-cache et erreurs affichées dans la page, `MAP` de `demo/build.js` | — |
+
+État de la suite de tests avant ces travaux : 71 suites rouges sur 118 (snapshots
+obsolètes, rendus cassés depuis la migration). Critère retenu : **aucune suite verte ne
+passe au rouge**, vérifié par comparaison avant / après à chaque commit ; les suites
+nouvelles sont vertes.
+
+## Décisions
+
+| Question | Décision |
 |---|---|
-| `clone()` profond par défaut, ou `cloneDeep()` séparé ? | Profond par défaut : le seul effet est que « Annuler » dans les 9 panneaux `DefaultPanel` annule vraiment. |
-| Entrée dans la barre de l'en-tête tant que le LLM est en construction ? | Entrée = recherche rapide actuelle, l'étincelle montre la notice. Aucune régression. |
+| `clone()` profond par défaut, ou `cloneDeep()` séparé ? | **Profond par défaut** (18/10/2026) : le seul effet est que « Annuler » dans les 9 panneaux `DefaultPanel` annule vraiment. |
+| Couleurs et formes des pastilles | **Bleu `secondary` par défaut, arrondi en pilule** (18/10/2026) ; le vert `primary` reste aux boutons d'action. |
+| Entrée dans la barre de l'en-tête tant que le LLM est en construction ? | Recommandé : Entrée = recherche rapide actuelle, l'étincelle montre la notice. À confirmer à l'étape 2. |
 | L'API accepte-t-elle `filter[and][or][…]` à côté de `filter[and][champ]` ? | À vérifier sur le backend avant l'étape 2 ; conditionne l'extension `group`. |
 
 ## Étape 1 — Fiche de recherche (bibliothèque 3.12.0)

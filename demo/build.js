@@ -1,8 +1,9 @@
 /**
- * Prépare l'aperçu autonome du champ HTML.
+ * Prépare les aperçus autonomes : le champ HTML (index.html) et les composants
+ * de recherche (recherche.html).
  *
  *   node demo/build.js [chemin de l'application]     (défaut : ../admin)
- *   puis ouvrir demo/index.html dans un navigateur.
+ *   puis ouvrir demo/index.html ou demo/recherche.html dans un navigateur.
  *
  * L'aperçu utilise le bundle réellement publié (`dist/`), les styles réellement
  * compilés par l'application, et les mêmes icônes Material Design — de façon à
@@ -59,6 +60,13 @@ const MAP = {
   more: 'mdiDotsHorizontal',
   toolbar: 'mdiTools',
   clear: 'mdiDelete',
+  /* Recherche (recherche.html). */
+  sparkle: 'mdiCreation',
+  caret: 'mdiChevronDown',
+  close: 'mdiClose',
+  check: 'mdiCheck',
+  plus: 'mdiPlus',
+  calendar: 'mdiCalendar',
 };
 
 const mdi = require(path.join(APP, 'node_modules/@mdi/js'));
@@ -81,4 +89,4 @@ execFileSync(
   { cwd: APP, stdio: 'inherit' },
 );
 
-console.log('Aperçu prêt : ouvrez ' + path.join(DEMO, 'index.html'));
+console.log('Aperçus prêts : ouvrez ' + path.join(DEMO, 'index.html') + ' ou ' + path.join(DEMO, 'recherche.html'));
