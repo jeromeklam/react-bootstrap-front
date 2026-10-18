@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -140,8 +140,18 @@
 
         /* Le catalogue de la démo : ce qu'admin construira depuis son getCols,
            avec les tournures de la phrase en clair. */
+        var PROGRAMMES = [
+          { value: 10, label: 'Dulan' }, { value: 11, label: 'Forêt' }, { value: 12, label: 'Parrainages' }, { value: 13, label: 'Soutien' }
+        ];
         var CATALOG = RBF.normalizeCatalog([
-          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills',
+          { name: 'cli_lastname', label: 'Nom', type: 'text', width: 12, phrase: { label: 'le nom' } },
+          { name: 'cli_firstname', label: 'Prénom', type: 'text', width: 12, phrase: { label: 'le prénom' } },
+          { name: 'cli_email', label: 'E-mail', type: 'text', width: 12 },
+          { name: 'cli_address1', label: 'Adresse', type: 'text', width: 12, phrase: { label: 'l’adresse' } },
+          { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' } },
+          { name: 'cli_town', label: 'Ville', type: 'text', width: 9, defaultOperator: 'containsb', phrase: { label: 'la ville' } },
+          { name: 'country.cnty_name', label: 'Pays', type: 'text', width: 9, phrase: { label: 'le pays' } },
+          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes',
             phrase: { eq: 'de catégorie {value}' },
             subjectFor: function(values) { return values.length === 1 && String(values[0]) === '6' ? 'Particuliers' : null; } },
           { name: 'don_kind', virtual: true, label: 'Don', widget: 'segmented', options: DON, fields: ['donations.sponsorship.spo_id'],
@@ -155,11 +165,22 @@
           { name: 'donations.don_real_ts', label: 'Paiement', type: 'date', widget: 'date-range',
             phrase: { between: 'ayant payé entre le {from} et le {to}' } },
           { name: 'donations.don_mnt_input', label: 'Montant', type: 'monetary', widget: 'amount-range', phrase: { label: 'le montant' } },
+          { name: 'donations.cause.cause_type.caut_id', label: 'Programme', type: 'select', options: PROGRAMMES, widget: 'pills', phrase: { eq: 'pour le programme {value}' } },
           { name: 'donations.payment_type.ptyp_id', label: 'Moyen de paiement', type: 'select', options: MOYENS, widget: 'pills',
             format: function(v, field) { var o = field.options.find(function(x) { return String(x.value) === String(v); }); return o ? o.label.toLowerCase() : String(v); },
             phrase: { eq: 'par {value}' } },
           { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' } }
         ]);
+
+        var SECTIONS = [
+          { name: 'donateur', label: 'Donateur', fields: ['cli_lastname', 'cli_firstname', 'cli_email', 'cli_address1', 'cli_cp', 'cli_town', 'country.cnty_name'] },
+          { name: 'categorie', label: 'Catégorie', fields: ['client_category.clic_id'] },
+          { name: 'paiement', label: 'Paiement', fields: ['donations.don_real_ts', 'donations.don_mnt_input', 'don_kind'] },
+          { name: 'moyen', label: 'Moyen', fields: ['donations.payment_type.ptyp_id'] },
+          { name: 'programme', label: 'Programme', fields: ['donations.cause.cause_type.caut_id'] },
+          { name: 'ami', label: 'Ami', fields: ['sponsorships.spo_ts'] }
+        ];
+        var FORM_ICONS = { calendar: icon('calendar', 16), clear: icon('close', 14), check: icon('check', 14), sparkle: icon('sparkle', 16) };
 
         function card(step, title, hint, children) {
           return e(
@@ -177,6 +198,8 @@
           var moy = React.useState([5]);
           var kind = React.useState('');
           var kind2 = React.useState('once');
+          var submitted = React.useState(null);
+          var formValues = React.useState({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'], 'donations.payment_type.ptyp_id': [5], 'donations.cause.cause_type.caut_id': [11] });
           var phrase = React.useState('particuliers qui ont donné par chèque en 2025 pour la forêt');
           var quick = React.useState('');
           var pay = React.useState(['2025-01-01', '2025-12-31']);
@@ -200,6 +223,30 @@
           return e(
             'div',
             null,
+            card(
+              'Étape 1 · SearchForm',
+              'La fiche de recherche complète',
+              'Tout ce qui précède assemblé : phrase en construction, sections pilotées par le catalogue, pied collant avec la phrase en clair. « Voir les donateurs » montre ci-dessous ce que recevrait l’API. Le lien « Critères avancés » attend l’étape 3.',
+              e('div', null,
+                e(RBF.SearchForm, {
+                  catalog: CATALOG, sections: SECTIONS, icons: FORM_ICONS, subject: 'Donateurs',
+                  title: 'Rechercher des donateurs', submitLabel: 'Voir les donateurs',
+                  values: formValues[0], onChange: function(v) { formValues[1](v); },
+                  naturalLanguage: { placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »' },
+                  advancedLink: { onClick: function() { alert('Critères avancés : étape 3'); } },
+                  onSubmit: function(filter, values) { submitted[1]({ filter: filter.asJsonApiObject(), values: values }); }
+                }),
+                submitted[0] && e('div', { className: 'mt-3' },
+                  e('p', { className: 'demo-hint mb-1' }, 'Dernière soumission — ce que recevrait l’API :'),
+                  e('div', { className: 'demo-out' }, JSON.stringify(submitted[0].filter, function(k, v) {
+                    if (Array.isArray(v) && Object.keys(v).some(function(key) { return isNaN(key); })) {
+                      var o = {}; Object.keys(v).forEach(function(key) { o[key] = v[key]; }); return o;
+                    }
+                    return v;
+                  }, 2))
+                )
+              )
+            ),
             card(
               'Étape 1 · InputNaturalSearch',
               'Recherche en langage naturel — « en construction »',

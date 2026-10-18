@@ -19,7 +19,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `InputDateRange`, `InputAmountRange` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `SearchSummary` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `InputNaturalSearch` (variantes `card` et `bar`) | 1 | **validé le 18/10/2026** sur l'aperçu ; centrage à reprendre à la revue de la fiche |
-| `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
+| `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
 | `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
 | Emplacement `toolbar` de l'en-tête, `InputNaturalSearch` (variante `bar`) | 2 | proposé, à valider |
@@ -301,45 +301,63 @@ petites capitales ; en `inline`, les fragments `bold` dans `<strong>`.
 
 ### `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` (écran A)
 
-`SearchForm` :
+`SearchForm` (composant de classe) :
 
 | Prop | Type | Défaut | Rôle |
 |---|---|---|---|
 | `catalog` | array, req. | | |
-| `sections` | `[{ name, label, fields?: [names], render?: ctx => node, hint? }]`, req. | | |
-| `values` / `defaultValues` | object | | Contrôlé ou non |
-| `onChange` | func | | `(values)` |
-| `onSubmit` | func, req. | | `(filter)` |
+| `sections` | `[{ name, label, fields?: [noms ou champs], render?: ctx => node, hint? }]`, req. | | |
+| `values` / `defaultValues` | object | | Contrôlée (`values` + `onChange`) ou non |
+| `onChange` | func | | `(values)` complètes |
+| `onSubmit` | func, req. | | `(filter, values)` |
 | `onClear` | func | | |
-| `base` | `Filter` | | Critères fixes et par défaut à conserver (`defaultFilters()`) |
+| `base` | `Filter` | | Ses fixes et défauts sont conservés (`defaultFilters()`) |
 | `mode` | `'AND'` \| `'OR'` | `'AND'` | |
-| `submitLabel` | string | « Rechercher » | |
-| `subject` | string | | Pour la phrase |
-| `naturalLanguage` | `{ onNaturalLanguage?, comingSoon?, placeholder, hint, sparkleIcon }` | | Carte du haut ; absente si non fournie |
-| `advancedLink` | `{ label, onClick }` | | Lien « Critères avancés » (étape 3) |
-| `icons` | `{ calendar, clear, check }` | | |
+| `submitLabel`, `clearLabel` | string | « Rechercher », « Tout effacer » | |
+| `subject`, `emptyText` | string | | Pour la phrase du pied |
+| `naturalLanguage` | `{ onNaturalLanguage?, comingSoon?, comingSoonMessage?, onComingSoon?, onError?, onResult?, placeholder, hint, sparkleIcon? }` | | La carte du haut ; absente si non fournie |
+| `advancedLink` | `{ label?, onClick }` | | Lien « Critères avancés » en haut à droite (étape 3) |
+| `icons` | `{ calendar, clear, check, sparkle }` | | |
 | `title` | node | | |
+| `showLabels` | bool | `false` | Libellés au-dessus des champs ; sinon le libellé sert de placeholder |
+| `size`, `disabled`, `locale`, `className`, `t` | | | |
 
-Comportement : `filter = valuesToFilter(values, catalog, base)` à chaque rendu ; le
-pied affiche `SearchSummary variant="inline"` ; « Tout effacer » vide `values` ;
-soumettre appelle `onSubmit(filter)`. À la réception d'un résultat LLM, les valeurs
-sont fusionnées et l'indication « remplis depuis votre phrase » apparaît ; rien n'est
-soumis.
+Comportement : `filter = valuesToFilter(values, catalog, base, { mode })` à chaque rendu ;
+le pied affiche `SearchSummary variant="inline"` ; « Tout effacer » vide `values` ;
+soumettre appelle `onSubmit(filter, values)`. À la réception d'un résultat
+d'interprétation (`values`, `plain` via `Filter.fromPlain`, ou `filter`), les valeurs
+sont fusionnées, l'indication devient « Les critères ci-dessous ont été remplis depuis
+votre phrase. Vérifiez-les avant de lancer. », les `warnings` s'affichent en liste ;
+rien n'est soumis. Le contexte passé au service : `{ catalog: catalogToJson(),
+filter, locale }`.
 
-`SearchFormSection` : `label` (req.), `hint`, `id`, et soit `children`, soit
-`catalog` + `fields` + `values` + `onChange`. Rendu `Row` → libellé
-`Col size={{ xxs: 36, sm: 6 }}` en capitales `.rbf-search-section-label`, contenu
-`Col size={{ xxs: 36, sm: 30 }}`, `aria-labelledby`.
+Rendu : un `Container` de la bibliothèque (grille à requêtes de conteneur), un
+`form`, l'en-tête (titre `h4` + lien), la carte de langage naturel, puis
+`.rbf-search-form-body.border.rounded.bg-white` avec les sections et le pied.
 
-`SearchFormField` : `field`, `value`, `onChange`, `icons`. Choix du composant par
-`field.widget` : `text` → `InputText`, `pills` → `InputPillGroup`, `segmented` →
-`InputSegmented`, `date-range` → `InputDateRange`, `amount-range` →
-`InputAmountRange`, `select` → select natif, `picker` → `InputAutocomplete`, `bool`
-→ `InputSegmented` ; `field.render` l'emporte.
+`SearchFormSection` : `label` (req.), `hint`, `id`, `first` (pas de bordure haute),
+et soit `children`, soit `catalog` + `fields` (noms résolus dans le catalogue, un
+inconnu est écarté avec un avertissement) + `values` + `onChange` + `icons`. Rendu
+`Row` → libellé `Col size={{ xxs: 36, md: 6 }}` en petites capitales
+`.rbf-search-form-section-label`, contenu `Col size={{ xxs: 36, md: 30 }}` où chaque
+champ occupe `Col size={{ xxs: 36, md: widthFor(field) }}` ; `role="group"
+aria-labelledby`.
 
-`SearchFormFooter` : `summary`, `onClear`, `onSubmit`, `submitLabel`, `disabled`.
-Barre collante (`position: sticky; bottom: 0`), qui fonctionne dans le conteneur
-défilant de `DefaultContent`.
+`SearchFormField` : `field`, `value`, `onChange` (`{ target: { name, value } }`),
+`icons`, `showLabel`, `size`, `disabled`. Le composant vient de `widgetFor(field)` :
+`field.widget`, sinon par type (`text` → `InputText` avec le libellé en placeholder,
+`number` → `<input type=number>`, `monetary` → `InputAmountRange` si `between` par
+défaut sinon `InputMonetary`, `date` / `datetime` → `InputDateRange` ou `InputDate`,
+`bool` → `InputSegmented` Tous / oui / non, `select` → `InputPillGroup` si `multiple`
+sinon `<select class=custom-select>`, `picker` → rien sans `field.render`, avec
+avertissement). `field.render({ field, value, onChange, icons, t, widget })` remplace
+tout. `widthFor(field)` : `field.width`, sinon pastilles 36, plage de dates 15, plage de
+montants 12, segmenté et booléen `auto`, le reste 12 (un tiers).
+
+`SearchFormFooter` : `summary`, `onClear`, `onSubmit` (sinon bouton `submit` du
+formulaire), `submitLabel`, `clearLabel`, `disabled`. Barre `d-flex border-top
+bg-light`, collante en bas du conteneur défilant (`SearchForm.scss`, la seule feuille
+de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 
 ### `InputNaturalSearch` (écrans A et B)
 

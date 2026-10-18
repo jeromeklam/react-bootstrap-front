@@ -5,3 +5,7 @@ export * from './criteria';
 export * from './filterToSentence';
 export { default as SearchSummary } from './SearchSummary';
 export { default as InputNaturalSearch } from './InputNaturalSearch';
+export { default as SearchForm } from './SearchForm';
+export { default as SearchFormSection } from './SearchFormSection';
+export { default as SearchFormField, widgetFor, widthFor } from './SearchFormField';
+export { default as SearchFormFooter } from './SearchFormFooter';

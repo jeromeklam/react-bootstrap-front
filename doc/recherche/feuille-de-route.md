@@ -46,11 +46,15 @@ graphiques sont commités après validation sur l'aperçu.
 | 1 | `279776b` | Aperçu : feuilles `@import` inlinées, le calendrier retrouve son style | — |
 | 1 | `4320792` | `search/i18n.js` (`tr`, `warnOnce`), `operators.js` (matrice, libellés, tournures), `catalog.js` (`catalogFromCols`, `fieldOwning`…), clés `rbf.filter.oper.*`, `search/style.scss` branché | relecture |
 | 1 | `70fbbfa` | `criteria.js` (`valuesToFilter` / `filterToValues`), `filterToSentence.js`, `SearchSummary`, fixtures avec les deux phrases des maquettes, carte « En clair » de l'aperçu | **18/10/2026** sur l'aperçu |
-| 1 | ce commit | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
+| 1 | `cd06e31` | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
+| 1 | ce commit | `SearchForm`, `SearchFormSection`, `SearchFormField` (`widgetFor`, `widthFor`), `SearchFormFooter`, `SearchForm.scss`, fiche complète en tête de l'aperçu | **18/10/2026** sur l'aperçu |
 
 Remarque du 18/10/2026 à la validation des premières briques : « globalement pas mal,
-quelques petits soucis de centrage ». À reprendre lors de la revue de la fiche complète
-(étape 1, dernière brique), composant par composant, avec les vraies icônes d'admin.
+quelques petits soucis de centrage ». À reprendre composant par composant lors du test
+réel dans admin, avec ses vraies icônes. À la validation de la fiche complète : « le
+design me paraît pas mal, quelques erreurs de libellés et de regroupement » — ceux de
+l'aperçu sont illustratifs ; dans admin, libellés, sections et tournures viennent de
+son catalogue (`client/searchCatalog.js`), la bibliothèque n'impose rien du contenu.
 
 État de la suite de tests avant ces travaux : 71 suites rouges sur 118 (snapshots
 obsolètes, rendus cassés depuis la migration). Critère retenu : **aucune suite verte ne

@@ -1,0 +1,13 @@
+/* Fiche de recherche : le pied reste visible en bas du conteneur défilant ; le
+   libellé de section respire un peu. Le reste est Bootstrap. */
+.rbf-search-form {
+  .rbf-search-form-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+  }
+
+  .rbf-search-form-section-label {
+    letter-spacing: 0.04em;
+  }
+}
