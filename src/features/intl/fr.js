@@ -1,4 +1,5 @@
 export const translations = {
+  'rbf.chip.remove': 'Retirer',
   'rbf.page.footer.followUs' : 'Suivez-nous',
   'rbf.page.header.menuIcon' : 'Menu',
   'rbf.button.help.help': 'Afficher les aides',

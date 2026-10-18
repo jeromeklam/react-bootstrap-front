@@ -4,18 +4,14 @@ import classnames from 'classnames';
 import { colSizeAsClassName } from './';
 
 export default function Col(props) {
-  const { size, otherProps } = props;
+  /* Les props restantes (id, role, aria-*, data-*) atteignent le div. */
+  const { size, textAlign, className, children, ...otherProps } = props;
   return (
     <div
       {...otherProps}
-      className={classnames(
-        'col',
-        colSizeAsClassName(size),
-        props.textAlign && `text-${props.textAlign}`,
-        props.className && props.className
-      )}
+      className={classnames('col', colSizeAsClassName(size), textAlign && `text-${textAlign}`, className && className)}
     >
-      {props.children}
+      {children}
     </div>
   );
 }

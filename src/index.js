@@ -5,6 +5,7 @@ import "core-js/features/global-this";
  *******************************************************************************
  */
 export { default as Badge } from "./features/basic/Badge";
+export { default as Chip } from "./features/basic/Chip";
 export { default as Dropdown } from "./features/basic/Dropdown";
 export { default as DropdownMenu } from "./features/basic/DropdownMenu";
 export { default as DropdownMenuDivider } from "./features/basic/DropdownMenuDivider";
@@ -32,6 +33,8 @@ export { default as InputPassword } from "./features/basic/InputPassword";
 export { default as InputPicker } from "./features/basic/InputPicker";
 export { default as ButtonPicker } from "./features/basic/ButtonPicker";
 export * from "./features/basic/InputRadio";
+export * from "./features/basic/InputSegmented";
+export * from "./features/basic/InputPillGroup";
 export * from "./features/basic/InputRandomText";
 export { default as InputSelect } from "./features/basic/InputSelect";
 export { default as InputSpin } from "./features/basic/InputSpin";

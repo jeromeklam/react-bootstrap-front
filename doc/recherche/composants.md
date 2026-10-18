@@ -15,12 +15,13 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 
 | Composant graphique | Étape | Statut |
 |---|---|---|
-| `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | proposé, à valider |
+| `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `InputDateRange`, `InputAmountRange` | 1 | proposé, à valider |
 | `SearchSummary` | 1 | proposé, à valider |
 | `InputNaturalSearch` (variante `card`) | 1 | proposé, à valider |
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
-| `Chip` (variantes `active`, `facet`, `add`), `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
+| `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
+| `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
 | Emplacement `toolbar` de l'en-tête, `InputNaturalSearch` (variante `bar`) | 2 | proposé, à valider |
 | `Drawer`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | proposé, à valider |
 | `InputNumberRange` | 3 | optionnel, à valider |
@@ -86,7 +87,7 @@ Pastille. `React.forwardRef` : elle peut servir d'ancre `myRef` à `Dropdown`.
 |---|---|---|---|
 | `label` | node, req. | | |
 | `variant` | `'default'` \| `'active'` \| `'facet'` \| `'add'` \| `'toggle'` | `'default'` | |
-| `theme` | string | `'primary'` | Clé de `$theme-colors` |
+| `theme` | string | `'secondary'` | Clé de `$theme-colors`. Le bleu d'admin ; le vert `primary` reste aux boutons d'action. |
 | `active` | bool | `false` | `toggle` sélectionnée, `facet` avec valeur |
 | `count` | number | | Badge de compteur (facette) |
 | `onClick` | func | | |
@@ -110,15 +111,16 @@ limite au bouton ×, à la bordure pointillée de `add` et au rayon.
 | `value` | string | | |
 | `options` | `[{ value, label, icon? }]`, req. | | |
 | `onChange` | func | | `{ target: { name, value } }` |
-| `theme` | string | `'primary'` | |
+| `theme` | string | `'secondary'` | |
 | `size` | `'sm'` | `'sm'` | |
 | `allowEmpty` | bool | `false` | Re-cliquer désélectionne |
 | `disabled` | bool | | |
 | `label`, `labelTop`, `help` | | | Comme `InputGroup` |
 
-Rendu : `InputGroup` + `div.btn-group[role=radiogroup]` de `button.btn[aria-checked]` ;
-flèches ← → au clavier. `btn-outline-{theme}` inactif, `btn-{theme} active` actif :
-le motif de `DefaultList`, aucun SCSS.
+Rendu : `form-group` + libellé (comme `InputRadio`) + `div.btn-group[role=group]` de
+`button.btn[aria-pressed]`, navigation au clavier par Tab (pas de focus tournant : au
+plus simple). `btn-outline-{theme}` inactif, `btn-{theme} active` actif : le motif de
+`DefaultList`, aucun SCSS.
 
 ### `InputDateRange`, `InputAmountRange` (et `InputNumberRange`, optionnel) — `src/features/basic/`
 
@@ -149,9 +151,11 @@ Rendu : `.rbf-input-range`, deux champs en ligne, empilés sous 512 px.
 | `multiple` | bool | `true` | |
 | `hint` | node | | « Aucune cochée = toutes » |
 | `checkIcon` | element | | |
-| `theme`, `size`, `disabled`, `label`, `labelTop` | | | |
+| `theme` | string | `'secondary'` | |
+| `size`, `disabled`, `label`, `labelTop` | | | |
 
-Rendu : `.rbf-pill-group[role=group]` de `Chip variant="toggle"`.
+Rendu : `.rbf-pill-group[role=group]` de `Chip variant="toggle"`. Les valeurs sont
+comparées en chaînes (`'3'` et `3` se valent), l'événement rend les valeurs d'origine.
 
 ### Correction de `Col` — `src/features/grid/Col.js`
 

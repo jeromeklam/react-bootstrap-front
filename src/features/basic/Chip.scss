@@ -1,0 +1,48 @@
+/* Pastilles : boutons Bootstrap arrondis. Le bouton × partage la bordure du
+   bouton principal (btn-group) ; l'ajout est en pointillés. */
+.rbf-chip {
+  vertical-align: middle;
+
+  .btn {
+    white-space: nowrap;
+  }
+
+  .btn:first-child {
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .btn:last-child {
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .rbf-chip-check,
+  .rbf-chip-caret {
+    display: inline-block;
+    line-height: 0;
+    vertical-align: middle;
+  }
+
+  .rbf-chip-check {
+    margin-right: 0.25rem;
+  }
+
+  .rbf-chip-caret {
+    margin-left: 0.25rem;
+  }
+
+  .rbf-chip-count {
+    margin-left: 0.35rem;
+  }
+
+  .rbf-chip-remove {
+    padding-left: 0.4rem;
+    padding-right: 0.5rem;
+    line-height: 1;
+  }
+}
+
+.rbf-chip-add .btn {
+  border-style: dashed;
+}
