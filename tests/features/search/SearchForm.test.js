@@ -39,6 +39,8 @@ test('une section par entrée, champs du catalogue, pied avec la phrase', () => 
   expect(w.find(SearchFormFooter).length).toBe(1);
   expect(w.find(SearchFormFooter).prop('summary').type).toBe(SearchSummary);
   expect(w.find(SearchFormFooter).prop('summary').props.withDefaults).toBe(true);
+  /* La phrase suit l'ordre des sections, pas celui du catalogue. */
+  expect(w.find(SearchFormFooter).prop('summary').props.catalog.slice(0, 3).map(f => f.name)).toEqual(['cli_lastname', 'cli_town', 'cli_email']);
   const quiet = shallow(<SearchForm catalog={donorCatalog()} sections={SECTIONS} onSubmit={() => {}} icons={icons} withDefaults={false} />);
   expect(quiet.find(SearchFormFooter).prop('summary').props.withDefaults).toBe(false);
   expect(w.find(InputNaturalSearch).length).toBe(0);

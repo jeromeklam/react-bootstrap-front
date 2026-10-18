@@ -124,6 +124,24 @@ export const fieldsForFacets = catalog =>
 
 export const fieldsForSection = (catalog, section) => catalog.filter(field => field.section === section);
 
+/* Le catalogue dans l'ordre de lecture d'une fiche : les champs des sections, dans
+   leur ordre, puis les autres. La phrase en clair suit ainsi la fiche, pas la liste
+   dont le catalogue est dérivé. */
+export const orderCatalogBySections = (catalog, sections = []) => {
+  const wanted = [];
+  sections.forEach(section => {
+    (section.fields || []).forEach(entry => {
+      const name = typeof entry === 'string' ? entry : entry && entry.name;
+      if (name && !wanted.includes(name)) {
+        wanted.push(name);
+      }
+    });
+  });
+  const first = wanted.map(name => findField(catalog, name)).filter(Boolean);
+  const rest = catalog.filter(field => !wanted.includes(field.name));
+  return first.concat(rest);
+};
+
 const withoutFunctions = value => {
   if (Array.isArray(value)) {
     return value.map(withoutFunctions).filter(v => typeof v !== 'undefined');

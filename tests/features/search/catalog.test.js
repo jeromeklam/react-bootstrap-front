@@ -1,4 +1,5 @@
 import {
+  orderCatalogBySections,
   normalizeType,
   normalizeCatalog,
   catalogFromCols,
@@ -83,6 +84,13 @@ test('overrides : par nom, libellé pour une colonne sans libellé, champs extra
   expect(fieldOwning(catalog, 'donations.sponsorship.spo_id').name).toBe('don_kind');
   expect(fieldOwning(catalog, 'cli_email').name).toBe('cli_email');
   expect(fieldOwning(catalog, 'inconnu')).toBeUndefined();
+});
+
+test('orderCatalogBySections : les champs des sections d’abord, dans leur ordre, puis les autres', () => {
+  const catalog = normalizeCatalog([{ name: 'a' }, { name: 'b' }, { name: 'c' }, { name: 'd' }]);
+  const ordered = orderCatalogBySections(catalog, [{ fields: ['c', 'inconnu'] }, { fields: ['a', { name: 'c' }] }]);
+  expect(ordered.map(f => f.name)).toEqual(['c', 'a', 'b', 'd']);
+  expect(orderCatalogBySections(catalog).map(f => f.name)).toEqual(['a', 'b', 'c', 'd']);
 });
 
 test('fieldsForRows écarte les champs cachés', () => {

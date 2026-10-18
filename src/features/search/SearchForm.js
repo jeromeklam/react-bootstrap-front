@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { Container } from '../grid';
 import { Filter } from '../filter';
 import { rbfIntl } from '../intl';
-import { catalogToJson } from './catalog';
+import { catalogToJson, orderCatalogBySections } from './catalog';
 import { valuesToFilter, filterToValues } from './criteria';
 import { tr } from './i18n';
 import InputNaturalSearch from './InputNaturalSearch';
@@ -97,8 +97,13 @@ export default class SearchForm extends Component {
     }
   }
 
+  /* Le catalogue dans l'ordre des sections : la phrase du pied suit la fiche. */
+  catalog() {
+    return orderCatalogBySections(this.props.catalog, this.props.sections);
+  }
+
   filter() {
-    return valuesToFilter(this.values(), this.props.catalog, this.props.base, { mode: this.props.mode });
+    return valuesToFilter(this.values(), this.catalog(), this.props.base, { mode: this.props.mode });
   }
 
   onFieldChange(event) {
@@ -127,7 +132,7 @@ export default class SearchForm extends Component {
 
   /* Le résultat de l'interprétation remplit les champs ; rien n'est lancé. */
   onNaturalResult(result = {}) {
-    const { catalog } = this.props;
+    const catalog = this.catalog();
     let next = null;
     if (result.values) {
       next = { ...this.values(), ...result.values };
@@ -146,7 +151,8 @@ export default class SearchForm extends Component {
   }
 
   renderNatural(filter) {
-    const { naturalLanguage, icons, catalog, locale, t } = this.props;
+    const { naturalLanguage, icons, locale, t } = this.props;
+    const catalog = this.catalog();
     if (!naturalLanguage) {
       return null;
     }
@@ -184,7 +190,8 @@ export default class SearchForm extends Component {
   }
 
   render() {
-    const { catalog, sections, submitLabel, clearLabel, subject, emptyText, withDefaults, advancedLink, icons, title, showLabels, size, disabled, className, t } = this.props;
+    const { sections, submitLabel, clearLabel, subject, emptyText, withDefaults, advancedLink, icons, title, showLabels, size, disabled, className, t } = this.props;
+    const catalog = this.catalog();
     const values = this.values();
     const filter = this.filter();
     return (

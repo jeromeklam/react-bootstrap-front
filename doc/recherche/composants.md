@@ -207,6 +207,9 @@ inchangée pour un filtre sans groupe.
   col.col`, `type = filterable.type`, `options`, `picker` (`onSearch`, `display`, qui
   force le type `picker`) ; fusionne `overrides[name]` ; ajoute `overrides.extra`
   (champs virtuels).
+- `orderCatalogBySections(catalog, sections)` : les champs des sections d'abord, dans
+  leur ordre, puis les autres — `SearchForm` s'en sert pour que la phrase suive la fiche
+  et non la liste dont le catalogue est dérivé.
 - `findField(catalog, name)` ; `fieldOwning(catalog, name)` : le champ virtuel qui
   liste ce nom dans `fields`, sinon le champ lui-même ; `fieldsForRows` (non
   cachés), `fieldsForFacets` (ceux à `facet`, triés par `facet.order` puis libellé),
