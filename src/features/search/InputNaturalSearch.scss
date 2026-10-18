@@ -1,0 +1,18 @@
+/* Les boutons du groupe suivent la taille du champ : l'application réduit la
+   police des .input-group sous 1200 px, mais les .btn Bootstrap restent à 1rem et
+   dépasseraient. L'icône de l'application (24 px) est bornée de même. */
+.rbf-natural-search {
+  .input-group .btn {
+    font-size: inherit;
+    /* Le groupe étire les boutons à la hauteur du champ : leur contenu reste centré. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .input-group .btn svg {
+    height: 1.25em;
+    width: 1.25em;
+    vertical-align: middle;
+  }
+}

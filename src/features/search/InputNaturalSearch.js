@@ -196,7 +196,7 @@ export default class InputNaturalSearch extends Component {
     const sparkle = (
       <button
         type="button"
-        className={classnames('btn btn-outline-secondary bg-light rbf-natural-search-sparkle', size && `btn-${size}`)}
+        className={classnames('btn btn-outline-rbf bg-light text-secondary rbf-natural-search-sparkle', size && `btn-${size}`)}
         title={sparkleTitle}
         aria-label={sparkleTitle}
         disabled={pending}
@@ -208,7 +208,7 @@ export default class InputNaturalSearch extends Component {
     const input = (
       <input
         type="text"
-        className={classnames('form-control', size && `form-control-${size}`)}
+        className={classnames('border-rbf form-control', size && `form-control-${size}`)}
         name={name}
         placeholder={placeholder}
         value={this.text()}
@@ -218,7 +218,7 @@ export default class InputNaturalSearch extends Component {
       />
     );
     const waiting = pending && (
-      <span className="input-group-text bg-white">
+      <span className="input-group-text border-rbf bg-white">
         <SmLoading3Dots />
       </span>
     );
@@ -251,7 +251,7 @@ export default class InputNaturalSearch extends Component {
           {(waiting || kbdHint) && (
             <div className="input-group-append">
               {waiting || (
-                <span className="input-group-text bg-white">
+                <span className="input-group-text border-rbf bg-white">
                   <span className="badge badge-light border text-secondary font-weight-normal">{kbdHint}</span>
                 </span>
               )}

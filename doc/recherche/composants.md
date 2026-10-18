@@ -383,12 +383,16 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `size` | string | | |
 
 Rendu : `form.rbf-natural-search > .input-group` : l'étincelle en préfixe
-(`btn-outline-secondary bg-light`, elle lance l'interprétation ou montre la notice),
-le champ, puis le badge « Entrée » ou `SmLoading3Dots` en attente ; notice
+(`btn-outline-rbf bg-light text-secondary`, comme les boutons accolés des autres
+champs de la bibliothèque ; elle lance l'interprétation ou montre la notice), le champ
+`border-rbf form-control` (focus discret de la bibliothèque, pas le halo Bootstrap),
+puis le badge « Entrée » ou `SmLoading3Dots` en attente ; notice
 `small.form-text.text-warning[role=status]` sous le champ, effacée après 4 s. La
 variante `card` enferme le tout dans un bloc `border rounded bg-white` avec le bouton
-`btn-primary` « Remplir les critères », l'indication `hint` en dessous. Classes
-Bootstrap seulement, aucun SCSS. Une phrase vide n'appelle pas le service.
+`btn-primary` « Remplir les critères », l'indication `hint` en dessous.
+`InputNaturalSearch.scss` : deux règles, les boutons du groupe à `font-size: inherit`
+(admin réduit la police des `.input-group` sous 1200 px, les `.btn` Bootstrap restent à
+1 rem) et l'icône bornée à 1,25 em. Une phrase vide n'appelle pas le service.
 
 Résultat attendu, figé dès l'étape 1 :
 
