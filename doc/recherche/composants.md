@@ -16,7 +16,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | Composant graphique | Étape | Statut |
 |---|---|---|
 | `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | **validé le 18/10/2026** sur l'aperçu |
-| `InputDateRange`, `InputAmountRange` | 1 | proposé, à valider |
+| `InputDateRange`, `InputAmountRange` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `SearchSummary` | 1 | proposé, à valider |
 | `InputNaturalSearch` (variante `card`) | 1 | proposé, à valider |
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
@@ -132,13 +132,16 @@ Déclinaisons d'un `InputRange` interne. `InputNumberRange` n'est écrit que si 
 | `name` | string, req. | | |
 | `value` | `[from, to]` | `[null, null]` | La forme du `between` du modèle |
 | `onChange` | func | | `{ target: { name, value: [from, to] } }` |
-| `fromLabel`, `toLabel` | string | « du » / « au », « de » / « à » via `t` | Préfixes `InputGroupText` |
+| `fromLabel`, `toLabel` | node | « du » / « au » (`rbf.range.from` / `.to`), « de » / « à » (`rbf.range.min` / `.max`) via `t` | Préfixes, passés en `prepend` aux champs |
 | `label`, `labelTop`, `size`, `disabled`, `error` | | | |
 | `calIcon`, `delIcon` | element, req. (dates) | | Transmis à `InputDate` : natif sur mobile, masque + calendrier ailleurs |
 | `unit` | string | `'€'` (montants) | |
 | `allowNull` | bool | `true` (montants) | |
 
-Rendu : `.rbf-input-range`, deux champs en ligne, empilés sous 512 px.
+Rendu : `.rbf-input-range` (un `form-group` avec le libellé), deux champs du type
+voulu (`InputDate` ou `InputMonetary`, chacun avec son `prepend`) nommés `name.from` et
+`name.to`, côte à côte en flex, l'un sous l'autre quand la place manque. Une borne
+absente vaut `''` ; `onClear` d'un champ vide sa borne.
 
 ### `InputPillGroup` — `src/features/basic/InputPillGroup.js`
 

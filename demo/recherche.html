@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -153,8 +153,14 @@
           var moy = React.useState([5]);
           var kind = React.useState('');
           var kind2 = React.useState('once');
+          var pay = React.useState(['2025-01-01', '2025-12-31']);
+          var amount = React.useState(['', '']);
+          var friend = React.useState(['', '']);
 
-          var state = { categories: cat[0], moyens: moy[0], don: kind[0], don_vide_possible: kind2[0] };
+          var state = {
+            categories: cat[0], moyens: moy[0], don: kind[0], don_vide_possible: kind2[0],
+            paiement: pay[0], montant: amount[0], ami: friend[0]
+          };
 
           return e(
             'div',
@@ -190,6 +196,27 @@
                   allowEmpty: true, help: 'Taille normale, thème primary',
                   size: null, theme: 'primary',
                   onChange: function(ev) { kind2[1](ev.target.value); }
+                })
+              )
+            ),
+            card(
+              'Étape 1 · InputDateRange / InputAmountRange',
+              'Plages',
+              'Deux champs, une seule valeur [de, à] : la forme du « entre » du modèle. Les dates sont le champ date de la lib (masque + calendrier) ; le montant affiche lui-même le €. Une seule borne suffit (gte ou ltwe).',
+              e('div', null,
+                e(RBF.InputDateRange, {
+                  name: 'don_real', label: 'Paiement', value: pay[0],
+                  calIcon: icon('calendar', 16), delIcon: icon('close', 14),
+                  onChange: function(ev) { pay[1](ev.target.value); }
+                }),
+                e(RBF.InputAmountRange, {
+                  name: 'don_mnt', label: 'Montant', value: amount[0],
+                  onChange: function(ev) { amount[1](ev.target.value); }
+                }),
+                e(RBF.InputDateRange, {
+                  name: 'spo_ts', label: 'Ami enregistré', value: friend[0], help: 'Une seule borne suffit.',
+                  calIcon: icon('calendar', 16), delIcon: icon('close', 14),
+                  onChange: function(ev) { friend[1](ev.target.value); }
                 })
               )
             ),

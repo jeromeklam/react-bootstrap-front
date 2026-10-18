@@ -41,7 +41,8 @@ graphiques sont commités après validation sur l'aperçu.
 | — | `fe22917` | Étude, contrat des composants, feuille de route | — |
 | 1 | `d4e3cb4` | Modèle `Filter` : tests dorés, `clone` profond, `removeAll`, `replaceFilter`, `setFilterValues`, `setFilterRange`, `getFilters` / `getValues` / `hasFilter`, `toPlain` / `fromPlain`, correction `locAction` | relecture |
 | 1 | `c4073bd` | `Col`, `Chip`, `InputSegmented`, `InputPillGroup`, tests, contrat mis à jour | **18/10/2026** sur l'aperçu |
-| 1 | ce commit | Aperçu `demo/recherche.html`, anti-cache et erreurs affichées dans la page, `MAP` de `demo/build.js` | — |
+| 1 | `34cc1da` | Aperçu `demo/recherche.html`, anti-cache et erreurs affichées dans la page, `MAP` de `demo/build.js` | — |
+| 1 | ce commit | `InputRange` interne, `InputDateRange`, `InputAmountRange`, tests, carte « Plages » de l'aperçu | **18/10/2026** sur l'aperçu |
 
 État de la suite de tests avant ces travaux : 71 suites rouges sur 118 (snapshots
 obsolètes, rendus cassés depuis la migration). Critère retenu : **aucune suite verte ne

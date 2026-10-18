@@ -34,6 +34,8 @@ export { default as InputPicker } from "./features/basic/InputPicker";
 export { default as ButtonPicker } from "./features/basic/ButtonPicker";
 export * from "./features/basic/InputRadio";
 export * from "./features/basic/InputSegmented";
+export { default as InputDateRange } from "./features/basic/InputDateRange";
+export { default as InputAmountRange } from "./features/basic/InputAmountRange";
 export * from "./features/basic/InputPillGroup";
 export * from "./features/basic/InputRandomText";
 export { default as InputSelect } from "./features/basic/InputSelect";
