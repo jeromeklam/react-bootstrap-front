@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Filter, FILTER_MODE_AND, FILTER_OPER_LIKE, FILTER_OPER_EQUAL } from '../../../src/features/filter';
+import { Col } from '../../../src/features/grid';
 import { SearchForm, SearchFormSection, SearchFormField, SearchFormFooter, SearchSummary, InputNaturalSearch } from '../../../src/features/search';
 import { donorCatalog } from './fixtures';
 
@@ -58,6 +59,11 @@ test('section : champs résolus, inconnu écarté avec avertissement, largeurs',
   );
   expect(stacked.find('.w-100').length).toBe(2);
   expect(stacked.find(SearchFormField).length).toBe(3);
+  /* Grille par palier, sans cumul : chaque colonne porte les six tailles. */
+  const sizes = stacked.find(Col).map(c => Object.keys(c.prop('size')).join(','));
+  expect(sizes.every(keys => keys === 'xxs,xs,sm,md,lg,xl')).toBe(true);
+  expect(stacked.find(Col).at(0).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 8, md: 6, lg: 6, xl: 5 });
+  expect(stacked.find(Col).at(2).prop('size')).toEqual({ xxs: 36, xs: 36, sm: 15, md: 15, lg: 15, xl: 15 });
   const custom = shallow(<SearchFormSection label="Libre"><b>libre</b></SearchFormSection>);
   expect(custom.find(SearchFormField).length).toBe(0);
   expect(custom.find('b').text()).toBe('libre');
