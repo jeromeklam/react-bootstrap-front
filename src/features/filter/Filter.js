@@ -8,7 +8,26 @@ import {
   FILTER_SEARCH_NONE,
   FILTER_OPER_EQUAL,
   FILTER_OPER_BETWEEN,
+  FILTER_OPER_GREATER_OR_EQUAL,
+  FILTER_OPER_LOWER_OR_EQUAL,
 } from './';
+
+/* Clé d'une valeur supplémentaire d'un critère (les « ou »), comme le fait le
+   panneau de filtres avec randomString(8). */
+const newKey = () => Math.random().toString(16).substring(2, 10);
+
+const hasValue = value => value !== null && typeof value !== 'undefined' && value !== '';
+
+/* Insère un critère, à la place de l'ancien s'il existe : l'ordre d'affichage
+   (pastilles, lignes) ne bouge pas quand on modifie un critère. */
+const putElem = (filter, elt) => {
+  const index = filter.data.filters.findIndex(e => e.getFilterName() === elt.getFilterName());
+  if (index >= 0) {
+    filter.data.filters.splice(index, 1, elt);
+  } else {
+    filter.data.filters.push(elt);
+  }
+};
 
 /**
  * Manage filters
@@ -112,7 +131,7 @@ export default class Filter {
         this.data.filter_crits.between = value;
         break;
       default:
-        this.data.filter_crits[action] = value;
+        this.data.filter_crits[locAction] = value;
         break;
     }
   }
@@ -218,6 +237,125 @@ export default class Filter {
     return this.data.filters.find(elt => elt.getFilterName() === name && elt.isEnable());
   }
 
+  hasFilter(name) {
+    return this.data.filters.some(elt => elt.getFilterName() === name);
+  }
+
+  /* Les critères, sans toucher à data. Par défaut : les actifs, hors fixes. */
+  getFilters({ enabledOnly = true, fixed = false, default: withDefault = true } = {}) {
+    return this.data.filters.filter(
+      elt => (!enabledOnly || elt.isEnable()) && (fixed || !elt.isFixed()) && (withDefault || !elt.isDefault())
+    );
+  }
+
+  /* Les valeurs d'un critère : default, between, puis les « ou ». */
+  getValues() {
+    const crits = this.data.filter_crits;
+    const values = [];
+    if (typeof crits.default !== 'undefined') {
+      values.push(crits.default);
+    }
+    if (typeof crits.between !== 'undefined') {
+      values.push(crits.between);
+    }
+    Object.keys(crits).forEach(key => {
+      if (key !== 'default' && key !== 'between') {
+        values.push(crits[key]);
+      }
+    });
+    return values;
+  }
+
+  /* « Tout effacer » : les critères fixes et par défaut restent. */
+  removeAll({ keepFixed = true, keepDefault = true } = {}) {
+    this.data.filters = this.data.filters.filter(
+      elt => (keepFixed && elt.isFixed()) || (keepDefault && elt.isDefault())
+    );
+  }
+
+  /* Remplace le critère d'un champ sans repasser par init(). Plusieurs valeurs
+     sortent jointes par des virgules, comme avec addFilter + updateFilter. Sans
+     valeur (hors empty / nempty), le critère est retiré. */
+  replaceFilter(name, values = [], oper = FILTER_OPER_EQUAL, { fixed = false, default: def = false, enable = true } = {}) {
+    const list = (Array.isArray(values) ? values : [values]).filter(hasValue);
+    if (oper === FILTER_OPER_BETWEEN) {
+      this.setFilterRange(name, list[0], list[1], { fixed, default: def, enable });
+      return;
+    }
+    const noValue = oper === FILTER_OPER_EMPTY || oper === FILTER_OPER_NOT_EMPTY;
+    if (list.length === 0 && !noValue) {
+      this.data.filters = this.data.filters.filter(elt => elt.getFilterName() !== name);
+      return;
+    }
+    const elt = new Filter();
+    elt.setFilterName(name, fixed, def, enable);
+    elt.setOperator(oper);
+    if (!noValue) {
+      list.forEach((value, i) => {
+        elt.setFilterCrit(value, oper, i === 0 ? 'default' : newKey());
+      });
+    }
+    putElem(this, elt);
+  }
+
+  setFilterValues(name, values = [], oper = FILTER_OPER_EQUAL, flags = {}) {
+    this.replaceFilter(name, values, oper, flags);
+  }
+
+  /* Deux bornes → between, une seule → gte ou ltwe, aucune → retrait. */
+  setFilterRange(name, from, to, { fixed = false, default: def = false, enable = true } = {}) {
+    if (!hasValue(from) && !hasValue(to)) {
+      this.data.filters = this.data.filters.filter(elt => elt.getFilterName() !== name);
+      return;
+    }
+    const elt = new Filter();
+    elt.setFilterName(name, fixed, def, enable);
+    if (hasValue(from) && hasValue(to)) {
+      elt.setFilterCrit(from, FILTER_OPER_BETWEEN, 'default');
+      elt.setFilterCrit(to, false, 'between');
+    } else if (hasValue(from)) {
+      elt.setFilterCrit(from, FILTER_OPER_GREATER_OR_EQUAL);
+    } else {
+      elt.setFilterCrit(to, FILTER_OPER_LOWER_OR_EQUAL);
+    }
+    putElem(this, elt);
+  }
+
+  /* Forme simple, sérialisable en JSON : recherches sauvegardées, résultat d'une
+     interprétation en langage naturel, fixtures de tests. */
+  toPlain() {
+    return {
+      mode: this.data.mode,
+      operator: this.data.operator,
+      search: this.data.search,
+      filters: this.data.filters.map(elt => {
+        const oper = elt.getOperator();
+        const noValue = oper === FILTER_OPER_EMPTY || oper === FILTER_OPER_NOT_EMPTY;
+        return {
+          name: elt.getFilterName(),
+          operator: oper,
+          values: noValue ? [] : elt.getValues(),
+          fixed: elt.isFixed(),
+          default: elt.isDefault(),
+          enable: elt.isEnable(),
+        };
+      }),
+    };
+  }
+
+  static fromPlain(plain = {}) {
+    const filter = new Filter();
+    filter.init(plain.mode || FILTER_MODE_OR, plain.operator || FILTER_OPER_LIKE);
+    if (plain.search) {
+      filter.setSearch(plain.search);
+    }
+    (plain.filters || []).forEach(p => {
+      const flags = { fixed: !!p.fixed, default: !!p.default, enable: p.enable !== false };
+      filter.replaceFilter(p.name, p.values, p.operator || FILTER_OPER_EQUAL, flags);
+    });
+    return filter;
+  }
+
   asJsonApiObject() {
     let params = {};
     let crits = {};
@@ -280,10 +418,17 @@ export default class Filter {
     return params;
   }
 
-  clone() {
+  /* Copie profonde par défaut : les critères du clone sont les siens, un
+     brouillon de panneau ne modifie plus le filtre d'origine. clone(false)
+     garde l'ancienne copie superficielle. */
+  clone(deep = true) {
     let newFilter = new Filter();
-    const datas = this.data;
-    newFilter.data = { ...datas };
+    newFilter.data = { ...this.data };
+    if (deep) {
+      newFilter.data.filter_crits = { ...this.data.filter_crits };
+      newFilter.data.origs = [...(this.data.origs || [])];
+      newFilter.data.filters = (this.data.filters || []).map(elt => elt.clone(true));
+    }
     return newFilter;
   }
 
