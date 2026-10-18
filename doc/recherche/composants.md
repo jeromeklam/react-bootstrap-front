@@ -17,7 +17,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 |---|---|---|
 | `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `InputDateRange`, `InputAmountRange` | 1 | **validé le 18/10/2026** sur l'aperçu |
-| `SearchSummary` | 1 | proposé, à valider |
+| `SearchSummary` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `InputNaturalSearch` (variante `card`) | 1 | proposé, à valider |
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
@@ -238,28 +238,49 @@ pour `empty` / `nempty`), `isRange(oper)`, `defaultOperatorForType(type)`,
 
 ### `criteria.js`
 
-- `filterToCriteria(filter, catalog)` → `[{ id, name, operator, values }]`, champs
-  virtuels compris (`fromFilter`).
-- `criteriaToFilter(rows, mode, catalog, base)` : `base.clone()` profond,
-  `removeAll()`, `setMode(mode)`, puis pour chaque ligne `setFilterValues`,
-  `setFilterRange`, `addFilter(name, null, 'empty')` ou `field.toFilter`. Les lignes
-  sans valeur (hors `empty` / `nempty`) sont ignorées ; un champ en double est refusé.
-- `valuesToFilter(values, catalog, base)` et `filterToValues(filter, catalog)` :
-  l'aller-retour du formulaire (A).
+L'aller-retour du formulaire (étape 1) :
+
+- `valuesToFilter(values, catalog, base, { mode })` : `newFilter(base, mode)` (copie
+  profonde de `base` vidée de tout sauf ses fixes et défauts, ou filtre neuf en mode
+  ET), puis pour chaque champ du catalogue, **dans l'ordre du catalogue** : virtuel →
+  `field.toFilter(valeur, filtre, champ)` (appelé même sans valeur, pour retirer) ;
+  plage (`widget` `*-range`, ou type date / monétaire / nombre avec `between` par
+  défaut) → `setFilterRange` ; multiple (`widget: 'pills'`, select multiple) →
+  `setFilterValues` (`eq` ou `in` selon `multiOperator`) ; texte →
+  `replaceFilter(nom, [valeur], defaultOperator)` ; sinon `eq`. Une valeur vide ne crée
+  rien.
+- `filterToValues(filter, catalog)` : l'inverse ; une plage en `gte` donne `[de, '']`,
+  en `ltwe` `['', à]` ; `empty` / `nempty` n'ont pas de valeur de formulaire ; les
+  virtuels passent par `fromFilter`.
+- `hasValue`, `isRangeField(field)`, `isMultiField(field)`, `newFilter(base, mode)`.
+
+Pour le tiroir (étape 3) : `filterToCriteria(filter, catalog)` → `[{ id, name,
+operator, values }]`, et `criteriaToFilter(rows, mode, catalog, base)` ; les lignes sans
+valeur (hors `empty` / `nempty`) sont ignorées, un champ en double est refusé.
 
 ### `filterToSentence.js`
 
-- `filterToFragments(filter, catalog, t)` → `[{ name, label, operator, valueText,
-  text, bold }]` pour chaque ELEM activé non fixe (regroupés par champ virtuel).
-- `filterToSentence(filter, catalog, t, { subject })` → chaîne.
-- Règles : `valueText` par `format` ou par type (`displayDate`, `displayMonetary`,
-  libellé d'option, Oui / Non) ; plusieurs valeurs « A, B ou C » ; `between` →
-  « entre le A et le B » ou « entre A et B € » ; `empty` → « sans {label} »,
-  `nempty` → « avec {label} » ; gabarit « dont {phrase.label ?? label}
-  {operatorPhrase} {valueText} », remplaçable par `phrase[oper]`. Sujet =
-  `subject`, ou la réponse d'un `subjectFor`. Connecteur du mode avant le dernier
-  fragment.
-- Fixtures : les deux phrases des maquettes, mot pour mot.
+- `filterToFragments(filter, catalog, t, { withDefaults })` → un fragment par critère
+  actif non fixe, dans l'ordre des critères du filtre : `{ name, label, operator,
+  value, parts: [{ text, bold? }], text }`. Les champs virtuels regroupent leurs noms
+  (`fromFilter` puis `toText`, qui rend une chaîne ou des `parts`) ; un nom hors
+  catalogue donne « nom opérateur valeur ».
+- `filterToSentenceParts(filter, catalog, t, { subject, withDefaults })` → les parties
+  de la phrase complète, sujet en tête (`bold`, `subject: true`), ou `null` sans
+  critère ; `filterToSentence(...)` → la chaîne.
+- Règles : valeur par `field.format(valeur, champ)` sinon par type (`formatDate`
+  jj/mm/aaaa, `formatAmount` « 12,5 € » avec `field.unit`, libellé d'option, oui / non) ;
+  plusieurs valeurs « A, B ou C » ; `between` → « dont {label} est entre le {from} et
+  le {to} » (dates) ou « … entre {from} et {to} » ; `empty` → « sans {label} »,
+  `nempty` → « avec {label} » ; sinon « dont {label} {operatorPhrase} {value} » ;
+  `label` = `phrase.label` sinon le libellé en minuscules ; `phrase[oper]` remplace le
+  gabarit entier (jetons `{label}`, `{value}`, `{from}`, `{to}`). Les valeurs sont les
+  parties en gras. Sujet = premier `subjectFor` qui répond (son critère sort de la
+  phrase), sinon `subject`, sinon « Résultats ». Fragments séparés par des virgules ;
+  en mode OU, « ou » avant le dernier. Point final.
+- Les gabarits passent par `t` avec leurs jetons comme valeurs (un `formatMessage` les
+  rend tels quels, `rbfIntl` les ignore) ; `renderTemplate(texte, vars)` est exporté.
+- Fixtures de tests : les deux phrases des maquettes, mot pour mot.
 
 ## Composites — `src/features/search/`
 

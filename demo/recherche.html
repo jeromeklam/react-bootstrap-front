@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -137,6 +137,29 @@
           { value: 'once', label: 'Ponctuel' }
         ];
 
+        /* Le catalogue de la démo : ce qu'admin construira depuis son getCols,
+           avec les tournures de la phrase en clair. */
+        var CATALOG = RBF.normalizeCatalog([
+          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills',
+            phrase: { eq: 'de catégorie {value}' },
+            subjectFor: function(values) { return values.length === 1 && String(values[0]) === '6' ? 'Particuliers' : null; } },
+          { name: 'don_kind', virtual: true, label: 'Don', widget: 'segmented', options: DON, fields: ['donations.sponsorship.spo_id'],
+            toFilter: function(v, f) {
+              f.removeFilter('donations.sponsorship.spo_id');
+              if (v === 'regular') { f.addFilter('donations.sponsorship.spo_id', null, RBF.FILTER_OPER_NOT_EMPTY); }
+              if (v === 'once') { f.addFilter('donations.sponsorship.spo_id', null, RBF.FILTER_OPER_EMPTY); }
+            },
+            fromFilter: function(f) { var e = f.findFirst('donations.sponsorship.spo_id'); return !e ? '' : e.getOperator() === RBF.FILTER_OPER_NOT_EMPTY ? 'regular' : 'once'; },
+            toText: function(v) { return v === 'regular' ? 'réguliers' : v === 'once' ? 'ponctuels' : ''; } },
+          { name: 'donations.don_real_ts', label: 'Paiement', type: 'date', widget: 'date-range',
+            phrase: { between: 'ayant payé entre le {from} et le {to}' } },
+          { name: 'donations.don_mnt_input', label: 'Montant', type: 'monetary', widget: 'amount-range', phrase: { label: 'le montant' } },
+          { name: 'donations.payment_type.ptyp_id', label: 'Moyen de paiement', type: 'select', options: MOYENS, widget: 'pills',
+            format: function(v, field) { var o = field.options.find(function(x) { return String(x.value) === String(v); }); return o ? o.label.toLowerCase() : String(v); },
+            phrase: { eq: 'par {value}' } },
+          { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' } }
+        ]);
+
         function card(step, title, hint, children) {
           return e(
             'div',
@@ -161,6 +184,15 @@
             categories: cat[0], moyens: moy[0], don: kind[0], don_vide_possible: kind2[0],
             paiement: pay[0], montant: amount[0], ami: friend[0]
           };
+          var values = {
+            'client_category.clic_id': cat[0],
+            'donations.payment_type.ptyp_id': moy[0],
+            don_kind: kind[0],
+            'donations.don_real_ts': pay[0],
+            'donations.don_mnt_input': amount[0],
+            'sponsorships.spo_ts': friend[0]
+          };
+          var filter = RBF.valuesToFilter(values, CATALOG);
 
           return e(
             'div',
@@ -218,6 +250,28 @@
                   calIcon: icon('calendar', 16), delIcon: icon('close', 14),
                   onChange: function(ev) { friend[1](ev.target.value); }
                 })
+              )
+            ),
+            card(
+              'Étape 1 · SearchSummary',
+              'En clair',
+              'La phrase du filtre, calculée en direct depuis les cartes ci-dessus par le catalogue (tournures, sujet « Particuliers » quand seule cette catégorie est cochée). Encart pour le tiroir, variante en ligne pour le pied de la fiche.',
+              e('div', null,
+                e(RBF.SearchSummary, { filter: filter, catalog: CATALOG, subject: 'Donateurs' }),
+                e('div', { className: 'mt-3 p-2 border rounded d-flex justify-content-between align-items-center bg-light' },
+                  e(RBF.SearchSummary, { variant: 'inline', filter: filter, catalog: CATALOG, subject: 'Donateurs' }),
+                  e('span', { className: 'text-nowrap ml-3' },
+                    e('a', { href: '#', className: 'btn btn-link btn-sm', onClick: function(ev) { ev.preventDefault(); cat[1]([]); moy[1]([]); kind[1](''); pay[1](['', '']); amount[1](['', '']); friend[1](['', '']); } }, 'Tout effacer'),
+                    e('button', { type: 'button', className: 'btn btn-primary btn-sm' }, 'Voir les donateurs')
+                  )
+                ),
+                e('p', { className: 'demo-hint mt-3 mb-1' }, 'Ce que recevrait l’API :'),
+                e('div', { className: 'demo-out' }, JSON.stringify(filter.asJsonApiObject(), function(k, v) {
+                  if (Array.isArray(v) && Object.keys(v).some(function(key) { return isNaN(key); })) {
+                    var o = {}; Object.keys(v).forEach(function(key) { o[key] = v[key]; }); return o;
+                  }
+                  return v;
+                }, 2))
               )
             ),
             card(
