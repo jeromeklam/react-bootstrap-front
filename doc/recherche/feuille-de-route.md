@@ -48,7 +48,7 @@ graphiques sont commités après validation sur l'aperçu.
 | 1 | `70fbbfa` | `criteria.js` (`valuesToFilter` / `filterToValues`), `filterToSentence.js`, `SearchSummary`, fixtures avec les deux phrases des maquettes, carte « En clair » de l'aperçu | **18/10/2026** sur l'aperçu |
 | 1 | `cd06e31` | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
 | 1 | `0f49015` | `SearchForm`, `SearchFormSection`, `SearchFormField` (`widgetFor`, `widthFor`), `SearchFormFooter`, `SearchForm.scss`, fiche complète en tête de l'aperçu | **18/10/2026** sur l'aperçu |
-| 1 | ce commit | Version 3.12.0 : `CHANGELOG`, `package.json`, `package-lock.json`, build et tests de garde. **Reste à publier sur npm** avant qu'admin ne la référence. Les pages `doc/basic/` des nouvelles briques ne sont pas créées : `composants.md` fait foi. | — |
+| 1 | `70c7ad7` | Version 3.12.0 : `CHANGELOG`, `package.json`, `package-lock.json`, build et tests de garde. **Reste à publier sur npm** avant qu'admin ne la référence. Les pages `doc/basic/` des nouvelles briques ne sont pas créées : `composants.md` fait foi. | — |
 
 Remarque du 18/10/2026 à la validation des premières briques : « globalement pas mal,
 quelques petits soucis de centrage ». À reprendre composant par composant lors du test
@@ -88,6 +88,11 @@ nouvelles sont vertes.
 | 9 | Livraison | Exports dans `src/index.js`, `search/style.scss` dans `src/styles/index.scss`, `SUMMARY.md`, `CHANGELOG`, `package.json` 3.12.0, `npm run build`, `npm test`, publication. |
 
 ### Administration Kalaweit
+
+En cours sur la branche locale `recherche` d'admin (18/10/2026) : `icons/Sparkle.js`,
+`client/searchCatalog.js`, `client/SearchPage.js` branchée sur `client/search`,
+`SimpleSearch.js` conservé. Test réel et validation à faire ; `package.json` ne
+référencera `^3.12.0` qu'après la publication npm.
 
 - `src/features/icons/Sparkle.js` (`mdiCreation`) ; un sac d'icônes `ui/searchIcons.js`
   (étincelle, calendrier, croix, coche, plus, corbeille, chevron).
