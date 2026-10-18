@@ -44,7 +44,13 @@ graphiques sont commités après validation sur l'aperçu.
 | 1 | `34cc1da` | Aperçu `demo/recherche.html`, anti-cache et erreurs affichées dans la page, `MAP` de `demo/build.js` | — |
 | 1 | `a9d83b0` | `InputRange` interne, `InputDateRange`, `InputAmountRange`, tests, carte « Plages » de l'aperçu | **18/10/2026** sur l'aperçu |
 | 1 | `279776b` | Aperçu : feuilles `@import` inlinées, le calendrier retrouve son style | — |
-| 1 | ce commit | `search/i18n.js` (`tr`, `warnOnce`), `operators.js` (matrice, libellés, tournures), `catalog.js` (`catalogFromCols`, `fieldOwning`…), clés `rbf.filter.oper.*`, `search/style.scss` branché | relecture |
+| 1 | `4320792` | `search/i18n.js` (`tr`, `warnOnce`), `operators.js` (matrice, libellés, tournures), `catalog.js` (`catalogFromCols`, `fieldOwning`…), clés `rbf.filter.oper.*`, `search/style.scss` branché | relecture |
+| 1 | `70fbbfa` | `criteria.js` (`valuesToFilter` / `filterToValues`), `filterToSentence.js`, `SearchSummary`, fixtures avec les deux phrases des maquettes, carte « En clair » de l'aperçu | **18/10/2026** sur l'aperçu |
+| 1 | ce commit | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
+
+Remarque du 18/10/2026 à la validation des premières briques : « globalement pas mal,
+quelques petits soucis de centrage ». À reprendre lors de la revue de la fiche complète
+(étape 1, dernière brique), composant par composant, avec les vraies icônes d'admin.
 
 État de la suite de tests avant ces travaux : 71 suites rouges sur 118 (snapshots
 obsolètes, rendus cassés depuis la migration). Critère retenu : **aucune suite verte ne
@@ -153,6 +159,7 @@ nouvelles sont vertes.
 ### Backend puis administration
 
 - Un endpoint, par exemple `POST /v1/asso/client/search/interpret`, qui reçoit
+- **La boucle de vérification** est le cœur de l'étape : le LLM reçoit `catalogToJson()`, répond un `PlainFilter` que `Filter.fromPlain()` relit, la fiche affiche les critères obtenus **et** la phrase « EN CLAIR » les redit en français ; l'utilisateur vérifie que ce qu'il a demandé correspond, corrige si besoin, puis lance. Les morceaux de phrase non compris remontent dans `warnings`. Rien n'est lancé automatiquement.
   `{ phrase, catalog }` (`catalogToJson()`, sans fonctions) et rend un `PlainFilter`.
 - `onNaturalLanguage` fourni à la fiche (« Remplir les critères ») et à la barre
   d'en-tête ; Entrée bascule alors vers le langage naturel, la recherche rapide devient

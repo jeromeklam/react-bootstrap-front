@@ -18,7 +18,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `Chip` (variante `toggle`), `InputSegmented`, `InputPillGroup` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `InputDateRange`, `InputAmountRange` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `SearchSummary` | 1 | **validé le 18/10/2026** sur l'aperçu |
-| `InputNaturalSearch` (variante `card`) | 1 | proposé, à valider |
+| `InputNaturalSearch` (variantes `card` et `bar`) | 1 | **validé le 18/10/2026** sur l'aperçu ; centrage à reprendre à la revue de la fiche |
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | proposé, à valider |
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
 | `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
@@ -349,23 +349,28 @@ défilant de `DefaultContent`.
 | `value` / `defaultValue` | string | | |
 | `placeholder` | string | | |
 | `sparkleIcon` | element, req. | | |
-| `kbdHint` | string \| false | « Entrée » | Indication clavier à droite |
+| `kbdHint` | string \| false | « Entrée » (`rbf.search.natural.kbd`) | Indication clavier à droite, un `badge badge-light` Bootstrap |
 | `variant` | `'bar'` \| `'card'` | `'bar'` | En-tête de liste ou carte de la fiche |
 | `submitLabel` | string | « Remplir les critères » | Variante `card` |
 | `hint` | node | | Sous le champ, variante `card` |
-| `onNaturalLanguage` | func | | `(phrase, { catalog, filter, locale }) => Promise<Result>` |
+| `onNaturalLanguage` | func | | `(phrase, { ...context, phrase }) => Promise<Result>`, appelé immédiatement |
+| `context` | object | `{}` | Ce que reçoit le service en plus de la phrase : `catalog` (`catalogToJson`), `filter`, `locale`… |
+| `onChange` | func | | `{ target: { name, value } }` à chaque frappe ; `value` rend le champ contrôlé |
 | `comingSoon` | bool | `!onNaturalLanguage` | |
 | `comingSoonMessage` | string | « Recherche en langage naturel : en construction pour l'instant » | |
 | `onComingSoon` | func | | Pour compter les essais, si l'application le souhaite |
 | `pending` | bool | | Contrôlable, sinon interne |
-| `onResult`, `onError` | func | | |
+| `onResult`, `onError` | func | | `(result, phrase)` / `(error, phrase)` ; en erreur, une notice s'affiche aussi |
 | `onQuickSearch` | func | | `(texte, mode)` : repli sur la recherche rapide actuelle. Tant que `comingSoon`, **Entrée appelle `onQuickSearch`** et le bouton étincelle montre la notice |
 | `size` | string | | |
 
-Rendu : `form.rbf-natural-search > .input-group` : étincelle en préfixe, champ,
-`kbd.rbf-kbd` ou `SmLoading3Dots` en attente ; notice `.rbf-natural-search-notice[role=status]`
-qui disparaît après quelques secondes. La variante `card` ajoute le bouton
-`btn-primary` et la ligne d'indication.
+Rendu : `form.rbf-natural-search > .input-group` : l'étincelle en préfixe
+(`btn-outline-secondary bg-light`, elle lance l'interprétation ou montre la notice),
+le champ, puis le badge « Entrée » ou `SmLoading3Dots` en attente ; notice
+`small.form-text.text-warning[role=status]` sous le champ, effacée après 4 s. La
+variante `card` enferme le tout dans un bloc `border rounded bg-white` avec le bouton
+`btn-primary` « Remplir les critères », l'indication `hint` en dessous. Classes
+Bootstrap seulement, aucun SCSS. Une phrase vide n'appelle pas le service.
 
 Résultat attendu, figé dès l'étape 1 :
 

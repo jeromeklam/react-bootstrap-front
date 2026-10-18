@@ -103,17 +103,18 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
         });
 
         /* Icône MDI en SVG inline : évite de dépendre de @mdi/react ici. */
+        /* Même alignement que les icônes MDI d'admin, sinon elles flottent dans les boutons. */
         function icon(name, size) {
           return e(
             'svg',
-            { viewBox: '0 0 24 24', width: size || 16, height: size || 16 },
+            { viewBox: '0 0 24 24', width: size || 16, height: size || 16, style: { verticalAlign: 'middle', display: 'inline-block' } },
             e('path', { d: window.DEMO_ICON_PATHS[name], fill: 'currentColor' })
           );
         }
@@ -176,6 +177,8 @@
           var moy = React.useState([5]);
           var kind = React.useState('');
           var kind2 = React.useState('once');
+          var phrase = React.useState('particuliers qui ont donné par chèque en 2025 pour la forêt');
+          var quick = React.useState('');
           var pay = React.useState(['2025-01-01', '2025-12-31']);
           var amount = React.useState(['', '']);
           var friend = React.useState(['', '']);
@@ -197,6 +200,27 @@
           return e(
             'div',
             null,
+            card(
+              'Étape 1 · InputNaturalSearch',
+              'Recherche en langage naturel — « en construction »',
+              'Aucun service n’est branché : l’étincelle et « Remplir les critères » affichent une notice, rien d’autre. La variante barre (pour l’en-tête de liste, étape 2) garde la recherche rapide actuelle sur Entrée.',
+              e('div', null,
+                e(RBF.InputNaturalSearch, {
+                  variant: 'card', sparkleIcon: icon('sparkle', 16), value: phrase[0],
+                  placeholder: 'Décrivez les donateurs recherchés',
+                  hint: 'Les critères ci-dessous seront remplis depuis votre phrase. Vérifiez-les avant de lancer.',
+                  onChange: function(ev) { phrase[1](ev.target.value); }
+                }),
+                e('div', { className: 'mt-3', style: { maxWidth: '560px' } },
+                  e(RBF.InputNaturalSearch, {
+                    variant: 'bar', sparkleIcon: icon('sparkle', 16), value: quick[0],
+                    placeholder: 'Rechercher par nom, prénom ou e-mail…',
+                    onChange: function(ev) { quick[1](ev.target.value); },
+                    onQuickSearch: function(text, mode) { alert('Recherche rapide actuelle : « ' + text + ' » (' + mode + ')'); }
+                  })
+                )
+              )
+            ),
             card(
               'Étape 1 · InputPillGroup',
               'Pastilles à bascule',

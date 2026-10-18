@@ -4,3 +4,4 @@ export * from './catalog';
 export * from './criteria';
 export * from './filterToSentence';
 export { default as SearchSummary } from './SearchSummary';
+export { default as InputNaturalSearch } from './InputNaturalSearch';
