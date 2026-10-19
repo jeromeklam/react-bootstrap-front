@@ -5,7 +5,9 @@ import { rbfIntl } from '../intl';
 import { SmLoading3Dots } from '../spinner';
 import { Dropdown } from '../basic';
 import { tr } from './i18n';
+import { criteriaToFilter } from './criteria';
 import NaturalVocabularyForm from './NaturalVocabularyForm';
+import SearchSummary from './SearchSummary';
 
 /**
  * La barre de recherche en langage naturel : une étincelle, une phrase, une
@@ -85,7 +87,7 @@ export default class InputNaturalSearch extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null, warnings: [], unmatched: [], explaining: null, panel: false };
+    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null, warnings: [], unmatched: [], interpreted: null, explaining: null, panel: false };
     this.timer = null;
     this.groupRef = React.createRef();
     this.onChange = this.onChange.bind(this);
@@ -171,7 +173,7 @@ export default class InputNaturalSearch extends Component {
       return;
     }
     this.notify(null);
-    this.setState({ pending: true, warnings: [], unmatched: [], explaining: null, panel: false });
+    this.setState({ pending: true, warnings: [], unmatched: [], interpreted: null, explaining: null, panel: false });
     let promise;
     try {
       promise = Promise.resolve(onNaturalLanguage(text, { ...context, phrase: text }));
@@ -185,7 +187,11 @@ export default class InputNaturalSearch extends Component {
         }
         const warnings = this.props.showWarnings && result && Array.isArray(result.warnings) ? result.warnings : [];
         const unmatched = this.props.vocabulary && result && Array.isArray(result.unmatched) ? result.unmatched : [];
-        this.setState({ pending: false, warnings, unmatched, panel: warnings.length > 0 || unmatched.length > 0 });
+        /* Avec un vocabulaire, le panneau s'ouvre après chaque interprétation : ce qui a
+           été compris, en clair, et de quoi expliquer un mot — même quand tout semble
+           aller (« un gibbon » pris pour le nom d'un animal ne lève aucun avertissement). */
+        const interpreted = this.props.vocabulary && result && Array.isArray(result.criteria) ? result : null;
+        this.setState({ pending: false, warnings, unmatched, interpreted, panel: warnings.length > 0 || unmatched.length > 0 || !!interpreted });
         onResult(result || {}, text);
       })
       .catch(error => {
@@ -233,8 +239,8 @@ export default class InputNaturalSearch extends Component {
   /* Ce qui suit le champ : les avertissements, les liens « Expliquer », ou la fiche
      d'explication. Null s'il n'y a rien à montrer. */
   renderPanel() {
-    const { vocabulary, t, size } = this.props;
-    const { warnings, unmatched, explaining } = this.state;
+    const { vocabulary, variant, t, size } = this.props;
+    const { warnings, unmatched, explaining, interpreted } = this.state;
     if (explaining !== null && vocabulary) {
       return (
         <NaturalVocabularyForm
@@ -250,6 +256,17 @@ export default class InputNaturalSearch extends Component {
           size={size || 'sm'}
           t={t}
         />
+      );
+    }
+    /* Dans la barre, la phrase en clair des seuls critères interprétés : la fiche a
+       déjà la sienne en pied. */
+    let understood = null;
+    if (variant !== 'card' && interpreted && interpreted.criteria.length > 0) {
+      const catalog = this.vocabularyCatalog();
+      understood = (
+        <div className="rbf-natural-search-understood small">
+          <SearchSummary variant="inline" filter={criteriaToFilter(interpreted.criteria, interpreted.mode, catalog)} catalog={catalog} subject={vocabulary.subject || null} withDefaults={false} t={t} />
+        </div>
       );
     }
     const list = warnings.length > 0 && (
@@ -273,11 +290,12 @@ export default class InputNaturalSearch extends Component {
         </button>
       </div>
     );
-    if (!list && !explain) {
+    if (!understood && !list && !explain) {
       return null;
     }
     return (
       <div>
+        {understood}
         {list}
         {explain}
       </div>

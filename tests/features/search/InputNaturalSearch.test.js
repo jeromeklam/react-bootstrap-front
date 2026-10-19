@@ -195,3 +195,26 @@ test('barre : les avertissements vont dans un panneau flottant (Dropdown), Écha
   renderer.act(() => after.props.onKeyDown({ key: 'Escape' }));
   expect(tree.root.findAllByType(Dropdown).length).toBe(0);
 });
+
+test('avec un vocabulaire, le panneau de la barre s’ouvre après chaque interprétation : ce qui a été compris, et « Expliquer un mot… »', async () => {
+  const { Dropdown } = require('../../../src/features/basic');
+  const { normalizeCatalog, naturalToResult } = require('../../../src/features/search');
+  const { donorCatalog } = require('./fixtures');
+  const catalog = normalizeCatalog(donorCatalog());
+  const onNaturalLanguage = jest.fn(() => Promise.resolve(naturalToResult({ c: [{ f: 'Programme', o: 'eq', v: ['Forêt'] }] }, catalog)));
+  const tree = renderer.create(
+    <InputNaturalSearch sparkleIcon={sparkle} onNaturalLanguage={onNaturalLanguage} vocabulary={{ onTry: jest.fn(), onSave: jest.fn(), catalog, subject: 'Donateurs' }} />
+  );
+  type(tree, 'donateurs de la forêt');
+  await renderer.act(async () => {
+    tree.root.findByType('form').props.onSubmit();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(tree.root.findAllByType(Dropdown).length).toBe(1);
+  const understood = tree.root.find(n => typeof n.props.className === 'string' && n.props.className.includes('rbf-natural-search-understood'));
+  const text = node => (typeof node === 'string' ? node : (node.children || []).map(text).join(''));
+  expect(text(understood)).toContain('pour le programme Forêt');
+  expect(tree.root.findAllByType('li').length).toBe(0);
+  expect(tree.root.find(n => n.type === 'button' && n.children.join('') === 'Expliquer un mot…')).toBeTruthy();
+});
