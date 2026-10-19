@@ -9,3 +9,5 @@ export { default as SearchForm } from './SearchForm';
 export { default as SearchFormSection } from './SearchFormSection';
 export { default as SearchFormField, widgetFor, widthFor } from './SearchFormField';
 export { default as SearchFormFooter } from './SearchFormFooter';
+export { default as FacetPopover } from './FacetPopover';
+export { default as SearchChipBar } from './SearchChipBar';

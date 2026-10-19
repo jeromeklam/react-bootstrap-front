@@ -21,7 +21,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `InputNaturalSearch` (variantes `card` et `bar`) | 1 | **validé le 18/10/2026** sur l'aperçu ; centrage à reprendre à la revue de la fiche |
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
-| `FacetPopover`, `SearchChipBar` | 2 | proposé, à valider |
+| `FacetPopover`, `SearchChipBar` | 2 | **validé le 19/10/2026** sur l'aperçu ; la rangée doit pouvoir se masquer (bouton d'en-tête, masquée par défaut) |
 | Emplacement `toolbar` de l'en-tête, `InputNaturalSearch` (variante `bar`) | 2 | proposé, à valider |
 | `Drawer`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | proposé, à valider |
 | `InputNumberRange` | 3 | optionnel, à valider |
@@ -422,24 +422,25 @@ type NaturalLanguageResult = {
 | Prop | Type | Défaut | Rôle |
 |---|---|---|---|
 | `field` | objet du catalogue, req. | | `facet.kind` `'options'` (défaut) ou `'range'` |
-| `value` | array \| `[from, to]` | | |
+| `value` | array \| `[from, to]` | `[]` | |
 | `onApply` | func, req. | | `(value)` |
 | `onClose` | func, req. | | |
 | `myRef` | ref, req. | | La pastille ancre |
 | `align` | string | `'bottom-left'` | |
-| `maxHeight` | number | `360` | |
-| `searchable` | bool | automatique au-delà de 7 options | Champ « Filtrer... » |
-| `showCounts` | bool | `false` | |
-| `icons` | `{ check, calendar, clear }` | | |
+| `maxHeight` | number | `360` | Transmis au `Dropdown` ; la liste défile elle-même à 15 rem |
+| `width` | string | `'18rem'` | |
+| `searchable` | bool | automatique à partir de `searchFrom` (8) options | Champ « Filtrer… », insensible aux accents |
+| `showCounts` | bool | `false` | `option.count` entre parenthèses |
+| `icons` | `{ calendar, clear }` | | Pour la plage de dates |
 
-Rendu : le `Dropdown` existant, utilisé directement avec un état d'ouverture propre
-(pas `DropdownWrapper`, dont `autoClose` ferme à tout clic ; s'il est préféré, passer
-`autoClose={false}`). Contenu `.rbf-facet-popover[role=dialog]` : champ de filtre
-(focus à l'ouverture), liste `.custom-scrollbar` de `custom-control custom-checkbox`
-Bootstrap (libellés cliquables, contrairement à `SvgCheckbox`), pied avec le compteur
-(`field.facet.countLabel(n)` ou « {n} valeurs ») et le bouton « Appliquer ». Entrée
-dans le champ = Appliquer, Échap = fermer sans appliquer. Variante `range` :
-`InputDateRange` ou `InputAmountRange` + Appliquer. Sur mobile `calc(100vw - 16px)`.
+Rendu : le `Dropdown` existant, utilisé directement (il place, retourne, se ferme au
+clic extérieur). Contenu `.rbf-facet-popover-body[role=dialog]` : champ de filtre
+(focus à l'ouverture), liste `custom-checkbox` Bootstrap (libellés cliquables), pied
+avec le compteur (`field.facet.countLabel(n)` ou « {n} sélectionnée(s) ») et
+« Appliquer ». Rien n'est émis avant « Appliquer » ou Entrée ; Échap ferme sans
+appliquer. `multiple: false` → un seul choix. Variante `range` : `InputDateRange`, ou
+`InputAmountRange` pour un montant ou un nombre. `FacetPopover.scss` : une règle (la
+liste défile).
 
 ### `SearchChipBar` (écran B)
 
@@ -448,20 +449,24 @@ dans le champ = Appliquer, Échap = fermer sans appliquer. Variante `range` :
 | `filter` | `Filter`, req. | | Lu, jamais modifié |
 | `catalog` | array, req. | | |
 | `onChange` | func, req. | | `(nouveauFilter)` |
-| `facets` | `[names]` | champs à `facet`, triés | |
+| `facets` | `[names]` | champs à `facet`, triés par `facet.order` | |
 | `onAddCriterion` | func | | Affiche « + Critère » (étape 3 : ouvre le tiroir) |
-| `onClearAll` | func | | |
+| `onClearAll` | func | | Appelé après « Tout effacer » |
 | `showDefaults` | bool | `false` | Montrer aussi les critères par défaut |
-| `icons` | `{ close, caret, add, check, calendar, clear }` | | |
+| `quickGroup` | string | `'quick'` | Le groupe de la recherche rapide, rendu en une seule pastille « Recherche : … » |
+| `icons` | `{ close, caret, add, calendar, clear }` | | |
 | `className` | string | | |
 
 Comportement : `filter.getFilters({ fixed: false })` → une pastille `active` par
-critère (le champ virtuel propriétaire d'abord, puis le champ réel) ; × →
-`f = filter.clone(); f.removeFilter(name)` (ou `virtual.toFilter('', f)`) →
-`onChange(f)` ; facette appliquée → `f.setFilterValues(...)` ou `f.setFilterRange(...)` ;
-« Tout effacer » → `f.removeAll()` ; le groupe de recherche rapide (`group: 'quick'`)
-apparaît comme une seule pastille « Recherche : … ». Rendu `.rbf-chip-bar` en
-`flex-wrap` ; défilement horizontal sur une ligne sous `container-xs`.
+critère dont le champ n'est pas une facette (« Ville : Metz », « Paiement : 01/01/2025 –
+31/12/2025 », « E-mail : vide », virtuel via `toText`) ; les champs à facette sont
+représentés par leur pastille de facette, avec le compteur de valeurs choisies ; le
+groupe `quickGroup` donne une seule pastille. × → `clone()` + `removeFilter` (ou
+`virtual.toFilter('')`, ou `removeGroup`) → `onChange`. Une facette ouvre son
+`FacetPopover` ancré sur la pastille ; « Appliquer » → `setFilterValues` (`eq`, ou `in`
+si `multiOperator: 'in'`) ou `setFilterRange`. « Tout effacer » → `removeAll()` (les
+fixes et défauts restent), masqué quand le filtre est vide. Rendu `.rbf-chip-bar` en
+`d-flex flex-wrap`, classes Bootstrap seulement.
 
 ### `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` (écran C)
 

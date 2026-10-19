@@ -64,7 +64,9 @@ obsolètes, rendus cassés depuis la migration). Critère retenu : **aucune suit
 passe au rouge**, vérifié par comparaison avant / après à chaque commit ; les suites
 nouvelles sont vertes.
 
-| 2 | ce commit | Modèle `Filter` : extension `group` (`addFilter(…, group)`, `removeGroup`, `getFilters({ group })`, émission `and: { …, or: {…} }`), sortie sans groupe inchangée (tests dorés). **À confirmer côté API** lors du test réel de l'en-tête. | relecture |
+| 2 | `09471f4` | Modèle `Filter` : extension `group` (`addFilter(…, group)`, `removeGroup`, `getFilters({ group })`, émission `and: { …, or: {…} }`), sortie sans groupe inchangée (tests dorés). **À confirmer côté API** lors du test réel de l'en-tête. | relecture |
+
+| 2 | ce commit | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
 
 ## Décisions
 
@@ -72,6 +74,7 @@ nouvelles sont vertes.
 |---|---|
 | `clone()` profond par défaut, ou `cloneDeep()` séparé ? | **Profond par défaut** (18/10/2026) : le seul effet est que « Annuler » dans les 9 panneaux `DefaultPanel` annule vraiment. |
 | Couleurs et formes des pastilles | **Bleu `secondary` par défaut, arrondi en pilule** (18/10/2026) ; le vert `primary` reste aux boutons d'action. |
+| Rangée de critères de l'en-tête | **Masquée par défaut**, affichée / cachée par un bouton de l'en-tête (badge du nombre de critères quand elle est repliée), choix mémorisé (19/10/2026 : « Constance va mettre un peu de temps à trouver l'utilité et au début ça va la gêner »). |
 | Entrée dans la barre de l'en-tête tant que le LLM est en construction ? | Recommandé : Entrée = recherche rapide actuelle, l'étincelle montre la notice. À confirmer à l'étape 2. |
 | L'API accepte-t-elle `filter[and][or][…]` à côté de `filter[and][champ]` ? | À vérifier sur le backend avant l'étape 2 ; conditionne l'extension `group`. |
 

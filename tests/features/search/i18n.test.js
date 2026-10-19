@@ -1,7 +1,8 @@
 import { tr, warnOnce } from '../../../src/features/search';
 
 test('tr avec rbfIntl : valeurs interpolées après coup', () => {
-  expect(tr(undefined, 'rbf.search.facet.count', '{n} valeurs', { n: 16 })).toBe('16 valeurs');
+  expect(tr(undefined, 'rbf.test.inexistante', '{n} valeurs', { n: 16 })).toBe('16 valeurs');
+  expect(tr(undefined, 'rbf.search.facet.count', '{n} valeurs', { n: 16 })).toBe('16 sélectionnée(s)');
   expect(tr(null, 'rbf.inconnu', 'Texte {a} et {b}', { a: 1 })).toBe('Texte 1 et {b}');
 });
 

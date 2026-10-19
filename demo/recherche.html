@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'SearchChipBar', 'FacetPopover', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -151,7 +151,7 @@
           { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' } },
           { name: 'cli_town', label: 'Ville', type: 'text', width: 9, defaultOperator: 'containsb', phrase: { label: 'la ville' } },
           { name: 'country.cnty_name', label: 'Pays', type: 'text', width: 9, phrase: { label: 'le pays' } },
-          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes',
+          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes', facet: { order: 20 },
             phrase: { eq: 'de catégorie {value}' },
             subjectFor: function(values) { return values.length === 1 && String(values[0]) === '6' ? 'Particuliers' : null; } },
           { name: 'don_kind', virtual: true, label: 'Don', widget: 'segmented', options: DON, fields: ['donations.sponsorship.spo_id'],
@@ -166,11 +166,13 @@
             phrase: { between: 'ayant payé entre le {from} et le {to}' } },
           { name: 'donations.don_mnt_input', label: 'Montant', type: 'monetary', widget: 'amount-range', phrase: { label: 'le montant' } },
           { name: 'donations.cause.cause_type.caut_id', label: 'Programme', type: 'select', options: PROGRAMMES, widget: 'pills', phrase: { eq: 'pour le programme {value}' } },
-          { name: 'donations.payment_type.ptyp_id', label: 'Moyen de paiement', type: 'select', options: MOYENS, widget: 'pills',
+          { name: 'donations.payment_type.ptyp_id', label: 'Moyen de paiement', type: 'select', options: MOYENS, widget: 'pills', facet: { order: 10, countLabel: function(n) { return n + ' moyen' + (n > 1 ? 's' : ''); } },
             format: function(v, field) { var o = field.options.find(function(x) { return String(x.value) === String(v); }); return o ? o.label.toLowerCase() : String(v); },
             phrase: { eq: 'par {value}' } },
-          { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' } }
+          { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' } },
+          { name: 'last_donation.don_real_ts', label: 'Période', type: 'date', facet: { order: 30, kind: 'range' }, phrase: { label: 'le dernier paiement' } }
         ]);
+        var BAR_ICONS = { close: icon('close', 12), caret: icon('caret', 14), add: icon('plus', 14), calendar: icon('calendar', 16), clear: icon('close', 14) };
 
         var SECTIONS = [
           { name: 'donateur', label: 'Donateur', fields: ['cli_lastname', 'cli_firstname', 'cli_email', 'cli_address1', 'cli_cp', 'cli_town', 'country.cnty_name'] },
@@ -199,6 +201,15 @@
           var kind = React.useState('');
           var kind2 = React.useState('once');
           var submitted = React.useState(null);
+          var listFilter = React.useState(function() {
+            var f = new RBF.Filter(); f.init(RBF.FILTER_MODE_AND, RBF.FILTER_OPER_LIKE);
+            f.addFilter('group.id', 15, RBF.FILTER_OPER_EQUAL, true);
+            f.addFilter('donations.sponsorship.spo_id', null, RBF.FILTER_OPER_NOT_EMPTY);
+            f.setFilterValues('donations.cause.cause_type.caut_id', [10]);
+            f.setFilterValues('donations.payment_type.ptyp_id', [5, 14]);
+            ['cli_firstname', 'cli_lastname', 'cli_email'].forEach(function(n) { f.addFilter(n, 'dup', RBF.FILTER_OPER_LIKE, false, false, true, 'quick'); });
+            return f;
+          });
           var formValues = React.useState({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'], 'donations.payment_type.ptyp_id': [5], 'donations.cause.cause_type.caut_id': [11] });
           var phrase = React.useState('particuliers qui ont donné par chèque en 2025 pour la forêt');
           var quick = React.useState('');
@@ -223,6 +234,26 @@
           return e(
             'div',
             null,
+            card(
+              'Étape 2 · SearchChipBar / FacetPopover',
+              'La rangée de critères de l’en-tête de liste',
+              'Les critères actifs en pastilles avec ×, les facettes avec chevron (le menu : liste à cocher filtrable, compteur, Appliquer ; « Période » est une plage), « + Critère » (étape 3) et « Tout effacer ». La recherche rapide est un groupe : une seule pastille, et elle cohabite avec les critères dans la requête (« or » dans « and »).',
+              e('div', null,
+                e(RBF.SearchChipBar, {
+                  filter: listFilter[0], catalog: CATALOG, icons: BAR_ICONS,
+                  onChange: function(f) { listFilter[1](f); },
+                  onAddCriterion: function() { alert('+ Critère : le tiroir arrive à l’étape 3'); }
+                }),
+                e(RBF.SearchSummary, { variant: 'inline', filter: listFilter[0], catalog: CATALOG, subject: 'Donateurs', className: 'd-block mt-1 mb-2' }),
+                e('p', { className: 'demo-hint mb-1' }, 'Ce que recevrait l’API :'),
+                e('div', { className: 'demo-out' }, JSON.stringify(listFilter[0].asJsonApiObject(), function(k, v) {
+                  if (Array.isArray(v) && Object.keys(v).some(function(key) { return isNaN(key); })) {
+                    var o = {}; Object.keys(v).forEach(function(key) { o[key] = v[key]; }); return o;
+                  }
+                  return v;
+                }, 2))
+              )
+            ),
             card(
               'Étape 1 · SearchForm',
               'La fiche de recherche complète',

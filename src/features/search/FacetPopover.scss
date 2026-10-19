@@ -1,0 +1,5 @@
+/* Menu d'une facette : la liste défile, le pied reste visible. */
+.rbf-facet-popover-list {
+  max-height: 15rem;
+  overflow-y: auto;
+}
