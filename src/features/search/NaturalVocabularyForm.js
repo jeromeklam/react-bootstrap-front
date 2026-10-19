@@ -71,10 +71,17 @@ export default class NaturalVocabularyForm extends Component {
     this.setState({ meaning: event.target.value.slice(0, this.props.maxLength), tried: null, error: null });
   }
 
-  /* Entrée dans le champ du mot : essayer. */
+  /* Entrée dans le champ du mot : essayer. Pas de <form> : la fiche vit dans le
+     formulaire de la fiche de recherche ou dans le panneau de la barre. */
   onSubmit(event) {
+    if (event && event.key && event.key !== 'Enter') {
+      return;
+    }
     if (event) {
       event.preventDefault();
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
     }
     if (this.canTry()) {
       this.onTry();
@@ -130,13 +137,13 @@ export default class NaturalVocabularyForm extends Component {
     const btn = classnames('btn', size && `btn-${size}`);
     const control = classnames('form-control', size && `form-control-${size}`);
     return (
-      <form className={classnames('rbf-vocabulary-form', className)} onSubmit={this.onSubmit}>
+      <div className={classnames('rbf-vocabulary-form', className)}>
         <div className="font-weight-bold mb-2">
           {term.trim() ? tr(t, 'rbf.search.vocabulary.title', 'Expliquer « {term} »', { term: term.trim() }) : tr(t, 'rbf.search.vocabulary.explainWord', 'Expliquer un mot…')}
         </div>
         <div className="form-group mb-2">
           <label className="small text-muted mb-1">{tr(t, 'rbf.search.vocabulary.term', 'Le mot ou l’expression')}</label>
-          <input type="text" className={control} value={term} onChange={this.onTermChange} autoComplete="off" />
+          <input type="text" className={control} value={term} onChange={this.onTermChange} onKeyDown={this.onSubmit} autoComplete="off" />
         </div>
         <div className="form-group mb-2">
           <label className="small text-muted mb-1">{tr(t, 'rbf.search.vocabulary.meaning', 'Ce que ça veut dire, écrit comme une recherche sur un champ')}</label>
@@ -189,7 +196,7 @@ export default class NaturalVocabularyForm extends Component {
             </span>
           )}
         </div>
-      </form>
+      </div>
     );
   }
 }

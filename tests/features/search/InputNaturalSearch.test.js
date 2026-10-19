@@ -149,7 +149,11 @@ test('vocabulaire : « Expliquer « banlieue »… » après le résultat, Essay
   const flush = () => renderer.act(async () => { await Promise.resolve(); await Promise.resolve(); });
   const button = label => tree.root.find(n => n.type === 'button' && n.children.join('') === label);
   type(tree, 'donateurs de banlieue');
-  renderer.act(() => tree.root.findByType('form').props.onSubmit());
+  /* La carte n'est pas un formulaire (elle vit dans celui de la fiche) : Entrée sur le champ. */
+  expect(tree.root.findAllByType('form').length).toBe(0);
+  const stop = jest.fn();
+  renderer.act(() => input(tree).props.onKeyDown({ key: 'Enter', preventDefault() {}, stopPropagation: stop }));
+  expect(stop).toHaveBeenCalled();
   await flush();
   expect(tree.root.findAllByType('li').map(n => n.children.join(''))).toEqual(['Non compris : « banlieue »']);
   renderer.act(() => button('Expliquer « banlieue »…').props.onClick());

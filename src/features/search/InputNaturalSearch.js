@@ -92,6 +92,7 @@ export default class InputNaturalSearch extends Component {
     this.groupRef = React.createRef();
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.interpret = this.interpret.bind(this);
     this.closePanel = this.closePanel.bind(this);
     this.onExplain = this.onExplain.bind(this);
@@ -144,16 +145,29 @@ export default class InputNaturalSearch extends Component {
     }
   }
 
-  /* Entrée : la recherche rapide si l'application la garde, sinon l'interprétation. */
+  /* Entrée : la recherche rapide si l'application la garde, sinon l'interprétation.
+     L'événement ne remonte pas : dans la fiche de recherche, la carte vit dans le
+     formulaire de la fiche, qui lancerait la recherche. */
   onSubmit(event) {
     if (event) {
       event.preventDefault();
+      if (typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
     }
     if (typeof this.props.onQuickSearch === 'function') {
       this.props.onQuickSearch(this.text(), 'simple');
       return;
     }
     this.interpret();
+  }
+
+  /* Dans la carte (un div, pas un form : elle est déjà dans le formulaire de la
+     fiche), Entrée vaut soumission. */
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      this.onSubmit(event);
+    }
   }
 
   interpret() {
@@ -341,7 +355,7 @@ export default class InputNaturalSearch extends Component {
     const sparkle = (
       <button
         type="button"
-        className={classnames('btn btn-outline-rbf bg-light text-secondary rbf-natural-search-sparkle', size && `btn-${size}`)}
+        className="btn btn-outline-rbf bg-light text-secondary rbf-natural-search-sparkle"
         title={sparkleTitle}
         aria-label={sparkleTitle}
         disabled={pending}
@@ -353,11 +367,12 @@ export default class InputNaturalSearch extends Component {
     const input = (
       <input
         type="text"
-        className={classnames('border-rbf form-control', size && `form-control-${size}`)}
+        className="border-rbf form-control"
         name={name}
         placeholder={placeholder}
         value={this.text()}
         onChange={this.onChange}
+        onKeyDown={variant === 'card' ? this.onKeyDown : undefined}
         disabled={pending}
         autoComplete="off"
       />
@@ -370,14 +385,14 @@ export default class InputNaturalSearch extends Component {
 
     if (variant === 'card') {
       return (
-        <form className={classnames('rbf-natural-search rbf-natural-search-card', className)} onSubmit={this.onSubmit}>
+        <div className={classnames('rbf-natural-search rbf-natural-search-card', className)}>
           <div className="border rounded p-3 bg-white">
-            <div className="input-group" ref={this.groupRef}>
+            <div className={classnames('input-group', size && `input-group-${size}`)} ref={this.groupRef}>
               <div className="input-group-prepend">{sparkle}</div>
               {input}
               <div className="input-group-append">
                 {waiting}
-                <button type="button" className={classnames('btn btn-primary', size && `btn-${size}`)} disabled={pending} onClick={this.interpret}>
+                <button type="button" className="btn btn-primary" disabled={pending} onClick={this.interpret}>
                   {submitLabel}
                 </button>
               </div>
@@ -386,12 +401,12 @@ export default class InputNaturalSearch extends Component {
             {after}
           </div>
           {hint && <small className="form-text text-muted mt-2">{hint}</small>}
-        </form>
+        </div>
       );
     }
     return (
       <form className={classnames('rbf-natural-search rbf-natural-search-bar', className)} onSubmit={this.onSubmit}>
-        <div className="input-group" ref={this.groupRef}>
+        <div className={classnames('input-group', size && `input-group-${size}`)} ref={this.groupRef}>
           <div className="input-group-prepend">{sparkle}</div>
           {input}
           {(waiting || kbdHint) && (

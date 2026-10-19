@@ -473,9 +473,9 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `vocabulary` | `{ onTry(term, meaning) → Promise<Result>, onSave(entry) → Promise, catalog, subject?, maxLength? }` | | Les morceaux non compris (`result.unmatched`) deviennent des liens « Expliquer « … » », plus un lien libre « Expliquer un mot… » (le modèle ne signale pas tout ce qu'il traduit de travers), qui ouvrent `NaturalVocabularyForm` ; `entry` = `{ term, meaning, criteria, mode }` ; une fois enregistré, la demande repart. Dans la barre, le panneau flottant (`Dropdown`, `.rbf-natural-search-panel`, Échap ou clic ailleurs le ferme) s'ouvre après **chaque** interprétation avec la phrase en clair des critères compris (`.rbf-natural-search-understood`), les avertissements et les liens — un contresens sans avertissement (« un gibbon » pris pour un nom d'animal) se voit et s'explique ; dans la carte, en ligne, sans la phrase (le pied l'a déjà) |
 | `onResult`, `onError` | func | | `(result, phrase)` / `(error, phrase)` ; en erreur, une notice s'affiche aussi |
 | `onQuickSearch` | func | | `(texte, mode)` : repli sur la recherche rapide actuelle. Tant que `comingSoon`, **Entrée appelle `onQuickSearch`** et le bouton étincelle montre la notice |
-| `size` | string | | |
+| `size` | string | | Posée sur le groupe (`input-group-sm`), Bootstrap aligne alors champ, boutons et badge sur une même hauteur |
 
-Rendu : `form.rbf-natural-search > .input-group` : l'étincelle en préfixe
+Rendu : `.rbf-natural-search > .input-group` (un `form` dans la barre ; un `div` dans la carte, qui vit déjà dans le formulaire de la fiche — Entrée y est gérée sur le champ et ne remonte pas, sinon la fiche lançait la recherche) : l'étincelle en préfixe
 (`btn-outline-rbf bg-light text-secondary`, comme les boutons accolés des autres
 champs de la bibliothèque ; elle lance l'interprétation ou montre la notice), le champ
 `border-rbf form-control` (focus discret de la bibliothèque, pas le halo Bootstrap),
@@ -519,8 +519,9 @@ clair ce que le modèle en a compris (`SearchSummary` inline, ou « Rien de comp
 écrivez-la comme une recherche sur un champ », et les avertissements), puis
 « Enregistrer » (actif après un essai qui a donné au moins un critère) qui appelle
 `onSave({ term, meaning, criteria: [{ name, operator, values }], mode })` ;
-« Annuler ». Props : `term`, `phrase`, `onTry` (req.), `onSave` (req.), `onCancel`,
-`catalog`, `subject`, `maxLength`, `size` (`sm`), `t`. Clés `rbf.search.vocabulary.*`.
+« Annuler ». Un `div`, pas un `form` (il vit dans la fiche ou dans le panneau) : Entrée
+sur le champ du mot vaut « Essayer ». Props : `term`, `phrase`, `onTry` (req.), `onSave`
+(req.), `onCancel`, `catalog`, `subject`, `maxLength`, `size` (`sm`), `t`. Clés `rbf.search.vocabulary.*`.
 L'application range l'entrée pour toute l'association et la redonne au modèle via
 `vocabulary` de `createNaturalLanguage` ; les critères appris en font un exemple.
 

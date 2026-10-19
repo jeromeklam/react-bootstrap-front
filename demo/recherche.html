@@ -442,7 +442,9 @@
                   onClearFilters: function() { var f = listFilter[0].clone(); f.removeAll(); listFilter[1](f); },
                   onLoadMore: function() {}, onSort: function() {}, onClick: function() {},
                   quickSearch: e(RBF.InputNaturalSearch, {
-                    variant: 'bar', sparkleIcon: icon('sparkle', 16), size: 'sm',
+                    variant: 'bar', size: 'sm',
+                    /* Comme l'admin : @mdi/react rend un svg avec sa taille en style inline (0.8rem). */
+                    sparkleIcon: e('svg', { viewBox: '0 0 24 24', style: { width: '0.8rem', height: '0.8rem' } }, e('path', { d: window.DEMO_ICON_PATHS.sparkle, fill: 'currentColor' })),
                     placeholder: 'Rechercher par nom, prénom ou e-mail…',
                     onQuickSearch: function(text) {
                       var f = listFilter[0].clone(); f.removeGroup('quick');

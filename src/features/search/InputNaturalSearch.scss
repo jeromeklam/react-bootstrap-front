@@ -10,10 +10,18 @@
     justify-content: center;
   }
 
+  /* L'icône de l'application arrive avec sa taille en style inline (@mdi/react) :
+     en bloc dans le bouton flex, elle se centre sans dépendre de la ligne de base. */
   .input-group .btn svg {
-    height: 1.25em;
-    width: 1.25em;
-    vertical-align: middle;
+    display: block;
+    max-height: 1.25em;
+    max-width: 1.25em;
+  }
+
+  /* Le badge « Entrée » : la case qui le porte suit la hauteur du groupe. */
+  .input-group-text {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
