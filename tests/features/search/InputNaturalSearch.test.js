@@ -222,3 +222,18 @@ test('avec un vocabulaire, le panneau de la barre s’ouvre après chaque interp
   expect(tree.root.findAllByType('li').length).toBe(0);
   expect(tree.root.find(n => n.type === 'button' && n.children.join('') === 'Expliquer un mot…')).toBeTruthy();
 });
+
+test('contrôlée : la phrase vidée par l’application efface les liens « Expliquer » et les avertissements', async () => {
+  const onNaturalLanguage = jest.fn(() => Promise.resolve({ warnings: ['Non compris : « banlieue »'], unmatched: ['banlieue'], criteria: [] }));
+  const vocabulary = { onTry: jest.fn(), onSave: jest.fn(), catalog: [] };
+  const tree = renderer.create(<InputNaturalSearch variant="card" sparkleIcon={sparkle} value="donateurs de banlieue" onNaturalLanguage={onNaturalLanguage} vocabulary={vocabulary} />);
+  await renderer.act(async () => {
+    buttons(tree)[0].props.onClick();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(tree.root.findAllByType('li').length).toBe(1);
+  renderer.act(() => tree.update(<InputNaturalSearch variant="card" sparkleIcon={sparkle} value="" onNaturalLanguage={onNaturalLanguage} vocabulary={vocabulary} />));
+  expect(tree.root.findAllByType('li').length).toBe(0);
+  expect(tree.root.findAll(n => n.type === 'button' && String(n.children.join('')).startsWith('Expliquer')).length).toBe(0);
+});

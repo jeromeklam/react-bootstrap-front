@@ -78,6 +78,7 @@ nouvelles sont vertes.
 | 4 | `3e0dfc6` | `NaturalVocabularyForm`, liens « Expliquer « … » », panneau flottant de la barre, `llm: true` l'emporte sur `hidden` (Langue) | **19/10/2026** sur l'aperçu, vrai modèle |
 | 4 | 3.15.0 | **Version 3.15.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier depuis `master` après fusion (ni 3.12.1, ni 3.13.0, ni 3.14.0 ne sont sorties : publier la 3.15.0) ; admin passe alors à `^3.15.0`. | — |
 | 4 | 3.15.1 | **Version 3.15.1** : retours de la mise en production du 19/10/2026 — Entrée dans la carte de la fiche (formulaire imbriqué), hauteur unique de la barre d'en-tête (`input-group-sm`). | prod |
+| 4 | 3.15.2 | **Version 3.15.2** : une retouche manuelle des champs de la fiche efface la phrase du haut (demande du 19/10/2026). | prod |
 
 ## Décisions
 

@@ -140,4 +140,14 @@ test('langage naturel : carte en construction, puis remplissage depuis un résul
   expect(w.find(SearchFormSection).at(0).prop('values')).toEqual({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'] });
   expect(w.find(InputNaturalSearch).prop('hint')).toBe('Les critères ci-dessous ont été remplis depuis votre phrase. Vérifiez-les avant de lancer.');
   expect(w.find('li').map(li => li.text())).toEqual(['« pour la forêt » non compris']);
+  /* Une retouche à la main efface la phrase du haut, son indication et ses avertissements. */
+  w.find(InputNaturalSearch).prop('onChange')({ target: { name: 'natural', value: 'particuliers de la forêt' } });
+  w.update();
+  expect(w.find(InputNaturalSearch).prop('value')).toBe('particuliers de la forêt');
+  w.find(SearchFormSection).at(0).prop('onChange')({ target: { name: 'cli_lastname', value: 'Dup' } });
+  w.update();
+  expect(w.find(InputNaturalSearch).prop('value')).toBe('');
+  expect(w.find(InputNaturalSearch).prop('hint')).toBe('Indication');
+  expect(w.find('li').length).toBe(0);
+  expect(w.find(SearchFormSection).at(0).prop('values')).toEqual({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'], cli_lastname: 'Dup' });
 });

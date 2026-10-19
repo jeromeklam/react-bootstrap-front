@@ -100,6 +100,13 @@ export default class InputNaturalSearch extends Component {
     this.onPanelKeyDown = this.onPanelKeyDown.bind(this);
   }
 
+  /* Phrase vidée par l'application (contrôlée) : plus rien à expliquer ni à signaler. */
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== null && prevProps.value && !this.props.value && (this.state.panel || this.state.warnings.length > 0 || this.state.unmatched.length > 0)) {
+      this.setState({ warnings: [], unmatched: [], interpreted: null, explaining: null, panel: false });
+    }
+  }
+
   componentWillUnmount() {
     this.unmounted = true;
     this.clearTimer();

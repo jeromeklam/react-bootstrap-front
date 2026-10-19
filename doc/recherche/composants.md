@@ -490,6 +490,11 @@ variante `card` enferme le tout dans un bloc `border rounded bg-white` avec le b
 (admin réduit la police des `.input-group` sous 1200 px, les `.btn` Bootstrap restent à
 1 rem) et l'icône bornée à 1,25 em. Une phrase vide n'appelle pas le service.
 
+Dans la fiche, une retouche à la main d'un champ efface la phrase du haut, son
+indication « remplis depuis votre phrase » et ses avertissements (la phrase en clair du
+pied suffit) ; « Tout effacer » aussi. `InputNaturalSearch` contrôlée dont la valeur passe
+à vide replie son panneau (liens « Expliquer », avertissements).
+
 Résultat attendu, figé dès l'étape 1 :
 
 ```ts

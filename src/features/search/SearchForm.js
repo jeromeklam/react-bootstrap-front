@@ -106,9 +106,14 @@ export default class SearchForm extends Component {
     return valuesToFilter(this.values(), this.catalog(), this.props.base, { mode: this.props.mode });
   }
 
+  /* Une retouche à la main rend la phrase du haut caduque : elle s'efface, la phrase
+     en clair du pied suffit à dire ce qui est demandé. */
   onFieldChange(event) {
     const { name, value } = event.target;
     this.setValues({ ...this.values(), [name]: value });
+    if (this.state.phrase !== '' || this.state.filled || this.state.warnings.length > 0) {
+      this.setState({ phrase: '', filled: false, warnings: [], explanation: null });
+    }
   }
 
   onSubmit(event) {
@@ -120,7 +125,7 @@ export default class SearchForm extends Component {
 
   onClear() {
     this.setValues({});
-    this.setState({ filled: false, warnings: [], explanation: null });
+    this.setState({ phrase: '', filled: false, warnings: [], explanation: null });
     if (this.props.onClear) {
       this.props.onClear();
     }
