@@ -55,8 +55,8 @@ test('les champs proposés au modèle : ni cachés, ni llm:false, ni pickers ; l
   expect(names).not.toContain('donations.grp_id');
   expect(names).not.toContain('cause.cau_id');
   expect(names).toContain('don_kind');
-  const twice = normalizeCatalog([{ name: 'a', label: 'Nom', type: 'text' }, { name: 'b', label: 'Nom', type: 'text' }, { name: 'c', label: 'Cause', type: 'picker', llm: true }]);
-  expect(fieldsForNatural(twice).map(f => f.name)).toEqual(['a', 'c']);
+  const twice = normalizeCatalog([{ name: 'a', label: 'Nom', type: 'text' }, { name: 'b', label: 'Nom', type: 'text' }, { name: 'c', label: 'Cause', type: 'picker', llm: true }, { name: 'd', label: 'Langue', type: 'select', hidden: true, llm: true }]);
+  expect(fieldsForNatural(twice).map(f => f.name)).toEqual(['a', 'c', 'd']);
   const json = catalogToJson(catalog());
   expect(json.find(f => f.name === 'last_donation.don_real_ts').description).toBe('date du dernier paiement reçu');
   expect(json.find(f => f.name === 'donations.grp_id').llm).toBe(false);

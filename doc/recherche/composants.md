@@ -27,6 +27,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | Panneau droit de `DefaultPage` à largeur réglable, `SearchCriteriaPanel` dans ce panneau | 3 | **validé le 19/10/2026** dans admin (« pas mal du tout ») |
 | `InputNumberRange` | 3 | optionnel, à valider |
 | `InputNaturalSearch` : attente et avertissements sous le champ ; carte « Étape 4 » de l'aperçu, branchée sur l'Ollama du poste | 4 | **validé le 19/10/2026** sur l'aperçu avec le vrai modèle (« ça me paraît pas mal du tout ») |
+| Liens « Expliquer « … » », `NaturalVocabularyForm`, panneau flottant de la barre | 4 | **validé le 19/10/2026** sur l'aperçu avec le vrai modèle (« ok go ») |
 
 Mettre cette table à jour à chaque validation.
 
@@ -469,6 +470,7 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `onComingSoon` | func | | Pour compter les essais, si l'application le souhaite |
 | `pending` | bool | | Contrôlable, sinon interne |
 | `showWarnings` | bool | `true` | Les `warnings` du résultat s'affichent sous le champ (liste `text-warning`) ; la fiche passe `false` et les montre elle-même |
+| `vocabulary` | `{ onTry(term, meaning) → Promise<Result>, onSave(entry) → Promise, catalog, subject?, maxLength? }` | | Les morceaux non compris (`result.unmatched`) deviennent des liens « Expliquer « … » », plus un lien libre « Expliquer un mot… » (le modèle ne signale pas tout ce qu'il traduit de travers), qui ouvrent `NaturalVocabularyForm` ; `entry` = `{ term, meaning, criteria, mode }` ; une fois enregistré, la demande repart. Dans la barre, avertissements, liens et fiche vivent dans un panneau flottant (`Dropdown`, `.rbf-natural-search-panel`, Échap ou clic ailleurs le ferme) ; dans la carte, en ligne |
 | `onResult`, `onError` | func | | `(result, phrase)` / `(error, phrase)` ; en erreur, une notice s'affiche aussi |
 | `onQuickSearch` | func | | `(texte, mode)` : repli sur la recherche rapide actuelle. Tant que `comingSoon`, **Entrée appelle `onQuickSearch`** et le bouton étincelle montre la notice |
 | `size` | string | | |
@@ -506,6 +508,21 @@ type NaturalLanguageResult = {
 `createNaturalLanguage` (natural.js) le produit avec `filter`, `mode`, `criteria`,
 `warnings` et `unmatched` ; la fiche ajoute un avertissement quand le mode est `OR`
 (elle combine toujours avec « et »).
+
+### `NaturalVocabularyForm` (étape 4)
+
+Expliquer un mot au modèle, depuis l'écran : le mot ou l'expression (modifiable —
+« Paris et banlieue » vaut mieux que « banlieue » seul), ce que ça veut dire, **écrit
+comme une recherche sur un champ** (textarea, `maxLength` 250 avec compteur, le
+gabarit en exemple), « Essayer » qui appelle `onTry(term, meaning)` et montre en
+clair ce que le modèle en a compris (`SearchSummary` inline, ou « Rien de compris…
+écrivez-la comme une recherche sur un champ », et les avertissements), puis
+« Enregistrer » (actif après un essai qui a donné au moins un critère) qui appelle
+`onSave({ term, meaning, criteria: [{ name, operator, values }], mode })` ;
+« Annuler ». Props : `term`, `phrase`, `onTry` (req.), `onSave` (req.), `onCancel`,
+`catalog`, `subject`, `maxLength`, `size` (`sm`), `t`. Clés `rbf.search.vocabulary.*`.
+L'application range l'entrée pour toute l'association et la redonne au modèle via
+`vocabulary` de `createNaturalLanguage` ; les critères appris en font un exemple.
 
 ### `FacetPopover` (écran B)
 

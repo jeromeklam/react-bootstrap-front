@@ -178,6 +178,7 @@ export default class SearchForm extends Component {
           onComingSoon={naturalLanguage.onComingSoon || null}
           context={{ catalog: catalogToJson(catalog), filter, locale }}
           showWarnings={false}
+          vocabulary={naturalLanguage.vocabulary || null}
           onResult={this.onNaturalResult}
           onError={naturalLanguage.onError || (() => {})}
           t={t}

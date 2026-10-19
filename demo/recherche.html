@@ -306,6 +306,21 @@
               return r.json();
             }).then(function(j) { llmTiming[1](Date.now() - t0); return { content: j.message.content }; });
           }
+          /* « Expliquer « … » » : essayer = interpréter l'explication ; enregistrer =
+             l'ajouter au vocabulaire de la démo (dans l'application : l'API). */
+          var vocabDemo = {
+            catalog: CATALOG, subject: 'Donateurs',
+            onTry: function(term, meaning) {
+              return RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES })(meaning, {});
+            },
+            onSave: function(entry) {
+              var text = (llmVocab[0].trim() ? llmVocab[0].trim() + '\n' : '') + entry.term + ' = ' + entry.meaning;
+              var all = llmLearned[0].concat([entry]);
+              llmVocab[1](text); llmLearned[1](all);
+              try { window.localStorage.setItem('demo.llm.vocab', text); window.localStorage.setItem('demo.llm.learned', JSON.stringify(all)); } catch (ex) {}
+              return Promise.resolve();
+            }
+          };
           var naturalOnList = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, base: function() { return listFilter[0]; }, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
           var naturalOnForm = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
 
@@ -318,13 +333,44 @@
             if (!m) { return; }
             var text = decodeURIComponent(m[1]);
             var ready = v ? new Promise(function(resolve) { setTimeout(function() { learnVocabulary(decodeURIComponent(v[1])).then(resolve, resolve); }, 300); }) : Promise.resolve();
+            /* Attendre un élément, puis agir : pour les captures d'écran automatiques. */
+            function when(find, act, tries) {
+              var el = find();
+              if (el) { act(el); return; }
+              if ((tries || 0) < 100) { setTimeout(function() { when(find, act, (tries || 0) + 1); }, 300); }
+            }
+            function setValue(el, value) {
+              var proto = el.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+              Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, value);
+              el.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            function buttonNamed(start) {
+              /* Le panneau de la barre vit dans un portail hors de la carte : chercher partout. */
+              return Array.prototype.find.call(document.querySelectorAll('button'), function(b) { return b.textContent.indexOf(start) === 0 && !b.disabled; });
+            }
+            var ex = window.location.hash.match(/[#&]explain=([^&]+)/);
+            var me = window.location.hash.match(/[#&]meaning=([^&]+)/);
+            var sv = /[#&]save=1/.test(window.location.hash);
             ready.then(function() {
               setTimeout(function() {
                 var input = document.querySelector('.demo-card .rbf-natural-search-bar input');
                 if (!input) { return; }
-                Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, text);
-                input.dispatchEvent(new Event('input', { bubbles: true }));
+                setValue(input, text);
                 setTimeout(function() { input.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }, 50);
+                if (!ex) { return; }
+                when(function() { return buttonNamed('Expliquer « ' + decodeURIComponent(ex[1])) || buttonNamed('Expliquer un'); }, function(b) {
+                  var specific = b.textContent.indexOf('Expliquer « ') === 0;
+                  b.click();
+                  if (!me) { return; }
+                  when(function() { return document.querySelector('.rbf-vocabulary-form textarea'); }, function(ta) {
+                    if (!specific) { setValue(document.querySelector('.rbf-vocabulary-form input'), decodeURIComponent(ex[1])); }
+                    setValue(ta, decodeURIComponent(me[1]));
+                    when(function() { return buttonNamed('Essayer'); }, function(t) {
+                      t.click();
+                      if (sv) { when(function() { return buttonNamed('Enregistrer'); }, function(s) { s.click(); }); }
+                    });
+                  });
+                });
               }, 300);
             });
           }, []);
@@ -364,6 +410,7 @@
                     placeholder: 'Par exemple : entreprises de Lyon ayant donné au moins 500 euros en 2024',
                     onChange: function(ev) { llmPhrase[1](ev.target.value); },
                     onNaturalLanguage: naturalOnList,
+                    vocabulary: vocabDemo,
                     context: { filter: listFilter[0] },
                     onResult: function(r) { llmResult[1](r); if (r && r.filter) { listFilter[1](r.filter); } }
                   })
@@ -483,7 +530,7 @@
                   catalog: CATALOG, sections: SECTIONS, icons: FORM_ICONS, subject: 'Donateurs',
                   title: 'Rechercher des donateurs', submitLabel: 'Voir les donateurs',
                   values: formValues[0], onChange: function(v) { formValues[1](v); },
-                  naturalLanguage: { placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', onNaturalLanguage: naturalOnForm },
+                  naturalLanguage: { placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', onNaturalLanguage: naturalOnForm, vocabulary: vocabDemo },
                   advancedLink: { onClick: function() { alert('Critères avancés : étape 3'); } },
                   onSubmit: function(filter, values) { submitted[1]({ filter: filter.asJsonApiObject(), values: values }); }
                 }),

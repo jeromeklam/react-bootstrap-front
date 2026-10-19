@@ -16,3 +16,22 @@
     vertical-align: middle;
   }
 }
+
+/* Le panneau flottant de la barre : avertissements, « Expliquer », fiche du mot.
+   Blanc, bordé, à la largeur d'une phrase ; le Dropdown le positionne sous le champ. */
+.rbf-natural-search-panel {
+  width: 32rem;
+  max-width: calc(100vw - 2rem);
+  background: #fff;
+  border: 1px solid theme-color('secondary-light');
+  border-radius: 0.25rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.12);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.rbf-vocabulary-form {
+  textarea {
+    resize: vertical;
+  }
+}

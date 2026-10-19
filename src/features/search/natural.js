@@ -59,12 +59,13 @@ export const naturalType = field => {
 };
 
 /* Les champs proposés au modèle : ni cachés, ni `llm: false`, ni les pickers
-   (leurs valeurs sont des identifiants que le modèle ne connaît pas) sauf `llm: true`.
+   (leurs valeurs sont des identifiants que le modèle ne connaît pas) — sauf `llm: true`,
+   qui l'emporte (« Langue », cachée dans la fiche mais utile à « en anglais »).
    Deux libellés identiques se gêneraient dans le schéma : le premier gagne. */
 export const fieldsForNatural = (catalog = []) => {
   const labels = new Set();
   return catalog.filter(field => {
-    if (field.hidden || field.llm === false || (field.type === 'picker' && field.llm !== true)) {
+    if (field.llm === false || ((field.hidden || field.type === 'picker') && field.llm !== true)) {
       return false;
     }
     const label = String(field.label);

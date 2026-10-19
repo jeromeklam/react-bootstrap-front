@@ -135,3 +135,63 @@ test('en attente : texte sous le champ ; puis les avertissements du résultat, e
   });
   expect(silent.root.findAllByType('li').length).toBe(0);
 });
+
+test('vocabulaire : « Expliquer « banlieue »… » après le résultat, Essayer montre la phrase, Enregistrer relance la demande', async () => {
+  const { normalizeCatalog, naturalToResult } = require('../../../src/features/search');
+  const { donorCatalog } = require('./fixtures');
+  const catalog = normalizeCatalog(donorCatalog().concat([{ name: 'cli_cp', label: 'Code postal', type: 'text', defaultOperator: 'containsb', phrase: { label: 'le code postal' } }]));
+  const onNaturalLanguage = jest.fn(() => Promise.resolve({ warnings: ['Non compris : « banlieue »'], unmatched: ['banlieue'], criteria: [] }));
+  const onTry = jest.fn((term, meaning) => Promise.resolve(naturalToResult({ c: [{ f: 'Code postal', o: 'containsb', v: ['77', '78'] }] }, catalog, { phrase: meaning })));
+  const onSave = jest.fn(() => Promise.resolve());
+  const tree = renderer.create(
+    <InputNaturalSearch variant="card" sparkleIcon={sparkle} onNaturalLanguage={onNaturalLanguage} vocabulary={{ onTry, onSave, catalog, subject: 'Donateurs' }} />
+  );
+  const flush = () => renderer.act(async () => { await Promise.resolve(); await Promise.resolve(); });
+  const button = label => tree.root.find(n => n.type === 'button' && n.children.join('') === label);
+  type(tree, 'donateurs de banlieue');
+  renderer.act(() => tree.root.findByType('form').props.onSubmit());
+  await flush();
+  expect(tree.root.findAllByType('li').map(n => n.children.join(''))).toEqual(['Non compris : « banlieue »']);
+  renderer.act(() => button('Expliquer « banlieue »…').props.onClick());
+  expect(tree.root.findAllByType('li').length).toBe(0);
+  const textarea = tree.root.findByType('textarea');
+  expect(button('Essayer').props.disabled).toBe(true);
+  renderer.act(() => textarea.props.onChange({ target: { value: 'code postal commence par 77 ou 78' } }));
+  expect(button('Essayer').props.disabled).toBe(false);
+  expect(button('Enregistrer').props.disabled).toBe(true);
+  await renderer.act(async () => {
+    button('Essayer').props.onClick();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(onTry).toHaveBeenCalledWith('banlieue', 'code postal commence par 77 ou 78');
+  const text = tree.root.findAll(n => typeof n.props.className === 'string' && n.props.className.includes('rbf-vocabulary-tried')).map(n => JSON.stringify(n.children.length)).length;
+  expect(text).toBe(1);
+  expect(button('Enregistrer').props.disabled).toBe(false);
+  await renderer.act(async () => {
+    button('Enregistrer').props.onClick();
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(onSave).toHaveBeenCalledWith({ term: 'banlieue', meaning: 'code postal commence par 77 ou 78', mode: 'AND', criteria: [{ name: 'cli_cp', operator: 'containsb', values: ['77', '78'] }] });
+  expect(onNaturalLanguage).toHaveBeenCalledTimes(2);
+  expect(tree.root.findAllByType('textarea').length).toBe(0);
+});
+
+test('barre : les avertissements vont dans un panneau flottant (Dropdown), Échap le ferme', async () => {
+  const { Dropdown } = require('../../../src/features/basic');
+  const onNaturalLanguage = jest.fn(() => Promise.resolve({ warnings: ['Nom : un seul critère retenu'], unmatched: [] }));
+  const tree = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} onNaturalLanguage={onNaturalLanguage} />);
+  type(tree, 'une phrase');
+  await renderer.act(async () => {
+    tree.root.findByType('form').props.onSubmit();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(tree.root.findAllByType(Dropdown).length).toBe(1);
+  expect(tree.root.findAllByType('li').map(n => n.children.join(''))).toEqual(['Nom : un seul critère retenu']);
+  const after = tree.root.find(n => typeof n.props.className === 'string' && n.props.className.includes('rbf-natural-search-after'));
+  renderer.act(() => after.props.onKeyDown({ key: 'Escape' }));
+  expect(tree.root.findAllByType(Dropdown).length).toBe(0);
+});

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { rbfIntl } from '../intl';
 import { SmLoading3Dots } from '../spinner';
+import { Dropdown } from '../basic';
 import { tr } from './i18n';
+import NaturalVocabularyForm from './NaturalVocabularyForm';
 
 /**
  * La barre de recherche en langage naturel : une étincelle, une phrase, une
@@ -19,7 +21,11 @@ import { tr } from './i18n';
  * Contrat du résultat : { filter?, plain?, values?, mode?, warnings?, explanation? },
  * voir doc/recherche/composants.md ; createNaturalLanguage (natural.js) le fabrique.
  * Les `warnings` s'affichent sous le champ (`showWarnings`), la fiche de recherche
- * préfère les montrer elle-même.
+ * préfère les montrer elle-même. Avec `vocabulary` ({ onTry, onSave, catalog,
+ * subject, maxLength }), chaque morceau non compris devient un lien « Expliquer
+ * « … » » qui ouvre NaturalVocabularyForm ; une fois le mot enregistré, la demande
+ * repart. Dans la barre (en-tête de liste, 50 px), tout cela vit dans un panneau
+ * flottant sous le champ ; dans la carte, en ligne.
  */
 const NOTICE_DELAY = 4000;
 
@@ -40,6 +46,7 @@ export default class InputNaturalSearch extends Component {
     onComingSoon: PropTypes.func,
     pending: PropTypes.bool,
     showWarnings: PropTypes.bool,
+    vocabulary: PropTypes.object,
     onResult: PropTypes.func,
     onError: PropTypes.func,
     onQuickSearch: PropTypes.func,
@@ -65,6 +72,7 @@ export default class InputNaturalSearch extends Component {
     onComingSoon: null,
     pending: null,
     showWarnings: true,
+    vocabulary: null,
     onResult: () => {},
     onError: () => {},
     onQuickSearch: null,
@@ -77,11 +85,16 @@ export default class InputNaturalSearch extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null, warnings: [] };
+    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null, warnings: [], unmatched: [], explaining: null, panel: false };
     this.timer = null;
+    this.groupRef = React.createRef();
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.interpret = this.interpret.bind(this);
+    this.closePanel = this.closePanel.bind(this);
+    this.onExplain = this.onExplain.bind(this);
+    this.onVocabularySave = this.onVocabularySave.bind(this);
+    this.onPanelKeyDown = this.onPanelKeyDown.bind(this);
   }
 
   componentWillUnmount() {
@@ -158,7 +171,7 @@ export default class InputNaturalSearch extends Component {
       return;
     }
     this.notify(null);
-    this.setState({ pending: true, warnings: [] });
+    this.setState({ pending: true, warnings: [], unmatched: [], explaining: null, panel: false });
     let promise;
     try {
       promise = Promise.resolve(onNaturalLanguage(text, { ...context, phrase: text }));
@@ -171,7 +184,8 @@ export default class InputNaturalSearch extends Component {
           return;
         }
         const warnings = this.props.showWarnings && result && Array.isArray(result.warnings) ? result.warnings : [];
-        this.setState({ pending: false, warnings });
+        const unmatched = this.props.vocabulary && result && Array.isArray(result.unmatched) ? result.unmatched : [];
+        this.setState({ pending: false, warnings, unmatched, panel: warnings.length > 0 || unmatched.length > 0 });
         onResult(result || {}, text);
       })
       .catch(error => {
@@ -182,6 +196,92 @@ export default class InputNaturalSearch extends Component {
         this.notify(tr(t, 'rbf.search.natural.error', 'L’interprétation de la phrase a échoué'));
         onError(error, text);
       });
+  }
+
+  closePanel() {
+    this.setState({ panel: false, explaining: null });
+  }
+
+  onPanelKeyDown(event) {
+    if (event.key === 'Escape') {
+      this.closePanel();
+    }
+  }
+
+  onExplain(term) {
+    this.setState({ explaining: term, panel: true });
+  }
+
+  /* Le mot enregistré, la même demande repart : le modèle le connaît maintenant. */
+  onVocabularySave(entry) {
+    return Promise.resolve(this.props.vocabulary.onSave(entry)).then(() => {
+      if (!this.unmounted) {
+        this.setState({ explaining: null, panel: false });
+        this.interpret();
+      }
+    });
+  }
+
+  vocabularyCatalog() {
+    const { vocabulary } = this.props;
+    if (!vocabulary) {
+      return [];
+    }
+    return typeof vocabulary.catalog === 'function' ? vocabulary.catalog() : vocabulary.catalog || [];
+  }
+
+  /* Ce qui suit le champ : les avertissements, les liens « Expliquer », ou la fiche
+     d'explication. Null s'il n'y a rien à montrer. */
+  renderPanel() {
+    const { vocabulary, t, size } = this.props;
+    const { warnings, unmatched, explaining } = this.state;
+    if (explaining !== null && vocabulary) {
+      return (
+        <NaturalVocabularyForm
+          key={explaining}
+          term={explaining}
+          phrase={this.text()}
+          onTry={vocabulary.onTry}
+          onSave={this.onVocabularySave}
+          onCancel={this.closePanel}
+          catalog={this.vocabularyCatalog()}
+          subject={vocabulary.subject || null}
+          maxLength={vocabulary.maxLength || 250}
+          size={size || 'sm'}
+          t={t}
+        />
+      );
+    }
+    const list = warnings.length > 0 && (
+      <ul className="rbf-natural-search-warnings small text-warning mt-1 mb-0 pl-3">
+        {warnings.map((warning, i) => (
+          <li key={i}>{warning}</li>
+        ))}
+      </ul>
+    );
+    /* Un lien par morceau non compris, et toujours un lien libre : le modèle ne
+       signale pas tout ce qu'il traduit de travers (« banlieue » en codes postaux). */
+    const explain = vocabulary && (
+      <div className="rbf-natural-search-explain small mt-1">
+        {unmatched.map(term => (
+          <button key={term} type="button" className="btn btn-link btn-sm p-0 mr-3" onClick={() => this.onExplain(term)}>
+            {tr(t, 'rbf.search.vocabulary.explain', 'Expliquer « {term} »…', { term })}
+          </button>
+        ))}
+        <button type="button" className="btn btn-link btn-sm p-0 mr-3 text-muted" onClick={() => this.onExplain('')}>
+          {tr(t, unmatched.length > 0 ? 'rbf.search.vocabulary.explainOther' : 'rbf.search.vocabulary.explainWord', unmatched.length > 0 ? 'Expliquer un autre mot…' : 'Expliquer un mot…')}
+        </button>
+      </div>
+    );
+    if (!list && !explain) {
+      return null;
+    }
+    return (
+      <div>
+        {list}
+        {explain}
+      </div>
+    );
   }
 
   render() {
@@ -195,6 +295,7 @@ export default class InputNaturalSearch extends Component {
       : tr(t, 'rbf.search.natural.ask', 'Interpréter la phrase');
     /* Sous le champ : la notice (4 s), l'attente (le modèle met quelques secondes sur
        un serveur sans GPU), puis ce que l'interprétation a corrigé ou ignoré. */
+    const panel = this.state.panel ? this.renderPanel() : null;
     const notice = this.state.notice ? (
       <small className="rbf-natural-search-notice form-text text-warning" role="status">
         {this.state.notice}
@@ -203,13 +304,22 @@ export default class InputNaturalSearch extends Component {
       <small className="rbf-natural-search-pending form-text text-muted" role="status">
         {tr(t, 'rbf.search.natural.pending', 'Analyse de la phrase en cours, quelques secondes…')}
       </small>
-    ) : this.state.warnings.length > 0 ? (
-      <ul className="rbf-natural-search-warnings small text-warning mt-1 mb-0 pl-3">
-        {this.state.warnings.map((warning, i) => (
-          <li key={i}>{warning}</li>
-        ))}
-      </ul>
     ) : null;
+    /* En ligne dans la carte ; dans la barre, flottant sous le champ pour ne pas
+       pousser l'en-tête de liste. */
+    const after =
+      panel &&
+      (variant === 'card' ? (
+        <div className="rbf-natural-search-after mt-1" onKeyDown={this.onPanelKeyDown}>
+          {panel}
+        </div>
+      ) : (
+        <Dropdown myRef={this.groupRef} align="bottom-left" className="rbf-natural-search-panel" onClose={this.closePanel}>
+          <div className="rbf-natural-search-after p-2" onKeyDown={this.onPanelKeyDown}>
+            {panel}
+          </div>
+        </Dropdown>
+      ));
     const sparkle = (
       <button
         type="button"
@@ -244,7 +354,7 @@ export default class InputNaturalSearch extends Component {
       return (
         <form className={classnames('rbf-natural-search rbf-natural-search-card', className)} onSubmit={this.onSubmit}>
           <div className="border rounded p-3 bg-white">
-            <div className="input-group">
+            <div className="input-group" ref={this.groupRef}>
               <div className="input-group-prepend">{sparkle}</div>
               {input}
               <div className="input-group-append">
@@ -255,6 +365,7 @@ export default class InputNaturalSearch extends Component {
               </div>
             </div>
             {notice}
+            {after}
           </div>
           {hint && <small className="form-text text-muted mt-2">{hint}</small>}
         </form>
@@ -262,7 +373,7 @@ export default class InputNaturalSearch extends Component {
     }
     return (
       <form className={classnames('rbf-natural-search rbf-natural-search-bar', className)} onSubmit={this.onSubmit}>
-        <div className="input-group">
+        <div className="input-group" ref={this.groupRef}>
           <div className="input-group-prepend">{sparkle}</div>
           {input}
           {(waiting || kbdHint) && (
@@ -276,6 +387,7 @@ export default class InputNaturalSearch extends Component {
           )}
         </div>
         {notice}
+        {after}
       </form>
     );
   }

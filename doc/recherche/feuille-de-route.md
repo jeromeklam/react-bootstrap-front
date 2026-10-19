@@ -73,7 +73,9 @@ nouvelles sont vertes.
 | 3 | `0cb6573` | `SearchCriteriaPanel` (le tiroir n'en est plus qu'un contenant), `DefaultPage` à largeur réglable (`rightPanelWidth`, `contentMinWidth`, `rightPanelStorageKey`), `storedFlag` numérique | **19/10/2026** dans admin |
 | 3 | `97092f2` | **Version 3.14.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier depuis `master` après fusion (ni la 3.12.1 ni la 3.13.0 ne sont sorties : publier la 3.14.0) ; admin passe alors à `^3.14.0`. | — |
 | 3 | `776f095` | Feuille de route : sha de la 3.14.0 | — |
-| 4 | ce lot | `search/natural.js` (prompt, schéma, vérification, `createNaturalLanguage`), `description` / `llm` du catalogue, attente et avertissements d'`InputNaturalSearch`, carte « Étape 4 » de l'aperçu sur l'Ollama du poste, tests | aperçu à valider |
+| 4 | `8035e3c` | `search/natural.js` (prompt, schéma, vérification, `createNaturalLanguage`), `description` / `llm` du catalogue, attente et avertissements d'`InputNaturalSearch`, carte « Étape 4 » de l'aperçu sur l'Ollama du poste, tests | **19/10/2026** sur l'aperçu, vrai modèle |
+| 4 | `e1ecb3d` | Vocabulaire des utilisateurs dans le prompt et sous la demande (« Précisions »), plusieurs valeurs sur les opérateurs de texte, un critère raté = une ligne, champ « Animal / projet » | **19/10/2026** sur l'aperçu |
+| 4 | ce lot | `NaturalVocabularyForm`, liens « Expliquer « … » », panneau flottant de la barre, `llm: true` l'emporte sur `hidden` (Langue) | aperçu à valider |
 
 ## Décisions
 
@@ -205,6 +207,12 @@ réchauffage périodique côté API).
   emporte avec `hidden`.
 - `InputNaturalSearch` : texte d'attente, avertissements du résultat sous le champ
   (`showWarnings`) ; `SearchForm` les montre elle-même et signale un mode « ou ».
+- **Vocabulaire** : `vocabulary` de `createNaturalLanguage` (définitions dans le prompt,
+  répétées sous la demande quand le mot y est, critères appris en exemple) ;
+  `NaturalVocabularyForm` et les liens « Expliquer « … » » d'`InputNaturalSearch`.
+  Côté API : une table `asso_llm_vocabulary` (décision du 19/10/2026), routes CRUD ;
+  côté admin : `onTry` = interpréter l'explication, `onSave` = créer l'entrée, une
+  page « Vocabulaire » pour relire et corriger.
 - Aperçu : carte « Étape 4 » branchée sur l'Ollama du poste (`python3 -m http.server`
   à la racine, Ollama refuse l'origine `null` des pages `file://`), `#llm=<phrase>`
   pour les captures.
