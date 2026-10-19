@@ -67,7 +67,7 @@ nouvelles sont vertes.
 | 2 | `09471f4` | Modèle `Filter` : extension `group` (`addFilter(…, group)`, `removeGroup`, `getFilters({ group })`, émission `and: { …, or: {…} }`), sortie sans groupe inchangée (tests dorés). **À confirmer côté API** lors du test réel de l'en-tête. | relecture |
 
 | 2 | `271dc13` | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
-| 2 | ce commit | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
+| 2 | `f358f4a` | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
 
 ## Décisions
 
@@ -137,6 +137,8 @@ npm, qui devra inclure ces corrections (donc une 3.12.0 republiée ou une 3.12.1
 | 6 | Livraison | Exports, démo, `CHANGELOG`, 3.13.0, build, tests, publication. |
 
 ### Administration Kalaweit
+
+En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` laisse passer les props de la rangée ; `client/List.js` pose la barre en langage naturel (Entrée = recherche rapide), la rangée de critères repliable (clé `client`, bouton ⚙ via `ui/searchIcons.js`), « + Donateur » et le lien « Fiche de recherche » ; le catalogue des donateurs déclare ses facettes (moyen, catégorie, dernier paiement en plage) ; `updateQuickSearch.js` est réécrit en groupe `quick` (plus d'`init()`), testé. **Test réel à faire** : il tranchera la question de l'API (`or` dans `and`) et la place de « + Donateur » dans la barre d'actions.
 
 - `ui/List.js` laisse passer `toolbar`.
 - `client/List.js` : `toolbar={<SearchChipBar filter={client.filters} catalog=… onChange=… />}`
