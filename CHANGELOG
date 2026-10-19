@@ -1,3 +1,12 @@
+# 3.15.0 : 19/10/2026
+
+* Recherche, étape 4 : le langage naturel (voir doc/recherche/)
+    * `search/natural.js` : le catalogue devient un prompt système stable et un schéma JSON imposé au modèle ; la réponse est vérifiée critère par critère (champ, opérateur selon le type, libellés de choix rapprochés, dates et nombres normalisés, valeur inventée écartée, doublons réunis, bornes fusionnées en plage) et posée en `Filter` sur la base ; `createNaturalLanguage({ transport, catalog, base, examples, vocabulary })` fabrique le `onNaturalLanguage` d'une application
+    * Vocabulaire des utilisateurs : définitions dans le prompt, répétées sous la demande quand le mot y figure, critères appris en exemple ; `NaturalVocabularyForm` et les liens « Expliquer « … » » d'`InputNaturalSearch` (panneau flottant dans la barre, en ligne dans la carte)
+    * `InputNaturalSearch` : texte d'attente, avertissements du résultat (`showWarnings`), `vocabulary`
+    * Catalogue : `description` (pour le modèle) et `llm` (`false` : caché au modèle ; `true` : proposé malgré `hidden` ou `picker`) ; `catalogToJson` les emporte
+    * Opérateurs de texte à plusieurs valeurs (l'API en fait un OU) ; clés `rbf.search.natural.*` et `rbf.search.vocabulary.*`
+
 # 3.14.0 : 19/10/2026
 
 * Recherche, étape 3 : les critères avancés (voir doc/recherche/)
