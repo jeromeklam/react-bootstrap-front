@@ -63,6 +63,7 @@ export { default as DropdownWrapper } from "./features/advanced/DropdownWrapper"
 export { default as Follower } from "./features/advanced/Follower";
 export { default as HoverObserver } from "./features/advanced/HoverObserver";
 export { default as Portal } from "./features/advanced/Portal";
+export { default as Drawer } from "./features/advanced/Drawer";
 export * from "./features/advanced/ResponsiveConfirm";
 export * from "./features/advanced/ResponsiveForm";
 export * from "./features/advanced/ResponsiveModal";

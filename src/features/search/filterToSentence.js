@@ -102,12 +102,14 @@ const partsFor = (field, elt, t) => {
   const custom = field.phrase && field.phrase[oper];
   const isDate = field.type === 'date' || field.type === 'datetime';
   if (!needsValue(oper)) {
+    /* « sans e-mail », « avec e-mail » : le nom nu, pas la forme avec article de
+       phrase.label (« l’e-mail ») qui sert aux autres tournures. */
     const text =
       custom ||
       (oper === FILTER_OPER_EMPTY
         ? template(t, 'rbf.search.phrase.empty', 'sans {label}')
         : template(t, 'rbf.search.phrase.nempty', 'avec {label}'));
-    return renderTemplate(text, { label });
+    return renderTemplate(text, { label: String(field.label).toLowerCase() });
   }
   if (oper === FILTER_OPER_BETWEEN) {
     const from = formatValue(field, elt.getFilterCrit('default'), t);
@@ -128,12 +130,56 @@ const partsFor = (field, elt, t) => {
   return renderTemplate(text, { label, value, or: tr(t, 'rbf.search.value.or', ' ou ') });
 };
 
-/* Un fragment par critère actif non fixe (les virtuels regroupent leurs champs). */
+const labelOf = (field, name) => (field && field.phrase && field.phrase.label ? field.phrase.label : field ? String(field.label).toLowerCase() : name);
+
+/* Un groupe de critères identiques (la recherche rapide : même opérateur, mêmes
+   valeurs sur plusieurs champs) se dit en une fois : « dont le prénom, le nom ou
+   l'e-mail contient dup ». Sinon null, et chaque critère garde son fragment. */
+const groupFragment = (group, elts, catalog, t) => {
+  if (elts.length < 2) {
+    return null;
+  }
+  const oper = elts[0].getOperator();
+  const first = JSON.stringify(elts[0].getValues());
+  if (!needsValue(oper) || oper === FILTER_OPER_BETWEEN || elts.some(e => e.getOperator() !== oper || JSON.stringify(e.getValues()) !== first)) {
+    return null;
+  }
+  const labels = elts.map(e => labelOf(fieldOwning(catalog, e.getFilterName()), e.getFilterName()));
+  const or = tr(t, 'rbf.search.value.or', ' ou ');
+  const label = labels.length > 1 ? `${labels.slice(0, -1).join(', ')}${or}${labels[labels.length - 1]}` : labels[0];
+  const field = fieldOwning(catalog, elts[0].getFilterName()) || { type: 'text', options: [] };
+  const values = elts[0].getValues().map(v => formatValue(field, v, t));
+  const value = values.length === 1 ? values[0] : values;
+  const text = template(t, 'rbf.search.phrase.default', 'dont {label} {operator} {value}').replace('{operator}', operatorPhrase(oper, field.type, t));
+  return { name: `group:${group}`, label, operator: oper, value: elts[0].getValues(), parts: renderTemplate(text, { label, value, or }) };
+};
+
+/* Un fragment par critère actif non fixe (les virtuels regroupent leurs champs, les
+   groupes identiques aussi). */
 export const filterToFragments = (filter, catalog = [], t, { withDefaults = true } = {}) => {
   const fragments = [];
   const seen = new Set();
-  filter.getFilters({ fixed: false, default: withDefaults }).forEach(elt => {
+  const elts = filter.getFilters({ fixed: false, default: withDefaults });
+  const groups = {};
+  elts.forEach(elt => {
+    if (elt.getGroup()) {
+      groups[elt.getGroup()] = (groups[elt.getGroup()] || []).concat(elt);
+    }
+  });
+  elts.forEach(elt => {
     const name = elt.getFilterName();
+    const group = elt.getGroup();
+    if (group && groups[group]) {
+      if (seen.has(`group:${group}`)) {
+        return;
+      }
+      const merged = groupFragment(group, groups[group], catalog, t);
+      if (merged) {
+        seen.add(`group:${group}`);
+        fragments.push(merged);
+        return;
+      }
+    }
     const field = fieldOwning(catalog, name);
     if (!field) {
       fragments.push({

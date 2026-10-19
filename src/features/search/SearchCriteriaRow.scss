@@ -1,0 +1,35 @@
+/* Une ligne de critère : champ et opérateur à largeur fixe, la valeur prend le
+   reste ; tout passe à la ligne quand la place manque. Les champs de la fiche
+   portent leur form-group : sa marge basse est retirée ici. */
+.rbf-criteria-row {
+  .rbf-criteria-field {
+    flex: 0 0 11rem;
+    width: 11rem;
+  }
+
+  .rbf-criteria-operator {
+    flex: 0 0 10rem;
+    width: 10rem;
+  }
+
+  /* Avec une zone large, le × reste sur la première ligne, à droite. */
+  .rbf-criteria-remove {
+    margin-left: auto;
+  }
+
+  /* 8 rem : un texte ou une date tient sur la ligne à 560 px ; les pastilles, plus
+     larges, passent dessous. */
+  .rbf-criteria-value {
+    flex: 1 1 8rem;
+    min-width: 0;
+
+    &.rbf-criteria-value-wide {
+      flex-basis: 100%;
+      order: 1;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}

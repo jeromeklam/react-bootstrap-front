@@ -304,6 +304,8 @@ export function getObjectmemberValue(obj, member) {
   return ' ';
 }
 
+export * from './storedFlag';
+
 export const randomString = length => {
   const random13chars = () => {
     return Math.random()

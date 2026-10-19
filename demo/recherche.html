@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'SearchChipBar', 'FacetPopover', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'SearchChipBar', 'FacetPopover', 'SearchDrawer', 'Drawer', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -146,7 +146,7 @@
         var CATALOG = RBF.normalizeCatalog([
           { name: 'cli_lastname', label: 'Nom', type: 'text', width: 12, phrase: { label: 'le nom' } },
           { name: 'cli_firstname', label: 'Prénom', type: 'text', width: 12, phrase: { label: 'le prénom' } },
-          { name: 'cli_email', label: 'E-mail', type: 'text', width: 12 },
+          { name: 'cli_email', label: 'E-mail', type: 'text', width: 12, phrase: { label: 'l’e-mail' } },
           { name: 'cli_address1', label: 'Adresse', type: 'text', width: 12, phrase: { label: 'l’adresse' } },
           { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' } },
           { name: 'cli_town', label: 'Ville', type: 'text', width: 9, defaultOperator: 'containsb', phrase: { label: 'la ville' } },
@@ -173,6 +173,7 @@
           { name: 'last_donation.don_real_ts', label: 'Période', type: 'date', facet: { order: 30, kind: 'range' }, phrase: { label: 'le dernier paiement' } }
         ]);
         var BAR_ICONS = { close: icon('close', 12), caret: icon('caret', 14), add: icon('plus', 14), calendar: icon('calendar', 16), clear: icon('close', 14) };
+        var DRAWER_ICONS = { close: icon('close', 18), expand: icon('expand', 18), collapse: icon('collapse', 18), add: icon('plus', 14), remove: icon('close', 14), calendar: icon('calendar', 16), clear: icon('close', 14), check: icon('check', 14) };
 
         var SECTIONS = [
           { name: 'donateur', label: 'Donateur', fields: ['cli_lastname', 'cli_firstname', 'cli_email', 'cli_address1', 'cli_cp', 'cli_town', 'country.cnty_name'] },
@@ -201,6 +202,7 @@
           var kind = React.useState('');
           var kind2 = React.useState('once');
           var submitted = React.useState(null);
+          var drawer = React.useState(window.location.hash === '#tiroir');
           var listFilter = React.useState(function() {
             var f = new RBF.Filter(); f.init(RBF.FILTER_MODE_AND, RBF.FILTER_OPER_LIKE);
             f.addFilter('group.id', 15, RBF.FILTER_OPER_EQUAL, true);
@@ -235,9 +237,23 @@
             'div',
             null,
             card(
+              'Étape 3 · SearchDrawer',
+              'Le tiroir « Critères avancés »',
+              'Le bouton filtre de la liste ci-dessous et « + Critère » de sa rangée l’ouvrent (ou ce bouton). Une ligne par critère : champ, opérateur, valeur selon le type ; « tous les critères / au moins un » ; l’encart EN CLAIR se recalcule ; Appliquer rend le filtre à la liste, les fixes et la recherche rapide conservés. Le bouton ⇥ l’agrandit (choix mémorisé, clé « demo »). Échap ou le fond le ferment.',
+              e('div', null,
+                e('button', { type: 'button', className: 'btn btn-outline-secondary', onClick: function() { drawer[1](true); } }, 'Ouvrir les critères avancés'),
+                e(RBF.SearchDrawer, {
+                  open: drawer[0], filter: listFilter[0], catalog: CATALOG, icons: DRAWER_ICONS,
+                  subject: 'les donateurs', sentenceSubject: 'Donateurs', storageKey: 'demo', top: 0,
+                  onApply: function(f) { listFilter[1](f); drawer[1](false); },
+                  onClose: function() { drawer[1](false); }
+                })
+              )
+            ),
+            card(
               'Étape 2 · En-tête de liste',
               'La liste des donateurs avec sa rangée de critères',
-              'Une vraie ResponsiveList : la barre en langage naturel à la place de la recherche rapide, « + Donateur » avec son texte, et le bouton ⚙ qui affiche ou masque la rangée de critères — masquée par défaut, avec le nombre de critères actifs en badge ; le choix est mémorisé (localStorage, clé « demo »).',
+              'Une vraie ResponsiveList : la barre en langage naturel à la place de la recherche rapide, « + Donateur » avec son texte, et le bouton ⚙ qui affiche ou masque la rangée de critères — masquée par défaut, avec le nombre de critères actifs en badge ; le choix est mémorisé (localStorage, clé « demo »). Le bouton filtre ouvre le tiroir.',
               e('div', { style: { position: 'relative', height: '360px', border: '1px solid #dfe3e8' } },
                 e(RBF.ResponsiveList, {
                   title: 'Donateurs', counter: '[8] résultats', icon: icon('check', 20),
@@ -259,7 +275,7 @@
                   sortIcon: icon('caret', 16), sortNoneIcon: icon('caret', 16), sortUpIcon: icon('caret', 16), sortDownIcon: icon('caret', 16),
                   calIcon: icon('calendar', 16), clearIcon: icon('close', 16), closeIcon: icon('close', 16), moreIcon: icon('plus', 16),
                   cancelPanelIcon: icon('close', 16), validPanelIcon: icon('check', 16),
-                  onFilters: function() { alert('Panneau de filtres : le tiroir arrive à l’étape 3'); },
+                  onFilters: function() { drawer[1](true); },
                   onClearFilters: function() { var f = listFilter[0].clone(); f.removeAll(); listFilter[1](f); },
                   onLoadMore: function() {}, onSort: function() {}, onClick: function() {},
                   quickSearch: e(RBF.InputNaturalSearch, {
@@ -278,7 +294,7 @@
                   toolbar: e(RBF.SearchChipBar, {
                     filter: listFilter[0], catalog: CATALOG, icons: BAR_ICONS, wrap: false,
                     onChange: function(f) { listFilter[1](f); },
-                    onAddCriterion: function() { alert('+ Critère : le tiroir arrive à l’étape 3'); }
+                    onAddCriterion: function() { drawer[1](true); }
                   }),
                   toolbarIcon: icon('tune', 18), toolbarStorageKey: 'demo'
                 })

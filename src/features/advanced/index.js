@@ -4,6 +4,7 @@ export { default as HoverObserver } from './HoverObserver';
 export * from './MobileForm';
 export { default as MobileQuickSearch } from './MobileQuickSearch';
 export { default as Portal } from './Portal';
+export { default as Drawer } from './Drawer';
 export * from './ResponsiveConfirm';
 export * from './ResponsiveForm';
 export * from './ResponsiveModal';

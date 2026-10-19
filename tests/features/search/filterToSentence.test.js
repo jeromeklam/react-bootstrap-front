@@ -52,6 +52,21 @@ test('plusieurs valeurs : « A, B ou C » ; champ virtuel ; sujet par défaut', 
   expect(filterToSentence(f, catalog)).toBe('Résultats réguliers, par cb, chèque ou prélèvement.');
 });
 
+test('un groupe de critères identiques se dit en une fois', () => {
+  const catalog = donorCatalog();
+  const f = fresh();
+  f.replaceFilter('cli_town', ['Metz'], FILTER_OPER_START_WITH);
+  ['cli_lastname', 'cli_email'].forEach(name => f.addFilter(name, 'dup', FILTER_OPER_LIKE, false, false, true, 'quick'));
+  expect(filterToSentence(f, catalog, undefined, { subject: 'Donateurs' })).toBe(
+    'Donateurs dont la ville commence par Metz, dont le nom ou l’e-mail contient dup.'
+  );
+  /* Des valeurs différentes dans le groupe : chacun son fragment. */
+  const g = fresh();
+  g.addFilter('cli_lastname', 'a', FILTER_OPER_LIKE, false, false, true, 'quick');
+  g.addFilter('cli_email', 'b', FILTER_OPER_LIKE, false, false, true, 'quick');
+  expect(filterToSentence(g, catalog, undefined, { subject: 'Donateurs' })).toBe('Donateurs dont le nom contient a, dont l’e-mail contient b.');
+});
+
 test('mode OU : « ou » avant le dernier fragment', () => {
   const catalog = donorCatalog();
   const f = new Filter();

@@ -11,3 +11,6 @@ export { default as SearchFormField, widgetFor, widthFor } from './SearchFormFie
 export { default as SearchFormFooter } from './SearchFormFooter';
 export { default as FacetPopover } from './FacetPopover';
 export { default as SearchChipBar } from './SearchChipBar';
+export { default as SearchCriteriaRow, widgetForOperator } from './SearchCriteriaRow';
+export { default as SearchCriteriaBuilder } from './SearchCriteriaBuilder';
+export { default as SearchDrawer } from './SearchDrawer';

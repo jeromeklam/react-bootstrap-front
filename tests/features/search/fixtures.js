@@ -26,7 +26,7 @@ export const donorCatalog = () =>
   normalizeCatalog([
     { name: 'cli_lastname', label: 'Nom', type: 'text', section: 'donateur', phrase: { label: 'le nom' } },
     { name: 'cli_town', label: 'Ville', type: 'text', section: 'donateur', defaultOperator: 'containsb', phrase: { label: 'la ville' } },
-    { name: 'cli_email', label: 'E-mail', type: 'text', section: 'donateur' },
+    { name: 'cli_email', label: 'E-mail', type: 'text', section: 'donateur', phrase: { label: 'l’e-mail' } },
     {
       name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES,
       section: 'categorie', widget: 'pills',

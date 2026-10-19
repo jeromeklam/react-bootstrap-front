@@ -68,6 +68,8 @@ const MAP = {
   plus: 'mdiPlus',
   calendar: 'mdiCalendar',
   tune: 'mdiTune',
+  expand: 'mdiArrowExpandHorizontal',
+  collapse: 'mdiArrowCollapseHorizontal',
 };
 
 const mdi = require(path.join(APP, 'node_modules/@mdi/js'));

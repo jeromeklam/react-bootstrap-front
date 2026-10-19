@@ -9,6 +9,7 @@ import {
   FILTER_OPER_LOWER_OR_EQUAL,
 } from '../filter';
 import { needsValue } from './operators';
+import { findField, fieldOwning } from './catalog';
 
 /**
  * Aller-retour entre les valeurs d'un formulaire de recherche ({ nom: valeur })
@@ -124,4 +125,103 @@ export const filterToValues = (filter, catalog = []) => {
     }
   });
   return values;
+};
+
+/* Les lignes du tiroir de critères : { id, name, operator, values }. */
+let lastRowId = 0;
+export const newCriterionId = () => {
+  lastRowId += 1;
+  return `crit-${lastRowId}`;
+};
+
+/* Les critères d'un filtre en lignes éditables : les fixes, les défauts et les
+   groupes (la recherche rapide) restent hors du tiroir et sont conservés tels quels. */
+export const filterToCriteria = (filter, catalog = []) => {
+  const rows = [];
+  const seen = new Set();
+  if (!filter) {
+    return rows;
+  }
+  filter.getFilters({ fixed: false, default: false }).forEach(elt => {
+    if (elt.getGroup()) {
+      return;
+    }
+    const name = elt.getFilterName();
+    const field = fieldOwning(catalog, name);
+    if (field && field.virtual) {
+      if (seen.has(field.name)) {
+        return;
+      }
+      seen.add(field.name);
+      const value = typeof field.fromFilter === 'function' ? field.fromFilter(filter, field) : '';
+      rows.push({ id: newCriterionId(), name: field.name, operator: FILTER_OPER_EQUAL, values: [value] });
+      return;
+    }
+    const oper = elt.getOperator();
+    let values;
+    if (oper === FILTER_OPER_BETWEEN) {
+      values = [bound(elt.getFilterCrit('default')), bound(elt.getFilterCrit('between'))];
+    } else if (!needsValue(oper)) {
+      values = [];
+    } else {
+      values = elt.getValues();
+    }
+    rows.push({ id: newCriterionId(), name, operator: oper, values });
+  });
+  return rows;
+};
+
+/* L'inverse : un nouveau Filter à partir de `base` (fixes, défauts et groupes
+   conservés, le reste remplacé par les lignes). Une ligne sans champ, sans valeur
+   (hors empty / nempty) ou sur un champ déjà pris est ignorée. */
+export const criteriaToFilter = (rows = [], mode = FILTER_MODE_AND, catalog = [], base = null) => {
+  let filter;
+  if (base) {
+    filter = base.clone();
+    filter.getFilters({ fixed: false, default: false }).forEach(elt => {
+      if (!elt.getGroup()) {
+        filter.removeFilter(elt.getFilterName());
+      }
+    });
+  } else {
+    filter = newFilter(null, mode);
+  }
+  if (mode) {
+    filter.setMode(mode);
+  }
+  const used = new Set();
+  rows.forEach(row => {
+    if (!row || !row.name || used.has(row.name)) {
+      return;
+    }
+    const field = findField(catalog, row.name);
+    const oper = row.operator || (field ? field.defaultOperator : FILTER_OPER_EQUAL);
+    const values = Array.isArray(row.values) ? row.values : [row.values];
+    if (field && field.virtual) {
+      if (hasValue(values[0]) && typeof field.toFilter === 'function') {
+        field.toFilter(values[0], filter, field);
+        used.add(row.name);
+      }
+      return;
+    }
+    if (!needsValue(oper)) {
+      filter.replaceFilter(row.name, [], oper);
+      used.add(row.name);
+      return;
+    }
+    if (oper === FILTER_OPER_BETWEEN) {
+      if (hasValue(values[0]) || hasValue(values[1])) {
+        filter.setFilterRange(row.name, values[0], values[1]);
+        used.add(row.name);
+      }
+      return;
+    }
+    const list = values.filter(hasValue);
+    if (list.length === 0) {
+      return;
+    }
+    filter.replaceFilter(row.name, list, oper);
+    used.add(row.name);
+  });
+  return filter;
 };

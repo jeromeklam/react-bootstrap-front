@@ -1,0 +1,49 @@
+/* Tiroir latéral : fond assombri sur toute la fenêtre sous l'en-tête, panneau
+   fixe qui se glisse depuis son bord. Pleine largeur sur mobile. */
+.rbf-drawer-backdrop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 300ms;
+
+  &.rbf-drawer-backdrop-dim.rbf-drawer-shown {
+    background-color: rgba(theme-color('dark'), 0.35);
+  }
+}
+
+.rbf-drawer {
+  position: fixed;
+  bottom: 0;
+  max-width: 100%;
+  overflow: hidden;
+  outline: none;
+  transition: transform 300ms, width 300ms;
+
+  &.rbf-drawer-right {
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  &.rbf-drawer-left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  .rbf-drawer-shown & {
+    transform: translateX(0);
+  }
+
+  .rbf-drawer-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .rbf-drawer {
+    width: 100% !important;
+  }
+}

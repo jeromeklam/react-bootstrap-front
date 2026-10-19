@@ -23,7 +23,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
 | `FacetPopover`, `SearchChipBar` | 2 | **validé le 19/10/2026** sur l'aperçu ; la rangée doit pouvoir se masquer (bouton d'en-tête, masquée par défaut) |
 | Emplacement `toolbar` de l'en-tête (repliable, mémorisé), `InputNaturalSearch` (variante `bar`) | 2 | **validé le 19/10/2026** sur l'aperçu (« nickel ») |
-| `Drawer`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | proposé, à valider |
+| `Drawer` (extensible), `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | **validé le 19/10/2026** sur l'aperçu (« pas mal du tout ») |
 | `InputNumberRange` | 3 | optionnel, à valider |
 
 Mettre cette table à jour à chaque validation.
@@ -53,32 +53,39 @@ Mettre cette table à jour à chaque validation.
 
 ### `Drawer` — `src/features/advanced/Drawer.js`
 
-Tiroir latéral dans un `Portal`.
+Tiroir latéral dans un `Portal`, **extensible**.
 
 | Prop | Type | Défaut | Rôle |
 |---|---|---|---|
-| `open` | bool, req. | | Ouvert ou fermé |
+| `open` | bool, req. | | Ouvert ou fermé (fermé : rien n'est rendu) |
 | `onClose` | func, req. | | Croix, Échap, clic sur le fond |
 | `side` | `'right'` \| `'left'` | `'right'` | |
-| `width` | number \| string | `560` | |
-| `top` | number | `0` | Décalage sous l'en-tête de l'application (60 sur bureau, 40 sur mobile). La bibliothèque ne devine pas la hauteur de l'en-tête. |
-| `backdrop` | bool | `true` | Fond assombri |
-| `closeOnBackdrop`, `closeOnEscape` | bool | `true` | |
+| `width` | number \| string | `560` | Largeur normale |
+| `expandedWidth` | number \| string | `'85vw'` | Largeur agrandie |
+| `expandable` | bool | `true` | Le bouton agrandir / réduire de l'en-tête |
+| `expanded` | bool | `null` | Contrôlé par l'application si fourni ; sinon mémorisé |
+| `defaultExpanded` | bool | `false` | |
+| `storageKey` | string | | Mémorisation de l'agrandissement (`localStorage`, `rbf.drawer.<clé>.expanded`) |
+| `onExpandToggle` | func | | `(expanded)` |
+| `top` | number | `0` | Décalage sous l'en-tête de l'application (60 sur bureau dans admin). La bibliothèque ne devine pas la hauteur de l'en-tête. |
+| `backdrop`, `closeOnBackdrop`, `closeOnEscape` | bool | `true` | |
 | `title` | node | | |
-| `closeIcon` | element | | |
+| `closeIcon`, `expandIcon`, `collapseIcon` | element | `×`, `⇥`, `⇤` à défaut | |
 | `footer` | node | | Barre de pied |
 | `children` | node | | Corps, défilant |
 | `className` | string | | |
 
-Rendu : `.rbf-drawer-backdrop` + `.rbf-drawer` (`position: fixed; top; bottom: 0;
-width`), `CSSTransition` 300 ms en translation ; en-tête `.rbf-drawer-header`, corps
-`.rbf-drawer-body.custom-scrollbar`, pied `.rbf-drawer-footer`. `role="dialog"
-aria-modal="true" aria-labelledby`. Le focus passe au panneau à l'ouverture et revient
-à l'élément d'origine à la fermeture. Pas de blocage du défilement : `look2.scss` pose
-déjà `overflow: hidden` sur `html, body`. Pleine largeur sous 768 px.
+Rendu : `Portal` → `.rbf-drawer-backdrop` (fixe sous `top`, assombri `rgba(dark, .35)`)
++ `aside.rbf-drawer.bg-white.modal-shadow` (`role="dialog" aria-modal`, `tabIndex=-1`,
+glissé depuis son bord en 300 ms) : en-tête (titre `h5`, agrandir / réduire, croix),
+corps `.custom-scrollbar`, pied. Échap écouté sur `document` en capture ; le focus passe
+au panneau à l'ouverture et revient à l'élément d'origine à la fermeture. Pleine largeur
+sous 768 px. Pas de blocage du défilement : `look2.scss` pose déjà `overflow: hidden` sur
+`html, body`. `src/features/helpers/storedFlag.js` (`readStoredFlag`, `writeStoredFlag`)
+porte la mémorisation, partagée avec la rangée d'outils des listes.
 
-Test de montage : `tests/features/advanced/Drawer.test.js`, après
-`jest.unmock('react-dom')`.
+Tests de montage : `tests/features/advanced/Drawer.test.js`, après
+`jest.unmock('react-dom')`, sans l'`act` de `react-dom/test-utils`.
 
 ### `Chip` — `src/features/basic/Chip.js`
 
@@ -258,8 +265,11 @@ L'aller-retour du formulaire (étape 1) :
 - `hasValue`, `isRangeField(field)`, `isMultiField(field)`, `newFilter(base, mode)`.
 
 Pour le tiroir (étape 3) : `filterToCriteria(filter, catalog)` → `[{ id, name,
-operator, values }]`, et `criteriaToFilter(rows, mode, catalog, base)` ; les lignes sans
-valeur (hors `empty` / `nempty`) sont ignorées, un champ en double est refusé.
+operator, values }]` pour chaque critère actif non fixe, non par défaut et hors groupe
+(les virtuels regroupent leurs noms) ; `criteriaToFilter(rows, mode, catalog, base)` →
+copie de `base` dont les critères éditables sont remplacés par les lignes (fixes, défauts
+et groupes conservés) ; une ligne sans champ, sans valeur (hors `empty` / `nempty`) ou
+sur un champ déjà pris est ignorée. `newCriterionId()`.
 
 ### `filterToSentence.js`
 
@@ -471,21 +481,26 @@ fixes et défauts restent), masqué quand le filtre est vide. Rendu `.rbf-chip-b
 ### `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` (écran C)
 
 `SearchCriteriaRow` : `catalog` (req.), `criterion: { id, name, operator, values }`
-(req.), `usedNames` (champs déjà pris, grisés), `onChange(criterion)`,
-`onRemove(id)`, `icons: { remove, calendar, clear }`, `autoFocus`. Quatre cellules :
-select de champ, select d'opérateur (`getFieldOperators`), zone de valeur, bouton ×.
-Zone de valeur selon l'opérateur et le type : `empty` / `nempty` → « pas de valeur à
-saisir » en gris ; `between` → plage du type ; `text` → `<input>` « Valeur » ;
-`number` → `<input type=number>` ; `date` → `InputDate` ; `datetime` → `InputDatetime` ;
-`monetary` → `InputMonetary allowNull` ; `select` → select, ou `InputPillGroup` si
-`field.multiple` et opérateur `eq` / `neq` / `in` / `nin` ; `bool` → `InputSegmented`
-Oui / Non ; `picker` → `InputAutocomplete` existant ; champ virtuel → son `widget`,
-opérateur « est » figé.
+(req.), `usedNames` (champs déjà pris, grisés dans le select), `onChange(criterion)`,
+`onRemove(id)`, `icons: { remove, calendar, clear, check }`, `size` (`'sm'`),
+`disabled`. Quatre cellules en flex (`SearchCriteriaRow.scss` : champ 11 rem,
+opérateur 10 rem, la valeur prend le reste, passage à la ligne si la place manque) :
+select de champ natif (`fieldsForRows`), select d'opérateur natif
+(`getFieldOperators` ; virtuel → « est » figé), zone de valeur, bouton ×. La zone de
+valeur est un `SearchFormField` dont le `widget` vient de `widgetForOperator(field,
+oper)` : `between` → plage du type, select multiple avec `eq` / `neq` / `in` / `nin` →
+pastilles, select simple → select, booléen → segmenté, date → `InputDate`, montant →
+`InputMonetary`, nombre → `<input type=number>`, virtuel → son widget, sinon texte ;
+`empty` / `nempty` → « pas de valeur à saisir ». Les zones larges (pastilles, plages) prennent toute une ligne sous le champ et
+l'opérateur, le × restant en haut à droite ; les autres tiennent sur la ligne. Choisir un
+champ pose son opérateur par défaut et vide la valeur ; changer d'opérateur garde la
+valeur si sa forme ne change pas.
 
 `SearchCriteriaBuilder` : `catalog`, `rows`, `mode`, `onRowsChange`, `onModeChange`,
-`maxRows`, `icons`. Phrase d'introduction + `InputSegmented` [tous les critères | au
-moins un], lignes, `Chip variant="add"` « + Ajouter un critère » (désactivée quand
-tous les champs sont pris).
+`modeToggle` (`true`), `subject` (« les donateurs »), `maxRows`, `icons`, `size`. Sans
+état. Phrase d'introduction + `InputSegmented` [tous les critères | au moins un], une
+`SearchCriteriaRow` par ligne, « Aucun critère : tous les résultats. » sinon, `Chip
+variant="add"` « + Ajouter un critère » (désactivée quand tous les champs sont pris).
 
 `SearchDrawer` :
 
@@ -495,17 +510,21 @@ tous les champs sont pris).
 | `filter` | `Filter`, req. | | |
 | `catalog` | array, req. | | |
 | `onApply` | func, req. | | `(filter)` |
-| `onClearAll` | func | | |
+| `onClearAll` | func | | Après « Tout effacer » |
 | `title` | string | « Critères avancés » | |
-| `width`, `top` | | `560`, `0` | Transmis à `Drawer` |
+| `subject` | string | | Pour l'introduction (« les donateurs ») |
+| `sentenceSubject` | string | | Pour l'encart (« Donateurs ») |
+| `width`, `expandedWidth`, `storageKey`, `top` | | `560`, `'85vw'`, —, `0` | Transmis à `Drawer` |
 | `showSummary`, `modeToggle` | bool | `true` | |
-| `icons` | `{ close, add, remove, calendar, clear }` | | |
+| `maxRows` | number | | |
+| `icons` | `{ close, expand, collapse, add, remove, calendar, clear, check }` | | |
 
-Comportement : à l'ouverture (transition `open` faux → vrai, et seulement là, pour
-éviter l'écueil de `DefaultPanel`), `rows = filterToCriteria(filter, catalog)` et
-`mode = filter.getMode()`. L'encart EN CLAIR est recalculé en direct sur un
-`criteriaToFilter` jetable. « Appliquer » → `onApply(criteriaToFilter(rows, mode,
-catalog, filter))`. « Tout effacer » vide les lignes.
+Comportement : à l'ouverture (transition `open` faux → vrai, et seulement là), `rows =
+filterToCriteria(filter, catalog)` et `mode = filter.getMode()` ; un re-rendu du parent
+n'écrase pas le brouillon. L'encart EN CLAIR est recalculé sur `criteriaToFilter(rows,
+mode, catalog, filter)` ; « Appliquer » le remet par `onApply` : les critères fixes, par
+défaut et le groupe de recherche rapide sont conservés, le reste remplacé par les lignes.
+« Tout effacer » vide les lignes.
 
 ## Emplacement d'en-tête de liste
 

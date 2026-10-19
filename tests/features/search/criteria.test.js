@@ -102,3 +102,66 @@ test('nature des champs et valeurs', () => {
   expect(hasValue(0)).toBe(true);
   expect(hasValue('')).toBe(false);
 });
+
+describe('lignes du tiroir', () => {
+  const { filterToCriteria, criteriaToFilter } = require('../../../src/features/search');
+
+  const listFilter = () => {
+    const f = new Filter();
+    f.init(FILTER_MODE_AND, FILTER_OPER_LIKE);
+    f.addFilter('group.id', 15, FILTER_OPER_EQUAL, true);
+    f.addFilter('cau_to', '2026-01-01', 'gten', false, true);
+    f.replaceFilter('cli_town', ['Me'], 'containsb');
+    f.setFilterRange('last_donation.don_real_ts', '2025-01-01', '2025-12-31');
+    f.replaceFilter('cli_email', [], 'empty');
+    f.setFilterValues('donations.payment_type.ptyp_id', [5, 14]);
+    f.addFilter('donations.sponsorship.spo_id', null, FILTER_OPER_NOT_EMPTY);
+    ['cli_firstname', 'cli_lastname'].forEach(n => f.addFilter(n, 'dup', FILTER_OPER_LIKE, false, false, true, 'quick'));
+    return f;
+  };
+
+  test('filterToCriteria : une ligne par critère éditable, le reste hors du tiroir', () => {
+    const rows = filterToCriteria(listFilter(), donorCatalog());
+    expect(rows.map(r => [r.name, r.operator, r.values])).toEqual([
+      ['cli_town', 'containsb', ['Me']],
+      ['last_donation.don_real_ts', 'between', ['2025-01-01', '2025-12-31']],
+      ['cli_email', 'empty', []],
+      ['donations.payment_type.ptyp_id', 'eq', [5, 14]],
+      ['don_kind', 'eq', ['regular']],
+    ]);
+    expect(new Set(rows.map(r => r.id)).size).toBe(5);
+  });
+
+  test('criteriaToFilter : fixes, défauts et recherche rapide conservés, lignes appliquées', () => {
+    const base = listFilter();
+    const rows = filterToCriteria(base, donorCatalog());
+    rows[0] = { ...rows[0], values: ['Metz'] };
+    rows.push({ id: 'x', name: 'donations.grp_id', operator: 'eq', values: [16] });
+    rows.push({ id: 'y', name: '', operator: 'eq', values: ['ignorée'] });
+    rows.push({ id: 'z', name: 'cli_town', operator: 'eq', values: ['doublon ignoré'] });
+    rows.push({ id: 'w', name: 'cli_lastname', operator: 'contains', values: ['', null] });
+    const next = criteriaToFilter(rows, 'OR', donorCatalog(), base);
+    expect(next).not.toBe(base);
+    expect(base.findFirst('cli_town').getValues()).toEqual(['Me']);
+    expect(next.getMode()).toBe('OR');
+    expect(next.findFirst('group.id').isFixed()).toBe(true);
+    expect(next.hasFilter('cau_to')).toBe(true);
+    expect(next.getFilters({ group: 'quick' }).length).toBe(2);
+    expect(next.findFirst('cli_town').getValues()).toEqual(['Metz']);
+    expect(next.findFirst('cli_town').getOperator()).toBe('containsb');
+    expect(next.findFirst('donations.grp_id').getValues()).toEqual([16]);
+    expect(next.hasFilter('cli_lastname')).toBe(true);
+    expect(next.findFirst('cli_lastname').getGroup()).toBe('quick');
+  });
+
+  test('criteriaToFilter : lignes retirées → critères retirés ; sans base → filtre neuf', () => {
+    const base = listFilter();
+    const next = criteriaToFilter([{ id: 'a', name: 'cli_email', operator: 'nempty', values: [] }], 'AND', donorCatalog(), base);
+    expect(next.hasFilter('cli_town')).toBe(false);
+    expect(next.hasFilter('donations.sponsorship.spo_id')).toBe(false);
+    expect(next.findFirst('cli_email').getOperator()).toBe('nempty');
+    expect(next.hasFilter('group.id')).toBe(true);
+    const fresh = criteriaToFilter([{ id: 'b', name: 'don_kind', operator: 'eq', values: ['once'] }, { id: 'c', name: 'donations.don_mnt_input', operator: 'between', values: ['', '100'] }], 'AND', donorCatalog());
+    expect(api(fresh)).toEqual({ filter: { and: { 'donations.sponsorship.spo_id': { empty: null }, 'donations.don_mnt_input': { ltwe: '100' } } } });
+  });
+});
