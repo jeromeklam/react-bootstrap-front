@@ -1,0 +1,7 @@
+/* Le pied du panneau de critères reste visible en bas du conteneur défilant
+   (panneau droit de la page ou corps du tiroir). */
+.rbf-criteria-panel-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}

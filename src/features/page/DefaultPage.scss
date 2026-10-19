@@ -11,3 +11,21 @@
   right: 80px;
   opacity: 0.25;
 }
+
+/* Poignée de largeur du panneau droit : une bande sur son bord gauche. */
+.rbf-page-right-resizer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 2;
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &.active {
+    background-color: theme-color('secondary-light');
+  }
+}

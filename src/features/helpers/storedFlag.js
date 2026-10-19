@@ -30,3 +30,30 @@ export const writeStoredFlag = (key, value) => {
     /* pas de stockage : le choix ne survit pas au rechargement */
   }
 };
+
+/* Même chose pour un nombre (une largeur de panneau). */
+export const readStoredNumber = (key, fallback) => {
+  if (!key) {
+    return fallback;
+  }
+  try {
+    const value = parseInt(window.localStorage.getItem(key), 10);
+    if (!Number.isNaN(value)) {
+      return value;
+    }
+  } catch (error) {
+    /* pas de stockage : on garde la valeur par défaut */
+  }
+  return fallback;
+};
+
+export const writeStoredNumber = (key, value) => {
+  if (!key) {
+    return;
+  }
+  try {
+    window.localStorage.setItem(key, String(Math.round(value)));
+  } catch (error) {
+    /* pas de stockage : le choix ne survit pas au rechargement */
+  }
+};

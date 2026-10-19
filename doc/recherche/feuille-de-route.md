@@ -77,6 +77,7 @@ nouvelles sont vertes.
 |---|---|
 | `clone()` profond par défaut, ou `cloneDeep()` séparé ? | **Profond par défaut** (18/10/2026) : le seul effet est que « Annuler » dans les 9 panneaux `DefaultPanel` annule vraiment. |
 | Couleurs et formes des pastilles | **Bleu `secondary` par défaut, arrondi en pilule** (18/10/2026) ; le vert `primary` reste aux boutons d'action. |
+| Contenant des critères avancés | **Le panneau droit de la page** (19/10/2026), à largeur réglable, pas le tiroir superposé ; ouvert sans icône choisie, il montre la recherche. Le `Drawer` reste dans la lib. |
 | Rangée de critères de l'en-tête | **Masquée par défaut**, affichée / cachée par un bouton de l'en-tête (badge du nombre de critères quand elle est repliée), choix mémorisé (19/10/2026 : « Constance va mettre un peu de temps à trouver l'utilité et au début ça va la gêner »). |
 | Entrée dans la barre de l'en-tête tant que le LLM est en construction ? | Recommandé : Entrée = recherche rapide actuelle, l'étincelle montre la notice. À confirmer à l'étape 2. |
 | L'API accepte-t-elle `filter[and][or][…]` à côté de `filter[and][champ]` ? | **Oui** (19/10/2026, vérifié dans admin : la recherche rapide en groupe filtre la liste des donateurs). |
@@ -167,7 +168,7 @@ En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` l
 
 ### Administration Kalaweit
 
-En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` gagne `onOpenCriteria` (le bouton filtre l'appelle au lieu du panneau droit) ; `client/List.js` porte le `SearchDrawer` (bouton filtre, « + Critère »), `client/SearchPage.js` son lien « Critères avancés » qui ouvre le tiroir sur les critères déjà saisis ; icônes dans `ui/searchIcons.js`. **Test réel à faire.** `client/FilterPanel.js` et son entrée dans `common/RightPanel.js` conservés.
+**Changement de contenant demandé le 19/10/2026** (« sur le concept ok, mais… ») : pas de tiroir superposé dans admin — les critères avancés remplacent l'ancien panneau de filtres des donateurs **dans le panneau droit de la page**, qui garde son mode ouvert / replié et gagne une **largeur réglable** (poignée, largeur minimale du panneau et du contenu, mémorisée) ; le panneau s'ouvre **sur la recherche** quand aucune icône de la barre n'a été choisie ; plus de lien « Fiche de recherche » dans l'en-tête (c'est une option de menu). Lib : `SearchCriteriaPanel` (le tiroir n'en est plus qu'un contenant), `DefaultPage` redimensionnable. Admin, branche `recherche` : `client/CriteriaPanel.js` branché dans `common/RightPanel.js` (donateurs, et contenu par défaut), `home/Page.js` (clé `admin`, 360 / 560), « + Critère » et « Critères avancés » de la fiche ouvrent ce panneau. **Testé et validé le 19/10/2026** ; `client/FilterPanel.js` retiré.
 
 - Pour `client` seulement : le bouton filtre de l'en-tête ouvre `SearchDrawer`
   (`top={60}`) au lieu de `setPanel('filter', 'client')` ; `onAddCriterion` de la

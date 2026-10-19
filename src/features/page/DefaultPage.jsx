@@ -4,6 +4,8 @@ import classnames from 'classnames';
 import { CSSTransition } from 'react-transition-group';
 import { DefaultHeader, DefaultSidebar, DefaultFooter } from './';
 import { WidthObserver } from '../advanced';
+import { readStoredNumber, writeStoredNumber } from '../helpers/storedFlag';
+import { maxRightPanelWidth, clampRightPanelWidth } from './rightPanelWidth';
 
 const duration = 500;
 
@@ -58,12 +60,14 @@ const headerMenuStyles = {
   exited: { top: '0px' },
 };
 
-const rightPanel = {
+/* Le panneau droit a une largeur réglable : ses positions dépendent d'elle. Replié,
+   il ne laisse voir que sa barre d'icônes (DesktopRightWidthMini). */
+const rightPanelFor = width => ({
   entering: { right: `0px` },
   entered: { right: `0px` },
-  exiting: { right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px` },
-  exited: { right: `-${DesktopRightWidthMaxi - DesktopRightWidthMini}px` },
-};
+  exiting: { right: `-${width - DesktopRightWidthMini}px` },
+  exited: { right: `-${width - DesktopRightWidthMini}px` },
+});
 
 const headerMenuDefaultStyles = {
   zIndex: '900',
@@ -109,12 +113,14 @@ let contentStyles = {
   exited: { left: `${DesktopSideWidthMini}px` },
 };
 
-const contentStylesPanel = {
-  entering: { right: `${DesktopRightWidthMaxi}px` },
-  entered: { right: `${DesktopRightWidthMaxi}px` },
+const contentStylesPanelFor = width => ({
+  entering: { right: `${width}px` },
+  entered: { right: `${width}px` },
   exiting: { right: `${DesktopRightWidthMini}px` },
   exited: { right: `${DesktopRightWidthMini}px` },
-};
+});
+
+const RIGHT_PANEL_STORAGE = 'rbf.page.rightPanel.';
 
 const footerStyles = {
   position: 'fixed',
@@ -135,11 +141,25 @@ export default class ResponsivePage extends Component {
     footer: PropTypes.bool,
     rightPanel: PropTypes.element,
     rightPanelOpened: PropTypes.bool,
+    rightPanelWidth: PropTypes.number,
+    rightPanelDefaultWidth: PropTypes.number,
+    rightPanelMinWidth: PropTypes.number,
+    contentMinWidth: PropTypes.number,
+    rightPanelStorageKey: PropTypes.string,
+    onRightPanelResize: PropTypes.func,
+    t: PropTypes.func,
   };
   static defaultProps = {
     footer: true,
     rightPanel: null,
     rightPanelOpened: false,
+    rightPanelWidth: null,
+    rightPanelDefaultWidth: DesktopRightWidthMaxi,
+    rightPanelMinWidth: 320,
+    contentMinWidth: 480,
+    rightPanelStorageKey: null,
+    onRightPanelResize: null,
+    t: null,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -170,11 +190,105 @@ export default class ResponsivePage extends Component {
       menuDataOpen: false,
       menuUserOpen: false,
       menuSideMini: !menuMaxi,
+      rightPanelWidth: readStoredNumber(
+        props.rightPanelStorageKey ? RIGHT_PANEL_STORAGE + props.rightPanelStorageKey + '.width' : null,
+        props.rightPanelDefaultWidth
+      ),
+      resizing: false,
     };
+    this.resizeStart = null;
     this.onToggleData = this.onToggleData.bind(this);
     this.onToggleSide = this.onToggleSide.bind(this);
     this.onToggleUser = this.onToggleUser.bind(this);
     this.onOpenSide = this.onOpenSide.bind(this);
+    this.onResizeStart = this.onResizeStart.bind(this);
+    this.onResizeMove = this.onResizeMove.bind(this);
+    this.onResizeEnd = this.onResizeEnd.bind(this);
+    this.onResizeKey = this.onResizeKey.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.stopResizeListeners();
+  }
+
+  /* Largeur du panneau droit : contrôlée par l'application si fournie, sinon mémorisée ici. */
+  rightPanelWidth() {
+    return this.props.rightPanelWidth !== null ? this.props.rightPanelWidth : this.state.rightPanelWidth;
+  }
+
+  rightPanelMaxWidth() {
+    const windowWidth = typeof window !== 'undefined' && window.innerWidth ? window.innerWidth : 1280;
+    const sidebar = this.props.authenticated ? (this.state.menuSideMini ? DesktopSideWidthMini : DesktopSideWidthMaxi) : 0;
+    return maxRightPanelWidth(windowWidth, sidebar, this.props.contentMinWidth, this.props.rightPanelMinWidth);
+  }
+
+  setRightPanelWidth(width, final = true) {
+    const clamped = clampRightPanelWidth(width, this.props.rightPanelMinWidth, this.rightPanelMaxWidth());
+    if (this.props.rightPanelWidth === null) {
+      this.setState({ rightPanelWidth: clamped });
+      if (final) {
+        writeStoredNumber(
+          this.props.rightPanelStorageKey ? RIGHT_PANEL_STORAGE + this.props.rightPanelStorageKey + '.width' : null,
+          clamped
+        );
+      }
+    }
+    if (this.props.onRightPanelResize && final) {
+      this.props.onRightPanelResize(clamped);
+    }
+  }
+
+  stopResizeListeners() {
+    document.removeEventListener('mousemove', this.onResizeMove);
+    document.removeEventListener('mouseup', this.onResizeEnd);
+    document.removeEventListener('touchmove', this.onResizeMove);
+    document.removeEventListener('touchend', this.onResizeEnd);
+  }
+
+  /* La poignée : on tire vers la gauche pour élargir le panneau. */
+  onResizeStart(event) {
+    const point = event.touches ? event.touches[0] : event;
+    this.resizeStart = { x: point.clientX, width: this.rightPanelWidth() };
+    this.setState({ resizing: true });
+    document.addEventListener('mousemove', this.onResizeMove);
+    document.addEventListener('mouseup', this.onResizeEnd);
+    document.addEventListener('touchmove', this.onResizeMove, { passive: false });
+    document.addEventListener('touchend', this.onResizeEnd);
+    if (event.preventDefault) {
+      event.preventDefault();
+    }
+  }
+
+  onResizeMove(event) {
+    if (!this.resizeStart) {
+      return;
+    }
+    const point = event.touches ? event.touches[0] : event;
+    if (event.cancelable && event.preventDefault) {
+      event.preventDefault();
+    }
+    this.setRightPanelWidth(this.resizeStart.width + (this.resizeStart.x - point.clientX), false);
+  }
+
+  onResizeEnd() {
+    if (!this.resizeStart) {
+      return;
+    }
+    this.resizeStart = null;
+    this.stopResizeListeners();
+    this.setState({ resizing: false });
+    this.setRightPanelWidth(this.rightPanelWidth(), true);
+  }
+
+  onResizeKey(event) {
+    const step = event.shiftKey ? 64 : 16;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.setRightPanelWidth(this.rightPanelWidth() + step);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.setRightPanelWidth(this.rightPanelWidth() - step);
+    }
   }
 
   onToggleData() {
@@ -195,6 +309,13 @@ export default class ResponsivePage extends Component {
 
   render() {
     const userForm = React.cloneElement(this.props.userForm, { onClose: this.onToggleUser });
+    const panelWidth = this.rightPanelWidth();
+    const rightPanel = rightPanelFor(panelWidth);
+    const contentStylesPanel = contentStylesPanelFor(panelWidth);
+    const noTransition = this.state.resizing ? { transition: 'none' } : {};
+    const resizeTitle = this.props.t
+      ? this.props.t({ id: 'rbf.page.rightPanel.resize', defaultMessage: 'Régler la largeur du panneau' })
+      : 'Régler la largeur du panneau';
     if (!this.props.rightPanel) {
       contentDefaultStyles.right = '0px';
     } else {
@@ -276,6 +397,7 @@ export default class ResponsivePage extends Component {
                           ...contentStyles[state],
                           ...contentStylesPanel[state2],
                           bottom: this.props.footer ? `${DesktopFooterHeight}px` : '0px',
+                          ...noTransition,
                         }}
                       >
                         {this.props.backgroundImg && (
@@ -287,7 +409,25 @@ export default class ResponsivePage extends Component {
                   </CSSTransition>
                   <CSSTransition in={this.props.rightPanelOpened} timeout={duration}>
                     {state2 => (
-                      <div className={classnames("ui-page-right-panel", this.props.authenticated && 'bg-light')} style={{ ...rightPanelStyles, ...rightPanel[state2] }}>
+                      <div
+                        className={classnames('ui-page-right-panel', this.props.authenticated && 'bg-light')}
+                        style={{ ...rightPanelStyles, width: `${panelWidth}px`, ...rightPanel[state2], ...noTransition }}
+                      >
+                        {this.props.rightPanelOpened && (
+                          <div
+                            className={classnames('rbf-page-right-resizer', this.state.resizing && 'active')}
+                            role="separator"
+                            aria-orientation="vertical"
+                            aria-valuenow={panelWidth}
+                            aria-valuemin={this.props.rightPanelMinWidth}
+                            aria-valuemax={this.rightPanelMaxWidth()}
+                            tabIndex={0}
+                            title={resizeTitle}
+                            onMouseDown={this.onResizeStart}
+                            onTouchStart={this.onResizeStart}
+                            onKeyDown={this.onResizeKey}
+                          />
+                        )}
                         {this.props.rightPanel}
                       </div>
                     )}

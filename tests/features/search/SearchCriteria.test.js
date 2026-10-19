@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import { Chip, InputSegmented } from '../../../src/features/basic';
 import { Filter, FILTER_MODE_AND, FILTER_MODE_OR, FILTER_OPER_LIKE, FILTER_OPER_EQUAL } from '../../../src/features/filter';
 import { Drawer } from '../../../src/features/advanced';
-import { SearchCriteriaRow, SearchCriteriaBuilder, SearchDrawer, SearchFormField, SearchSummary, widgetForOperator } from '../../../src/features/search';
+import { SearchCriteriaRow, SearchCriteriaBuilder, SearchCriteriaPanel, SearchDrawer, SearchFormField, SearchSummary, widgetForOperator } from '../../../src/features/search';
 import { donorCatalog } from './fixtures';
 
 const normalize = value => {
@@ -127,7 +127,7 @@ describe('SearchCriteriaBuilder', () => {
   });
 });
 
-describe('SearchDrawer', () => {
+describe('SearchCriteriaPanel et SearchDrawer', () => {
   const listFilter = () => {
     const f = new Filter();
     f.init(FILTER_MODE_AND, FILTER_OPER_LIKE);
@@ -138,11 +138,10 @@ describe('SearchDrawer', () => {
     return f;
   };
 
-  test('à l’ouverture : lignes dérivées du filtre, mode, encart ; Appliquer rend un nouveau filtre', () => {
+  test('panneau : lignes dérivées du filtre, mode, encart ; Appliquer rend un nouveau filtre', () => {
     const onApply = jest.fn();
-    const w = shallow(<SearchDrawer open filter={listFilter()} catalog={donorCatalog()} onApply={onApply} onClose={() => {}} subject="les donateurs" sentenceSubject="Donateurs" storageKey="client" top={60} icons={icons} />);
-    expect(w.find(Drawer).prop('top')).toBe(60);
-    expect(w.find(Drawer).prop('storageKey')).toBe('client');
+    const w = shallow(<SearchCriteriaPanel filter={listFilter()} catalog={donorCatalog()} onApply={onApply} title="Critères avancés" subject="les donateurs" sentenceSubject="Donateurs" icons={icons} />);
+    expect(w.find('.rbf-criteria-panel-title').text()).toBe('Critères avancés');
     const builder = w.find(SearchCriteriaBuilder);
     expect(builder.prop('rows').map(r => r.name)).toEqual(['cli_town', 'donations.payment_type.ptyp_id']);
     expect(builder.prop('mode')).toBe(FILTER_MODE_AND);
@@ -150,7 +149,7 @@ describe('SearchDrawer', () => {
     builder.prop('onRowsChange')([...builder.prop('rows'), { id: 'n', name: 'cli_email', operator: 'empty', values: [] }]);
     builder.prop('onModeChange')(FILTER_MODE_OR);
     w.update();
-    w.find(Drawer).prop('footer').props.children[1].props.onClick();
+    w.find('.rbf-search-drawer-apply').simulate('click');
     const next = onApply.mock.calls[0][0];
     expect(next.getMode()).toBe(FILTER_MODE_OR);
     expect(next.hasFilter('cli_email')).toBe(true);
@@ -159,20 +158,30 @@ describe('SearchDrawer', () => {
     expect(api(next).filter.and.or).toBeDefined();
   });
 
-  test('Tout effacer vide les lignes ; les lignes sont redérivées à chaque ouverture, pas entre deux', () => {
+  test('panneau : relu quand le filtre change d’identité, pas sur un simple re-rendu ; Tout effacer', () => {
     const onClearAll = jest.fn();
-    const w = shallow(<SearchDrawer open={false} filter={listFilter()} catalog={donorCatalog()} onApply={() => {}} onClose={() => {}} onClearAll={onClearAll} />);
-    expect(w.find(SearchCriteriaBuilder).prop('rows')).toEqual([]);
-    w.setProps({ open: true });
+    const first = listFilter();
+    const w = shallow(<SearchCriteriaPanel filter={first} catalog={donorCatalog()} onApply={() => {}} onClearAll={onClearAll} />);
     expect(w.find(SearchCriteriaBuilder).prop('rows').length).toBe(2);
     w.find(SearchCriteriaBuilder).prop('onRowsChange')([]);
-    w.setProps({ filter: listFilter() });
+    w.setProps({ filter: first, catalog: donorCatalog() });
     expect(w.find(SearchCriteriaBuilder).prop('rows').length).toBe(0);
-    w.setProps({ open: false });
-    w.setProps({ open: true });
+    w.setProps({ filter: listFilter() });
     expect(w.find(SearchCriteriaBuilder).prop('rows').length).toBe(2);
-    w.find(Drawer).prop('footer').props.children[0].props.onClick();
+    w.find('.rbf-search-drawer-clear').simulate('click');
     expect(w.find(SearchCriteriaBuilder).prop('rows')).toEqual([]);
     expect(onClearAll).toHaveBeenCalled();
+  });
+
+  test('tiroir : un Drawer autour du panneau, avec ses réglages', () => {
+    const w = shallow(<SearchDrawer open filter={listFilter()} catalog={donorCatalog()} onApply={() => {}} onClose={() => {}} subject="les donateurs" storageKey="client" top={60} icons={icons} />);
+    expect(w.find(Drawer).prop('top')).toBe(60);
+    expect(w.find(Drawer).prop('storageKey')).toBe('client');
+    expect(w.find(Drawer).prop('title')).toBe('Critères avancés');
+    const panel = w.find(SearchCriteriaPanel);
+    expect(panel.length).toBe(1);
+    expect(panel.prop('subject')).toBe('les donateurs');
+    expect(panel.prop('icons')).toBe(icons);
+    expect(panel.prop('title')).toBeNull();
   });
 });

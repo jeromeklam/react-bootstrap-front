@@ -60,6 +60,7 @@ export const translations = {
   'rbf.drawer.close': 'Fermer',
   'rbf.drawer.expand': 'Agrandir',
   'rbf.drawer.collapse': 'Réduire',
+  'rbf.page.rightPanel.resize': 'Régler la largeur du panneau',
   'rbf.search.drawer.title': 'Critères avancés',
   'rbf.search.drawer.intro': 'Afficher {subject} qui remplissent',
   'rbf.search.drawer.subject': 'les résultats',

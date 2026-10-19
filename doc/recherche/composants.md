@@ -23,7 +23,8 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
 | `FacetPopover`, `SearchChipBar` | 2 | **validé le 19/10/2026** sur l'aperçu ; la rangée doit pouvoir se masquer (bouton d'en-tête, masquée par défaut) |
 | Emplacement `toolbar` de l'en-tête (repliable, mémorisé), `InputNaturalSearch` (variante `bar`) | 2 | **validé le 19/10/2026** sur l'aperçu (« nickel ») |
-| `Drawer` (extensible), `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | **validé le 19/10/2026** sur l'aperçu (« pas mal du tout ») |
+| `Drawer` (extensible), `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | **validé le 19/10/2026** sur l'aperçu (« pas mal du tout ») ; admin retient le panneau droit de la page (`SearchCriteriaPanel`), pas le tiroir |
+| Panneau droit de `DefaultPage` à largeur réglable, `SearchCriteriaPanel` dans ce panneau | 3 | **validé le 19/10/2026** dans admin (« pas mal du tout ») |
 | `InputNumberRange` | 3 | optionnel, à valider |
 
 Mettre cette table à jour à chaque validation.
@@ -502,7 +503,16 @@ valeur si sa forme ne change pas.
 `SearchCriteriaRow` par ligne, « Aucun critère : tous les résultats. » sinon, `Chip
 variant="add"` « + Ajouter un critère » (désactivée quand tous les champs sont pris).
 
-`SearchDrawer` :
+`SearchCriteriaPanel` : le panneau lui-même, sans contenant — constructeur, encart,
+« Tout effacer » / « Appliquer » en pied collant. Props : `filter` (req.), `catalog`
+(req.), `onApply(filter)` (req.), `onClearAll`, `title` (node, rendu en `h5`),
+`subject`, `sentenceSubject`, `showSummary`, `modeToggle`, `maxRows`, `icons`, `size`,
+`className`, `t`. Les lignes sont dérivées du filtre au montage puis **chaque fois que
+`filter` change d'identité** (un nouveau `Filter` posé par la liste), jamais sur un simple
+re-rendu : le brouillon tient. C'est lui qu'admin pose dans le panneau droit de la page.
+
+`SearchDrawer` : le même panneau dans un `Drawer` superposé (le tiroir démonte son
+contenu quand il est fermé, donc relecture à chaque ouverture) :
 
 | Prop | Type | Défaut | Rôle |
 |---|---|---|---|
@@ -549,6 +559,27 @@ Le bouton porte `aria-expanded` et son titre (« Afficher / Masquer les critère
 `wrap={false}` (défilement horizontal, pas de marge basse). `DefaultHeader` : `sort`
 vaut désormais `[]` par défaut (`sortToText` itère dessus). Mobile : même emplacement,
 même bouton, même mémorisation.
+
+## Panneau droit de la page à largeur réglable
+
+Props additives sur `ResponsivePage` / `DefaultPage`, comportement par défaut inchangé
+(400 px) :
+
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `rightPanelWidth` | number | `null` | Contrôlée par l'application si fournie |
+| `rightPanelDefaultWidth` | number | `400` | |
+| `rightPanelMinWidth` | number | `320` | Largeur minimale du panneau |
+| `contentMinWidth` | number | `480` | Largeur minimale garantie au contenu : la borne haute vaut fenêtre − menu latéral − `contentMinWidth` |
+| `rightPanelStorageKey` | string | | Mémorisation de la largeur (`localStorage`, `rbf.page.rightPanel.<clé>.width`) |
+| `onRightPanelResize` | func | | `(width)` à la fin d'un glissement ou d'un réglage clavier |
+
+Panneau ouvert, une poignée `.rbf-page-right-resizer` (`role="separator"`, 6 px sur le
+bord gauche) se tire à la souris ou au doigt — vers la gauche pour élargir — et se
+règle aux flèches ← → (16 px, 64 avec Maj). Pendant le glissement, les transitions sont
+coupées pour suivre le pointeur. Les positions du panneau replié (barre d'icônes de
+60 px) et du contenu sont recalculées de la largeur courante. Le mode ouvert / replié
+reste celui de `rightPanelOpened`.
 
 ## Contrat du catalogue
 
