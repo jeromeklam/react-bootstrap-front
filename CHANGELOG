@@ -1,3 +1,8 @@
+# 3.15.1 : 19/10/2026
+
+* Recherche : dans la fiche de recherche, Entrée dans la carte de langage naturel remplit les critères au lieu de lancer la recherche (plus de formulaire imbriqué) ; même chose dans la fiche « Expliquer un mot »
+* Recherche : `InputNaturalSearch` pose sa taille sur le groupe entier (`input-group-sm`), le champ, l'étincelle et le badge « Entrée » ont la même hauteur dans l'en-tête de liste
+
 # 3.15.0 : 19/10/2026
 
 * Recherche, étape 4 : le langage naturel (voir doc/recherche/)
