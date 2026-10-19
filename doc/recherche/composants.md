@@ -26,6 +26,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `Drawer` (extensible), `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | **validé le 19/10/2026** sur l'aperçu (« pas mal du tout ») ; admin retient le panneau droit de la page (`SearchCriteriaPanel`), pas le tiroir |
 | Panneau droit de `DefaultPage` à largeur réglable, `SearchCriteriaPanel` dans ce panneau | 3 | **validé le 19/10/2026** dans admin (« pas mal du tout ») |
 | `InputNumberRange` | 3 | optionnel, à valider |
+| `InputNaturalSearch` : attente et avertissements sous le champ ; carte « Étape 4 » de l'aperçu, branchée sur l'Ollama du poste | 4 | **validé le 19/10/2026** sur l'aperçu avec le vrai modèle (« ça me paraît pas mal du tout ») |
 
 Mettre cette table à jour à chaque validation.
 
@@ -296,6 +297,64 @@ sur un champ déjà pris est ignorée. `newCriterionId()`.
   rend tels quels, `rbfIntl` les ignore) ; `renderTemplate(texte, vars)` est exporté.
 - Fixtures de tests : les deux phrases des maquettes, mot pour mot.
 
+### `natural.js` (étape 4)
+
+Du catalogue vers le modèle de langage, et retour. Le modèle ne voit que des libellés
+français ; il répond dans une **forme courte** `{ mode, c: [{ f, o, v }], unmatched }`
+(chaque token de sortie coûte ~0,1 s sur le serveur sans GPU) ; la phrase en clair
+n'est pas demandée, `filterToSentence` la produit.
+
+- `fieldsForNatural(catalog)` : les champs proposés — ni `hidden`, ni `llm: false`, ni
+  les pickers (sauf `llm: true`) ; deux libellés identiques → le premier seul.
+  `naturalType(champ)` : `select` dès qu'il y a des options (le virtuel « Don »),
+  sinon le type.
+- `buildNaturalPrompt(catalog, { today, subject, examples, intro })` : le prompt
+  système, **stable pour un catalogue donné** (Ollama garde son évaluation en cache
+  et ne relit que la phrase) : une ligne par champ « libellé : type [choix] —
+  description », les opérateurs par type, les règles (dates AAAA-MM-JJ avec la date du
+  jour, montants en euros, « ne rien inventer, `unmatched` plutôt qu'un champ
+  approchant »), puis les exemples de l'application. `naturalFieldLine`,
+  `naturalExampleToText` (un exemple = `{ phrase, mode?, criteria: [{ name, operator,
+  values }], unmatched? }`, valeurs écrites comme le modèle doit les rendre).
+- `buildNaturalSchema(catalog)` : le schéma JSON imposé (`format` d'Ollama) — `f` dans
+  un `enum` des libellés, `o` dans la matrice, `v` tableau de chaînes.
+- `buildNaturalRequest(phrase, catalog, options)` → `{ system, phrase, user, format }` :
+  ce que l'application envoie à son service ; le service choisit le modèle et ses
+  options (`temperature` 0, `num_predict` 400, `keep_alive` long).
+- `parseNaturalContent(réponse)` : objet, chaîne JSON ou clôture markdown ; lève une
+  erreur sinon.
+- `naturalToCriteria(brut, catalog, { t })` → `{ mode, criteria: [{ id, name,
+  operator, values }], warnings, unmatched }`. Accepte aussi la forme pleine
+  `{ criteria: [{ field, operator, values }] }` (par nom ou par libellé). Vérifie et
+  dit, en français (`rbf.search.natural.*`), tout ce qui est corrigé ou ignoré : champ
+  inconnu ; opérateur hors de la matrice du type (→ `eq` pour un choix, sinon
+  l'opérateur par défaut — mais des mots avec un opérateur de texte sur une date ou
+  un nombre, « Ami contient Kiki », c'est un mauvais champ : écarté en une ligne,
+  comme un critère dont aucune valeur n'est une date ou un nombre ; et une comparaison
+  sur un texte, « code postal entre 75000 et 75019 », est écartée en une ligne par
+  champ — le prompt dit qu'un texte « commence par » ou « contient ») ; valeurs — option par `matchOption` (valeur, libellé sans
+  accent ni casse, puis préfixe ou inclusion **uniques** : « Association » →
+  « Association / Fondation »), booléen (oui/non/1/0), nombre (« 1 500,50 € »), date
+  (ISO ou jj/mm/aaaa, calendrier vérifié), texte **présent dans la demande** quand
+  elle est fournie (une ville ou un pays absents de la phrase ont été inventés :
+  « en anglais » → « United Kingdom ») ; `between` sans deux bornes ; critère sans
+  valeur. Puis un seul critère par champ : mêmes opérateurs → valeurs réunies ; une
+  borne basse et une haute (date, nombre, montant) → `between` ; sinon le premier
+  gagne. Texte : plusieurs valeurs seulement avec `eq` / `neq` (jointes par virgule
+  comme les listes de choix), « contient A ou B » garde A. Mode `OR` ramené à `AND`
+  s'il reste moins de deux critères.
+- `naturalToResult(brut, catalog, { base, t })` → le `NaturalLanguageResult` :
+  `filter` bâti par `criteriaToFilter` sur `base` (fixes, défauts et groupes — la
+  recherche rapide — conservés, le reste remplacé), `mode`, `criteria`, `warnings`
+  précédés de « Non compris : « … » » s'il y a des `unmatched`, `unmatched`.
+- `createNaturalLanguage({ transport, catalog, base, examples, subject, intro, today,
+  t })` fabrique le `onNaturalLanguage` d'une application : `transport(request,
+  context)` rend ou promet la réponse du modèle (chaîne, objet ou `{ content }`) ;
+  `catalog` et `base` peuvent être des fonctions ; sans `base`, `context.filter` sert
+  de socle.
+- Mesures (19/10/2026, `doc/recherche/feuille-de-route.md`) : qwen2.5:7b 10/10 sur dix
+  demandes ; 3b et llama3.2:3b écartés.
+
 ## Composites — `src/features/search/`
 
 ### `SearchSummary`
@@ -399,6 +458,7 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `comingSoonMessage` | string | « Recherche en langage naturel : en construction pour l'instant » | |
 | `onComingSoon` | func | | Pour compter les essais, si l'application le souhaite |
 | `pending` | bool | | Contrôlable, sinon interne |
+| `showWarnings` | bool | `true` | Les `warnings` du résultat s'affichent sous le champ (liste `text-warning`) ; la fiche passe `false` et les montre elle-même |
 | `onResult`, `onError` | func | | `(result, phrase)` / `(error, phrase)` ; en erreur, une notice s'affiche aussi |
 | `onQuickSearch` | func | | `(texte, mode)` : repli sur la recherche rapide actuelle. Tant que `comingSoon`, **Entrée appelle `onQuickSearch`** et le bouton étincelle montre la notice |
 | `size` | string | | |
@@ -407,8 +467,11 @@ Rendu : `form.rbf-natural-search > .input-group` : l'étincelle en préfixe
 (`btn-outline-rbf bg-light text-secondary`, comme les boutons accolés des autres
 champs de la bibliothèque ; elle lance l'interprétation ou montre la notice), le champ
 `border-rbf form-control` (focus discret de la bibliothèque, pas le halo Bootstrap),
-puis le badge « Entrée » ou `SmLoading3Dots` en attente ; notice
-`small.form-text.text-warning[role=status]` sous le champ, effacée après 4 s. La
+puis le badge « Entrée » ou `SmLoading3Dots` en attente ; sous le champ, la notice
+`small.form-text.text-warning[role=status]` (effacée après 4 s), sinon pendant
+l'attente « Analyse de la phrase en cours, quelques secondes… » (`text-muted`,
+`rbf.search.natural.pending`), sinon la liste des `warnings` du dernier résultat,
+effacée à la demande suivante. La
 variante `card` enferme le tout dans un bloc `border rounded bg-white` avec le bouton
 `btn-primary` « Remplir les critères », l'indication `hint` en dessous.
 `InputNaturalSearch.scss` : deux règles, les boutons du groupe à `font-size: inherit`
@@ -423,10 +486,16 @@ type NaturalLanguageResult = {
   plain?: PlainFilter;    // la forme de Filter.fromPlain, noms du catalogue (virtuels compris)
   values?: object;        // ou directement des valeurs de SearchForm
   mode?: 'AND' | 'OR';
-  warnings?: string[];    // morceaux de phrase non compris
-  explanation?: string;   // une ligne, affichée sous l'indication
+  criteria?: [{ id, name, operator, values }];  // ce que natural.js a retenu
+  warnings?: string[];    // en français : non compris, corrigé, ignoré
+  unmatched?: string[];   // les morceaux de phrase non compris, bruts
+  explanation?: string;   // une ligne, affichée sous l'indication (facultative)
 };
 ```
+
+`createNaturalLanguage` (natural.js) le produit avec `filter`, `mode`, `criteria`,
+`warnings` et `unmatched` ; la fiche ajoute un avertissement quand le mode est `OR`
+(elle combine toujours avec « et »).
 
 ### `FacetPopover` (écran B)
 
@@ -600,6 +669,8 @@ reste celui de `rightPanelOpened`.
   newLine: false,                 // true : commence une nouvelle ligne dans sa section, largeur inchangée
   picker: undefined,              // type picker : { onSearch, display }
   hidden: false,                  // jamais proposé dans « + Ajouter un critère » ni le formulaire, mais affiché en pastille
+  description: 'date du dernier paiement reçu',  // pour le modèle de langage seulement (étape 4) ; `hint` reste l'aide affichée
+  llm: undefined,                 // false : jamais proposé au modèle ; true : un picker malgré tout
   subjectFor: undefined,          // values => 'Particuliers' | null
 }
 ```
@@ -668,3 +739,7 @@ Dans `src/features/intl/fr.js`, à la suite des 37 clés existantes :
 `rbf.range.from` / `.to` / `.min` / `.max` (plages), `rbf.search.form.submit`,
 `rbf.search.form.noneChecked`, et `rbf.filter.oper.<opérateur>` (avec les variantes
 `.date` pour « Postérieur à » / « Antérieur à »).
+Étape 4 : `rbf.search.natural.pending`, `.unmatched`, `.unknownField`,
+`.operatorReplaced`, `.unknownValue`, `.notInPhrase`, `.notA`, `.textCompare`, `.badRange`, `.noValue`, `.duplicate`,
+`.singleValue`, `.orMode` (jetons `{label}`, `{field}`, `{value}`, `{from}`, `{to}`,
+`{items}`).

@@ -144,7 +144,11 @@ export default class SearchForm extends Component {
     if (next) {
       this.setValues(next);
     }
-    this.setState({ filled: !!next, warnings: result.warnings || [], explanation: result.explanation || null });
+    const warnings = (result.warnings || []).slice();
+    if (next && result.mode === 'OR') {
+      warnings.push(tr(this.props.t, 'rbf.search.natural.orMode', 'Lus comme des alternatives (« ou ») ; la fiche les combine avec « et »'));
+    }
+    this.setState({ filled: !!next, warnings, explanation: result.explanation || null });
     if (this.props.naturalLanguage && typeof this.props.naturalLanguage.onResult === 'function') {
       this.props.naturalLanguage.onResult(result);
     }
@@ -173,6 +177,7 @@ export default class SearchForm extends Component {
           comingSoonMessage={naturalLanguage.comingSoonMessage || null}
           onComingSoon={naturalLanguage.onComingSoon || null}
           context={{ catalog: catalogToJson(catalog), filter, locale }}
+          showWarnings={false}
           onResult={this.onNaturalResult}
           onError={naturalLanguage.onError || (() => {})}
           t={t}

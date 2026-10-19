@@ -72,6 +72,8 @@ nouvelles sont vertes.
 | 3 | `0774f03` | `Drawer` extensible (agrandir / réduire mémorisé, demande du 19/10/2026 : « rendre ce panneau extensible pour avoir plus de place »), `filterToCriteria` / `criteriaToFilter`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer`, helper `storedFlag`, carte de l'aperçu ; la phrase en clair résume un groupe de critères identiques en une fois | **19/10/2026** sur l'aperçu |
 | 3 | `0cb6573` | `SearchCriteriaPanel` (le tiroir n'en est plus qu'un contenant), `DefaultPage` à largeur réglable (`rightPanelWidth`, `contentMinWidth`, `rightPanelStorageKey`), `storedFlag` numérique | **19/10/2026** dans admin |
 | 3 | `97092f2` | **Version 3.14.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier depuis `master` après fusion (ni la 3.12.1 ni la 3.13.0 ne sont sorties : publier la 3.14.0) ; admin passe alors à `^3.14.0`. | — |
+| 3 | `776f095` | Feuille de route : sha de la 3.14.0 | — |
+| 4 | ce lot | `search/natural.js` (prompt, schéma, vérification, `createNaturalLanguage`), `description` / `llm` du catalogue, attente et avertissements d'`InputNaturalSearch`, carte « Étape 4 » de l'aperçu sur l'Ollama du poste, tests | aperçu à valider |
 
 ## Décisions
 
@@ -182,21 +184,74 @@ En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` l
 
 ## Étape 4 — LLM
 
-### Bibliothèque
+Décisions du 19/10/2026 : **Ollama tourne déjà sur le serveur Kalaweit** (CPU, 12 fils,
+31 Gio, sans GPU, modèles qwen2.5 3b/7b et llama3.x) ; le PHP n'est qu'un **relais
+contrôlé**, le prompt est construit dans le navigateur par la bibliothèque. Banc
+d'essai (dix demandes, vrai catalogue des donateurs, schéma JSON imposé) :
+**qwen2.5:7b, 10/10** ; 3b fautif (4/10), llama3.2:3b écarté. Sur le serveur : ~9,5
+tokens/s en 7b, prompt (~1 200 tokens) évalué une fois puis servi par le cache ; forme
+de réponse courte → 5-11 s par demande, 60 s à froid (d'où `keep_alive` long ou un
+réchauffage périodique côté API).
 
-- `validatePlain(plain, catalog)` : noms, opérateurs et valeurs inconnus → `warnings`.
-- État `pending` piloté par l'application, affichage des `warnings` et de
-  l'`explanation` sous la barre et dans la fiche.
-- Rien d'autre : le contrat `NaturalLanguageResult` est figé depuis l'étape 1.
+### Bibliothèque — fait, validé le 19/10/2026 sur l'aperçu
 
-### Backend puis administration
+- `search/natural.js` : `fieldsForNatural`, `buildNaturalPrompt` (libellés français,
+  descriptions `description`, exemples de l'application, date du jour),
+  `buildNaturalSchema`, `buildNaturalRequest` → `{ system, phrase, user, format }`,
+  `parseNaturalContent`, `matchOption`, `naturalToCriteria` (vérifications et
+  fusions, avertissements en français), `naturalToResult`, `createNaturalLanguage`.
+- Catalogue : `description` (pour le modèle ; `hint` reste l'aide affichée) et `llm`
+  (`false` : jamais proposé ; `true` : un picker malgré tout) ; `catalogToJson` les
+  emporte avec `hidden`.
+- `InputNaturalSearch` : texte d'attente, avertissements du résultat sous le champ
+  (`showWarnings`) ; `SearchForm` les montre elle-même et signale un mode « ou ».
+- Aperçu : carte « Étape 4 » branchée sur l'Ollama du poste (`python3 -m http.server`
+  à la racine, Ollama refuse l'origine `null` des pages `file://`), `#llm=<phrase>`
+  pour les captures.
 
-- Un endpoint, par exemple `POST /v1/asso/client/search/interpret`, qui reçoit
-- **La boucle de vérification** est le cœur de l'étape : le LLM reçoit `catalogToJson()`, répond un `PlainFilter` que `Filter.fromPlain()` relit, la fiche affiche les critères obtenus **et** la phrase « EN CLAIR » les redit en français ; l'utilisateur vérifie que ce qu'il a demandé correspond, corrige si besoin, puis lance. Les morceaux de phrase non compris remontent dans `warnings`. Rien n'est lancé automatiquement.
-  `{ phrase, catalog }` (`catalogToJson()`, sans fonctions) et rend un `PlainFilter`.
-- `onNaturalLanguage` fourni à la fiche (« Remplir les critères ») et à la barre
-  d'en-tête ; Entrée bascule alors vers le langage naturel, la recherche rapide devient
-  une action secondaire.
+### Backend — à faire (freeasso, branche `recherche` du Pi)
+
+- La couche LLM de janvier 2026 (routes `query` / `filters` / `health`, `Service/Llm`,
+  `LlmContext`, métadonnées des modèles) est **mise de côté sur la branche
+  `llm-experimental`** (`e3663b1`) ; `master` est propre.
+- Une route `POST /v1/asso/llm/interpret` (`AUTH_IN`), un modèle de paramètres
+  `LlmInterpret` (`system`, `user`, `format`), une méthode de service qui appelle
+  `/api/chat` d'Ollama avec ce que le serveur impose — modèle `qwen2.5:7b`,
+  `temperature` 0, `num_predict` 400, `num_ctx` 4096, `keep_alive` long, timeout —
+  et rend `message.content` tel quel. Config `llm:ollama` : URL de base (sans
+  `/api/generate`), modèle, timeout.
+- Solution de repli sans déploiement PHP : un `location` nginx vers
+  `127.0.0.1:11434/api/chat` gardé par `auth_request` sur l'API.
+
+### Administration — à faire
+
+- `client/searchCatalog.js` : `description` sur les champs ambigus (Paiement /
+  Dernier paiement, Pays, Don, Ami…), `llm: false` sur `donations.grp_id` (l'entité
+  FR/BE/CH/ID égarait le modèle), trois exemples ; question ouverte : montrer
+  « Langue » au modèle (sinon « en anglais » reste non compris).
+- `onNaturalLanguage` = `createNaturalLanguage({ transport })` avec un transport qui
+  poste à `/v1/asso/llm/interpret` ; sur la barre de l'en-tête (le résultat remplace
+  les critères, recherche rapide conservée, puis `loadMore(true)`) et sur la fiche
+  (« Remplir les critères », rien n'est lancé). Entrée bascule vers le langage
+  naturel ; la recherche rapide devient le repli quand la phrase est un simple mot.
+- **La boucle de vérification** reste le cœur : le modèle répond, la bibliothèque
+  vérifie et dit ce qu'elle a corrigé, les critères s'affichent (rangée, panneau,
+  fiche) **et** la phrase « EN CLAIR » les redit ; l'utilisateur corrige puis lance.
+
+### Limites connues
+
+- « Nom ou prénom contient X » au milieu de critères en « et » : rendu en « et » (le
+  `group` du modèle `Filter` le permettrait plus tard).
+- « Contient A ou B » sur un champ texte : A seul (un opérateur par champ) ; `eq` à
+  plusieurs valeurs passe comme une liste.
+- Un libellé tronqué par le modèle est rapproché s'il désigne une seule option ; une
+  notion absente du catalogue (langue, âge…) doit finir dans « Non compris », le 7b y
+  arrive le plus souvent mais pas toujours.
+- Une valeur texte absente de la phrase est écartée (le modèle l'a inventée) ; des mots
+  dans un champ date ou nombre écartent le critère en une ligne. Le champ « Animal /
+  projet » (`donations.cause.cau_name`) a été ajouté au catalogue des donateurs pour
+  « parrainent Kiki » : l'API doit accepter ce chemin, à confirmer au premier test réel.
+
 
 ## Ensuite
 

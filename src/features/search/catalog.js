@@ -47,6 +47,8 @@ export const normalizeField = field => {
     multiOperator: field.multiOperator || 'eq',
     options: Array.isArray(field.options) ? field.options : [],
     hidden: !!field.hidden,
+    description: field.description || '',
+    llm: field.llm === false ? false : field.llm === true ? true : undefined,
     virtual: !!field.virtual,
     fields: Array.isArray(field.fields) ? field.fields : [],
   };
@@ -158,14 +160,16 @@ const withoutFunctions = value => {
   return typeof value === 'function' ? undefined : value;
 };
 
-/* Pour le futur service d'interprétation : noms, libellés, types, options, sans
-   aucune fonction. */
+/* Le catalogue sans aucune fonction : pour un service, un journal, un test. */
 export const catalogToJson = catalog =>
   catalog.map(field =>
     withoutFunctions({
       name: field.name,
       label: field.label,
       type: field.type,
+      description: field.description || undefined,
+      hidden: field.hidden || undefined,
+      llm: field.llm,
       operators: field.operators,
       defaultOperator: field.defaultOperator,
       multiple: field.multiple,

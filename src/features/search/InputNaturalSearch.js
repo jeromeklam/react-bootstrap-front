@@ -16,8 +16,10 @@ import { tr } from './i18n';
  * rien casser. Variante `card` : le bloc de la fiche de recherche, avec son bouton
  * « Remplir les critères » et son indication.
  *
- * Contrat du résultat (étape 4) : { filter?, plain?, values?, mode?, warnings?,
- * explanation? }, voir doc/recherche/composants.md.
+ * Contrat du résultat : { filter?, plain?, values?, mode?, warnings?, explanation? },
+ * voir doc/recherche/composants.md ; createNaturalLanguage (natural.js) le fabrique.
+ * Les `warnings` s'affichent sous le champ (`showWarnings`), la fiche de recherche
+ * préfère les montrer elle-même.
  */
 const NOTICE_DELAY = 4000;
 
@@ -37,6 +39,7 @@ export default class InputNaturalSearch extends Component {
     comingSoonMessage: PropTypes.string,
     onComingSoon: PropTypes.func,
     pending: PropTypes.bool,
+    showWarnings: PropTypes.bool,
     onResult: PropTypes.func,
     onError: PropTypes.func,
     onQuickSearch: PropTypes.func,
@@ -61,6 +64,7 @@ export default class InputNaturalSearch extends Component {
     comingSoonMessage: null,
     onComingSoon: null,
     pending: null,
+    showWarnings: true,
     onResult: () => {},
     onError: () => {},
     onQuickSearch: null,
@@ -73,7 +77,7 @@ export default class InputNaturalSearch extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null };
+    this.state = { text: props.value !== null ? props.value : props.defaultValue, pending: false, notice: null, warnings: [] };
     this.timer = null;
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -154,7 +158,7 @@ export default class InputNaturalSearch extends Component {
       return;
     }
     this.notify(null);
-    this.setState({ pending: true });
+    this.setState({ pending: true, warnings: [] });
     let promise;
     try {
       promise = Promise.resolve(onNaturalLanguage(text, { ...context, phrase: text }));
@@ -166,7 +170,8 @@ export default class InputNaturalSearch extends Component {
         if (this.unmounted) {
           return;
         }
-        this.setState({ pending: false });
+        const warnings = this.props.showWarnings && result && Array.isArray(result.warnings) ? result.warnings : [];
+        this.setState({ pending: false, warnings });
         onResult(result || {}, text);
       })
       .catch(error => {
@@ -188,11 +193,23 @@ export default class InputNaturalSearch extends Component {
     const sparkleTitle = comingSoon
       ? tr(t, 'rbf.search.natural.comingSoon', 'Recherche en langage naturel : en construction pour l’instant')
       : tr(t, 'rbf.search.natural.ask', 'Interpréter la phrase');
-    const notice = this.state.notice && (
+    /* Sous le champ : la notice (4 s), l'attente (le modèle met quelques secondes sur
+       un serveur sans GPU), puis ce que l'interprétation a corrigé ou ignoré. */
+    const notice = this.state.notice ? (
       <small className="rbf-natural-search-notice form-text text-warning" role="status">
         {this.state.notice}
       </small>
-    );
+    ) : pending ? (
+      <small className="rbf-natural-search-pending form-text text-muted" role="status">
+        {tr(t, 'rbf.search.natural.pending', 'Analyse de la phrase en cours, quelques secondes…')}
+      </small>
+    ) : this.state.warnings.length > 0 ? (
+      <ul className="rbf-natural-search-warnings small text-warning mt-1 mb-0 pl-3">
+        {this.state.warnings.map((warning, i) => (
+          <li key={i}>{warning}</li>
+        ))}
+      </ul>
+    ) : null;
     const sparkle = (
       <button
         type="button"

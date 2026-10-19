@@ -3,6 +3,7 @@ export * from './operators';
 export * from './catalog';
 export * from './criteria';
 export * from './filterToSentence';
+export * from './natural';
 export { default as SearchSummary } from './SearchSummary';
 export { default as InputNaturalSearch } from './InputNaturalSearch';
 export { default as SearchForm } from './SearchForm';

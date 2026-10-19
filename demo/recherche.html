@@ -103,7 +103,7 @@
         if (!RBF) {
           throw new Error('Le bundle dist/react-bootstrap-front.js n’est pas chargé.');
         }
-        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'SearchChipBar', 'FacetPopover', 'SearchDrawer', 'Drawer', 'valuesToFilter', 'normalizeCatalog'].forEach(function(name) {
+        ['Chip', 'InputSegmented', 'InputPillGroup', 'InputDateRange', 'InputAmountRange', 'SearchSummary', 'InputNaturalSearch', 'SearchForm', 'SearchChipBar', 'FacetPopover', 'SearchDrawer', 'Drawer', 'valuesToFilter', 'normalizeCatalog', 'createNaturalLanguage'].forEach(function(name) {
           if (!RBF[name]) {
             throw new Error('Le bundle ne contient pas ' + name + ' : reconstruire avec npm run build (ou sync-to.sh), puis node demo/build.js ../admin.');
           }
@@ -148,13 +148,14 @@
           { name: 'cli_firstname', label: 'Prénom', type: 'text', width: 12, phrase: { label: 'le prénom' } },
           { name: 'cli_email', label: 'E-mail', type: 'text', width: 12, phrase: { label: 'l’e-mail' } },
           { name: 'cli_address1', label: 'Adresse', type: 'text', width: 12, phrase: { label: 'l’adresse' } },
-          { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' } },
+          { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' }, description: 'commence par le numéro de département' },
           { name: 'cli_town', label: 'Ville', type: 'text', width: 9, defaultOperator: 'containsb', phrase: { label: 'la ville' } },
-          { name: 'country.cnty_name', label: 'Pays', type: 'text', width: 9, phrase: { label: 'le pays' } },
-          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes', facet: { order: 20 },
+          { name: 'country.cnty_name', label: 'Pays', type: 'text', width: 9, phrase: { label: 'le pays' }, description: 'nom du pays en toutes lettres' },
+          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes', facet: { order: 20 }, description: 'catégorie du donateur',
             phrase: { eq: 'de catégorie {value}' },
             subjectFor: function(values) { return values.length === 1 && String(values[0]) === '6' ? 'Particuliers' : null; } },
           { name: 'don_kind', virtual: true, label: 'Don', widget: 'segmented', options: DON, fields: ['donations.sponsorship.spo_id'],
+            description: 'régulier = parrainage avec paiements récurrents, ponctuel = don isolé',
             toFilter: function(v, f) {
               f.removeFilter('donations.sponsorship.spo_id');
               if (v === 'regular') { f.addFilter('donations.sponsorship.spo_id', null, RBF.FILTER_OPER_NOT_EMPTY); }
@@ -163,14 +164,15 @@
             fromFilter: function(f) { var e = f.findFirst('donations.sponsorship.spo_id'); return !e ? '' : e.getOperator() === RBF.FILTER_OPER_NOT_EMPTY ? 'regular' : 'once'; },
             toText: function(v) { return v === 'regular' ? 'réguliers' : v === 'once' ? 'ponctuels' : ''; } },
           { name: 'donations.don_real_ts', label: 'Paiement', type: 'date', widget: 'date-range',
-            phrase: { between: 'ayant payé entre le {from} et le {to}' } },
-          { name: 'donations.don_mnt_input', label: 'Montant', type: 'monetary', widget: 'amount-range', phrase: { label: 'le montant' } },
-          { name: 'donations.cause.cause_type.caut_id', label: 'Programme', type: 'select', options: PROGRAMMES, widget: 'pills', phrase: { eq: 'pour le programme {value}' } },
+            phrase: { between: 'ayant payé entre le {from} et le {to}' }, description: 'date d’un paiement : « a donné en 2024 », « dons entre deux dates »' },
+          { name: 'donations.don_mnt_input', label: 'Montant', type: 'monetary', widget: 'amount-range', phrase: { label: 'le montant' }, description: 'montant d’un paiement, en euros' },
+          { name: 'donations.cause.cause_type.caut_id', label: 'Programme', type: 'select', options: PROGRAMMES, widget: 'pills', phrase: { eq: 'pour le programme {value}' }, description: 'programme soutenu' },
+          { name: 'donations.cause.cau_name', label: 'Animal / projet', type: 'text', width: 12, phrase: { label: 'l’animal ou le projet' }, description: 'nom de l’animal ou du projet soutenu : « parrainent Kiki », « donnent pour Bimbo »' },
           { name: 'donations.payment_type.ptyp_id', label: 'Moyen de paiement', type: 'select', options: MOYENS, widget: 'pills', facet: { order: 10, countLabel: function(n) { return n + ' moyen' + (n > 1 ? 's' : ''); } },
             format: function(v, field) { var o = field.options.find(function(x) { return String(x.value) === String(v); }); return o ? o.label.toLowerCase() : String(v); },
-            phrase: { eq: 'par {value}' } },
-          { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' } },
-          { name: 'last_donation.don_real_ts', label: 'Période', type: 'date', facet: { order: 30, kind: 'range' }, phrase: { label: 'le dernier paiement' } }
+            phrase: { eq: 'par {value}' }, description: 'moyen de paiement des dons' },
+          { name: 'sponsorships.spo_ts', label: 'Ami', type: 'date', widget: 'date-range', phrase: { label: 'l’enregistrement comme ami' }, description: 'date à laquelle le donateur a parrainé un ami (parrain, filleul)' },
+          { name: 'last_donation.don_real_ts', label: 'Période', type: 'date', facet: { order: 30, kind: 'range' }, phrase: { label: 'le dernier paiement' }, description: 'date du dernier paiement reçu : « dernier don », « n’a rien donné depuis »' }
         ]);
         var BAR_ICONS = { close: icon('close', 12), caret: icon('caret', 14), add: icon('plus', 14), calendar: icon('calendar', 16), clear: icon('close', 14) };
         var DRAWER_ICONS = { close: icon('close', 18), expand: icon('expand', 18), collapse: icon('collapse', 18), add: icon('plus', 14), remove: icon('close', 14), calendar: icon('calendar', 16), clear: icon('close', 14), check: icon('check', 14) };
@@ -180,10 +182,36 @@
           { name: 'categorie', label: 'Catégorie', fields: ['client_category.clic_id'] },
           { name: 'paiement', label: 'Paiement', fields: ['donations.don_real_ts', 'donations.don_mnt_input', 'don_kind'] },
           { name: 'moyen', label: 'Moyen', fields: ['donations.payment_type.ptyp_id'] },
-          { name: 'programme', label: 'Programme', fields: ['donations.cause.cause_type.caut_id'] },
+          { name: 'programme', label: 'Programme', fields: ['donations.cause.cause_type.caut_id', 'donations.cause.cau_name'] },
           { name: 'ami', label: 'Ami', fields: ['sponsorships.spo_ts'] }
         ];
         var FORM_ICONS = { calendar: icon('calendar', 16), clear: icon('close', 14), check: icon('check', 14), sparkle: icon('sparkle', 16) };
+
+        /* Étape 4 : les exemples donnés au modèle (noms du catalogue, valeurs comme il
+           doit les écrire) et le sujet de la liste. */
+        function isoDaysAgo(days) { var d = new Date(); d.setDate(d.getDate() - days); return d.toISOString().slice(0, 10); }
+        var NATURAL_SUBJECT = 'la liste des donateurs d’une association de protection animale';
+        var NATURAL_EXAMPLES = [
+          { phrase: 'particuliers de Strasbourg ayant donné plus de 100 € en 2025',
+            criteria: [
+              { name: 'client_category.clic_id', operator: 'eq', values: ['Particulier'] },
+              { name: 'cli_town', operator: 'contains', values: ['Strasbourg'] },
+              { name: 'donations.don_mnt_input', operator: 'gt', values: ['100'] },
+              { name: 'donations.don_real_ts', operator: 'between', values: ['2025-01-01', '2025-12-31'] }
+            ] },
+          { phrase: 'au moins 50 € par prélèvement, rien donné depuis six mois',
+            criteria: [
+              { name: 'donations.don_mnt_input', operator: 'gte', values: ['50'] },
+              { name: 'donations.payment_type.ptyp_id', operator: 'eq', values: ['Prélèvement'] },
+              { name: 'last_donation.don_real_ts', operator: 'ltwe', values: [isoDaysAgo(183)] }
+            ] },
+          { phrase: 'donateurs réguliers sans e-mail, membres du club',
+            criteria: [
+              { name: 'don_kind', operator: 'eq', values: ['Régulier'] },
+              { name: 'cli_email', operator: 'empty', values: [] }
+            ],
+            unmatched: ['membres du club'] }
+        ];
 
         function card(step, title, hint, children) {
           return e(
@@ -218,6 +246,47 @@
           var pay = React.useState(['2025-01-01', '2025-12-31']);
           var amount = React.useState(['', '']);
           var friend = React.useState(['', '']);
+          var llmUrl = React.useState('http://localhost:11434');
+          var llmModel = React.useState('qwen2.5:7b');
+          var llmPhrase = React.useState('');
+          var llmResult = React.useState(null);
+          var llmTiming = React.useState(null);
+
+          /* Le transport de la démo parle directement à l'Ollama du poste ; dans
+             l'application, c'est l'API qui relaie (/v1/asso/llm/interpret). Ollama
+             refuse l'origine « null » des pages file:// : servir la démo en http. */
+          function ollamaTransport(request) {
+            var t0 = Date.now();
+            return fetch(llmUrl[0].replace(/\/$/, '') + '/api/chat', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                model: llmModel[0],
+                messages: [{ role: 'system', content: request.system }, { role: 'user', content: request.user }],
+                stream: false, format: request.format,
+                options: { temperature: 0, num_ctx: 4096, num_predict: 400 }, keep_alive: '15m'
+              })
+            }).then(function(r) {
+              if (!r.ok) { throw new Error('Ollama : HTTP ' + r.status); }
+              return r.json();
+            }).then(function(j) { llmTiming[1](Date.now() - t0); return { content: j.message.content }; });
+          }
+          var naturalOnList = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, base: function() { return listFilter[0]; }, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES });
+          var naturalOnForm = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES });
+
+          /* #llm=<phrase> : tape la phrase dans la barre et l'envoie, pour les captures
+             d'écran automatiques (même rôle que #tiroir). */
+          React.useEffect(function() {
+            var m = window.location.hash.match(/^#llm=(.+)$/);
+            if (!m) { return; }
+            var text = decodeURIComponent(m[1]);
+            setTimeout(function() {
+              var input = document.querySelector('.demo-card .rbf-natural-search-bar input');
+              if (!input) { return; }
+              Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, text);
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+              setTimeout(function() { input.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }, 50);
+            }, 300);
+          }, []);
 
           var state = {
             categories: cat[0], moyens: moy[0], don: kind[0], don_vide_possible: kind2[0],
@@ -236,6 +305,35 @@
           return e(
             'div',
             null,
+            card(
+              'Étape 4 · Langage naturel',
+              'La phrase devient des critères — avec le vrai modèle',
+              'La barre interroge l’Ollama de ce poste (même modèle que le serveur) avec le prompt et le schéma JSON de la bibliothèque ; la réponse est vérifiée (champs, opérateurs, valeurs, doublons) puis appliquée à la liste de l’étape 2 — la recherche rapide et les fixes sont conservés. Sous le champ : l’attente, puis ce qui n’a pas été compris ou a été corrigé. La fiche de recherche plus bas remplit ses champs de la même façon (« Remplir les critères »). Depuis un fichier local, Ollama refuse l’origine : servir la démo avec « python3 -m http.server 8276 » à la racine de la lib et ouvrir http://localhost:8276/demo/recherche.html.',
+              e('div', null,
+                e('div', { className: 'form-row mb-3', style: { maxWidth: '640px' } },
+                  e('div', { className: 'col-8' },
+                    e('input', { type: 'text', className: 'form-control form-control-sm', value: llmUrl[0], onChange: function(ev) { llmUrl[1](ev.target.value); }, 'aria-label': 'URL d’Ollama' })),
+                  e('div', { className: 'col-4' },
+                    e('select', { className: 'custom-select custom-select-sm', value: llmModel[0], onChange: function(ev) { llmModel[1](ev.target.value); } },
+                      e('option', { value: 'qwen2.5:7b' }, 'qwen2.5:7b'), e('option', { value: 'qwen2.5:3b' }, 'qwen2.5:3b')))
+                ),
+                e('div', { style: { maxWidth: '640px' } },
+                  e(RBF.InputNaturalSearch, {
+                    variant: 'bar', sparkleIcon: icon('sparkle', 16), value: llmPhrase[0],
+                    placeholder: 'Par exemple : entreprises de Lyon ayant donné au moins 500 euros en 2024',
+                    onChange: function(ev) { llmPhrase[1](ev.target.value); },
+                    onNaturalLanguage: naturalOnList,
+                    context: { filter: listFilter[0] },
+                    onResult: function(r) { llmResult[1](r); if (r && r.filter) { listFilter[1](r.filter); } }
+                  })
+                ),
+                llmResult[0] && e('div', { className: 'mt-3' },
+                  e('p', { className: 'demo-hint mb-1' }, 'Réponse en ' + (llmTiming[0] ? (llmTiming[0] / 1000).toFixed(1) + ' s' : '—') + ' · mode ' + llmResult[0].mode + ' · ' + llmResult[0].criteria.length + ' critère(s)'),
+                  e(RBF.SearchSummary, { filter: llmResult[0].filter, catalog: CATALOG, subject: 'Donateurs' }),
+                  e('div', { className: 'demo-out mt-2' }, JSON.stringify(llmResult[0].criteria.map(function(c) { return { name: c.name, operator: c.operator, values: c.values }; }), null, 1))
+                )
+              )
+            ),
             card(
               'Étape 3 · SearchDrawer',
               'Le tiroir « Critères avancés »',
@@ -329,7 +427,7 @@
                   catalog: CATALOG, sections: SECTIONS, icons: FORM_ICONS, subject: 'Donateurs',
                   title: 'Rechercher des donateurs', submitLabel: 'Voir les donateurs',
                   values: formValues[0], onChange: function(v) { formValues[1](v); },
-                  naturalLanguage: { placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »' },
+                  naturalLanguage: { placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', onNaturalLanguage: naturalOnForm },
                   advancedLink: { onClick: function() { alert('Critères avancés : étape 3'); } },
                   onSubmit: function(filter, values) { submitted[1]({ filter: filter.asJsonApiObject(), values: values }); }
                 }),

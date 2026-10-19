@@ -107,3 +107,31 @@ test('comingSoon forcé malgré un service ; message personnalisé', () => {
   expect(onNaturalLanguage).not.toHaveBeenCalled();
   expect(notices(tree)).toEqual(['Bientôt.']);
 });
+
+test('en attente : texte sous le champ ; puis les avertissements du résultat, effacés à la demande suivante', async () => {
+  let resolve;
+  const onNaturalLanguage = jest.fn(() => new Promise(r => { resolve = r; }));
+  const tree = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} onNaturalLanguage={onNaturalLanguage} />);
+  type(tree, 'ponctuels en anglais');
+  renderer.act(() => tree.root.findByType('form').props.onSubmit());
+  await renderer.act(async () => {
+    await Promise.resolve();
+  });
+  expect(notices(tree)).toEqual(['Analyse de la phrase en cours, quelques secondes…']);
+  await renderer.act(async () => {
+    resolve({ warnings: ['Non compris : « en anglais »', 'Nom : un seul critère retenu'] });
+    await Promise.resolve();
+  });
+  expect(notices(tree)).toEqual([]);
+  expect(tree.root.findAllByType('li').map(n => n.children.join(''))).toEqual(['Non compris : « en anglais »', 'Nom : un seul critère retenu']);
+  renderer.act(() => tree.root.findByType('form').props.onSubmit());
+  expect(tree.root.findAllByType('li').length).toBe(0);
+  const silent = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} onNaturalLanguage={() => Promise.resolve({ warnings: ['x'] })} showWarnings={false} />);
+  type(silent, 'a');
+  await renderer.act(async () => {
+    silent.root.findByType('form').props.onSubmit();
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+  expect(silent.root.findAllByType('li').length).toBe(0);
+});
