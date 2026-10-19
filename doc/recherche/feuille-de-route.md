@@ -220,7 +220,7 @@ réchauffage périodique côté API).
   à la racine, Ollama refuse l'origine `null` des pages `file://`), `#llm=<phrase>`
   pour les captures.
 
-### Backend — à faire (freeasso, branche `recherche` du Pi)
+### Backend — fait, en production le 19/10/2026 (freeasso, branche `recherche`, release-20261019182423)
 
 - La couche LLM de janvier 2026 (routes `query` / `filters` / `health`, `Service/Llm`,
   `LlmContext`, métadonnées des modèles) est **mise de côté sur la branche
@@ -234,7 +234,7 @@ réchauffage périodique côté API).
 - Solution de repli sans déploiement PHP : un `location` nginx vers
   `127.0.0.1:11434/api/chat` gardé par `auth_request` sur l'API.
 
-### Administration — à faire
+### Administration — fait, en production le 19/10/2026 (2.24.0 → 2.24.3, puis 2.25.0)
 
 - `client/searchCatalog.js` : `description` sur les champs ambigus (Paiement /
   Dernier paiement, Pays, Don, Ami…), `llm: false` sur `donations.grp_id` (l'entité
@@ -265,6 +265,14 @@ réchauffage périodique côté API).
 
 
 ## Ensuite
+
+> 19/10/2026 : **fait dans l'admin 2.25.0** pour les neuf listes qui avaient un panneau de
+> filtres (dons, reçus, certificats, causes, écritures, origines, historique, notifications,
+> messages), par deux briques génériques de l'admin — `ui/ListSearch` (barre, rangée,
+> vocabulaire) et `ui/makeCriteriaPanel` (panneau droit) — plus `ui/makeQuickSearchReducer`
+> et un `searchCatalog.js` léger par liste ; les donateurs y sont repassés aussi. Restent
+> les listes à simple recherche rapide et celles dont le panneau n'était pas branché
+> (group, session, inbox, alert, site…).
 
 - Les autres listes (dons, reçus, certificats…) : un `searchCatalog.js` par feature,
   dérivé de son `getCols`, et les mêmes composants.
