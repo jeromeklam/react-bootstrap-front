@@ -1,3 +1,12 @@
+# 3.14.0 : 19/10/2026
+
+* Recherche, étape 3 : les critères avancés (voir doc/recherche/)
+    * `SearchCriteriaPanel` : une ligne par critère — champ, opérateur, valeur selon le type —, « tous les critères / au moins un », l'encart EN CLAIR, « Tout effacer » / « Appliquer » ; `SearchCriteriaRow`, `SearchCriteriaBuilder` ; `filterToCriteria` / `criteriaToFilter`
+    * `SearchDrawer` : le même panneau dans un tiroir superposé
+    * `Drawer` : tiroir latéral extensible (agrandir / réduire mémorisé)
+    * `ResponsivePage` : le panneau droit a une largeur réglable (poignée, largeur minimale du panneau et du contenu, mémorisée)
+    * La phrase en clair résume un groupe de critères identiques en une fois
+
 # 3.13.0 : 19/10/2026
 
 * Recherche, étape 2 : l'en-tête de liste (voir doc/recherche/)

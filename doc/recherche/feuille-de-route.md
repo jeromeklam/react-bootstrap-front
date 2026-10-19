@@ -70,6 +70,8 @@ nouvelles sont vertes.
 | 2 | `f358f4a` | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
 | 2 | `3e9bce9` | **Version 3.13.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier sur npm depuis `master` après fusion (la 3.12.1 n'est jamais sortie : publier directement la 3.13.0) ; admin passe alors à `^3.13.0`. | — |
 | 3 | `0774f03` | `Drawer` extensible (agrandir / réduire mémorisé, demande du 19/10/2026 : « rendre ce panneau extensible pour avoir plus de place »), `filterToCriteria` / `criteriaToFilter`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer`, helper `storedFlag`, carte de l'aperçu ; la phrase en clair résume un groupe de critères identiques en une fois | **19/10/2026** sur l'aperçu |
+| 3 | `0cb6573` | `SearchCriteriaPanel` (le tiroir n'en est plus qu'un contenant), `DefaultPage` à largeur réglable (`rightPanelWidth`, `contentMinWidth`, `rightPanelStorageKey`), `storedFlag` numérique | **19/10/2026** dans admin |
+| 3 | ce commit | **Version 3.14.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier depuis `master` après fusion (ni la 3.12.1 ni la 3.13.0 ne sont sorties : publier la 3.14.0) ; admin passe alors à `^3.14.0`. | — |
 
 ## Décisions
 
