@@ -10,8 +10,8 @@ import NaturalVocabularyForm from './NaturalVocabularyForm';
 import SearchSummary from './SearchSummary';
 
 /**
- * La barre de recherche en langage naturel : une étincelle, une phrase, une
- * indication « Entrée ».
+ * La barre de recherche en langage naturel : une étincelle, une phrase, un
+ * bouton « Entrée » (vert, de la hauteur du groupe) qui soumet la barre.
  *
  * Tant qu'aucun service d'interprétation n'est branché (`onNaturalLanguage`
  * absent, ou `comingSoon`), le composant est « en construction » : l'étincelle
@@ -419,9 +419,9 @@ export default class InputNaturalSearch extends Component {
           {(waiting || kbdHint) && (
             <div className="input-group-append">
               {waiting || (
-                <span className="input-group-text border-rbf bg-white">
-                  <span className="badge badge-light border text-secondary font-weight-normal">{kbdHint}</span>
-                </span>
+                <button type="submit" className="btn btn-primary rbf-natural-search-submit" disabled={pending}>
+                  {kbdHint}
+                </button>
               )}
             </div>
           )}

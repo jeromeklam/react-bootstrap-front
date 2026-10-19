@@ -22,17 +22,18 @@ test('sans service : en construction, l’étincelle affiche la notice puis l’
   expect(notices(tree)).toEqual([]);
 });
 
-test('barre : Entrée garde la recherche rapide, sans notice ; indication « Entrée » en badge', () => {
+test('barre : Entrée garde la recherche rapide, sans notice ; bouton « Entrée » vert qui soumet', () => {
   const onQuickSearch = jest.fn();
   const tree = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} onQuickSearch={onQuickSearch} />);
   type(tree, 'dupont');
   renderer.act(() => tree.root.findByType('form').props.onSubmit({ preventDefault() {} }));
   expect(onQuickSearch).toHaveBeenCalledWith('dupont', 'simple');
   expect(notices(tree)).toEqual([]);
-  const badge = tree.root.find(n => typeof n.props.className === 'string' && n.props.className.includes('badge'));
-  expect(badge.children).toEqual(['Entrée']);
+  const submit = tree.root.find(n => n.type === 'button' && n.props.type === 'submit');
+  expect(submit.props.className).toContain('btn-primary');
+  expect(submit.children).toEqual(['Entrée']);
   const hidden = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} kbdHint={false} />);
-  expect(hidden.root.findAll(n => typeof n.props.className === 'string' && n.props.className.includes('badge')).length).toBe(0);
+  expect(hidden.root.findAll(n => n.type === 'button' && n.props.type === 'submit').length).toBe(0);
 });
 
 test('avec un service : attente, puis onResult avec le résultat et la phrase', async () => {

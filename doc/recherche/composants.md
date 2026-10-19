@@ -458,7 +458,7 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `value` / `defaultValue` | string | | |
 | `placeholder` | string | | |
 | `sparkleIcon` | element, req. | | |
-| `kbdHint` | string \| false | « Entrée » (`rbf.search.natural.kbd`) | Indication clavier à droite, un `badge badge-light` Bootstrap |
+| `kbdHint` | string \| false | « Entrée » (`rbf.search.natural.kbd`) | Libellé du bouton de droite de la barre : un `btn btn-primary` de la hauteur du groupe, qui soumet la barre (depuis 3.15.4 ; `false` le retire) |
 | `variant` | `'bar'` \| `'card'` | `'bar'` | En-tête de liste ou carte de la fiche |
 | `submitLabel` | string | « Remplir les critères » | Variante `card` |
 | `hint` | node | | Sous le champ, variante `card` |
