@@ -69,7 +69,7 @@ nouvelles sont vertes.
 | 2 | `271dc13` | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
 | 2 | `f358f4a` | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
 | 2 | `3e9bce9` | **Version 3.13.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier sur npm depuis `master` après fusion (la 3.12.1 n'est jamais sortie : publier directement la 3.13.0) ; admin passe alors à `^3.13.0`. | — |
-| 3 | ce commit | `Drawer` extensible (agrandir / réduire mémorisé, demande du 19/10/2026 : « rendre ce panneau extensible pour avoir plus de place »), `filterToCriteria` / `criteriaToFilter`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer`, helper `storedFlag`, carte de l'aperçu ; la phrase en clair résume un groupe de critères identiques en une fois | **19/10/2026** sur l'aperçu |
+| 3 | `0774f03` | `Drawer` extensible (agrandir / réduire mémorisé, demande du 19/10/2026 : « rendre ce panneau extensible pour avoir plus de place »), `filterToCriteria` / `criteriaToFilter`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer`, helper `storedFlag`, carte de l'aperçu ; la phrase en clair résume un groupe de critères identiques en une fois | **19/10/2026** sur l'aperçu |
 
 ## Décisions
 
@@ -166,6 +166,8 @@ En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` l
 | 4 | Livraison | Exports, démo, `CHANGELOG`, 3.14.0, build, tests, publication. |
 
 ### Administration Kalaweit
+
+En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` gagne `onOpenCriteria` (le bouton filtre l'appelle au lieu du panneau droit) ; `client/List.js` porte le `SearchDrawer` (bouton filtre, « + Critère »), `client/SearchPage.js` son lien « Critères avancés » qui ouvre le tiroir sur les critères déjà saisis ; icônes dans `ui/searchIcons.js`. **Test réel à faire.** `client/FilterPanel.js` et son entrée dans `common/RightPanel.js` conservés.
 
 - Pour `client` seulement : le bouton filtre de l'en-tête ouvre `SearchDrawer`
   (`top={60}`) au lieu de `setPanel('filter', 'client')` ; `onAddCriterion` de la
