@@ -251,6 +251,42 @@
           var llmPhrase = React.useState('');
           var llmResult = React.useState(null);
           var llmTiming = React.useState(null);
+          var llmVocab = React.useState(function() { try { return window.localStorage.getItem('demo.llm.vocab') || ''; } catch (ex) { return ''; } });
+          var llmLearned = React.useState(function() { try { return JSON.parse(window.localStorage.getItem('demo.llm.learned') || '[]'); } catch (ex) { return []; } });
+          /* Une définition par ligne : « terme = explication » ; les critères appris
+             (l'explication interprétée une fois) complètent l'entrée. */
+          function vocabulary(text, learnedList) {
+            var source = typeof text === 'string' ? text : llmVocab[0];
+            var known0 = learnedList || llmLearned[0];
+            return source.split('\n').map(function(line) {
+              var i = line.indexOf('=');
+              if (i <= 0) { return null; }
+              var entry = { term: line.slice(0, i).trim(), meaning: line.slice(i + 1).trim() };
+              var known = known0.find(function(l) { return l.term === entry.term && l.meaning === entry.meaning; });
+              if (known) { entry.criteria = known.criteria; entry.mode = known.mode; }
+              return entry;
+            }).filter(Boolean);
+          }
+          /* « Apprendre » : chaque explication est interprétée comme une demande, ses
+             critères sont gardés ; dans l'application, l'utilisateur les verra en clair
+             et confirmera avant d'enregistrer. */
+          function learnVocabulary(text) {
+            var plain = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES });
+            var todo = vocabulary(text).filter(function(v) { return !v.criteria; });
+            return todo.reduce(function(chain, entry) {
+              return chain.then(function(acc) {
+                return plain(entry.meaning, {}).then(function(r) {
+                  var crit = r.criteria.map(function(c) { return { name: c.name, operator: c.operator, values: c.values }; });
+                  return acc.concat([{ term: entry.term, meaning: entry.meaning, mode: r.mode, criteria: crit }]);
+                });
+              });
+            }, Promise.resolve([])).then(function(learned) {
+              var all = llmLearned[0].concat(learned);
+              llmLearned[1](all);
+              try { window.localStorage.setItem('demo.llm.learned', JSON.stringify(all)); } catch (ex) {}
+              return all;
+            });
+          }
 
           /* Le transport de la démo parle directement à l'Ollama du poste ; dans
              l'application, c'est l'API qui relaie (/v1/asso/llm/interpret). Ollama
@@ -270,22 +306,27 @@
               return r.json();
             }).then(function(j) { llmTiming[1](Date.now() - t0); return { content: j.message.content }; });
           }
-          var naturalOnList = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, base: function() { return listFilter[0]; }, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES });
-          var naturalOnForm = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES });
+          var naturalOnList = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, base: function() { return listFilter[0]; }, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
+          var naturalOnForm = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
 
           /* #llm=<phrase> : tape la phrase dans la barre et l'envoie, pour les captures
              d'écran automatiques (même rôle que #tiroir). */
           React.useEffect(function() {
-            var m = window.location.hash.match(/^#llm=(.+)$/);
+            var v = window.location.hash.match(/[#&]vocab=([^&]+)/);
+            if (v) { try { window.localStorage.setItem('demo.llm.vocab', decodeURIComponent(v[1])); } catch (ex) {} llmVocab[1](decodeURIComponent(v[1])); }
+            var m = window.location.hash.match(/[#&]llm=([^&]+)/);
             if (!m) { return; }
             var text = decodeURIComponent(m[1]);
-            setTimeout(function() {
-              var input = document.querySelector('.demo-card .rbf-natural-search-bar input');
-              if (!input) { return; }
-              Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, text);
-              input.dispatchEvent(new Event('input', { bubbles: true }));
-              setTimeout(function() { input.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }, 50);
-            }, 300);
+            var ready = v ? new Promise(function(resolve) { setTimeout(function() { learnVocabulary(decodeURIComponent(v[1])).then(resolve, resolve); }, 300); }) : Promise.resolve();
+            ready.then(function() {
+              setTimeout(function() {
+                var input = document.querySelector('.demo-card .rbf-natural-search-bar input');
+                if (!input) { return; }
+                Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input, text);
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                setTimeout(function() { input.form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }, 50);
+              }, 300);
+            });
           }, []);
 
           var state = {
@@ -326,6 +367,21 @@
                     context: { filter: listFilter[0] },
                     onResult: function(r) { llmResult[1](r); if (r && r.filter) { listFilter[1](r.filter); } }
                   })
+                ),
+                e('div', { className: 'mt-3', style: { maxWidth: '640px' } },
+                  e('label', { className: 'demo-hint mb-1 d-block' }, 'Vocabulaire du métier, une définition par ligne (« terme = explication ») — ce que les utilisateurs expliqueront eux-mêmes depuis l’écran :'),
+                  e('textarea', { className: 'form-control form-control-sm', rows: 3, value: llmVocab[0],
+                    placeholder: 'banlieue = les départements 77, 78, 91, 92, 93, 94 et 95 autour de Paris : Code postal commence par l’un d’eux',
+                    onChange: function(ev) { llmVocab[1](ev.target.value); try { window.localStorage.setItem('demo.llm.vocab', ev.target.value); } catch (ex) {} } }),
+                  e('div', { className: 'mt-2 d-flex align-items-start' },
+                    e('button', { type: 'button', className: 'btn btn-sm btn-outline-secondary mr-3', onClick: function() { learnVocabulary(); } }, 'Apprendre le vocabulaire'),
+                    e('div', { className: 'small text-muted' },
+                      vocabulary().map(function(v, i) {
+                        var f = v.criteria ? RBF.naturalToResult({ criteria: v.criteria, mode: v.mode }, CATALOG).filter : null;
+                        return e('div', { key: i }, '« ' + v.term + ' » → ' + (f ? RBF.filterToSentence(f, CATALOG, { subject: 'donateurs' }) : 'pas encore appris'));
+                      })
+                    )
+                  )
                 ),
                 llmResult[0] && e('div', { className: 'mt-3' },
                   e('p', { className: 'demo-hint mb-1' }, 'Réponse en ' + (llmTiming[0] ? (llmTiming[0] / 1000).toFixed(1) + ' s' : '—') + ' · mode ' + llmResult[0].mode + ' · ' + llmResult[0].criteria.length + ' critère(s)'),

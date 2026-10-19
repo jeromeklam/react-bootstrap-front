@@ -308,19 +308,27 @@ n'est pas demandée, `filterToSentence` la produit.
   les pickers (sauf `llm: true`) ; deux libellés identiques → le premier seul.
   `naturalType(champ)` : `select` dès qu'il y a des options (le virtuel « Don »),
   sinon le type.
-- `buildNaturalPrompt(catalog, { today, subject, examples, intro })` : le prompt
-  système, **stable pour un catalogue donné** (Ollama garde son évaluation en cache
+- `buildNaturalPrompt(catalog, { today, subject, examples, vocabulary, intro })` : le
+  prompt système, **stable pour un catalogue donné** (Ollama garde son évaluation en cache
   et ne relit que la phrase) : une ligne par champ « libellé : type [choix] —
   description », les opérateurs par type, les règles (dates AAAA-MM-JJ avec la date du
   jour, montants en euros, « ne rien inventer, `unmatched` plutôt qu'un champ
-  approchant »), puis les exemples de l'application. `naturalFieldLine`,
+  approchant »), le **vocabulaire** des utilisateurs (`[{ term, meaning, criteria?,
+  mode? }]`, section « VOCABULAIRE » : « banlieue » : les départements 77, 78, 91… —
+  ce que l'application stocke et laisse enrichir depuis l'écran ; une entrée qui porte
+  ses `criteria` devient aussi un exemple, ce que les petits modèles suivent le mieux),
+  puis les exemples de l'application. `naturalFieldLine`,
   `naturalExampleToText` (un exemple = `{ phrase, mode?, criteria: [{ name, operator,
   values }], unmatched? }`, valeurs écrites comme le modèle doit les rendre).
 - `buildNaturalSchema(catalog)` : le schéma JSON imposé (`format` d'Ollama) — `f` dans
   un `enum` des libellés, `o` dans la matrice, `v` tableau de chaînes.
 - `buildNaturalRequest(phrase, catalog, options)` → `{ system, phrase, user, format }` :
   ce que l'application envoie à son service ; le service choisit le modèle et ses
-  options (`temperature` 0, `num_predict` 400, `keep_alive` long).
+  options (`temperature` 0, `num_predict` 400, `keep_alive` long). `user` =
+  `naturalUserMessage(phrase, vocabulary)` : « Demande : « … » » puis, si la phrase
+  contient des mots du vocabulaire (`vocabularyIn`, mot entier, pluriel toléré),
+  « Précisions : « banlieue » = … » — répétées sous la demande, c'est ce qu'un petit
+  modèle suit le mieux, et le prompt système en cache n'en bouge pas.
 - `parseNaturalContent(réponse)` : objet, chaîne JSON ou clôture markdown ; lève une
   erreur sinon.
 - `naturalToCriteria(brut, catalog, { t })` → `{ mode, criteria: [{ id, name,
@@ -336,22 +344,24 @@ n'est pas demandée, `filterToSentence` la produit.
   accent ni casse, puis préfixe ou inclusion **uniques** : « Association » →
   « Association / Fondation »), booléen (oui/non/1/0), nombre (« 1 500,50 € »), date
   (ISO ou jj/mm/aaaa, calendrier vérifié), texte **présent dans la demande** quand
-  elle est fournie (une ville ou un pays absents de la phrase ont été inventés :
-  « en anglais » → « United Kingdom ») ; `between` sans deux bornes ; critère sans
+  elle est fournie — sauf un code en chiffres (« Paris » → 75) ou un mot apporté par le
+  vocabulaire (« banlieue » → 77, 78…) ; une ville ou un pays absents de la phrase ont
+  été inventés (« en anglais » → « United Kingdom ») ; `between` sans deux bornes ; critère sans
   valeur. Puis un seul critère par champ : mêmes opérateurs → valeurs réunies ; une
   borne basse et une haute (date, nombre, montant) → `between` ; sinon le premier
-  gagne. Texte : plusieurs valeurs seulement avec `eq` / `neq` (jointes par virgule
-  comme les listes de choix), « contient A ou B » garde A. Mode `OR` ramené à `AND`
-  s'il reste moins de deux critères.
+  gagne. Texte : plusieurs valeurs avec `contains`, `containsb`, `containse`, `soundex`,
+  `eq` — jointes par virgule, l'API (FreeFW `Conditions`) en fait un OU, « commence
+  par 75, 77 ou 92 » ; `ncontains` / `neq` gardent la première. Mode `OR` ramené à
+  `AND` s'il reste moins de deux critères.
 - `naturalToResult(brut, catalog, { base, t })` → le `NaturalLanguageResult` :
   `filter` bâti par `criteriaToFilter` sur `base` (fixes, défauts et groupes — la
   recherche rapide — conservés, le reste remplacé), `mode`, `criteria`, `warnings`
   précédés de « Non compris : « … » » s'il y a des `unmatched`, `unmatched`.
-- `createNaturalLanguage({ transport, catalog, base, examples, subject, intro, today,
-  t })` fabrique le `onNaturalLanguage` d'une application : `transport(request,
-  context)` rend ou promet la réponse du modèle (chaîne, objet ou `{ content }`) ;
-  `catalog` et `base` peuvent être des fonctions ; sans `base`, `context.filter` sert
-  de socle.
+- `createNaturalLanguage({ transport, catalog, base, examples, vocabulary, subject,
+  intro, today, t })` fabrique le `onNaturalLanguage` d'une application :
+  `transport(request, context)` rend ou promet la réponse du modèle (chaîne, objet ou
+  `{ content }`) ; `catalog`, `base` et `vocabulary` peuvent être des fonctions ; sans
+  `base`, `context.filter` sert de socle.
 - Mesures (19/10/2026, `doc/recherche/feuille-de-route.md`) : qwen2.5:7b 10/10 sur dix
   demandes ; 3b et llama3.2:3b écartés.
 

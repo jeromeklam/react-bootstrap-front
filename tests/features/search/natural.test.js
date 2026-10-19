@@ -6,6 +6,7 @@ import {
   buildNaturalPrompt,
   buildNaturalSchema,
   buildNaturalRequest,
+  vocabularyIn,
   parseNaturalContent,
   matchOption,
   naturalToCriteria,
@@ -158,14 +159,16 @@ test('ce qui est corrigé ou ignoré est dit : champ inconnu, opérateur hors ty
       { f: 'Nom', o: 'containsb', v: ['Du'] },
       { f: 'E-mail', o: 'empty', v: ['x'] },
       { f: 'Montant', o: 'gt', v: [] },
+      { f: 'Ville', o: 'ncontains', v: ['Paris', 'Lyon'] },
     ],
     unmatched: ['quarante ans', ' '],
   };
   const result = naturalToCriteria(raw, catalog());
   expect(result.criteria.map(c => [c.name, c.operator, c.values])).toEqual([
     ['donations.payment_type.ptyp_id', 'eq', ['3', '5']],
-    ['cli_lastname', 'contains', ['Dupont']],
+    ['cli_lastname', 'contains', ['Dupont', 'Durand']],
     ['cli_email', 'empty', []],
+    ['cli_town', 'ncontains', ['Paris']],
   ]);
   expect(result.warnings).toEqual([
     'Champ inconnu « Âge », critère ignoré',
@@ -178,7 +181,7 @@ test('ce qui est corrigé ou ignoré est dit : champ inconnu, opérateur hors ty
     'Montant : il faut un début et une fin, critère ignoré',
     'Montant : pas de valeur donnée, critère ignoré',
     'Nom : un seul critère retenu',
-    'Nom : une seule valeur retenue, « Dupont »',
+    'Ville : une seule valeur retenue, « Paris »',
   ]);
   expect(result.unmatched).toEqual(['quarante ans']);
   expect(result.mode).toBe(FILTER_MODE_OR);
@@ -247,6 +250,41 @@ test('des comparaisons sur un texte (« Paris et banlieue » en codes postaux) :
     'Nom : « M » ignoré — un texte ne se compare pas, il « commence par » ou « contient »',
   ]);
   expect(buildNaturalPrompt(catalog())).toContain('Un champ text ne se compare pas');
+});
+
+test('le vocabulaire des utilisateurs entre dans le prompt ; « commence par » accepte plusieurs valeurs (OU côté API)', async () => {
+  const vocabulary = [{ term: 'banlieue', meaning: 'les départements 77, 78, 91, 92, 93, 94 et 95 autour de Paris : Code postal commence par l’un d’eux' }, { term: '', meaning: 'x' }];
+  const prompt = buildNaturalPrompt(catalog(), { vocabulary });
+  expect(prompt).toContain('VOCABULAIRE (ce que ces mots veulent dire ici) :\n- « banlieue » : les départements 77, 78, 91, 92, 93, 94 et 95 autour de Paris');
+  expect(buildNaturalPrompt(catalog())).not.toContain('VOCABULAIRE');
+  const learned = [{ term: 'banlieue', meaning: 'autour de Paris', criteria: [{ name: 'cli_cp', operator: 'containsb', values: ['77', '78'] }, { name: 'client_category.clic_id', operator: 'eq', values: [6] }] }];
+  const taught = buildNaturalPrompt(catalog().concat(normalizeCatalog([{ name: 'cli_cp', label: 'Code postal', type: 'text' }])), { vocabulary: learned });
+  expect(taught).toContain('EXEMPLES :\nDemande : « banlieue »\n{"mode":"AND","c":[{"f":"Code postal","o":"containsb","v":["77","78"]},{"f":"Catégorie","o":"eq","v":["Particulier"]}],"unmatched":[]}');
+  const withCp = normalizeCatalog(catalog().concat([{ name: 'cli_cp', label: 'Code postal', type: 'text', defaultOperator: 'containsb' }]));
+  const result = naturalToCriteria({ c: [{ f: 'Code postal', o: 'containsb', v: ['75', '77', '78', '91', '92', '93', '94', '95'] }] }, withCp, { phrase: 'paris et banlieue' });
+  expect(result.criteria).toEqual([{ id: expect.any(String), name: 'cli_cp', operator: 'containsb', values: ['75', '77', '78', '91', '92', '93', '94', '95'] }]);
+  expect(result.warnings).toEqual([]);
+  expect(api(naturalToResult({ c: [{ f: 'Code postal', o: 'containsb', v: ['75', '92'] }] }, withCp).filter)).toEqual({ filter: { and: { cli_cp: { containsb: '75,92' } } } });
+  /* Une valeur que le vocabulaire apporte est légitime même absente de la phrase ; une
+     valeur inventée reste écartée. */
+  const idf = [{ term: 'IDF', meaning: 'Île-de-France : Ville contient Paris ou Versailles' }];
+  const fromVocab = naturalToCriteria({ c: [{ f: 'Ville', o: 'contains', v: ['Paris', 'Versailles', 'Londres'] }] }, withCp, { phrase: 'donateurs IDF', vocabulary: idf });
+  expect(fromVocab.criteria.map(c => c.values)).toEqual([['Paris', 'Versailles']]);
+  expect(fromVocab.warnings).toEqual(['Ville : « Londres » n’est pas dans la demande, ignoré']);
+  /* La forme pleine accepte `name` (ce qu'une application a gardé d'un résultat). */
+  expect(naturalToCriteria({ criteria: learned[0].criteria }, withCp).criteria.map(c => [c.name, c.values])).toEqual([['cli_cp', ['77', '78']], ['client_category.clic_id', ['6']]]);
+  /* Les mots du vocabulaire présents dans la demande sont redits sous elle. */
+  expect(vocabularyIn('donateurs de Banlieue et IDF', idf.concat(vocabulary)).map(e => e.term)).toEqual(['IDF', 'banlieue']);
+  expect(vocabularyIn('banlieues chics', vocabulary).length).toBe(1);
+  expect(vocabularyIn('banlieusards', vocabulary).length).toBe(0);
+  const request = buildNaturalRequest('donateurs de banlieue', withCp, { vocabulary });
+  expect(request.user).toBe('Demande : « donateurs de banlieue »\nPrécisions : « banlieue » = les départements 77, 78, 91, 92, 93, 94 et 95 autour de Paris : Code postal commence par l’un d’eux');
+  expect(buildNaturalRequest('donateurs de Lyon', withCp, { vocabulary }).user).toBe('Demande : « donateurs de Lyon »');
+  const seen = [];
+  const ask = createNaturalLanguage({ transport: request => { seen.push(request.system); return '{"mode":"AND","c":[{"f":"Ville","o":"contains","v":["Versailles"]}],"unmatched":[]}'; }, catalog: withCp, vocabulary: () => idf });
+  const asked = await ask('IDF');
+  expect(seen[0]).toContain('« IDF » : Île-de-France');
+  expect(asked.criteria.map(c => c.values)).toEqual([['Versailles']]);
 });
 
 test('la forme pleine { criteria: [{ field, operator, values }] } est acceptée, par nom comme par libellé', () => {

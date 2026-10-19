@@ -242,8 +242,8 @@ réchauffage périodique côté API).
 
 - « Nom ou prénom contient X » au milieu de critères en « et » : rendu en « et » (le
   `group` du modèle `Filter` le permettrait plus tard).
-- « Contient A ou B » sur un champ texte : A seul (un opérateur par champ) ; `eq` à
-  plusieurs valeurs passe comme une liste.
+- « Contient A ou B », « commence par 75 ou 92 » passent en une liste de valeurs (l'API
+  en fait un OU) ; « ne contient pas » garde la première.
 - Un libellé tronqué par le modèle est rapproché s'il désigne une seule option ; une
   notion absente du catalogue (langue, âge…) doit finir dans « Non compris », le 7b y
   arrive le plus souvent mais pas toujours.

@@ -1,8 +1,11 @@
 import {
   FILTER_MODE_AND,
   FILTER_MODE_OR,
+  FILTER_OPER_LIKE,
+  FILTER_OPER_START_WITH,
+  FILTER_OPER_END_WITH,
+  FILTER_OPER_SOUND_LIKE,
   FILTER_OPER_EQUAL,
-  FILTER_OPER_NOT_EQUAL,
   FILTER_OPER_BETWEEN,
   FILTER_OPER_GREATER,
   FILTER_OPER_GREATER_OR_EQUAL,
@@ -33,6 +36,9 @@ const KIND_OF = { date: 'une date', datetime: 'une date', number: 'un nombre', m
 const LOW_OPERS = [FILTER_OPER_GREATER, FILTER_OPER_GREATER_OR_EQUAL];
 const HIGH_OPERS = [FILTER_OPER_LOWER, FILTER_OPER_LOWER_OR_EQUAL];
 const COMPARE_OPERS = LOW_OPERS.concat(HIGH_OPERS, [FILTER_OPER_BETWEEN]);
+/* Plusieurs valeurs jointes par une virgule : l'API en fait un OU pour ces opérateurs
+   (FreeFW Conditions) ; « ne contient pas » ou « différent » n'ont de sens qu'à une. */
+const TEXT_MULTI_OPERS = [FILTER_OPER_LIKE, FILTER_OPER_START_WITH, FILTER_OPER_END_WITH, FILTER_OPER_SOUND_LIKE, FILTER_OPER_EQUAL];
 
 export const NATURAL_OPERATORS = Object.keys(OPERATORS_BY_TYPE).reduce((acc, type) => {
   OPERATORS_BY_TYPE[type].forEach(oper => {
@@ -104,7 +110,12 @@ export const naturalExampleToText = (example, catalog) => {
         return null;
       }
       const values = Array.isArray(crit.values) ? crit.values : [crit.values];
-      return { f: field.label, o: crit.operator, v: values.filter(v => v !== null && typeof v !== 'undefined').map(String) };
+      /* Une valeur d'option (son identifiant) s'écrit par son libellé, comme le modèle doit la rendre. */
+      const asText = value => {
+        const option = (field.options || []).find(o => String(o.value) === String(value));
+        return option ? String(option.label) : String(value);
+      };
+      return { f: field.label, o: crit.operator, v: values.filter(v => v !== null && typeof v !== 'undefined').map(asText) };
     })
     .filter(Boolean);
   const answer = { mode: example.mode === FILTER_MODE_OR ? FILTER_MODE_OR : FILTER_MODE_AND, c, unmatched: example.unmatched || [] };
@@ -113,9 +124,11 @@ export const naturalExampleToText = (example, catalog) => {
 
 /**
  * Le prompt système. Stable d'une demande à l'autre pour un même catalogue : Ollama
- * garde son évaluation en cache et ne relit que la phrase.
+ * garde son évaluation en cache et ne relit que la phrase. `vocabulary` : les mots
+ * du métier expliqués par les utilisateurs eux-mêmes, [{ term, meaning }] — « banlieue »
+ * : les départements 77, 78, 91… — que le modèle applique comme une règle de plus.
  */
-export const buildNaturalPrompt = (catalog, { today = null, subject = null, examples = [], intro = null } = {}) => {
+export const buildNaturalPrompt = (catalog, { today = null, subject = null, examples = [], vocabulary = [], intro = null } = {}) => {
   const fields = fieldsForNatural(catalog);
   const lines = fields.map(naturalFieldLine).join('\n');
   const what = subject || 'une liste';
@@ -139,13 +152,24 @@ export const buildNaturalPrompt = (catalog, { today = null, subject = null, exam
     '- Champ bool : "v" vaut ["1"] pour oui, ["0"] pour non.',
     `- Dates au format AAAA-MM-JJ. Aujourd'hui : ${isoDate(today)}. Une année seule → between du 1er janvier au 31 décembre. « depuis N mois / plus de N ans » → calcule la date à partir d'aujourd'hui.`,
     '- Montants en euros, nombres sans symbole ni espace.',
-    '- Un champ text ne se compare pas (jamais gt, gte, ltw, ltwe ni between dessus) : « commence par » (containsb, une seule valeur) ou « contient » ; ce qui ne tient pas en une valeur va dans "unmatched".',
+    '- Un champ text ne se compare pas (jamais gt, gte, ltw, ltwe ni between dessus) : « contient » ou « commence par », avec une ou plusieurs valeurs dans "v" (plusieurs = l\'une ou l\'autre : "commence par" ["77","78"]).',
     '- "mode" vaut "AND" (tous les critères, cas normal) ou "OR" si la demande oppose des critères portant sur des champs différents par « ou ».',
     '- N\'invente aucun critère. Ce que la demande dit et que tu ne peux pas traduire avec ces champs va dans "unmatched" (les mots concernés, en français), pas dans "c" : une langue, une nationalité, un âge, un métier… ne se remplacent pas par un pays ni par un autre champ approchant.',
   ];
-  if (examples.length > 0) {
+  const words = (vocabulary || []).filter(entry => entry && entry.term && entry.meaning);
+  if (words.length > 0) {
+    parts.push('', 'VOCABULAIRE (ce que ces mots veulent dire ici) :');
+    words.forEach(entry => parts.push(`- « ${String(entry.term).trim()} » : ${String(entry.meaning).trim()}`));
+  }
+  /* Un mot du vocabulaire dont les critères sont connus devient aussi un exemple :
+     c'est ce que les petits modèles suivent le mieux. */
+  const learned = words
+    .filter(entry => Array.isArray(entry.criteria) && entry.criteria.length > 0)
+    .map(entry => ({ phrase: entry.term, mode: entry.mode, criteria: entry.criteria, unmatched: [] }));
+  const shown = (examples || []).concat(learned);
+  if (shown.length > 0) {
     parts.push('', 'EXEMPLES :');
-    examples.forEach(example => parts.push(naturalExampleToText(example, catalog)));
+    shown.forEach(example => parts.push(naturalExampleToText(example, catalog)));
   }
   return parts.join('\n');
 };
@@ -173,13 +197,40 @@ export const buildNaturalSchema = catalog => ({
   required: ['mode', 'c', 'unmatched'],
 });
 
+const escapeRegExp = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/* Les mots du vocabulaire présents dans la phrase (mot entier, pluriel en s toléré,
+   accents et casse ignorés). */
+export const vocabularyIn = (phrase, vocabulary = []) => {
+  const asked = fold(phrase);
+  return (vocabulary || []).filter(entry => {
+    if (!entry || !entry.term || !entry.meaning) {
+      return false;
+    }
+    const term = escapeRegExp(fold(entry.term));
+    return new RegExp(`(^|[^\\p{L}\\p{N}])${term}s?([^\\p{L}\\p{N}]|$)`, 'u').test(asked);
+  });
+};
+
+/* Le message utilisateur : la demande, puis — c'est ce qu'un petit modèle suit le
+   mieux — les définitions des mots du vocabulaire qu'elle contient, répétées là,
+   sous ses yeux, sans toucher au prompt système que le serveur garde en cache. */
+export const naturalUserMessage = (phrase, vocabulary = []) => {
+  const hits = vocabularyIn(phrase, vocabulary);
+  let user = `Demande : « ${phrase} »`;
+  if (hits.length > 0) {
+    user += '\nPrécisions : ' + hits.map(entry => `« ${String(entry.term).trim()} » = ${String(entry.meaning).trim()}`).join(' ; ');
+  }
+  return user;
+};
+
 /* Ce que l'application envoie à son service : le prompt système, la phrase telle
    quelle, le message utilisateur prêt, le schéma. Le service choisit le modèle et
    ses options. */
 export const buildNaturalRequest = (phrase, catalog, options = {}) => ({
   system: buildNaturalPrompt(catalog, options),
   phrase,
-  user: `Demande : « ${phrase} »`,
+  user: naturalUserMessage(phrase, options.vocabulary),
   format: buildNaturalSchema(catalog),
 });
 
@@ -283,15 +334,29 @@ const unique = values => values.filter((value, index) => values.indexOf(value) =
  * operator, values }], warnings, unmatched }. Accepte la forme courte { c: [{ f, o,
  * v }] } comme la forme pleine { criteria: [{ field, operator, values }] }.
  */
-export const naturalToCriteria = (raw = {}, catalog = [], { t = null, phrase = null } = {}) => {
+export const naturalToCriteria = (raw = {}, catalog = [], { t = null, phrase = null, vocabulary = [] } = {}) => {
   const asked = phrase === null || typeof phrase === 'undefined' ? null : fold(phrase);
+  /* Une valeur texte est légitime si la demande la contient, si c'est un code (chiffres :
+     « Paris » → 75), ou si le vocabulaire l'a apportée (« banlieue » → 77, 78…). */
+  const words = (vocabulary || []).filter(entry => entry && entry.meaning);
+  const legitimate = value => {
+    if (asked === null || asked.includes(fold(value)) || /^[\d\s.,/-]+$/.test(String(value))) {
+      return true;
+    }
+    return words.some(
+      entry =>
+        fold(entry.meaning).includes(fold(value)) ||
+        fold(entry.term || '') === fold(value) ||
+        (Array.isArray(entry.criteria) && entry.criteria.some(c => (Array.isArray(c.values) ? c.values : [c.values]).some(v => fold(v) === fold(value))))
+    );
+  };
   const fields = fieldsForNatural(catalog);
   const byLabel = new Map(fields.map(field => [fold(field.label), field]));
   const byName = new Map(fields.map(field => [field.name, field]));
   const items = Array.isArray(raw.c)
     ? raw.c.map(item => ({ field: item && item.f, operator: item && item.o, values: item && item.v }))
     : Array.isArray(raw.criteria)
-      ? raw.criteria
+      ? raw.criteria.map(item => (item && !item.field && item.name ? { ...item, field: item.name } : item))
       : [];
   const warnings = [];
   const rows = [];
@@ -366,7 +431,7 @@ export const naturalToCriteria = (raw = {}, catalog = [], { t = null, phrase = n
               bad.push(value);
               return null;
             }
-          } else if (asked !== null && !asked.includes(fold(value))) {
+          } else if (!legitimate(value)) {
             /* Un nom, une ville, un pays viennent de la demande elle-même : une valeur
                texte qui n'y figure pas a été inventée (« en anglais » → « United
                Kingdom »), elle part avec un mot. */
@@ -440,10 +505,10 @@ export const naturalToCriteria = (raw = {}, catalog = [], { t = null, phrase = n
     warnings.push(tr(t, 'rbf.search.natural.duplicate', '{label} : un seul critère retenu', { label: row.field.label }));
   });
 
-  /* Texte : plusieurs valeurs n'ont de sens que pour eq / neq (jointes par virgule,
-     comme les listes de choix) ; « contient A ou B » garde A. */
+  /* Texte : « contient A ou B », « commence par 77, 78 ou 91 » passent en une liste ;
+     les opérateurs négatifs gardent la première valeur. */
   merged.forEach(row => {
-    if (row.type === 'text' && row.values.length > 1 && ![FILTER_OPER_EQUAL, FILTER_OPER_NOT_EQUAL].includes(row.operator)) {
+    if (row.type === 'text' && row.values.length > 1 && !TEXT_MULTI_OPERS.includes(row.operator)) {
       warnings.push(tr(t, 'rbf.search.natural.singleValue', '{label} : une seule valeur retenue, « {value} »', { label: row.field.label, value: row.values[0] }));
       row.values = [row.values[0]];
     }
@@ -469,8 +534,8 @@ export const naturalToCriteria = (raw = {}, catalog = [], { t = null, phrase = n
  * et groupes conservés, le reste remplacé), le mode, les critères, et les
  * avertissements précédés des morceaux non compris.
  */
-export const naturalToResult = (raw, catalog = [], { base = null, t = null, phrase = null } = {}) => {
-  const { mode, criteria, warnings, unmatched } = naturalToCriteria(raw, catalog, { t, phrase });
+export const naturalToResult = (raw, catalog = [], { base = null, t = null, phrase = null, vocabulary = [] } = {}) => {
+  const { mode, criteria, warnings, unmatched } = naturalToCriteria(raw, catalog, { t, phrase, vocabulary });
   const filter = criteriaToFilter(criteria, mode, catalog, base);
   const all = warnings.slice();
   if (unmatched.length > 0) {
@@ -482,20 +547,21 @@ export const naturalToResult = (raw, catalog = [], { base = null, t = null, phra
 /**
  * Fabrique le `onNaturalLanguage` d'une application : `transport(request, context)`
  * rend (ou promet) la réponse du modèle — une chaîne, un objet, ou { content }.
- * `catalog` et `base` peuvent être des fonctions, lues à chaque demande ; sans
- * `base`, le filtre courant du contexte sert de socle.
+ * `catalog`, `base` et `vocabulary` peuvent être des fonctions, lues à chaque
+ * demande ; sans `base`, le filtre courant du contexte sert de socle.
  */
-export const createNaturalLanguage = ({ transport, catalog, base = null, examples = [], subject = null, intro = null, today = null, t = null }) => {
+export const createNaturalLanguage = ({ transport, catalog, base = null, examples = [], vocabulary = [], subject = null, intro = null, today = null, t = null }) => {
   if (typeof transport !== 'function') {
     throw new Error('createNaturalLanguage : transport requis');
   }
   return (phrase, context = {}) => {
     const fields = typeof catalog === 'function' ? catalog(context) : catalog;
     const socle = typeof base === 'function' ? base(context) : base || context.filter || null;
-    const request = buildNaturalRequest(phrase, fields, { examples, subject, intro, today });
+    const words = typeof vocabulary === 'function' ? vocabulary(context) : vocabulary;
+    const request = buildNaturalRequest(phrase, fields, { examples, vocabulary: words, subject, intro, today });
     return Promise.resolve(transport(request, context)).then(response => {
       const content = response && typeof response === 'object' && Object.prototype.hasOwnProperty.call(response, 'content') ? response.content : response;
-      return naturalToResult(parseNaturalContent(content), fields, { base: socle, t, phrase });
+      return naturalToResult(parseNaturalContent(content), fields, { base: socle, t, phrase, vocabulary: words });
     });
   };
 };
