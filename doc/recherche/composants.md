@@ -458,7 +458,7 @@ de la fiche, avec un peu d'espacement de lettres sur les libellés de section).
 | `value` / `defaultValue` | string | | |
 | `placeholder` | string | | |
 | `sparkleIcon` | element, req. | | |
-| `kbdHint` | string \| false | « Entrée » (`rbf.search.natural.kbd`) | Libellé du bouton de droite de la barre : un `btn btn-primary` de la hauteur du groupe, qui soumet la barre (depuis 3.15.4 ; `false` le retire) |
+| `kbdHint` | string \| false | « Rechercher » (`rbf.search.natural.kbd`) | Libellé du bouton de droite de la barre : un `btn btn-primary` de la hauteur et de la police du champ, qui soumet la barre (depuis 3.15.4, « Rechercher » depuis 3.15.5 ; `false` le retire) |
 | `variant` | `'bar'` \| `'card'` | `'bar'` | En-tête de liste ou carte de la fiche |
 | `submitLabel` | string | « Remplir les critères » | Variante `card` |
 | `hint` | node | | Sous le champ, variante `card` |
@@ -479,7 +479,7 @@ Rendu : `.rbf-natural-search > .input-group` (un `form` dans la barre ; un `div`
 (`btn-outline-rbf bg-light text-secondary`, comme les boutons accolés des autres
 champs de la bibliothèque ; elle lance l'interprétation ou montre la notice), le champ
 `border-rbf form-control` (focus discret de la bibliothèque, pas le halo Bootstrap),
-puis le badge « Entrée » ou `SmLoading3Dots` en attente ; sous le champ, la notice
+puis le bouton « Rechercher » ou `SmLoading3Dots` en attente ; sous le champ, la notice
 `small.form-text.text-warning[role=status]` (effacée après 4 s), sinon pendant
 l'attente « Analyse de la phrase en cours, quelques secondes… » (`text-muted`,
 `rbf.search.natural.pending`), sinon la liste des `warnings` du dernier résultat,

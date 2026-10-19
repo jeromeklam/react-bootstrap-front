@@ -1,13 +1,19 @@
 /* Les boutons du groupe suivent la taille du champ : l'application réduit la
    police des .input-group sous 1200 px, mais les .btn Bootstrap restent à 1rem et
-   dépasseraient. L'icône de l'application (24 px) est bornée de même. */
+   dépasseraient. Avec une taille (input-group-sm, -lg), Bootstrap donne déjà aux
+   boutons la police du champ : l'héritage prendrait celle du groupe (0,9 rem) et
+   le bouton « Rechercher » dépassait le texte du champ (0,7 rem). L'icône de
+   l'application (24 px) est bornée de même. */
 .rbf-natural-search {
   .input-group .btn {
-    font-size: inherit;
     /* Le groupe étire les boutons à la hauteur du champ : leur contenu reste centré. */
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .input-group:not(.input-group-sm):not(.input-group-lg) .btn {
+    font-size: inherit;
   }
 
   /* L'icône de l'application arrive avec sa taille en style inline (@mdi/react) :

@@ -40,7 +40,7 @@ export const translations = {
   'rbf.search.value.yes': 'oui',
   'rbf.search.value.no': 'non',
   'rbf.search.value.or': ' ou ',
-  'rbf.search.natural.kbd': 'Entrée',
+  'rbf.search.natural.kbd': 'Rechercher',
   'rbf.search.natural.submit': 'Remplir les critères',
   'rbf.search.natural.ask': 'Interpréter la phrase',
   'rbf.search.natural.comingSoon': 'Recherche en langage naturel : en construction pour l’instant',

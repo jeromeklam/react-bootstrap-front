@@ -22,7 +22,7 @@ test('sans service : en construction, l’étincelle affiche la notice puis l’
   expect(notices(tree)).toEqual([]);
 });
 
-test('barre : Entrée garde la recherche rapide, sans notice ; bouton « Entrée » vert qui soumet', () => {
+test('barre : Entrée garde la recherche rapide, sans notice ; bouton « Rechercher » vert qui soumet', () => {
   const onQuickSearch = jest.fn();
   const tree = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} onQuickSearch={onQuickSearch} />);
   type(tree, 'dupont');
@@ -31,7 +31,7 @@ test('barre : Entrée garde la recherche rapide, sans notice ; bouton « Entrée
   expect(notices(tree)).toEqual([]);
   const submit = tree.root.find(n => n.type === 'button' && n.props.type === 'submit');
   expect(submit.props.className).toContain('btn-primary');
-  expect(submit.children).toEqual(['Entrée']);
+  expect(submit.children).toEqual(['Rechercher']);
   const hidden = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} kbdHint={false} />);
   expect(hidden.root.findAll(n => n.type === 'button' && n.props.type === 'submit').length).toBe(0);
 });

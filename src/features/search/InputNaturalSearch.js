@@ -11,7 +11,7 @@ import SearchSummary from './SearchSummary';
 
 /**
  * La barre de recherche en langage naturel : une étincelle, une phrase, un
- * bouton « Entrée » (vert, de la hauteur du groupe) qui soumet la barre.
+ * bouton « Rechercher » (vert, de la hauteur et de la police du champ) qui soumet la barre.
  *
  * Tant qu'aucun service d'interprétation n'est branché (`onNaturalLanguage`
  * absent, ou `comingSoon`), le composant est « en construction » : l'étincelle
@@ -327,7 +327,7 @@ export default class InputNaturalSearch extends Component {
     const { name, placeholder, sparkleIcon, variant, hint, size, className, t } = this.props;
     const comingSoon = this.isComingSoon();
     const pending = this.isPending();
-    const kbdHint = this.props.kbdHint === null ? tr(t, 'rbf.search.natural.kbd', 'Entrée') : this.props.kbdHint;
+    const kbdHint = this.props.kbdHint === null ? tr(t, 'rbf.search.natural.kbd', 'Rechercher') : this.props.kbdHint;
     const submitLabel = this.props.submitLabel || tr(t, 'rbf.search.natural.submit', 'Remplir les critères');
     const sparkleTitle = comingSoon
       ? tr(t, 'rbf.search.natural.comingSoon', 'Recherche en langage naturel : en construction pour l’instant')

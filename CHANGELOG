@@ -1,3 +1,7 @@
+# 3.15.5 : 19/10/2026
+
+* Recherche : le bouton de droite de la barre d'en-tête dit « Rechercher » (et non plus « Entrée ») et prend la police du champ : avec `size="sm"`, il héritait de celle du groupe et son texte dépassait celui du champ
+
 # 3.15.4 : 19/10/2026
 
 * Recherche : dans la barre d'en-tête de liste, « Entrée » n'est plus un badge posé dans une case blanche mais un vrai bouton `btn-primary` de la hauteur du groupe, comme le bouton de la fiche de recherche ; il soumet la barre, `kbdHint={false}` le retire
