@@ -66,7 +66,8 @@ nouvelles sont vertes.
 
 | 2 | `09471f4` | Modèle `Filter` : extension `group` (`addFilter(…, group)`, `removeGroup`, `getFilters({ group })`, émission `and: { …, or: {…} }`), sortie sans groupe inchangée (tests dorés). **À confirmer côté API** lors du test réel de l'en-tête. | relecture |
 
-| 2 | ce commit | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
+| 2 | `271dc13` | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
+| 2 | ce commit | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
 
 ## Décisions
 

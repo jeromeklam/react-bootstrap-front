@@ -11,3 +11,11 @@
     padding-right: 1px;
   }
 }
+
+/* Rangée d'outils sous le titre : les critères de recherche. L'en-tête impose un
+   interligne de 50 px pour centrer sa ligne de titre ; la rangée reprend le sien. */
+.default-list-header .rbf-list-header-toolbar {
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+}

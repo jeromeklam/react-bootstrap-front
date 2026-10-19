@@ -1,0 +1,10 @@
+/* La rangée sur une ligne (bandeau d'en-tête de liste) défile horizontalement. */
+.rbf-chip-bar-line {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  .rbf-chip {
+    flex: 0 0 auto;
+  }
+}

@@ -67,6 +67,7 @@ const MAP = {
   check: 'mdiCheck',
   plus: 'mdiPlus',
   calendar: 'mdiCalendar',
+  tune: 'mdiTune',
 };
 
 const mdi = require(path.join(APP, 'node_modules/@mdi/js'));

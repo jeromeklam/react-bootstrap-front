@@ -27,11 +27,23 @@ export default class MobileHeader extends Component {
     title: PropTypes.string.isRequired,
     onReload: PropTypes.func.isRequired,
     t: PropTypes.func,
+    toolbar: PropTypes.node,
+    toolbarHeight: PropTypes.number,
+    toolbarOpen: PropTypes.bool,
+    onToolbarToggle: PropTypes.func,
+    toolbarIcon: PropTypes.element,
+    toolbarCount: PropTypes.number,
   };
   static defaultProps = {
     globalActions: [],
     icon: null,
     t: rbfIntl,
+    toolbar: null,
+    toolbarHeight: 44,
+    toolbarOpen: false,
+    onToolbarToggle: null,
+    toolbarIcon: null,
+    toolbarCount: null,
   };
 
   constructor(props) {
@@ -91,9 +103,19 @@ export default class MobileHeader extends Component {
         }
       }
     }
+    /* Rangée d'outils, comme sur bureau : masquée par défaut, bouton avec badge. */
+    const toolbarOpen = !!(this.props.toolbar && this.props.toolbarOpen);
+    const headerHeight = 50 + (toolbarOpen ? this.props.toolbarHeight : 0);
+    let toolbarCount = this.props.toolbarCount;
+    if (toolbarCount === null && this.props.filters && typeof this.props.filters.getFilters === 'function') {
+      toolbarCount = this.props.filters.getFilters({ fixed: false }).length;
+    }
+    const toolbarTitle = toolbarOpen
+      ? this.props.t({ id: 'rbf.list.header.toolbar.hide', defaultMessage: 'Masquer les critères' })
+      : this.props.t({ id: 'rbf.list.header.toolbar.show', defaultMessage: 'Afficher les critères' });
     return (
       <div
-        style={mystyle}
+        style={{ ...mystyle, height: `${headerHeight}px` }}
         className="ui-mobile-list row bg-light text-secondary border-bottom border-secondary-light"
       >
         <div className="col-xxs-w12 ui-mobile-list-icon">
@@ -164,6 +186,20 @@ export default class MobileHeader extends Component {
                 </div>
               </li>
             )}
+            {this.props.toolbar && (
+              <li className="nav-item">
+                <button
+                  type="button"
+                  className={classnames('btn btn-light text-secondary rbf-list-header-toolbar-toggle', toolbarOpen && 'active')}
+                  title={toolbarTitle}
+                  aria-expanded={toolbarOpen}
+                  onClick={this.props.onToolbarToggle || undefined}
+                >
+                  {this.props.toolbarIcon}
+                  {!toolbarOpen && toolbarCount > 0 && <span className="badge badge-primary ml-1">{toolbarCount}</span>}
+                </button>
+              </li>
+            )}
             {this.props.filters && (
               <li className="nav-item">
                 <Highlight
@@ -203,11 +239,17 @@ export default class MobileHeader extends Component {
                     }}
                   >
                     {action.icon}
+                    {action.text && <span className="ml-1">{action.text}</span>}
                   </button>
                 </li>
               ))}
           </ul>
         </div>
+        {toolbarOpen && (
+          <div className="col-xxs-w36 rbf-list-header-toolbar px-2" style={{ height: `${this.props.toolbarHeight}px`, lineHeight: '1.5' }}>
+            {this.props.toolbar}
+          </div>
+        )}
       </div>
     );
   }

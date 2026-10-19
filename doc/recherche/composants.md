@@ -22,7 +22,7 @@ validé par Jérôme avant d'être commité. Les modules purs et les méthodes d
 | `SearchForm`, `SearchFormSection`, `SearchFormField`, `SearchFormFooter` | 1 | **validé le 18/10/2026** sur l'aperçu |
 | `Chip` (variantes `active`, `facet`, `add`) | 2 | rendu **validé le 18/10/2026** sur l'aperçu |
 | `FacetPopover`, `SearchChipBar` | 2 | **validé le 19/10/2026** sur l'aperçu ; la rangée doit pouvoir se masquer (bouton d'en-tête, masquée par défaut) |
-| Emplacement `toolbar` de l'en-tête, `InputNaturalSearch` (variante `bar`) | 2 | proposé, à valider |
+| Emplacement `toolbar` de l'en-tête (repliable, mémorisé), `InputNaturalSearch` (variante `bar`) | 2 | **validé le 19/10/2026** sur l'aperçu (« nickel ») |
 | `Drawer`, `SearchCriteriaRow`, `SearchCriteriaBuilder`, `SearchDrawer` | 3 | proposé, à valider |
 | `InputNumberRange` | 3 | optionnel, à valider |
 
@@ -509,17 +509,27 @@ catalog, filter))`. « Tout effacer » vide les lignes.
 
 ## Emplacement d'en-tête de liste
 
-Props additives, comportement par défaut inchangé.
+Props additives sur `ResponsiveList` (transmises à `DefaultList` / `DefaultHeader` et à
+`MobileList` / `MobileHeader`), comportement par défaut inchangé.
 
-- `list/DefaultHeader.jsx` : `toolbar` (node) et `toolbarHeight` (number, 44). Si
-  `toolbar` est fourni, la barre absolue passe de 50 à `50 + toolbarHeight` px et une
-  seconde rangée `.rbf-list-header-toolbar` est rendue sous la `Row` actuelle.
-  `globalActions[].text` (string) affiché après l'icône.
-- `list/DefaultList.jsx` : `listStyle.top` et `height` calculés avec la même hauteur,
-  comme le fait déjà `titleMultiline` (L314-327).
-- `list/MobileHeader.jsx`, `MobileList.jsx` : même emplacement, seconde rangée fixe,
-  `datastyle.top` ajusté.
-- `ResponsiveList` transmet déjà toutes les props.
+| Prop | Type | Défaut | Rôle |
+|---|---|---|---|
+| `toolbar` | node | | La rangée d'outils sous la ligne de titre (la `SearchChipBar`) |
+| `toolbarHeight` | number | `44` | Hauteur de la rangée ; l'en-tête passe de 50 à 50 + `toolbarHeight` px et le corps de liste se décale d'autant |
+| `toolbarOpen` | bool | `null` | Contrôlé par l'application si fourni ; sinon la liste mémorise l'état elle-même |
+| `toolbarDefaultOpen` | bool | `false` | **Repliée par défaut** : l'utilisateur la découvre par son bouton |
+| `toolbarStorageKey` | string | | Clé de mémorisation (`localStorage`, `rbf.list.toolbar.<clé>`), une par liste ; silencieux sans stockage |
+| `onToolbarToggle` | func | | `(open)` à chaque bascule |
+| `toolbarIcon` | element | | L'icône du bouton d'affichage, dans la barre d'actions à gauche du bouton filtre |
+| `toolbarCount` | number | calculé | Le badge du bouton quand la rangée est repliée : `filters.getFilters({ fixed: false }).length` sinon |
+| `globalActions[].text` | string | | Un libellé après l'icône (« + Donateur ») |
+
+Le bouton porte `aria-expanded` et son titre (« Afficher / Masquer les critères »,
+`rbf.list.header.toolbar.*`). La rangée reprend un interligne normal (l'en-tête impose
+50 px à sa ligne de titre) ; pour y tenir sur une ligne, la `SearchChipBar` reçoit
+`wrap={false}` (défilement horizontal, pas de marge basse). `DefaultHeader` : `sort`
+vaut désormais `[]` par défaut (`sortToText` itère dessus). Mobile : même emplacement,
+même bouton, même mémorisation.
 
 ## Contrat du catalogue
 

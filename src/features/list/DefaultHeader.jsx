@@ -85,6 +85,12 @@ export default class DefaultHeader extends Component {
     selectMenu: PropTypes.element,
     sort: PropTypes.element,
     t: PropTypes.func,
+    toolbar: PropTypes.node,
+    toolbarHeight: PropTypes.number,
+    toolbarOpen: PropTypes.bool,
+    onToolbarToggle: PropTypes.func,
+    toolbarIcon: PropTypes.element,
+    toolbarCount: PropTypes.number,
   };
 
   static defaultProps = {
@@ -99,8 +105,14 @@ export default class DefaultHeader extends Component {
     quickSearch: '',
     selected: null,
     selectMenu: null,
-    sort: {},
+    sort: [],
     t: rbfIntl,
+    toolbar: null,
+    toolbarHeight: 44,
+    toolbarOpen: false,
+    onToolbarToggle: null,
+    toolbarIcon: null,
+    toolbarCount: null,
   };
 
   constructor(props) {
@@ -187,9 +199,20 @@ export default class DefaultHeader extends Component {
       }
     }
     const selectable = this.props.cols && this.props.cols.findIndex(oneCol => oneCol.selectable === true) >= 0;
+    /* La rangée d'outils (critères de recherche) : masquée par défaut, affichée par
+       son bouton, qui porte le nombre de critères actifs quand elle est repliée. */
+    const toolbarOpen = !!(this.props.toolbar && this.props.toolbarOpen);
+    const headerHeight = 50 + (toolbarOpen ? this.props.toolbarHeight : 0);
+    let toolbarCount = this.props.toolbarCount;
+    if (toolbarCount === null && this.props.filters && typeof this.props.filters.getFilters === 'function') {
+      toolbarCount = this.props.filters.getFilters({ fixed: false }).length;
+    }
+    const toolbarTitle = toolbarOpen
+      ? this.props.t({ id: 'rbf.list.header.toolbar.hide', defaultMessage: 'Masquer les critères' })
+      : this.props.t({ id: 'rbf.list.header.toolbar.show', defaultMessage: 'Afficher les critères' });
     return (
       <div
-        style={mystyle}
+        style={{ ...mystyle, height: `${headerHeight}px` }}
         className={classnames(
           'default-list-header text-secondary overflow-hidden',
           this.props.className,
@@ -197,6 +220,9 @@ export default class DefaultHeader extends Component {
           'text-' + this.props.headerTextTheme
         )}
       >
+        {/* La ligne de titre garde ses 50 px : si la barre d'actions replie ses
+            boutons, ils passent sous elle et non dans la rangée d'outils. */}
+        <div className="rbf-list-header-line" style={{ height: '50px', overflow: 'hidden' }}>
         <Row>
           <Col size={{ xs: 10, sm: 10, md: 10, lg: 14 }}>
             <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
@@ -323,6 +349,22 @@ export default class DefaultHeader extends Component {
                   </div>
                 </li>
               )}
+              {this.props.toolbar && (
+                <li className="nav-item">
+                  <Highlight position="bottom" theme="NAV" title={toolbarTitle}>
+                    <button
+                      type="button"
+                      className={classnames('btn btn-light text-secondary rbf-list-header-toolbar-toggle', toolbarOpen && 'active')}
+                      title={toolbarTitle}
+                      aria-expanded={toolbarOpen}
+                      onClick={this.props.onToolbarToggle || undefined}
+                    >
+                      {this.props.toolbarIcon}
+                      {!toolbarOpen && toolbarCount > 0 && <span className="badge badge-primary ml-1">{toolbarCount}</span>}
+                    </button>
+                  </Highlight>
+                </li>
+              )}
               {this.props.filters && (
                 <li className="nav-item">
                   <Highlight
@@ -367,12 +409,19 @@ export default class DefaultHeader extends Component {
                       }}
                     >
                       {action.icon}
+                      {action.text && <span className="ml-1">{action.text}</span>}
                     </button>
                   </li>
                 ))}
             </ul>
           </Col>
         </Row>
+        </div>
+        {toolbarOpen && (
+          <div className="rbf-list-header-toolbar px-2" style={{ height: `${this.props.toolbarHeight}px` }}>
+            {this.props.toolbar}
+          </div>
+        )}
       </div>
     );
   }

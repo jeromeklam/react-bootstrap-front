@@ -235,6 +235,56 @@
             'div',
             null,
             card(
+              'Étape 2 · En-tête de liste',
+              'La liste des donateurs avec sa rangée de critères',
+              'Une vraie ResponsiveList : la barre en langage naturel à la place de la recherche rapide, « + Donateur » avec son texte, et le bouton ⚙ qui affiche ou masque la rangée de critères — masquée par défaut, avec le nombre de critères actifs en badge ; le choix est mémorisé (localStorage, clé « demo »).',
+              e('div', { style: { position: 'relative', height: '360px', border: '1px solid #dfe3e8' } },
+                e(RBF.ResponsiveList, {
+                  title: 'Donateurs', counter: '[8] résultats', icon: icon('check', 20),
+                  cols: [
+                    { name: 'lastname', label: 'Nom', col: 'cli_lastname', size: 8, sortable: true, card: { role: 'TITLE' } },
+                    { name: 'firstname', label: 'Prénom', col: 'cli_firstname', size: 8, card: { role: 'FIELD' } },
+                    { name: 'town', label: 'Ville', col: 'cli_town', size: 8, card: { role: 'FIELD' } },
+                    { name: 'last', label: 'Dernier paiement', col: 'last', size: 8, card: { role: 'FIELD' } }
+                  ],
+                  items: [
+                    { id: 1, cli_lastname: 'Bernard', cli_firstname: 'Luc', cli_town: 'Nancy', last: '05/10/2026' },
+                    { id: 2, cli_lastname: 'Durand', cli_firstname: 'Élise', cli_town: 'Strasbourg', last: '05/10/2026' },
+                    { id: 3, cli_lastname: 'Fontaine', cli_firstname: 'Marc', cli_town: 'Bruxelles', last: '28/09/2026' },
+                    { id: 4, cli_lastname: 'Garnier', cli_firstname: 'Sophie', cli_town: 'Lyon', last: '05/10/2026' }
+                  ],
+                  filters: listFilter[0], sort: [], mainCol: 'cli_lastname', mode: 'right',
+                  filterFullIcon: icon('check', 16), filterEmptyIcon: icon('check', 16), filterClearIcon: icon('close', 16),
+                  filterDefaultIcon: icon('check', 16), filterClearDefaultIcon: icon('close', 16),
+                  sortIcon: icon('caret', 16), sortNoneIcon: icon('caret', 16), sortUpIcon: icon('caret', 16), sortDownIcon: icon('caret', 16),
+                  calIcon: icon('calendar', 16), clearIcon: icon('close', 16), closeIcon: icon('close', 16), moreIcon: icon('plus', 16),
+                  cancelPanelIcon: icon('close', 16), validPanelIcon: icon('check', 16),
+                  onFilters: function() { alert('Panneau de filtres : le tiroir arrive à l’étape 3'); },
+                  onClearFilters: function() { var f = listFilter[0].clone(); f.removeAll(); listFilter[1](f); },
+                  onLoadMore: function() {}, onSort: function() {}, onClick: function() {},
+                  quickSearch: e(RBF.InputNaturalSearch, {
+                    variant: 'bar', sparkleIcon: icon('sparkle', 16), size: 'sm',
+                    placeholder: 'Rechercher par nom, prénom ou e-mail…',
+                    onQuickSearch: function(text) {
+                      var f = listFilter[0].clone(); f.removeGroup('quick');
+                      if (text) { ['cli_firstname', 'cli_lastname', 'cli_email'].forEach(function(n) { f.addFilter(n, text, RBF.FILTER_OPER_LIKE, false, false, true, 'quick'); }); }
+                      listFilter[1](f);
+                    }
+                  }),
+                  globalActions: [
+                    { name: 'search', label: 'Fiche de recherche', text: 'Fiche de recherche', theme: 'link', onClick: function() { alert('→ /client/search'); } },
+                    { name: 'add', label: 'Ajouter un donateur', icon: icon('plus', 16), text: 'Donateur', theme: 'primary', onClick: function() { alert('Nouveau donateur'); } }
+                  ],
+                  toolbar: e(RBF.SearchChipBar, {
+                    filter: listFilter[0], catalog: CATALOG, icons: BAR_ICONS, wrap: false,
+                    onChange: function(f) { listFilter[1](f); },
+                    onAddCriterion: function() { alert('+ Critère : le tiroir arrive à l’étape 3'); }
+                  }),
+                  toolbarIcon: icon('tune', 18), toolbarStorageKey: 'demo'
+                })
+              )
+            ),
+            card(
               'Étape 2 · SearchChipBar / FacetPopover',
               'La rangée de critères de l’en-tête de liste',
               'Les critères actifs en pastilles avec ×, les facettes avec chevron (le menu : liste à cocher filtrable, compteur, Appliquer ; « Période » est une plage), « + Critère » (étape 3) et « Tout effacer ». La recherche rapide est un groupe : une seule pastille, et elle cohabite avec les critères dans la requête (« or » dans « and »).',

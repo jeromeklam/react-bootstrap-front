@@ -30,6 +30,7 @@ export default class SearchChipBar extends Component {
     onClearAll: PropTypes.func,
     showDefaults: PropTypes.bool,
     quickGroup: PropTypes.string,
+    wrap: PropTypes.bool,
     icons: PropTypes.object,
     className: PropTypes.string,
     t: PropTypes.func,
@@ -41,6 +42,7 @@ export default class SearchChipBar extends Component {
     onClearAll: null,
     showDefaults: false,
     quickGroup: 'quick',
+    wrap: true,
     icons: {},
     className: '',
     t: rbfIntl,
@@ -152,7 +154,9 @@ export default class SearchChipBar extends Component {
   }
 
   render() {
-    const { filter, catalog, onAddCriterion, showDefaults, quickGroup, icons, className, t } = this.props;
+    const { filter, catalog, onAddCriterion, showDefaults, quickGroup, wrap, icons, className, t } = this.props;
+    /* Sur une ligne (bandeau d'en-tête) : pas de marge basse, défilement horizontal. */
+    const chipClass = wrap ? 'mr-2 mb-2' : 'mr-2';
     const facetFields = this.facetFields();
     const facetNames = facetFields.map(f => f.name);
     const chips = [];
@@ -177,7 +181,7 @@ export default class SearchChipBar extends Component {
         <Chip
           key={`crit-${key}`}
           variant="active"
-          className="mr-2 mb-2"
+          className={chipClass}
           label={this.chipText(field, elt, t)}
           removeIcon={icons.close || null}
           onRemove={() => this.remove(field, name)}
@@ -187,12 +191,12 @@ export default class SearchChipBar extends Component {
     });
     const empty = filter.isEmpty() && quick === null;
     return (
-      <div className={classnames('rbf-chip-bar d-flex flex-wrap align-items-center', className)}>
+      <div className={classnames('rbf-chip-bar d-flex align-items-center', wrap ? 'flex-wrap' : 'flex-nowrap rbf-chip-bar-line', className)}>
         {quick !== null && (
           <Chip
             key="quick"
             variant="active"
-            className="mr-2 mb-2"
+            className={chipClass}
             label={`${tr(t, 'rbf.search.chip.quick', 'Recherche')} : ${quick}`}
             removeIcon={icons.close || null}
             onRemove={() => this.change(next => next.removeGroup(quickGroup))}
@@ -209,7 +213,7 @@ export default class SearchChipBar extends Component {
               <Chip
                 ref={this.anchor(field.name)}
                 variant="facet"
-                className="mr-2 mb-2"
+                className={chipClass}
                 label={field.label}
                 count={count}
                 active={open}
@@ -235,7 +239,7 @@ export default class SearchChipBar extends Component {
           <Chip
             key="add"
             variant="add"
-            className="mr-2 mb-2"
+            className={chipClass}
             label={
               <span>
                 {icons.add}
@@ -248,7 +252,7 @@ export default class SearchChipBar extends Component {
           />
         )}
         {!empty && (
-          <button type="button" className="btn btn-link btn-sm mb-2 rbf-chip-bar-clear" onClick={this.onClearAll}>
+          <button type="button" className={classnames('btn btn-link btn-sm rbf-chip-bar-clear text-nowrap', wrap && 'mb-2')} onClick={this.onClearAll}>
             {tr(t, 'rbf.search.clearAll', 'Tout effacer')}
           </button>
         )}

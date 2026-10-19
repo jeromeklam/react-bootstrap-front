@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { InView } from 'react-intersection-observer';
 import { CSSTransition } from 'react-transition-group';
+import { readToolbarOpen, writeToolbarOpen } from './toolbarStorage';
 import { DefaultHeader, DefaultTitle, DefaultFooter, DefaultLine, MobileLine, DefaultRightHeader } from './';
 import { getSizeFromWidth, isInViewPort } from '../helpers';
 import { DefaultPanel } from '../filter';
@@ -102,6 +103,12 @@ export default class DefaultList extends Component {
     currentItem: PropTypes.object,
     items: PropTypes.element.isRequired,
     titleMultiline: PropTypes.bool,
+    toolbar: PropTypes.node,
+    toolbarHeight: PropTypes.number,
+    toolbarOpen: PropTypes.bool,
+    toolbarDefaultOpen: PropTypes.bool,
+    toolbarStorageKey: PropTypes.string,
+    onToolbarToggle: PropTypes.func,
     loadMorePending: PropTypes.bool.isRequired,
     onSetFiltersAndSort: PropTypes.func.isRequired,
     onUpdateShortcuts: PropTypes.func,
@@ -123,6 +130,12 @@ export default class DefaultList extends Component {
     mode: 'inline',
     closeIcon: null,
     titleMultiline: false,
+    toolbar: null,
+    toolbarHeight: 44,
+    toolbarOpen: null,
+    toolbarDefaultOpen: false,
+    toolbarStorageKey: null,
+    onToolbarToggle: null,
     oddEven: true,
   };
 
@@ -151,6 +164,7 @@ export default class DefaultList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      toolbarOpen: readToolbarOpen(props.toolbarStorageKey, props.toolbarDefaultOpen),
       contentSize: 'lg',
       listSize: 'lg',
       dataSize: 'none',
@@ -161,6 +175,7 @@ export default class DefaultList extends Component {
       currentFlipped: 0,
     };
     this.togglePanel = this.togglePanel.bind(this);
+    this.toggleToolbar = this.toggleToolbar.bind(this);
     this.toggleSplit = this.toggleSplit.bind(this);
     this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
     this.onInView = this.onInView.bind(this);
@@ -197,6 +212,22 @@ export default class DefaultList extends Component {
       this.props.onSetFiltersAndSort(filters, sort);
     }
     this.setState({ panelOpen: !this.state.panelOpen });
+  }
+
+  /* Rangée d'outils : contrôlée par toolbarOpen si fourni, sinon mémorisée ici. */
+  isToolbarOpen() {
+    return this.props.toolbarOpen !== null ? this.props.toolbarOpen : this.state.toolbarOpen;
+  }
+
+  toggleToolbar() {
+    const open = !this.isToolbarOpen();
+    if (this.props.toolbarOpen === null) {
+      writeToolbarOpen(this.props.toolbarStorageKey, open);
+      this.setState({ toolbarOpen: open });
+    }
+    if (this.props.onToolbarToggle) {
+      this.props.onToolbarToggle(open);
+    }
   }
 
   render() {
@@ -266,7 +297,9 @@ export default class DefaultList extends Component {
       }
     });
     let locTitleStyle = titleStyle;
-    let locListStyle = listStyle;
+    const toolbarOpen = !!(this.props.toolbar && this.isToolbarOpen());
+    const headerHeight = 50 + (toolbarOpen ? this.props.toolbarHeight : 0);
+    let locListStyle = { ...listStyle, top: `${headerHeight}px`, height: `calc(100% - ${headerHeight}px)` };
     return (
       <div style={fullDiv}>
         <WidthObserver>
@@ -280,7 +313,7 @@ export default class DefaultList extends Component {
             inlineStyle.right = '-' + calcW + 'px';
             return (
               <div>
-                <DefaultHeader {...this.props} onToggleFilter={this.togglePanel} />
+                <DefaultHeader {...this.props} toolbarOpen={toolbarOpen} onToolbarToggle={this.toggleToolbar} onToggleFilter={this.togglePanel} />
                 <CSSTransition in={this.state.panelOpen} timeout={duration}>
                   {state => (
                     <div

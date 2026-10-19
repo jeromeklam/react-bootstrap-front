@@ -55,6 +55,8 @@ export const translations = {
   'rbf.search.chip.filled': 'renseigné',
   'rbf.search.chip.add': 'Critère',
   'rbf.search.clearAll': 'Tout effacer',
+  'rbf.list.header.toolbar.show': 'Afficher les critères',
+  'rbf.list.header.toolbar.hide': 'Masquer les critères',
   'rbf.search.form.submit': 'Rechercher',
   'rbf.search.form.clear': 'Tout effacer',
   'rbf.search.form.advanced': 'Critères avancés',

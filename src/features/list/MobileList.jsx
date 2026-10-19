@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import { MobileLine, MobileHeader, MobileFooter } from './';
 import { DefaultPanel } from '../filter';
+import { readToolbarOpen, writeToolbarOpen } from './toolbarStorage';
 
 const duration = 300;
 
@@ -37,12 +38,24 @@ const transitionStyles = {
 export default class MobileList extends Component {
   static propTypes = {
     mainCol: PropTypes.string,
+    toolbar: PropTypes.node,
+    toolbarHeight: PropTypes.number,
+    toolbarOpen: PropTypes.bool,
+    toolbarDefaultOpen: PropTypes.bool,
+    toolbarStorageKey: PropTypes.string,
+    onToolbarToggle: PropTypes.func,
     items: PropTypes.element.isRequired,
     loadMorePending: PropTypes.bool.isRequired,
     onSetFiltersAndSort: PropTypes.func.isRequired,
   };
   static defaultProps = {
     mainCol: '',
+    toolbar: null,
+    toolbarHeight: 44,
+    toolbarOpen: null,
+    toolbarDefaultOpen: false,
+    toolbarStorageKey: null,
+    onToolbarToggle: null,
   };
 
   constructor(props) {
@@ -51,8 +64,10 @@ export default class MobileList extends Component {
       prevY: 0,
       panelOpen: false,
       currentFlipped: 0,
+      toolbarOpen: readToolbarOpen(props.toolbarStorageKey, props.toolbarDefaultOpen),
     };
     this.togglePanel = this.togglePanel.bind(this);
+    this.toggleToolbar = this.toggleToolbar.bind(this);
     this.setCurrentFlipped = this.setCurrentFlipped.bind(this);
     this.handleObserver = this.handleObserver.bind(this);
   }
@@ -86,6 +101,21 @@ export default class MobileList extends Component {
     this.setState({ panelOpen: !this.state.panelOpen });
   }
 
+  isToolbarOpen() {
+    return this.props.toolbarOpen !== null ? this.props.toolbarOpen : this.state.toolbarOpen;
+  }
+
+  toggleToolbar() {
+    const open = !this.isToolbarOpen();
+    if (this.props.toolbarOpen === null) {
+      writeToolbarOpen(this.props.toolbarStorageKey, open);
+      this.setState({ toolbarOpen: open });
+    }
+    if (this.props.onToolbarToggle) {
+      this.props.onToolbarToggle(open);
+    }
+  }
+
   handleObserver(entities, observer) {
     const y = entities[0].boundingClientRect.y;
     if (y < this.state.prevY) {
@@ -111,9 +141,11 @@ export default class MobileList extends Component {
       }
     });
     let counter = 1;
+    const toolbarOpen = !!(this.props.toolbar && this.isToolbarOpen());
+    const headerHeight = 50 + (toolbarOpen ? this.props.toolbarHeight : 0);
     return (
-      <div style={datastyle}>
-        <MobileHeader {...this.props} onToggleFilter={this.togglePanel} />
+      <div style={{ ...datastyle, top: `${headerHeight}px`, height: `calc(100% - ${headerHeight}px)` }}>
+        <MobileHeader {...this.props} toolbarOpen={toolbarOpen} onToolbarToggle={this.toggleToolbar} onToggleFilter={this.togglePanel} />
         <CSSTransition in={this.state.panelOpen} timeout={duration}>
           {state => (
             <div
