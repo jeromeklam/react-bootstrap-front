@@ -204,6 +204,7 @@ describe('toPlain / fromPlain', () => {
       fixed: false,
       default: false,
       enable: true,
+      group: '',
     });
     const back = Filter.fromPlain(JSON.parse(JSON.stringify(plain)));
     expect(api(back)).toEqual(api(f));
@@ -226,5 +227,59 @@ describe('setFilterCrit', () => {
     f.setFilterCrit('Nancy', false, false);
     expect(f.getFilterCrit()).toBe('Nancy');
     expect(Object.keys(f.getFilterCrits())).toEqual(['default']);
+  });
+});
+
+describe('group : un OU à l’intérieur du ET', () => {
+  test('la recherche rapide cohabite avec les critères', () => {
+    const f = base();
+    ['cli_firstname', 'cli_lastname', 'cli_email'].forEach(name => f.addFilter(name, 'dup', FILTER_OPER_LIKE, false, false, true, 'quick'));
+    expect(api(f)).toEqual({
+      filter: {
+        and: {
+          cli_town: { contains: 'Metz' },
+          cau_to: { gte: '2026-01-01' },
+          'group.id': { eq: '15' },
+          or: { cli_firstname: { contains: 'dup' }, cli_lastname: { contains: 'dup' }, cli_email: { contains: 'dup' } },
+        },
+      },
+    });
+    expect(f.getFilters({ group: 'quick' }).length).toBe(3);
+    expect(f.getFilters({ group: '' }).map(e => e.getFilterName())).toEqual(['cau_to', 'cli_town']);
+  });
+
+  test('removeGroup retire le groupe, et seulement lui', () => {
+    const f = base();
+    f.addFilter('cli_firstname', 'dup', FILTER_OPER_LIKE, false, false, true, 'quick');
+    f.addFilter('cli_lastname', 'dup', FILTER_OPER_LIKE, false, false, true, 'quick');
+    f.removeGroup('quick');
+    expect(f.hasFilter('cli_firstname')).toBe(false);
+    expect(f.hasFilter('cli_town')).toBe(true);
+    expect(api(f).filter.and.or).toBeUndefined();
+  });
+
+  test('sans groupe, rien ne change ; en mode OU le groupe est ignoré', () => {
+    const f = base();
+    expect(api(f).filter.and.or).toBeUndefined();
+    const or = new Filter();
+    or.init(FILTER_MODE_OR, FILTER_OPER_LIKE);
+    or.addFilter('a', 'x', FILTER_OPER_LIKE, false, false, true, 'g');
+    or.addFilter('b', 'x', FILTER_OPER_LIKE);
+    expect(api(or)).toEqual({ filter: { and: { or: { a: { contains: 'x' }, b: { contains: 'x' } } } } });
+  });
+
+  test('clone, replaceFilter et toPlain / fromPlain conservent le groupe', () => {
+    const f = base();
+    f.replaceFilter('cli_firstname', ['dup'], FILTER_OPER_LIKE, { group: 'quick' });
+    f.setFilterRange('don_ts', '2025-01-01', '', { group: 'quick' });
+    const copy = f.clone();
+    expect(copy.findFirst('cli_firstname').getGroup()).toBe('quick');
+    expect(copy.findFirst('don_ts').getGroup()).toBe('quick');
+    const plain = f.toPlain();
+    expect(plain.filters.find(p => p.name === 'cli_firstname').group).toBe('quick');
+    expect(plain.filters.find(p => p.name === 'cli_town').group).toBe('');
+    const back = Filter.fromPlain(JSON.parse(JSON.stringify(plain)));
+    expect(api(back)).toEqual(api(f));
+    expect(back.toPlain()).toEqual(plain);
   });
 });

@@ -45,6 +45,7 @@ export default class Filter {
       filter_default: false,
       filter_enable: true,
       filter_crits: {},
+      filter_group: '',
       search: FILTER_SEARCH_NONE,
     };
     this.init();
@@ -98,6 +99,17 @@ export default class Filter {
 
   setEnable(ena = true) {
     this.data.filter_enable = ena;
+  }
+
+  /* Groupe d'un critère : en mode ET, les critères d'un même groupe sont émis en
+     OU entre eux (and: { …, or: { …groupe } }). C'est ce qui permet à une recherche
+     rapide sur plusieurs champs de cohabiter avec les autres critères. */
+  setGroup(group = '') {
+    this.data.filter_group = group || '';
+  }
+
+  getGroup() {
+    return this.data.filter_group || '';
   }
 
   setFilterName(name, fixed = false, def = false, enable = true) {
@@ -185,10 +197,13 @@ export default class Filter {
     this.data.filters = filters;
   }
 
-  addFilter(name, value, oper = false, fixed = false, def = false, enable = true) {
+  addFilter(name, value, oper = false, fixed = false, def = false, enable = true, group = '') {
     let elem = this.data.filters.find(elt => elt.getFilterName() === name);
     if (elem) {
       elem.setFilterCrit(value, oper);
+      if (group) {
+        elem.setGroup(group);
+      }
     } else {
       if (oper === false) {
         oper = this.data.operator;
@@ -196,9 +211,17 @@ export default class Filter {
       let elt2 = new Filter();
       elt2.setFilterName(name, fixed, def, enable);
       elt2.setFilterCrit(value, oper);
+      elt2.setGroup(group);
       this.data.filters.push(elt2);
     }
     this.checkFilters();
+  }
+
+  removeGroup(group) {
+    if (!group) {
+      return;
+    }
+    this.data.filters = this.data.filters.filter(elt => elt.getGroup() !== group);
   }
 
   updateFilter(name, value, action = "default") {
@@ -242,9 +265,13 @@ export default class Filter {
   }
 
   /* Les critères, sans toucher à data. Par défaut : les actifs, hors fixes. */
-  getFilters({ enabledOnly = true, fixed = false, default: withDefault = true } = {}) {
+  getFilters({ enabledOnly = true, fixed = false, default: withDefault = true, group = null } = {}) {
     return this.data.filters.filter(
-      elt => (!enabledOnly || elt.isEnable()) && (fixed || !elt.isFixed()) && (withDefault || !elt.isDefault())
+      elt =>
+        (!enabledOnly || elt.isEnable()) &&
+        (fixed || !elt.isFixed()) &&
+        (withDefault || !elt.isDefault()) &&
+        (group === null || elt.getGroup() === group)
     );
   }
 
@@ -276,10 +303,10 @@ export default class Filter {
   /* Remplace le critère d'un champ sans repasser par init(). Plusieurs valeurs
      sortent jointes par des virgules, comme avec addFilter + updateFilter. Sans
      valeur (hors empty / nempty), le critère est retiré. */
-  replaceFilter(name, values = [], oper = FILTER_OPER_EQUAL, { fixed = false, default: def = false, enable = true } = {}) {
+  replaceFilter(name, values = [], oper = FILTER_OPER_EQUAL, { fixed = false, default: def = false, enable = true, group = '' } = {}) {
     const list = (Array.isArray(values) ? values : [values]).filter(hasValue);
     if (oper === FILTER_OPER_BETWEEN) {
-      this.setFilterRange(name, list[0], list[1], { fixed, default: def, enable });
+      this.setFilterRange(name, list[0], list[1], { fixed, default: def, enable, group });
       return;
     }
     const noValue = oper === FILTER_OPER_EMPTY || oper === FILTER_OPER_NOT_EMPTY;
@@ -289,6 +316,7 @@ export default class Filter {
     }
     const elt = new Filter();
     elt.setFilterName(name, fixed, def, enable);
+    elt.setGroup(group);
     elt.setOperator(oper);
     if (!noValue) {
       list.forEach((value, i) => {
@@ -303,13 +331,14 @@ export default class Filter {
   }
 
   /* Deux bornes → between, une seule → gte ou ltwe, aucune → retrait. */
-  setFilterRange(name, from, to, { fixed = false, default: def = false, enable = true } = {}) {
+  setFilterRange(name, from, to, { fixed = false, default: def = false, enable = true, group = '' } = {}) {
     if (!hasValue(from) && !hasValue(to)) {
       this.data.filters = this.data.filters.filter(elt => elt.getFilterName() !== name);
       return;
     }
     const elt = new Filter();
     elt.setFilterName(name, fixed, def, enable);
+    elt.setGroup(group);
     if (hasValue(from) && hasValue(to)) {
       elt.setFilterCrit(from, FILTER_OPER_BETWEEN, 'default');
       elt.setFilterCrit(to, false, 'between');
@@ -338,6 +367,7 @@ export default class Filter {
           fixed: elt.isFixed(),
           default: elt.isDefault(),
           enable: elt.isEnable(),
+          group: elt.getGroup(),
         };
       }),
     };
@@ -350,7 +380,7 @@ export default class Filter {
       filter.setSearch(plain.search);
     }
     (plain.filters || []).forEach(p => {
-      const flags = { fixed: !!p.fixed, default: !!p.default, enable: p.enable !== false };
+      const flags = { fixed: !!p.fixed, default: !!p.default, enable: p.enable !== false, group: p.group || '' };
       filter.replaceFilter(p.name, p.values, p.operator || FILTER_OPER_EQUAL, flags);
     });
     return filter;
@@ -360,6 +390,7 @@ export default class Filter {
     let params = {};
     let crits = {};
     let fixed = {};
+    let grouped = {};
     if (this.data.filters.length > 0) {
       params.filter = {};
       this.data.filters.forEach(elt => {
@@ -391,6 +422,8 @@ export default class Filter {
         if (elt.isEnable()) {
           if (elt.isFixed() || elt.isDefault()) {
             fixed[elt.getFilterName()] = crits2;
+          } else if (this.data.mode !== FILTER_MODE_OR && elt.getGroup()) {
+            grouped[elt.getFilterName()] = crits2;
           } else {
             crits[elt.getFilterName()] = crits2;
           }
@@ -406,6 +439,11 @@ export default class Filter {
           };
         } else {
           params.filter.and = { ...crits, ...fixed };
+          /* Les critères groupés : un OU à l'intérieur du ET. Sans groupe, la
+             sortie est exactement celle d'avant. */
+          if (Object.keys(grouped).length > 0) {
+            params.filter.and.or = grouped;
+          }
         }
       } else {
         if (this.data.mode === FILTER_MODE_OR) {

@@ -185,7 +185,7 @@ inchangée pour un filtre sans groupe.
 | `getValues` | sur un ELEM : `getValues() → [default, between?, ...extras]` | 1 |
 | `hasFilter` | `hasFilter(name) → bool` | 1 |
 | `toPlain` / `fromPlain` | `toPlain() → PlainFilter`, `static fromPlain(obj) → Filter` ; `PlainFilter = { mode, operator, filters: [{ name, operator, values, fixed, default, enable, group }] }` | 1 |
-| `addFilter` | septième paramètre `group = ''` | 2 |
+| `addFilter` | septième paramètre `group = ''` ; `setGroup` / `getGroup` sur un ELEM ; `replaceFilter`, `setFilterValues`, `setFilterRange` acceptent `group` dans leurs drapeaux ; `getFilters({ group })` ; `toPlain` / `fromPlain` le conservent. En mode ET, les critères groupés sortent en `and: { …, or: { …groupe } }` ; sans groupe la sortie est inchangée ; en mode OU le groupe est ignoré. | 2 |
 | `removeGroup` | `removeGroup(group)` | 2 |
 
 ## Modules purs — `src/features/search/`
