@@ -48,7 +48,9 @@ graphiques sont commités après validation sur l'aperçu.
 | 1 | `70fbbfa` | `criteria.js` (`valuesToFilter` / `filterToValues`), `filterToSentence.js`, `SearchSummary`, fixtures avec les deux phrases des maquettes, carte « En clair » de l'aperçu | **18/10/2026** sur l'aperçu |
 | 1 | `cd06e31` | `InputNaturalSearch` (carte et barre, « en construction », Entrée = recherche rapide), clés `rbf.search.natural.*`, carte de l'aperçu ; feuille de route : boucle de vérification de l'étape 4 | **18/10/2026** sur l'aperçu |
 | 1 | `0f49015` | `SearchForm`, `SearchFormSection`, `SearchFormField` (`widgetFor`, `widthFor`), `SearchFormFooter`, `SearchForm.scss`, fiche complète en tête de l'aperçu | **18/10/2026** sur l'aperçu |
-| 1 | `70c7ad7` | Version 3.12.0 : `CHANGELOG`, `package.json`, `package-lock.json`, build et tests de garde. **Reste à publier sur npm** avant qu'admin ne la référence. Les pages `doc/basic/` des nouvelles briques ne sont pas créées : `composants.md` fait foi. | — |
+| 1 | `70c7ad7` | Version 3.12.0 : `CHANGELOG`, `package.json`, `package-lock.json`, build et tests de garde. Jamais publiée : remplacée par la 3.12.1. Les pages `doc/basic/` des nouvelles briques ne sont pas créées : `composants.md` fait foi. | — |
+| 1 | `9469df8` `dd9b8bc` `360b4d3` `61da452` `14c18e4` `7ac31c8` | Correctifs du test réel dans admin : barre en langage naturel alignée, `newLine`, tailles par palier puis colonne de libellés fixe, `withDefaults`, phrase dans l'ordre des sections | **18-19/10/2026** dans admin |
+| 1 | ce commit | **Version 3.12.1** : `CHANGELOG`, `package.json`, build et tests de garde. À publier sur npm depuis `master` après fusion de la branche `recherche` ; admin passe alors à `^3.12.1`. | — |
 
 Remarque du 18/10/2026 à la validation des premières briques : « globalement pas mal,
 quelques petits soucis de centrage ». À reprendre composant par composant lors du test
