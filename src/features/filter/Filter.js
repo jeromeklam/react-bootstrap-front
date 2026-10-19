@@ -12,9 +12,10 @@ import {
   FILTER_OPER_LOWER_OR_EQUAL,
 } from './';
 
-/* Clé d'une valeur supplémentaire d'un critère (les « ou »), comme le fait le
-   panneau de filtres avec randomString(8). */
-const newKey = () => Math.random().toString(16).substring(2, 10);
+/* Clé d'une valeur supplémentaire d'un critère (les « ou »). Elle commence par une
+   lettre : une clé faite de chiffres seulement serait rangée avant `default` par
+   JavaScript, et l'ordre des valeurs changerait d'une fois sur l'autre. */
+const newKey = () => 'k' + Math.random().toString(16).substring(2, 9);
 
 const hasValue = value => value !== null && typeof value !== 'undefined' && value !== '';
 

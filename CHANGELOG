@@ -1,3 +1,12 @@
+# 3.13.0 : 19/10/2026
+
+* Recherche, étape 2 : l'en-tête de liste (voir doc/recherche/)
+    * `ResponsiveList` : emplacement `toolbar` sous le titre, repliable par un bouton de la barre d'actions (badge du nombre de critères), replié par défaut, choix mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text`
+    * `SearchChipBar` : les critères actifs en pastilles avec ×, les facettes avec chevron et compteur, la recherche rapide en une pastille, « + Critère », « Tout effacer »
+    * `FacetPopover` : le menu d'une facette, liste à cocher filtrable ou plage, dans le `Dropdown`
+    * Modèle `Filter` : groupes de critères — en mode ET, un groupe sort en `or` à l'intérieur du `and` (`addFilter(…, group)`, `removeGroup`, `getFilters({ group })`), ce qui permet à une recherche rapide de cohabiter avec les autres critères
+* `DefaultHeader` : `sort` vaut `[]` par défaut
+
 # 3.12.1 : 19/10/2026
 
 * Recherche : corrections issues du test réel des fiches dans l'administration Kalaweit

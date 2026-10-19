@@ -68,6 +68,7 @@ nouvelles sont vertes.
 
 | 2 | `271dc13` | `FacetPopover` (liste à cocher filtrable ou plage, dans le `Dropdown`), `SearchChipBar` (critères actifs, facettes avec compteur, recherche rapide en une pastille, « + Critère », « Tout effacer »), carte de l'aperçu | **19/10/2026** sur l'aperçu |
 | 2 | `f358f4a` | Emplacement `toolbar` dans `DefaultHeader` / `DefaultList` / `MobileHeader` / `MobileList` : repliable par un bouton de la barre d'actions (badge du nombre de critères), **replié par défaut**, mémorisé par liste (`toolbarStorageKey`) ; `globalActions[].text` ; `SearchChipBar wrap={false}` ; liste réelle dans l'aperçu | **19/10/2026** sur l'aperçu |
+| 2 | ce commit | **Version 3.13.0** : `CHANGELOG`, `package.json`, build et tests de garde. À publier sur npm depuis `master` après fusion (la 3.12.1 n'est jamais sortie : publier directement la 3.13.0) ; admin passe alors à `^3.13.0`. | — |
 
 ## Décisions
 
@@ -77,7 +78,7 @@ nouvelles sont vertes.
 | Couleurs et formes des pastilles | **Bleu `secondary` par défaut, arrondi en pilule** (18/10/2026) ; le vert `primary` reste aux boutons d'action. |
 | Rangée de critères de l'en-tête | **Masquée par défaut**, affichée / cachée par un bouton de l'en-tête (badge du nombre de critères quand elle est repliée), choix mémorisé (19/10/2026 : « Constance va mettre un peu de temps à trouver l'utilité et au début ça va la gêner »). |
 | Entrée dans la barre de l'en-tête tant que le LLM est en construction ? | Recommandé : Entrée = recherche rapide actuelle, l'étincelle montre la notice. À confirmer à l'étape 2. |
-| L'API accepte-t-elle `filter[and][or][…]` à côté de `filter[and][champ]` ? | À vérifier sur le backend avant l'étape 2 ; conditionne l'extension `group`. |
+| L'API accepte-t-elle `filter[and][or][…]` à côté de `filter[and][champ]` ? | **Oui** (19/10/2026, vérifié dans admin : la recherche rapide en groupe filtre la liste des donateurs). |
 
 ## Étape 1 — Fiche de recherche (bibliothèque 3.12.0)
 
@@ -138,7 +139,7 @@ npm, qui devra inclure ces corrections (donc une 3.12.0 republiée ou une 3.12.1
 
 ### Administration Kalaweit
 
-En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` laisse passer les props de la rangée ; `client/List.js` pose la barre en langage naturel (Entrée = recherche rapide), la rangée de critères repliable (clé `client`, bouton ⚙ via `ui/searchIcons.js`), « + Donateur » et le lien « Fiche de recherche » ; le catalogue des donateurs déclare ses facettes (moyen, catégorie, dernier paiement en plage) ; `updateQuickSearch.js` est réécrit en groupe `quick` (plus d'`init()`), testé. **Test réel à faire** : il tranchera la question de l'API (`or` dans `and`) et la place de « + Donateur » dans la barre d'actions.
+En cours sur la branche locale `recherche` d'admin (19/10/2026) : `ui/List.js` laisse passer les props de la rangée ; `client/List.js` pose la barre en langage naturel (Entrée = recherche rapide), la rangée de critères repliable (clé `client`, bouton ⚙ via `ui/searchIcons.js`), « + Donateur » et le lien « Fiche de recherche » ; le catalogue des donateurs déclare ses facettes (moyen, catégorie, dernier paiement en plage) ; `updateQuickSearch.js` est réécrit en groupe `quick` (plus d'`init()`), testé. **Testé et validé le 19/10/2026** (commit d'admin sur la branche `recherche`) : l'API accepte le `or` dans le `and`, « + Donateur » tient dans la barre d'actions.
 
 - `ui/List.js` laisse passer `toolbar`.
 - `client/List.js` : `toolbar={<SearchChipBar filter={client.filters} catalog=… onChange=… />}`
