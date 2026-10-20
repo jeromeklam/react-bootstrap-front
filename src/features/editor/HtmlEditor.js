@@ -161,6 +161,7 @@ export default class HtmlEditor extends Component {
       onBlur: this.flush,
       onTransaction: this.scheduleToolbarRefresh,
     });
+    this.markLoaded();
     document.addEventListener('keydown', this.onGlobalKeydown, true);
     /* La barre lit l'état de l'éditeur, qui n'existe pas au premier rendu. */
     this.forceUpdate();
@@ -192,7 +193,7 @@ export default class HtmlEditor extends Component {
        déclencher onChange, sinon ouvrir puis fermer un formulaire réécrirait
        la base en silence avec la conversion de l'éditeur. */
     this.editor.commands.setContent(normalizeLegacyHtml(next, this.props.legacy), false);
-    this.lastEmitted = null;
+    this.markLoaded();
     if (nameChanged && this.state.mode === 'source') {
       this.setState({ mode: 'wysiwyg', sourceWarning: null, sourceBackup: null });
     }
@@ -279,6 +280,20 @@ export default class HtmlEditor extends Component {
         this.setState(state => ({ tick: state.tick + 1 }));
       }
     });
+  }
+
+  /**
+   * Un contenu vient d'être chargé depuis le formulaire : on retient sa forme
+   * sérialisée comme « déjà émise ». Sans cela, le blur ou le démontage
+   * remontaient la conversion TipTap d'un texte que personne n'avait touché :
+   * la base était réécrite en silence, et le formulaire appelant recevait un
+   * changement depuis un rendu dépassé (une fiche revenait sur son premier
+   * onglet à chaque tentative d'en changer).
+   */
+  markLoaded() {
+    if (this.editor) {
+      this.lastEmitted = serialize(this.editor, this.props.serializeOptions);
+    }
   }
 
   /**

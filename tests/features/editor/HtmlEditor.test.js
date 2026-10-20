@@ -120,6 +120,25 @@ describe("HtmlEditor — ce qu'il n'émet pas", () => {
     rerender({ value: "<p>a</p>", onChange });
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  it("n'émet rien au blur ni au démontage quand rien n'a été saisi, même avec un contenu à convertir", () => {
+    const onChange = jest.fn();
+    /* Le texte d'origine n'est pas au format TipTap : sa sérialisation diffère.
+       Ouvrir la fiche, changer d'onglet (le champ est démonté) ou cliquer
+       ailleurs (blur) ne doit pas remonter cette conversion comme une saisie. */
+    const instance = render({ value: "ancien texte\nsans balises", onChange, legacy: true });
+    instance.flush();
+    unmount();
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("n'émet rien au démontage après un rechargement de valeur non modifié", () => {
+    const onChange = jest.fn();
+    render({ value: "<p>a</p>", onChange });
+    rerender({ value: "<cite>b</cite>", onChange });
+    unmount();
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });
 
 describe("HtmlEditor — reprise de la valeur", () => {
