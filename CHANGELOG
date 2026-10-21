@@ -1,3 +1,7 @@
+# 3.15.7 : 21/10/2026
+
+* Recherche : la phrase en langage naturel de la fiche de recherche peut se replier derrière une ligne « Décrire en une phrase » (`naturalLanguage.collapsible`), fermée par défaut et mémorisée par fiche (`storageKey`) ; libellé `toggleLabel`, chevron `icons.caret`. La carte dépliée ne change pas
+
 # 3.15.6 : 20/10/2026
 
 * Éditeur HTML : un contenu chargé depuis le formulaire est retenu comme déjà émis ; le blur et le démontage ne remontent plus la conversion TipTap d'un texte que personne n'a touché. Dans une application, cette émission arrivait depuis un rendu dépassé du formulaire appelant et le ramenait sur son premier onglet à chaque changement d'onglet (fiche bloquée) ; elle réécrivait aussi la base avec le HTML converti à chaque enregistrement
