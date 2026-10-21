@@ -77,6 +77,31 @@ test('section : champs résolus, inconnu écarté avec avertissement, largeurs',
   expect(custom.find('b').text()).toBe('libre');
 });
 
+test('phrase repliable : repliée par défaut, dépliée au clic, mémorisée par fiche', () => {
+  window.localStorage.removeItem('rbf.search.form.natural.test');
+  const natural = { placeholder: 'Décrivez', collapsible: true, storageKey: 'test', toggleLabel: 'Décrire en une phrase' };
+  const w = shallow(<SearchForm catalog={donorCatalog()} sections={SECTIONS} onSubmit={() => {}} icons={{ ...icons, caret: <i className="caret" /> }} naturalLanguage={natural} />);
+  expect(w.find(InputNaturalSearch).length).toBe(0);
+  const toggle = w.find('button.rbf-search-form-natural-toggle');
+  expect(toggle.length).toBe(1);
+  expect(toggle.prop('aria-expanded')).toBe(false);
+  expect(toggle.text()).toContain('Décrire en une phrase');
+  toggle.simulate('click');
+  expect(w.find(InputNaturalSearch).length).toBe(1);
+  expect(w.find('button.rbf-search-form-natural-toggle').prop('aria-expanded')).toBe(true);
+  expect(window.localStorage.getItem('rbf.search.form.natural.test')).toBe('1');
+  /* Le choix mémorisé vaut au prochain montage ; sans `collapsible`, rien ne change. */
+  const again = shallow(<SearchForm catalog={donorCatalog()} sections={SECTIONS} onSubmit={() => {}} icons={icons} naturalLanguage={natural} />);
+  expect(again.find(InputNaturalSearch).length).toBe(1);
+  again.find('button.rbf-search-form-natural-toggle').simulate('click');
+  expect(again.find(InputNaturalSearch).length).toBe(0);
+  expect(window.localStorage.getItem('rbf.search.form.natural.test')).toBe('0');
+  const plain = shallow(<SearchForm catalog={donorCatalog()} sections={SECTIONS} onSubmit={() => {}} icons={icons} naturalLanguage={{ placeholder: 'Décrivez' }} />);
+  expect(plain.find(InputNaturalSearch).length).toBe(1);
+  expect(plain.find('button.rbf-search-form-natural-toggle').length).toBe(0);
+  window.localStorage.removeItem('rbf.search.form.natural.test');
+});
+
 test('non contrôlée : saisie, soumission avec le filtre et les valeurs, effacement', () => {
   const onSubmit = jest.fn();
   const onClear = jest.fn();

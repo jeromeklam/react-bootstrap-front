@@ -186,6 +186,7 @@
           { name: 'ami', label: 'Ami', fields: ['sponsorships.spo_ts'] }
         ];
         var FORM_ICONS = { calendar: icon('calendar', 16), clear: icon('close', 14), check: icon('check', 14), sparkle: icon('sparkle', 16) };
+        var FORM_ICONS_CARET = Object.assign({}, FORM_ICONS, { caret: icon('caret', 14) });
 
         /* Étape 4 : les exemples donnés au modèle (noms du catalogue, valeurs comme il
            doit les écrire) et le sujet de la liste. */
@@ -242,6 +243,8 @@
           });
           var formValues = React.useState({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'], 'donations.payment_type.ptyp_id': [5], 'donations.cause.cause_type.caut_id': [11] });
           var phrase = React.useState('particuliers qui ont donné par chèque en 2025 pour la forêt');
+          var formValues2 = React.useState({});
+          var submitted2 = React.useState(null);
           var quick = React.useState('');
           var pay = React.useState(['2025-01-01', '2025-12-31']);
           var amount = React.useState(['', '']);
@@ -359,6 +362,22 @@
           return e(
             'div',
             null,
+            card(
+              'Proposition du 21/10/2026',
+              'La fiche de recherche avec la phrase repliée',
+              'Retour de Constance : le bloc « phrase » au-dessus des champs intimide. Il devient une ligne « Décrire les donateurs recherchés en une phrase », repliée par défaut ; un clic l’ouvre, un autre la referme, et le choix est mémorisé par fiche, comme la rangée de critères des listes. La carte, « Remplir les critères » et les avertissements ne changent pas une fois dépliés. Recharger la page : l’état revient. Rien n’est commité tant que ce rendu n’est pas validé.',
+              e('div', null,
+                e(RBF.SearchForm, {
+                  catalog: CATALOG, sections: SECTIONS, icons: FORM_ICONS_CARET, subject: 'Donateurs',
+                  title: 'Rechercher des donateurs', submitLabel: 'Voir les donateurs',
+                  values: formValues2[0], onChange: function(v) { formValues2[1](v); },
+                  naturalLanguage: { collapsible: true, storageKey: 'demo-donateurs', toggleLabel: 'Décrire les donateurs recherchés en une phrase', placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', hint: 'La phrase remplit les critères ci-dessous (quelques secondes) ; vérifiez-les avant de lancer.', onNaturalLanguage: naturalOnForm, vocabulary: vocabDemo },
+                  advancedLink: { onClick: function() { alert('Critères avancés : le panneau droit de l’application'); } },
+                  onSubmit: function(filter, values) { submitted2[1]({ filter: filter.asJsonApiObject(), values: values }); }
+                }),
+                submitted2[0] && e('div', { className: 'demo-out mt-3' }, JSON.stringify(submitted2[0].filter, null, 2))
+              )
+            ),
             card(
               'Étape 4 · Langage naturel',
               'La phrase devient des critères — avec le vrai modèle',

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { Container } from '../grid';
 import { Filter } from '../filter';
 import { rbfIntl } from '../intl';
+import { readStoredFlag, writeStoredFlag } from '../helpers/storedFlag';
 import { catalogToJson, orderCatalogBySections } from './catalog';
 import { valuesToFilter, filterToValues } from './criteria';
 import { tr } from './i18n';
@@ -21,7 +22,14 @@ import SearchFormFooter from './SearchFormFooter';
  * valuesToFilter (base conservée pour ses fixes et défauts) et remis à
  * l'application par onSubmit(filter, values). Contrôlée (`values` + `onChange`)
  * ou non (`defaultValues`).
+ *
+ * `naturalLanguage.collapsible` : la phrase se replie derrière une ligne « Décrire
+ * en une phrase » (`toggleLabel`), repliée par défaut (`open`), choix mémorisé par
+ * fiche (`storageKey`) — la carte reste la même une fois dépliée.
  */
+const NATURAL_KEY = 'rbf.search.form.natural.';
+const naturalStorageKey = naturalLanguage => (naturalLanguage && naturalLanguage.storageKey ? NATURAL_KEY + naturalLanguage.storageKey : null);
+
 export default class SearchForm extends Component {
   static propTypes = {
     catalog: PropTypes.array.isRequired,
@@ -76,12 +84,21 @@ export default class SearchForm extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { values: props.defaultValues || {}, phrase: '', filled: false, warnings: [], explanation: null };
+    const natural = props.naturalLanguage;
+    this.state = {
+      values: props.defaultValues || {},
+      phrase: '',
+      filled: false,
+      warnings: [],
+      explanation: null,
+      naturalOpen: natural && natural.collapsible ? readStoredFlag(naturalStorageKey(natural), !!natural.open) : true,
+    };
     this.onFieldChange = this.onFieldChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onClear = this.onClear.bind(this);
     this.onPhraseChange = this.onPhraseChange.bind(this);
     this.onNaturalResult = this.onNaturalResult.bind(this);
+    this.toggleNatural = this.toggleNatural.bind(this);
   }
 
   values() {
@@ -135,6 +152,13 @@ export default class SearchForm extends Component {
     this.setState({ phrase: event.target.value });
   }
 
+  /* Replie ou déplie la phrase ; le choix est mémorisé par fiche. */
+  toggleNatural() {
+    const open = !this.state.naturalOpen;
+    this.setState({ naturalOpen: open });
+    writeStoredFlag(naturalStorageKey(this.props.naturalLanguage), open);
+  }
+
   /* Le résultat de l'interprétation remplit les champs ; rien n'est lancé. */
   onNaturalResult(result = {}) {
     const catalog = this.catalog();
@@ -167,12 +191,35 @@ export default class SearchForm extends Component {
     }
     const { filled, warnings, explanation } = this.state;
     const hint = filled ? tr(t, 'rbf.search.form.filledHint', 'Les critères ci-dessous ont été remplis depuis votre phrase. Vérifiez-les avant de lancer.') : naturalLanguage.hint;
+    const collapsible = !!naturalLanguage.collapsible;
+    const open = !collapsible || this.state.naturalOpen;
+    const sparkle = naturalLanguage.sparkleIcon || icons.sparkle;
+    const cardId = `rbf-search-form-natural-${naturalLanguage.storageKey || 'card'}`;
     return (
       <div className="rbf-search-form-natural mb-3">
+        {collapsible && (
+          <button
+            type="button"
+            className="btn btn-link btn-sm p-0 text-secondary rbf-search-form-natural-toggle"
+            aria-expanded={open}
+            aria-controls={cardId}
+            onClick={this.toggleNatural}
+          >
+            {sparkle && <span className="mr-1">{sparkle}</span>}
+            {naturalLanguage.toggleLabel || tr(t, 'rbf.search.natural.toggle', 'Décrire en une phrase')}
+            {icons.caret && (
+              <span className="ml-1 d-inline-block" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>
+                {icons.caret}
+              </span>
+            )}
+          </button>
+        )}
+        {open && (
+        <div id={cardId} className={collapsible ? 'mt-2' : undefined}>
         <InputNaturalSearch
           variant="card"
           name="natural"
-          sparkleIcon={naturalLanguage.sparkleIcon || icons.sparkle}
+          sparkleIcon={sparkle}
           placeholder={naturalLanguage.placeholder || ''}
           hint={hint || null}
           value={this.state.phrase}
@@ -196,6 +243,8 @@ export default class SearchForm extends Component {
           </ul>
         )}
         {explanation && <small className="form-text text-muted">{explanation}</small>}
+        </div>
+        )}
       </div>
     );
   }
