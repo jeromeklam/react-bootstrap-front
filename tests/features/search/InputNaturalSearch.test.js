@@ -75,6 +75,19 @@ test('service en erreur : notice et onError ; phrase vide ignorée', async () =>
   expect(notices(tree)).toEqual(['L’interprétation de la phrase a échoué']);
 });
 
+test('attente visible : bandeau dans la carte sans aide, spinner dans la barre', () => {
+  const card = renderer.create(<InputNaturalSearch variant="card" sparkleIcon={sparkle} pending={true} hint="Vérifiez-les avant de lancer." />);
+  const strip = card.root.findByProps({ role: 'status' });
+  expect(strip.type).toBe('div');
+  expect(strip.props.className).toContain('alert-primary');
+  expect(card.root.findAllByProps({ className: 'spinner-border spinner-border-sm mr-2' }).length).toBe(1);
+  expect(card.root.findAllByType('small').length).toBe(0);
+  expect(card.root.findAllByProps({ className: 'spinner-border spinner-border-sm text-primary' }).length).toBe(0);
+  const bar = renderer.create(<InputNaturalSearch sparkleIcon={sparkle} pending={true} />);
+  expect(bar.root.findByProps({ role: 'status' }).type).toBe('small');
+  expect(bar.root.findAllByProps({ className: 'spinner-border spinner-border-sm text-primary' }).length).toBe(1);
+});
+
 test('carte : bouton « Remplir les critères », indication, valeur contrôlée', () => {
   const onChange = jest.fn();
   const tree = renderer.create(

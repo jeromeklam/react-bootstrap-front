@@ -48,6 +48,14 @@
         letter-spacing: 0.04em;
         color: #6b7680;
       }
+      /* Même règle que SearchForm.scss de la lib : app.css de la démo a été compilé avant elle. */
+      .rbf-search-form .rbf-search-form-body {
+        transition: opacity 0.2s;
+      }
+      .rbf-search-form:has(.rbf-natural-search-pending) .rbf-search-form-body {
+        opacity: 0.45;
+        pointer-events: none;
+      }
     </style>
   </head>
   <body>
@@ -293,6 +301,15 @@
           };
           var naturalOnList = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, base: function() { return listFilter[0]; }, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
           var naturalOnForm = RBF.createNaturalLanguage({ transport: ollamaTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
+          /* L'état « en cours » sans Ollama : huit secondes d'attente, puis les critères du premier exemple. */
+          function slowTransport() {
+            return new Promise(function(resolve) {
+              setTimeout(function() {
+                resolve({ content: JSON.stringify({ criteria: NATURAL_EXAMPLES[0].criteria, mode: 'AND', unmatched: [] }) });
+              }, 8000);
+            });
+          }
+          var naturalOnSlow = RBF.createNaturalLanguage({ transport: slowTransport, catalog: CATALOG, subject: NATURAL_SUBJECT, examples: NATURAL_EXAMPLES, vocabulary: vocabulary });
 
           /* #llm=<phrase> : tape la phrase dans la barre et l'envoie, pour les captures
              d'écran automatiques (même rôle que #tiroir). */
@@ -365,13 +382,13 @@
             card(
               'Proposition du 21/10/2026',
               'La fiche de recherche avec la phrase repliée',
-              'Retour de Constance : le bloc « phrase » au-dessus des champs intimide. Il devient une ligne « Décrire les donateurs recherchés en une phrase », repliée par défaut ; un clic l’ouvre, un autre la referme, et le choix est mémorisé par fiche, comme la rangée de critères des listes. La carte, « Remplir les critères » et les avertissements ne changent pas une fois dépliés. Recharger la page : l’état revient. Rien n’est commité tant que ce rendu n’est pas validé.',
+              'Retour de Constance : le bloc « phrase » au-dessus des champs intimide. Il devient une ligne « Décrire les donateurs recherchés en une phrase », repliée par défaut ; un clic l’ouvre, un autre la referme, et le choix est mémorisé par fiche, comme la rangée de critères des listes. La carte, « Remplir les critères » et les avertissements ne changent pas une fois dépliés. Recharger la page : l’état revient. Ici l’analyse est simulée : huit secondes d’attente puis les critères du premier exemple, pour voir l’état « en cours » (bandeau vert avec spinner, aide masquée, champs estompés).',
               e('div', null,
                 e(RBF.SearchForm, {
                   catalog: CATALOG, sections: SECTIONS, icons: FORM_ICONS_CARET, subject: 'Donateurs',
                   title: 'Rechercher des donateurs', submitLabel: 'Voir les donateurs',
                   values: formValues2[0], onChange: function(v) { formValues2[1](v); },
-                  naturalLanguage: { collapsible: true, storageKey: 'demo-donateurs', toggleLabel: 'Décrire les donateurs recherchés en une phrase', placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', hint: 'La phrase remplit les critères ci-dessous (quelques secondes) ; vérifiez-les avant de lancer.', onNaturalLanguage: naturalOnForm, vocabulary: vocabDemo },
+                  naturalLanguage: { collapsible: true, storageKey: 'demo-donateurs', toggleLabel: 'Décrire les donateurs recherchés en une phrase', placeholder: 'Décrivez les donateurs recherchés, par exemple « particuliers qui ont donné par chèque en 2025 pour la forêt »', hint: 'La phrase remplit les critères ci-dessous (quelques secondes) ; vérifiez-les avant de lancer.', onNaturalLanguage: naturalOnSlow, vocabulary: vocabDemo },
                   advancedLink: { onClick: function() { alert('Critères avancés : le panneau droit de l’application'); } },
                   onSubmit: function(filter, values) { submitted2[1]({ filter: filter.asJsonApiObject(), values: values }); }
                 }),

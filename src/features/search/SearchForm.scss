@@ -37,4 +37,14 @@
       max-width: 10rem;
     }
   }
+
+  /* Pendant l'analyse de la phrase, les champs s'estompent : ils vont être remplis. */
+  .rbf-search-form-body {
+    transition: opacity 0.2s;
+  }
+
+  &:has(.rbf-natural-search-pending) .rbf-search-form-body {
+    opacity: 0.45;
+    pointer-events: none;
+  }
 }

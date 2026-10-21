@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { rbfIntl } from '../intl';
-import { SmLoading3Dots } from '../spinner';
 import { Dropdown } from '../basic';
 import { tr } from './i18n';
 import { criteriaToFilter } from './criteria';
@@ -340,9 +339,18 @@ export default class InputNaturalSearch extends Component {
         {this.state.notice}
       </small>
     ) : pending ? (
-      <small className="rbf-natural-search-pending form-text text-muted" role="status">
-        {tr(t, 'rbf.search.natural.pending', 'Analyse de la phrase en cours, quelques secondes…')}
-      </small>
+      variant === 'card' ? (
+        /* Dans la carte, un bandeau pleine largeur : sur une grande fenêtre, trois points
+           dans le groupe ne se voyaient pas. */
+        <div className="rbf-natural-search-pending alert alert-primary d-flex align-items-center py-2 px-3 mt-2 mb-0" role="status">
+          <span className="spinner-border spinner-border-sm mr-2" aria-hidden="true" />
+          {tr(t, 'rbf.search.natural.pending', 'Analyse de la phrase en cours, quelques secondes…')}
+        </div>
+      ) : (
+        <small className="rbf-natural-search-pending form-text text-primary" role="status">
+          {tr(t, 'rbf.search.natural.pending', 'Analyse de la phrase en cours, quelques secondes…')}
+        </small>
+      )
     ) : null;
     /* En ligne dans la carte ; dans la barre, flottant sous le champ pour ne pas
        pousser l'en-tête de liste. */
@@ -384,9 +392,10 @@ export default class InputNaturalSearch extends Component {
         autoComplete="off"
       />
     );
-    const waiting = pending && (
+    /* Dans la barre, le bouton « Rechercher » laisse place à un spinner ; la carte a son bandeau. */
+    const waiting = pending && variant !== 'card' && (
       <span className="input-group-text border-rbf bg-white">
-        <SmLoading3Dots />
+        <span className="spinner-border spinner-border-sm text-primary" aria-hidden="true" />
       </span>
     );
 
@@ -407,7 +416,7 @@ export default class InputNaturalSearch extends Component {
             {notice}
             {after}
           </div>
-          {hint && <small className="form-text text-muted mt-2">{hint}</small>}
+          {hint && !pending && <small className="form-text text-muted mt-2">{hint}</small>}
         </div>
       );
     }
