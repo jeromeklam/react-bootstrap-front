@@ -40,6 +40,36 @@ test('ouverte : 94 px, la rangée porte la barre, plus de badge', () => {
   expect(onToolbarToggle).toHaveBeenCalled();
 });
 
+test('compact : recherche rapide sur une seconde ligne, 100 px ; serré : textes du tri et des actions masqués', () => {
+  const actions = [
+    { name: 'add', icon: <i className="plus" />, text: 'Donateur', onClick: () => {} },
+    { name: 'link', text: 'Fiche de recherche', onClick: () => {} },
+  ];
+  const cols = [{ name: 'lastname', label: 'Nom', col: 'cli_lastname' }];
+  const sort = [{ col: 'cli_lastname', way: 'up' }];
+  const normal = header({ quickSearch: <input className="qs" />, globalActions: actions, cols, sort });
+  expect(normal.prop('style').height).toBe('50px');
+  expect(normal.find('.rbf-list-header-line .qs').length).toBe(1);
+  expect(normal.find('.rbf-list-header-search').length).toBe(0);
+  expect(normal.find('.rbf-list-default-header-nav').hasClass('flex-nowrap')).toBe(true);
+  const texts = normal.find('.rbf-list-default-header-nav button').map(b => b.text());
+  expect(texts).toContain('Donateur');
+  expect(normal.find('span').someWhere(n => n.text().trim() === 'Nom(+)')).toBe(true);
+  const tight = header({ tight: true, quickSearch: <input className="qs" />, globalActions: actions, cols, sort });
+  expect(tight.prop('style').height).toBe('50px');
+  const tightTexts = tight.find('.rbf-list-default-header-nav button').map(b => b.text());
+  expect(tightTexts).not.toContain('Donateur');
+  expect(tightTexts).toContain('Fiche de recherche');
+  expect(tight.find('span').someWhere(n => n.text().trim() === 'Nom(+)')).toBe(false);
+  const compact = header({ compact: true, tight: true, quickSearch: <input className="qs" />, globalActions: actions, cols, sort });
+  expect(compact.prop('style').height).toBe('100px');
+  expect(compact.find('.rbf-list-header-line .qs').length).toBe(0);
+  expect(compact.find('.rbf-list-header-search .qs').length).toBe(1);
+  expect(compact.find('.rbf-list-header-toolbar-toggle').length).toBe(1);
+  const both = header({ compact: true, toolbarOpen: true });
+  expect(both.prop('style').height).toBe('144px');
+});
+
 test('sans toolbar : rien ne change ; toolbarCount explicite ; texte d’action globale', () => {
   const plain = shallow(<DefaultHeader title="Donateurs" cols={[]} onToggleFilter={() => {}} filters={filters()} globalActions={[{ name: 'add', label: 'Ajouter', icon: <i />, text: 'Donateur', theme: 'primary', onClick: () => {} }]} />);
   expect(plain.find('.rbf-list-header-toolbar-toggle').length).toBe(0);

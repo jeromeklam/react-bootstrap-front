@@ -91,6 +91,11 @@ export default class DefaultHeader extends Component {
     onToolbarToggle: PropTypes.func,
     toolbarIcon: PropTypes.element,
     toolbarCount: PropTypes.number,
+    /* Paliers de largeur (décidés par la liste, qui se mesure) : serré = plus de texte
+       sur le tri ni sur les actions à icône ; compact = la recherche rapide passe sur
+       une seconde ligne, les actions restent entières. */
+    compact: PropTypes.bool,
+    tight: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -113,6 +118,8 @@ export default class DefaultHeader extends Component {
     onToolbarToggle: null,
     toolbarIcon: null,
     toolbarCount: null,
+    compact: false,
+    tight: false,
   };
 
   constructor(props) {
@@ -202,7 +209,8 @@ export default class DefaultHeader extends Component {
     /* La rangée d'outils (critères de recherche) : masquée par défaut, affichée par
        son bouton, qui porte le nombre de critères actifs quand elle est repliée. */
     const toolbarOpen = !!(this.props.toolbar && this.props.toolbarOpen);
-    const headerHeight = 50 + (toolbarOpen ? this.props.toolbarHeight : 0);
+    const { compact, tight } = this.props;
+    const headerHeight = 50 + (compact ? 50 : 0) + (toolbarOpen ? this.props.toolbarHeight : 0);
     let toolbarCount = this.props.toolbarCount;
     if (toolbarCount === null && this.props.filters && typeof this.props.filters.getFilters === 'function') {
       toolbarCount = this.props.filters.getFilters({ fixed: false }).length;
@@ -224,7 +232,7 @@ export default class DefaultHeader extends Component {
             boutons, ils passent sous elle et non dans la rangée d'outils. */}
         <div className="rbf-list-header-line" style={{ height: '50px', overflow: 'hidden' }}>
         <Row>
-          <Col size={{ xs: 10, sm: 10, md: 10, lg: 14 }}>
+          <Col size={compact ? { xs: 18, sm: 18, md: 18, lg: 18 } : { xs: 10, sm: 10, md: 10, lg: 14 }}>
             <div className="pl-2" style={{ display: 'inline-block', float: 'left' }}>
               <span style={iconstyle} className={classnames('no-selector', 'text-' + this.props.headerTextTheme)}>
                 {this.props.icon && this.props.icon}
@@ -249,19 +257,21 @@ export default class DefaultHeader extends Component {
               </div>
             )}
           </Col>
-          <Col size={{ xs: 10, sm: 12, md: 12, lg: 8 }}>
-            <Highlight
-              className="w-100"
-              style={sortStyle}
-              position="bottom"
-              theme="NAV"
-              title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
-            >
-              {this.props.quickSearch}
-            </Highlight>
-          </Col>
-          <Col size={{ xs: 16, sm: 14, md: 14, lg: 14 }} className="text-right">
-            <ul className="nav justify-content-end rbf-list-default-header-nav">
+          {!compact && (
+            <Col size={{ xs: 10, sm: 12, md: 12, lg: 8 }}>
+              <Highlight
+                className="w-100"
+                style={sortStyle}
+                position="bottom"
+                theme="NAV"
+                title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
+              >
+                {this.props.quickSearch}
+              </Highlight>
+            </Col>
+          )}
+          <Col size={compact ? { xs: 18, sm: 18, md: 18, lg: 18 } : { xs: 16, sm: 14, md: 14, lg: 14 }} className="text-right">
+            <ul className="nav flex-nowrap justify-content-end rbf-list-default-header-nav">
               <li className="nav-item">
                 <Highlight
                   className="w-100"
@@ -270,9 +280,7 @@ export default class DefaultHeader extends Component {
                   theme="NAV"
                   title={this.props.t({ id: 'rbf.list.header.sort.help', defaultMessage: 'Sort helper' })}
                 >
-                  <span>
-                    {sortToText(this.props.sort, this.props.cols)}
-                  </span>
+                  {!tight && <span>{sortToText(this.props.sort, this.props.cols)}</span>}
                   <button ref={this.state.mySortRef} type="button" className="btn btn-light text-secondary" onClick={this.onToggleSortMenu}>
                     {this.props.sortIcon}
                   </button>
@@ -409,7 +417,7 @@ export default class DefaultHeader extends Component {
                       }}
                     >
                       {action.icon}
-                      {action.text && <span className="ml-1">{action.text}</span>}
+                      {action.text && (!tight || !action.icon) && <span className="ml-1">{action.text}</span>}
                     </button>
                   </li>
                 ))}
@@ -417,6 +425,18 @@ export default class DefaultHeader extends Component {
           </Col>
         </Row>
         </div>
+        {compact && (
+          <div className="rbf-list-header-search px-2" style={{ height: '50px', display: 'flex', alignItems: 'center' }}>
+            <Highlight
+              className="w-100"
+              position="bottom"
+              theme="NAV"
+              title={this.props.t({ id: 'rbf.list.header.search.help', defaultMessage: 'Search helper' })}
+            >
+              {this.props.quickSearch}
+            </Highlight>
+          </div>
+        )}
         {toolbarOpen && (
           <div className="rbf-list-header-toolbar px-2" style={{ height: `${this.props.toolbarHeight}px` }}>
             {this.props.toolbar}

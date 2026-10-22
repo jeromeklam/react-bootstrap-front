@@ -106,6 +106,11 @@ export default class DefaultList extends Component {
     toolbar: PropTypes.node,
     toolbarHeight: PropTypes.number,
     toolbarOpen: PropTypes.bool,
+    /* Paliers de l'en-tête selon la largeur mesurée de la liste ; null = automatique. */
+    compact: PropTypes.bool,
+    tight: PropTypes.bool,
+    compactBelow: PropTypes.number,
+    tightBelow: PropTypes.number,
     toolbarDefaultOpen: PropTypes.bool,
     toolbarStorageKey: PropTypes.string,
     onToolbarToggle: PropTypes.func,
@@ -133,6 +138,10 @@ export default class DefaultList extends Component {
     toolbar: null,
     toolbarHeight: 44,
     toolbarOpen: null,
+    compact: null,
+    tight: null,
+    compactBelow: 992,
+    tightBelow: 1100,
     toolbarDefaultOpen: false,
     toolbarStorageKey: null,
     onToolbarToggle: null,
@@ -311,9 +320,17 @@ export default class DefaultList extends Component {
             inlineTransitionStyles.exited.right = '-' + calcW + 'px';
             inlineStyle.width = calcW + 'px';
             inlineStyle.right = '-' + calcW + 'px';
+            /* L'en-tête se resserre avec la largeur réelle de la liste : serré sous tightBelow
+               (textes du tri et des actions masqués), compact sous compactBelow (recherche
+               rapide sur une seconde ligne). Rien n'est jamais replié hors de vue. */
+            const listWidth = parseInt(width, 10) || 0;
+            const compact = this.props.compact !== null ? this.props.compact : listWidth > 0 && listWidth < this.props.compactBelow;
+            const tight = this.props.tight !== null ? this.props.tight : compact || (listWidth > 0 && listWidth < this.props.tightBelow);
+            const compactHeaderHeight = headerHeight + (compact ? 50 : 0);
+            locListStyle = { ...listStyle, top: `${compactHeaderHeight}px`, height: `calc(100% - ${compactHeaderHeight}px)` };
             return (
               <div>
-                <DefaultHeader {...this.props} toolbarOpen={toolbarOpen} onToolbarToggle={this.toggleToolbar} onToggleFilter={this.togglePanel} />
+                <DefaultHeader {...this.props} compact={compact} tight={tight} toolbarOpen={toolbarOpen} onToolbarToggle={this.toggleToolbar} onToggleFilter={this.togglePanel} />
                 <CSSTransition in={this.state.panelOpen} timeout={duration}>
                   {state => (
                     <div

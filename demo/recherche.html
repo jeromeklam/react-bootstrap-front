@@ -376,9 +376,56 @@
           };
           var filter = RBF.valuesToFilter(values, CATALOG);
 
+          /* Proposition du 22/10 : la même liste à trois largeurs, paliers forcés ou mesurés. */
+          function headerDemo(forced, width) {
+            return e('div', { style: { position: 'relative', height: '150px', border: '1px solid #dfe3e8', width: width ? width + 'px' : 'auto', marginBottom: '0.75rem', maxWidth: '100%' } },
+              e(RBF.ResponsiveList, Object.assign({
+                title: 'Donateurs', counter: '[8] résultats', icon: icon('check', 20),
+                cols: [
+                  { name: 'lastname', label: 'Nom', col: 'cli_lastname', size: 12, sortable: true, card: { role: 'TITLE' } },
+                  { name: 'firstname', label: 'Prénom', col: 'cli_firstname', size: 12, card: { role: 'FIELD' } },
+                  { name: 'town', label: 'Ville', col: 'cli_town', size: 12, card: { role: 'FIELD' } }
+                ],
+                items: [
+                  { id: 1, cli_lastname: 'Bernard', cli_firstname: 'Luc', cli_town: 'Nancy' },
+                  { id: 2, cli_lastname: 'Durand', cli_firstname: 'Élise', cli_town: 'Strasbourg' }
+                ],
+                filters: listFilter[0], sort: [{ col: 'cli_lastname', way: 'up' }], mainCol: 'cli_lastname', mode: 'right',
+                filterFullIcon: icon('check', 16), filterEmptyIcon: icon('check', 16), filterClearIcon: icon('close', 16),
+                filterDefaultIcon: icon('check', 16), filterClearDefaultIcon: icon('close', 16),
+                sortIcon: icon('caret', 16), sortNoneIcon: icon('caret', 16), sortUpIcon: icon('caret', 16), sortDownIcon: icon('caret', 16),
+                calIcon: icon('calendar', 16), clearIcon: icon('close', 16), closeIcon: icon('close', 16), moreIcon: icon('plus', 16),
+                cancelPanelIcon: icon('close', 16), validPanelIcon: icon('check', 16),
+                onFilters: function() {}, onClearFilters: function() {}, onLoadMore: function() {}, onSort: function() {}, onClick: function() {},
+                quickSearch: e(RBF.ResponsiveQuickSearch, {
+                  name: 'quick', label: 'Rechercher par nom, prénom ou e-mail…', quickSearch: '', onSubmit: function() {},
+                  icon: icon(window.DEMO_ICON_PATHS.search ? 'search' : 'check', 14), reset: icon('close', 14)
+                }),
+                globalActions: [
+                  { name: 'add', label: 'Ajouter un donateur', icon: icon('plus', 16), text: 'Donateur', theme: 'primary', onClick: function() { alert('Nouveau donateur'); } }
+                ],
+                toolbar: e(RBF.SearchChipBar, { filter: listFilter[0], catalog: CATALOG, icons: BAR_ICONS, wrap: false, onChange: function(f) { listFilter[1](f); }, onAddCriterion: function() {} }),
+                toolbarIcon: icon('tune', 18), toolbarStorageKey: 'demo-compact'
+              }, forced || {}))
+            );
+          }
+
           return e(
             'div',
             null,
+            card(
+              'Proposition du 22/10/2026',
+              'L’en-tête de liste sur les petits affichages',
+              'Aujourd’hui la ligne de titre fait 50 px et masque ce qui déborde : quand la place manque, la barre d’actions replie ses boutons dessous, hors de vue, et le « + » disparaît. Proposition : l’en-tête se resserre en trois paliers selon la largeur réelle de la liste (mesurée, pas celle de la fenêtre). Large : comme aujourd’hui. Serré, sous 1 100 px : le texte du tri disparaît (il reste dans l’info-bulle du bouton) et les actions à icône gardent l’icône seule, « + Donateur » devient « + ». Compact, sous 992 px : la recherche rapide passe sur une seconde ligne pleine largeur et l’en-tête fait 100 px ; les actions restent entières à droite du titre. Jamais rien de replié hors de vue, et la barre d’actions ne passe plus à la ligne. Les trois cadres ci-dessous forcent chaque palier ; réduire la fenêtre montre les bascules réelles sur la carte « Étape 2 ».',
+              e('div', null,
+                e('p', { className: 'demo-step mb-1' }, 'Large (au-delà de 1 100 px)'),
+                headerDemo({ compact: false, tight: false }),
+                e('p', { className: 'demo-step mb-1' }, 'Serré (entre 992 et 1 100 px)'),
+                headerDemo({ compact: false, tight: true }),
+                e('p', { className: 'demo-step mb-1' }, 'Compact (sous 992 px), ici dans un cadre de 860 px'),
+                headerDemo({ compact: true, tight: true }, 860)
+              )
+            ),
             card(
               'Proposition du 21/10/2026',
               'La fiche de recherche avec la phrase repliée',
