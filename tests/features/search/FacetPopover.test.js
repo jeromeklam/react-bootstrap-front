@@ -28,6 +28,19 @@ test('liste à cocher : état initial, bascule, Appliquer émet les valeurs', ()
   expect(onApply).toHaveBeenCalledWith([5, 3]);
 });
 
+test('facette : les options terminées sont masquées sauf choisies ; le lien les affiche avec leur suffixe', () => {
+  const base = field('donations.payment_type.ptyp_id');
+  const withEnded = { ...base, options: [...base.options, { value: 9, label: 'Alvarum', ended: true }, { value: 8, label: 'Kunbis', ended: true }] };
+  const tree = renderer.create(<FacetPopover field={withEnded} value={[8]} onApply={() => {}} onClose={() => {}} myRef={ref} />, options);
+  const toggle = () => tree.root.findAllByType('button').find(b => String(b.props.className).includes('rbf-facet-popover-ended'));
+  expect(checkboxes(tree).length).toBe(4);
+  expect(toggle().children.join('')).toBe('Afficher aussi les 1 terminé(s)');
+  renderer.act(() => toggle().props.onClick());
+  expect(checkboxes(tree).length).toBe(5);
+  expect(tree.root.findAllByType('label').filter(l => JSON.stringify(l.children.map(c => (typeof c === 'string' ? c : c.children.join('')))).includes('(terminé)')).length).toBe(2);
+  expect(toggle().children.join('')).toBe('Masquer les terminés');
+});
+
 test('champ de filtre à partir de 8 options, insensible aux accents ; Entrée applique, Échap ferme', () => {
   const many = { ...field('donations.payment_type.ptyp_id'), options: ['Alvarum', 'Chèque', 'Espèces', 'Prélèvement', 'Paypal', 'CB', 'Stripe', 'HelloAsso'].map((label, i) => ({ value: i + 1, label })) };
   const onApply = jest.fn();

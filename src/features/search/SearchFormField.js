@@ -83,6 +83,9 @@ export const SearchFormField = props => {
           size={size}
           disabled={disabled}
           onChange={forward}
+          showEndedLabel={tr(t, 'rbf.search.ended.show', 'Afficher aussi les {n} terminé(s)')}
+          hideEndedLabel={tr(t, 'rbf.search.ended.hide', 'Masquer les terminés')}
+          endedTitle={tr(t, 'rbf.search.ended.title', 'Terminé')}
         />
       );
     case 'segmented':
@@ -175,6 +178,7 @@ export const SearchFormField = props => {
             {field.options.map(option => (
               <option key={String(option.value)} value={String(option.value)}>
                 {option.label}
+                {option.ended ? ` ${tr(t, 'rbf.search.ended.suffix', '(terminé)')}` : ''}
               </option>
             ))}
           </select>

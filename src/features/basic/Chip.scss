@@ -46,3 +46,8 @@
 .rbf-chip-add .btn {
   border-style: dashed;
 }
+
+/* Option terminée (fin de validité passée) : visible seulement si choisie ou sur demande. */
+.rbf-chip-ended .btn {
+  opacity: 0.65;
+}

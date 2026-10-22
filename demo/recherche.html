@@ -56,6 +56,10 @@
         opacity: 0.45;
         pointer-events: none;
       }
+      /* Même règle que Chip.scss de la lib : option terminée estompée. */
+      .rbf-chip-ended .btn {
+        opacity: 0.65;
+      }
     </style>
   </head>
   <body>
@@ -139,7 +143,7 @@
         ];
         var MOYENS = ['Alvarum', 'Autre', 'CB', 'Charities Aid Fnd', 'Chèque', 'Espèces', 'Facebook', 'Fnd Roi Baudouin',
           'HelloAsso', 'Kunbis', 'Maecenata Stiftung', 'Nature', 'Paypal', 'Prélèvement', 'RaiseNow', 'Stripe']
-          .map(function(label, i) { return { value: i + 1, label: label }; });
+          .map(function(label, i) { return { value: i + 1, label: label, ended: label === 'Alvarum' || label === 'Kunbis' }; });
         var DON = [
           { value: '', label: 'Tous' },
           { value: 'regular', label: 'Régulier' },
@@ -252,6 +256,7 @@
           var formValues = React.useState({ 'client_category.clic_id': [6], 'donations.don_real_ts': ['2025-01-01', '2025-12-31'], 'donations.payment_type.ptyp_id': [5], 'donations.cause.cause_type.caut_id': [11] });
           var phrase = React.useState('particuliers qui ont donné par chèque en 2025 pour la forêt');
           var formValues2 = React.useState({});
+          var moyEnded = React.useState([10]);
           var submitted2 = React.useState(null);
           var quick = React.useState('');
           var pay = React.useState(['2025-01-01', '2025-12-31']);
@@ -425,6 +430,12 @@
                 e('p', { className: 'demo-step mb-1' }, 'Compact (sous 992 px), ici dans un cadre de 860 px'),
                 headerDemo({ compact: true, tight: true }, 860)
               )
+            ),
+            card(
+              'Proposition du 22/10/2026 · éléments terminés',
+              'Les moyens de paiement en fin de validité ne s’affichent plus par défaut',
+              'Un catalogue peut marquer une option « terminée » (ended) : dans l’admin, les moyens de paiement dont la fin de validité est passée. Dans les pastilles de la fiche et dans les facettes de l’en-tête, ces options sont masquées, sauf celles déjà choisies, qui restent visibles et estompées ; un lien « Afficher aussi les N terminé(s) » les ramène, et « Masquer les terminés » les cache. Dans une liste déroulante (panneau de critères), elles restent proposées avec le suffixe « (terminé) ». Ici Alvarum et Kunbis sont terminés, Kunbis est choisi. Même chose dans la rangée « Moyen » de la fiche ci-dessous et dans la facette « Moyen » de la carte Étape 2.',
+              e(RBF.InputPillGroup, { name: 'moyens', value: moyEnded[0], options: MOYENS, checkIcon: icon('check', 14), onChange: function(ev) { moyEnded[1](ev.target.value); }, hint: 'Aucune cochée = tous' })
             ),
             card(
               'Proposition du 21/10/2026',

@@ -49,7 +49,7 @@ export default class FacetPopover extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { draft: Array.isArray(props.value) ? [...props.value] : [], query: '' };
+    this.state = { draft: Array.isArray(props.value) ? [...props.value] : [], query: '', showEnded: false };
     this.onQuery = this.onQuery.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onApply = this.onApply.bind(this);
@@ -61,10 +61,20 @@ export default class FacetPopover extends Component {
     return field.facet && field.facet.kind === 'range' ? 'range' : 'options';
   }
 
+  /* Les options terminées (ended) non choisies, masquées tant que le lien n'est pas activé. */
+  hiddenEnded() {
+    const selected = this.state.draft.map(String);
+    return (this.props.field.options || []).filter(option => option.ended && !selected.includes(String(option.value)));
+  }
+
   options() {
     const { field } = this.props;
-    const { query } = this.state;
-    const options = field.options || [];
+    const { query, showEnded } = this.state;
+    let options = field.options || [];
+    if (!showEnded) {
+      const hidden = this.hiddenEnded();
+      options = options.filter(option => !hidden.includes(option));
+    }
     if (!query) {
       return options;
     }
@@ -158,12 +168,20 @@ export default class FacetPopover extends Component {
                 />
                 <label className="custom-control-label" htmlFor={id}>
                   {option.label}
+                  {option.ended && <span className="text-muted ml-1">{tr(t, 'rbf.search.ended.suffix', '(terminé)')}</span>}
                   {showCounts && typeof option.count === 'number' && <span className="text-muted ml-1">({option.count})</span>}
                 </label>
               </div>
             );
           })}
         </div>
+        {this.hiddenEnded().length > 0 && (
+          <button type="button" className="btn btn-link btn-sm p-0 mt-1 rbf-facet-popover-ended" onClick={() => this.setState({ showEnded: !this.state.showEnded })}>
+            {this.state.showEnded
+              ? tr(t, 'rbf.search.ended.hide', 'Masquer les terminés')
+              : tr(t, 'rbf.search.ended.show', 'Afficher aussi les {n} terminé(s)', { n: this.hiddenEnded().length })}
+          </button>
+        )}
       </div>
     );
   }

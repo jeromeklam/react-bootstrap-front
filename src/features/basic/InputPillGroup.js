@@ -10,8 +10,13 @@ import Chip from './Chip';
  * Émet { target: { name, value: [...] } }.
  */
 export const InputPillGroup = props => {
-  const { name, value, options, onChange, multiple, hint, checkIcon, theme, size, disabled, label, labelTop, id } = props;
+  const { name, value, options, onChange, multiple, hint, checkIcon, theme, size, disabled, label, labelTop, id, showEndedLabel, hideEndedLabel, endedTitle } = props;
   const current = (Array.isArray(value) ? value : []).map(String);
+  /* Les options terminées (`ended: true`, un moyen de paiement en fin de validité…) sont
+     masquées tant qu'elles ne sont pas choisies ; un lien les affiche toutes. */
+  const [showEnded, setShowEnded] = React.useState(false);
+  const hiddenCount = options.filter(option => option.ended && !current.includes(String(option.value))).length;
+  const visible = showEnded ? options : options.filter(option => !option.ended || current.includes(String(option.value)));
   const toggle = option => {
     const key = String(option.value);
     let next;
@@ -33,7 +38,7 @@ export const InputPillGroup = props => {
       )}
       <div className={classnames(!labelTop && `col-xxs-w${props.inputSize}`)}>
         <div id={id || name} className="rbf-pill-group" role="group" aria-label={label || name}>
-          {options.map(option => (
+          {visible.map(option => (
             <Chip
               key={String(option.value)}
               variant="toggle"
@@ -45,10 +50,16 @@ export const InputPillGroup = props => {
               checkIcon={checkIcon}
               disabled={disabled}
               onClick={() => toggle(option)}
-              className="mr-1 mb-1"
+              title={option.ended ? endedTitle : undefined}
+              className={classnames('mr-1 mb-1', option.ended && 'rbf-chip-ended')}
             />
           ))}
         </div>
+        {hiddenCount > 0 && (
+          <button type="button" className="btn btn-link btn-sm p-0 rbf-pill-group-ended" onClick={() => setShowEnded(!showEnded)}>
+            {showEnded ? hideEndedLabel : showEndedLabel.replace('{n}', String(hiddenCount))}
+          </button>
+        )}
         {hint && hint !== '' && <small className="form-text text-muted">{hint}</small>}
       </div>
     </div>
@@ -71,6 +82,9 @@ InputPillGroup.propTypes = {
   labelSize: PropTypes.number,
   inputSize: PropTypes.number,
   id: PropTypes.string,
+  showEndedLabel: PropTypes.string,
+  hideEndedLabel: PropTypes.string,
+  endedTitle: PropTypes.string,
 };
 
 InputPillGroup.defaultProps = {
@@ -86,6 +100,9 @@ InputPillGroup.defaultProps = {
   labelSize: 6,
   inputSize: 30,
   id: null,
+  showEndedLabel: 'Afficher aussi les {n} terminé(s)',
+  hideEndedLabel: 'Masquer les terminés',
+  endedTitle: 'Terminé',
 };
 
 export default InputPillGroup;
