@@ -100,6 +100,7 @@ export * from "./features/editor/index.js";
  */
 export * from "./features/page/DefaultFooter.jsx";
 export * from "./features/page/DefaultHeader.jsx";
+export { default as Flag, flagFile } from "./features/page/Flag.jsx";
 export { default as DefaultPage } from "./features/page/DefaultPage.jsx";
 export { default as DefaultSidebar } from "./features/page/DefaultSidebar.jsx";
 export * from "./features/page/MobileFooter.jsx";

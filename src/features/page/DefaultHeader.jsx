@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import Flag from 'react-world-flags';
+import Flag from './Flag.jsx';
 import { Dropdown, DropdownMenu, DropdownMenuOption, Badge } from '../basic';
 import { Highlight, HighlightButton } from '../tour';
 
@@ -17,6 +17,8 @@ const navStyles = {
 
 export class DefaultHeader extends Component {
   static propTypes = {
+    /* Préfixe (ou fonction code → URL) des drapeaux servis par l'application. */
+    flagSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     headerBackgroundSrc: PropTypes.element,
     headerBackgroundTheme: PropTypes.string,
     headerTextTheme: PropTypes.string,
@@ -42,6 +44,7 @@ export class DefaultHeader extends Component {
   };
 
   static defaultProps = {
+    flagSrc: '/flags/',
     headerBackgroundSrc: null,
     headerBorderBottomSrc: null,
     headerBackgroundTheme: 'secondary',
@@ -141,7 +144,7 @@ export class DefaultHeader extends Component {
                         onClick={this.onToggleFlag}
                         ref={this.state.myRef}
                       >
-                        <Flag code={current.code} height={24} />
+                        <Flag code={current.code} height={24} src={this.props.flagSrc} />
                       </button>
                     </Highlight>
                     {this.state.flagsOpen && (
@@ -162,7 +165,7 @@ export class DefaultHeader extends Component {
                                       this.props.onLocale(lang.locale);
                                     }}
                                   >
-                                    <Flag code={lang.code} height={24} />
+                                    <Flag code={lang.code} height={24} src={this.props.flagSrc} />
                                   </DropdownMenuOption>
                                 );
                               }
