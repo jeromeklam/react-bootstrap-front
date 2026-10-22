@@ -1,3 +1,10 @@
+# 3.15.8 : 22/10/2026
+
+* En-tête : les drapeaux de langue sont des images servies par l'application (`/flags/<code>.svg`, composant `Flag` exporté, prop `flagSrc`) ; react-world-flags, qui embarquait 250 drapeaux en data-URI, est retiré : le bundle passe de 6,2 à 2,7 Mo. react-scripts n'est plus une dépendance d'exécution
+* Listes : l'en-tête se resserre avec la largeur de la liste, en trois paliers (`tightBelow` 1100 px : textes du tri et des actions à icône masqués ; `compactBelow` 992 px : recherche rapide sur une seconde ligne) ; la barre d'actions ne passe plus à la ligne et le bouton « + » ne disparaît plus sur les petits affichages
+* Recherche : une option de catalogue marquée `ended: true` (moyen de paiement en fin de validité…) est masquée par défaut dans les pastilles et les facettes, sauf si elle est choisie ; un lien « Afficher aussi les N terminé(s) » la ramène, les listes déroulantes la gardent avec le suffixe « (terminé) »
+* Recherche : pendant l'analyse de la phrase, la fiche de recherche affiche un bandeau avec un spinner, masque son aide et estompe ses champs ; la barre d'en-tête remplace « Rechercher » par un spinner. Les trois points animés ne se voyaient pas sur une grande fenêtre
+
 # 3.15.7 : 21/10/2026
 
 * Recherche : la phrase en langage naturel de la fiche de recherche peut se replier derrière une ligne « Décrire en une phrase » (`naturalLanguage.collapsible`), fermée par défaut et mémorisée par fiche (`storageKey`) ; libellé `toggleLabel`, chevron `icons.caret`. La carte dépliée ne change pas
