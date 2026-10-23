@@ -1,3 +1,7 @@
+# 3.15.9 : 23/10/2026
+
+* Recherche : les filtres à options (pastilles `InputPillGroup`, menu de facette `FacetPopover`) partent toutes cochées, comme les anciennes fiches de recherche : aucune valeur veut toujours dire « toutes » mais s'affiche ainsi ; en décocher une garde les autres, recocher la dernière (ou tout recouvrir) revient au tableau vide ; liens « Tous » / « Aucun » (`allLabel`, `noneLabel`, clés `rbf.search.pills.all` / `pills.none`, compteur « Toutes » `rbf.search.facet.all`) ; « Aucun » validé tel quel vaut « toutes », comme avant ; les options terminées masquées restent hors de « toutes » ; `multiple: false` inchangé
+
 # 3.15.8 : 22/10/2026
 
 * En-tête : les drapeaux de langue sont des images servies par l'application (`/flags/<code>.svg`, composant `Flag` exporté, prop `flagSrc`) ; react-world-flags, qui embarquait 250 drapeaux en data-URI, est retiré : le bundle passe de 6,2 à 2,7 Mo. react-scripts n'est plus une dépendance d'exécution

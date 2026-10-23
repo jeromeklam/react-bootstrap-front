@@ -163,7 +163,7 @@
           { name: 'cli_cp', label: 'Code postal', type: 'text', width: 6, defaultOperator: 'containsb', phrase: { label: 'le code postal' }, description: 'commence par le numéro de département' },
           { name: 'cli_town', label: 'Ville', type: 'text', width: 9, defaultOperator: 'containsb', phrase: { label: 'la ville' } },
           { name: 'country.cnty_name', label: 'Pays', type: 'text', width: 9, phrase: { label: 'le pays' }, description: 'nom du pays en toutes lettres' },
-          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', hint: 'Aucune cochée = toutes', facet: { order: 20 }, description: 'catégorie du donateur',
+          { name: 'client_category.clic_id', label: 'Catégorie', type: 'select', options: CATEGORIES, widget: 'pills', facet: { order: 20 }, description: 'catégorie du donateur',
             phrase: { eq: 'de catégorie {value}' },
             subjectFor: function(values) { return values.length === 1 && String(values[0]) === '6' ? 'Particuliers' : null; } },
           { name: 'don_kind', virtual: true, label: 'Don', widget: 'segmented', options: DON, fields: ['donations.sponsorship.spo_id'],
@@ -435,7 +435,7 @@
               'Proposition du 22/10/2026 · éléments terminés',
               'Les moyens de paiement en fin de validité ne s’affichent plus par défaut',
               'Un catalogue peut marquer une option « terminée » (ended) : dans l’admin, les moyens de paiement dont la fin de validité est passée. Dans les pastilles de la fiche et dans les facettes de l’en-tête, ces options sont masquées, sauf celles déjà choisies, qui restent visibles et estompées ; un lien « Afficher aussi les N terminé(s) » les ramène, et « Masquer les terminés » les cache. Dans une liste déroulante (panneau de critères), elles restent proposées avec le suffixe « (terminé) ». Ici Alvarum et Kunbis sont terminés, Kunbis est choisi. Même chose dans la rangée « Moyen » de la fiche ci-dessous et dans la facette « Moyen » de la carte Étape 2.',
-              e(RBF.InputPillGroup, { name: 'moyens', value: moyEnded[0], options: MOYENS, checkIcon: icon('check', 14), onChange: function(ev) { moyEnded[1](ev.target.value); }, hint: 'Aucune cochée = tous' })
+              e(RBF.InputPillGroup, { name: 'moyens', value: moyEnded[0], options: MOYENS, checkIcon: icon('check', 14), onChange: function(ev) { moyEnded[1](ev.target.value); } })
             ),
             card(
               'Proposition du 21/10/2026',
@@ -627,10 +627,10 @@
             card(
               'Étape 1 · InputPillGroup',
               'Pastilles à bascule',
-              'Plusieurs choix. Une pastille choisie passe en plein avec la coche ; aucune choisie = toutes.',
+              'Plusieurs choix. Au départ toutes sont cochées (aucune restriction) ; en décocher une garde les autres ; Tous / Aucun en dessous.',
               e('div', null,
                 e(RBF.InputPillGroup, {
-                  name: 'clic_id', label: 'Catégorie', hint: 'Aucune cochée = toutes',
+                  name: 'clic_id', label: 'Catégorie',
                   value: cat[0], options: CATEGORIES, checkIcon: icon('check', 14),
                   onChange: function(ev) { cat[1](ev.target.value); }
                 }),

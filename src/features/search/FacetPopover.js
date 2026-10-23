@@ -54,6 +54,8 @@ export default class FacetPopover extends Component {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onApply = this.onApply.bind(this);
     this.onRange = this.onRange.bind(this);
+    this.selectAll = this.selectAll.bind(this);
+    this.selectNone = this.selectNone.bind(this);
   }
 
   kind() {
@@ -67,14 +69,42 @@ export default class FacetPopover extends Component {
     return (this.props.field.options || []).filter(option => option.ended && !selected.includes(String(option.value)));
   }
 
-  options() {
+  /* Les options affichables : sans les terminées masquées, avant le filtre texte. Ce sont elles que « toutes » désigne. */
+  visibleOptions() {
     const { field } = this.props;
-    const { query, showEnded } = this.state;
+    const { showEnded } = this.state;
     let options = field.options || [];
     if (!showEnded) {
       const hidden = this.hiddenEnded();
       options = options.filter(option => !hidden.includes(option));
     }
+    return options;
+  }
+
+  /* Aucune valeur = toutes, affichées cochées, comme les anciennes fiches de recherche ;
+     « Aucun » (state.none) vide l'affichage pour ne cocher ensuite que quelques valeurs. */
+  isAll() {
+    return this.props.field.multiple !== false && this.state.draft.length === 0 && !this.state.none;
+  }
+
+  isChecked(option) {
+    return this.isAll() || this.state.draft.map(String).includes(String(option.value));
+  }
+
+  /* Un choix qui recouvre toutes les options affichables vaut « toutes » : tableau vide. */
+  normalize(draft) {
+    if (this.props.field.multiple === false) {
+      return draft;
+    }
+    const keys = draft.map(String);
+    const all = this.visibleOptions();
+    const full = all.length > 0 && keys.length === all.length && all.every(option => keys.includes(String(option.value)));
+    return full ? [] : draft;
+  }
+
+  options() {
+    const { query } = this.state;
+    const options = this.visibleOptions();
     if (!query) {
       return options;
     }
@@ -95,14 +125,24 @@ export default class FacetPopover extends Component {
     const key = String(option.value);
     const selected = this.state.draft.map(String).includes(key);
     let draft;
-    if (selected) {
+    if (this.isAll()) {
+      draft = this.visibleOptions().filter(o => String(o.value) !== key).map(o => o.value);
+    } else if (selected) {
       draft = this.state.draft.filter(v => String(v) !== key);
     } else if (field.multiple === false) {
       draft = [option.value];
     } else {
       draft = [...this.state.draft, option.value];
     }
-    this.setState({ draft });
+    this.setState({ draft: this.normalize(draft), none: false });
+  }
+
+  selectAll() {
+    this.setState({ draft: [], none: false });
+  }
+
+  selectNone() {
+    this.setState({ draft: [], none: true });
   }
 
   onQuery(event) {
@@ -125,11 +165,15 @@ export default class FacetPopover extends Component {
   }
 
   onApply() {
-    this.props.onApply(this.state.draft);
+    /* « Aucun » validé tel quel vaut « toutes », comme avant : tableau vide. */
+    this.props.onApply(this.normalize(this.state.draft));
   }
 
   count() {
     const { field, t } = this.props;
+    if (this.isAll()) {
+      return tr(t, 'rbf.search.facet.all', 'Toutes');
+    }
     const n = this.state.draft.filter(v => v !== null && typeof v !== 'undefined' && v !== '').length;
     if (field.facet && typeof field.facet.countLabel === 'function') {
       return field.facet.countLabel(n, field);
@@ -139,8 +183,8 @@ export default class FacetPopover extends Component {
 
   renderOptions() {
     const { field, showCounts, t } = this.props;
-    const selected = this.state.draft.map(String);
     const options = this.options();
+    const tools = field.multiple !== false && this.visibleOptions().length > 1;
     return (
       <div>
         {this.isSearchable() && (
@@ -153,6 +197,16 @@ export default class FacetPopover extends Component {
             autoFocus
           />
         )}
+        {tools && (
+          <div className="rbf-facet-popover-tools mb-1">
+            <button type="button" className="btn btn-link btn-sm p-0 mr-2 rbf-facet-popover-all" disabled={this.isAll()} onClick={this.selectAll}>
+              {tr(t, 'rbf.search.pills.all', 'Tous')}
+            </button>
+            <button type="button" className="btn btn-link btn-sm p-0 rbf-facet-popover-none" disabled={this.state.none && this.state.draft.length === 0} onClick={this.selectNone}>
+              {tr(t, 'rbf.search.pills.none', 'Aucun')}
+            </button>
+          </div>
+        )}
         <div className="rbf-facet-popover-list custom-scrollbar">
           {options.length === 0 && <div className="text-muted small">{tr(t, 'rbf.search.facet.none', 'Aucune valeur')}</div>}
           {options.map(option => {
@@ -163,7 +217,7 @@ export default class FacetPopover extends Component {
                   type="checkbox"
                   className="custom-control-input"
                   id={id}
-                  checked={selected.includes(String(option.value))}
+                  checked={this.isChecked(option)}
                   onChange={() => this.toggle(option)}
                 />
                 <label className="custom-control-label" htmlFor={id}>

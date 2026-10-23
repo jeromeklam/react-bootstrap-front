@@ -75,3 +75,35 @@ test('facette de plage : une plage de dates, Appliquer émet [de, à] ; compteur
   const two = shallow(<FacetPopover field={counted} value={[5, 3]} onApply={() => {}} onClose={() => {}} myRef={ref} />);
   expect(two.find('small').text()).toBe('2 moyens');
 });
+
+test('facette sans valeur = toutes cochées ; décocher garde les autres ; Tous / Aucun ; tout recocher vaut toutes', () => {
+  const onApply = jest.fn();
+  const tree = renderer.create(
+    <FacetPopover field={field('donations.payment_type.ptyp_id')} value={[]} onApply={onApply} onClose={() => {}} myRef={ref} />,
+    options
+  );
+  const tool = cls => tree.root.findAllByType('button').find(b => String(b.props.className).includes(cls));
+  const count = () => tree.root.findByType('small').children.join('');
+  expect(checkboxes(tree).map(c => c.props.checked)).toEqual([true, true, true]);
+  expect(count()).toBe('Toutes');
+  expect(tool('rbf-facet-popover-all').props.disabled).toBe(true);
+  renderer.act(() => checkboxes(tree)[1].props.onChange());
+  expect(checkboxes(tree).map(c => c.props.checked)).toEqual([true, false, true]);
+  expect(count()).toBe('2 sélectionnée(s)');
+  renderer.act(() => apply(tree).props.onClick());
+  expect(onApply).toHaveBeenLastCalledWith([3, 14]);
+  renderer.act(() => checkboxes(tree)[1].props.onChange());
+  expect(count()).toBe('Toutes');
+  renderer.act(() => apply(tree).props.onClick());
+  expect(onApply).toHaveBeenLastCalledWith([]);
+  renderer.act(() => tool('rbf-facet-popover-none').props.onClick());
+  expect(checkboxes(tree).map(c => c.props.checked)).toEqual([false, false, false]);
+  expect(count()).toBe('0 sélectionnée(s)');
+  renderer.act(() => checkboxes(tree)[2].props.onChange());
+  renderer.act(() => apply(tree).props.onClick());
+  expect(onApply).toHaveBeenLastCalledWith([14]);
+  renderer.act(() => tool('rbf-facet-popover-all').props.onClick());
+  expect(checkboxes(tree).map(c => c.props.checked)).toEqual([true, true, true]);
+  renderer.act(() => apply(tree).props.onClick());
+  expect(onApply).toHaveBeenLastCalledWith([]);
+});

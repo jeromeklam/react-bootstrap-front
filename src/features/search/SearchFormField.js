@@ -86,6 +86,8 @@ export const SearchFormField = props => {
           showEndedLabel={tr(t, 'rbf.search.ended.show', 'Afficher aussi les {n} terminé(s)')}
           hideEndedLabel={tr(t, 'rbf.search.ended.hide', 'Masquer les terminés')}
           endedTitle={tr(t, 'rbf.search.ended.title', 'Terminé')}
+          allLabel={tr(t, 'rbf.search.pills.all', 'Tous')}
+          noneLabel={tr(t, 'rbf.search.pills.none', 'Aucun')}
         />
       );
     case 'segmented':
